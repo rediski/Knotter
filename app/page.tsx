@@ -8,7 +8,8 @@ import { GitCommitHorizontal } from 'lucide-react';
 
 export const metadata: Metadata = {
     title: 'Knotter',
-    description: 'Knotter — это публичный нодовый редактор с открытым исходным кодом, защищенный лицензией GNU GPL',
+    description:
+        'Knotter — это нодовый редактор для работы с данными, распространяемый под лицензией GPL-3.0, которая гарантирует, что любые производные работы и модификации останутся столь же свободными и открытыми.',
 };
 
 export default function Home() {
