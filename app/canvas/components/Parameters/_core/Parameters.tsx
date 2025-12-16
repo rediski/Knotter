@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, memo, Fragment } from 'react';
+import { memo, Fragment } from 'react';
 
 import { Input } from '@/components/UI/Input';
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
@@ -11,16 +11,20 @@ import { ParametersItem } from '@/canvas/components/Parameters/_core/ParametersI
 import { useParameters } from '@/canvas/hooks/Parameters/_core/useParameters';
 
 import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
-import { ParameterType } from '@/canvas/utils/parameters/parameter.types';
 import { parameterTypes } from '@/canvas/utils/parameters/parameter.utils';
 
 import { Plus } from 'lucide-react';
 
 export const Parameters = memo(function Parameters() {
-    const [parameterName, setParameterName] = useState('');
-    const [parameterType, setParameterType] = useState<ParameterType>('number');
-
-    const { parameters, createParameter, removeParameter } = useParameters();
+    const {
+        parameters,
+        parameterName,
+        parameterType,
+        setParameterName,
+        setParameterType,
+        createParameter,
+        removeParameter,
+    } = useParameters();
 
     const currentType = parameterTypes.find((parameter) => parameter.type === parameterType);
 

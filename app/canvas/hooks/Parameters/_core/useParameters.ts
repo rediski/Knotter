@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import type { Parameter, ParameterType } from '@/canvas/utils/parameters/parameter.types';
@@ -9,6 +10,9 @@ import { createInitialParameterValue } from '@/canvas/utils/parameters/parameter
 import { v4 as uuid } from 'uuid';
 
 export const useParameters = () => {
+    const [parameterName, setParameterName] = useState('');
+    const [parameterType, setParameterType] = useState<ParameterType>('number');
+
     const items = useCanvasStore((state) => state.items);
     const parameters = useCanvasStore((state) => state.parameters);
     const setItems = useCanvasStore((state) => state.setItems);
@@ -25,6 +29,8 @@ export const useParameters = () => {
         };
 
         setParameters([...parameters, newParameter]);
+        setParameterName('');
+
         return newParameter;
     };
 
@@ -72,6 +78,11 @@ export const useParameters = () => {
 
     return {
         parameters,
+
+        parameterName,
+        parameterType,
+        setParameterName,
+        setParameterType,
 
         createParameter,
         removeParameter,
