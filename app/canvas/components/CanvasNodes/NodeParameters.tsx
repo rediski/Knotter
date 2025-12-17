@@ -8,12 +8,16 @@ interface NodeParametersProps {
 }
 
 export const NodeParameters = memo(function NodeParameters({ node }: NodeParametersProps) {
-    const parameters = node?.parameters || [];
+    const parameters = node?.nodeParameters;
 
     return (
         <div className="flex flex-col gap-1">
             {parameters.map((parameter) => {
-                return <div key={parameter.id}>{parameter.name}</div>;
+                return (
+                    <div key={parameter.id}>
+                        <span>{parameter.name}</span>
+                    </div>
+                );
             })}
         </div>
     );
