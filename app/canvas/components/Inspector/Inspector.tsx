@@ -41,7 +41,9 @@ export const Inspector = memo(function Inspector() {
 
     const selectedItem = useCanvasStore((state) => state.selectedItem);
 
-    const nodeParameters = node?.parameters || [];
+    const nodeParameters = node?.nodeParameters;
+
+    if (!nodeParameters) return;
 
     const filteredParameters = parameters.filter(
         (template) => !nodeParameters.some((nodeParam) => nodeParam.id === template.id),

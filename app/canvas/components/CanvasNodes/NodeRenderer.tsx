@@ -61,7 +61,7 @@ function EditMode({ node, isSelected }: NodeProps) {
                 </div>
             )}
 
-            {node.parameters.length > 0 && <NodeParameters node={node} />}
+            {node.nodeParameters.length > 0 && <NodeParameters node={node} />}
         </div>
     );
 }

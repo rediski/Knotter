@@ -48,7 +48,7 @@ export const useParameters = () => {
         const nodeIndex = items.findIndex((item) => item.kind === 'node' && item.id === nodeId);
         const parameter = parameters.find((parameter) => parameter.id === parameterId);
         const node = items[nodeIndex] as Node;
-        const parameterExists = node.parameters.some((parameter) => parameter.id === parameterId);
+        const parameterExists = node.nodeParameters.some((parameter) => parameter.id === parameterId);
 
         if (!parameter) return;
         if (nodeIndex === -1) return;
@@ -60,7 +60,7 @@ export const useParameters = () => {
 
         const updatedNode = {
             ...node,
-            parameters: [...node.parameters, nodeParameter],
+            parameters: [...node.nodeParameters, nodeParameter],
         };
 
         const updatedItems = [...items];
@@ -73,7 +73,7 @@ export const useParameters = () => {
 
         if (!node) return null;
 
-        return node.parameters;
+        return node.nodeParameters;
     };
 
     return {
