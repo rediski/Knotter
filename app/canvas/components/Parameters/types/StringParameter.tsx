@@ -48,7 +48,7 @@ export const StringParameter = memo(function StringParameter({
                         <p className="truncate w-full text-right">Базовое значение</p>
 
                         <Input
-                            value={parameter.data}
+                            value={parameter.value}
                             onChange={(val) => handleInputChange(val)}
                             className="bg-depth-3 border border-depth-4"
                             max={16}

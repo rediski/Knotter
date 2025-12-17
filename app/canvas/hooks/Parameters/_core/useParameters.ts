@@ -25,7 +25,7 @@ export const useParameters = () => {
             id: uuid(),
             name: name,
             type,
-            data: createInitialParameterValue(type),
+            value: createInitialParameterValue(type),
         };
 
         setParameters([...parameters, newParameter]);

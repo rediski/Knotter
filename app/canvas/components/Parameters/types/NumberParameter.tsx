@@ -54,7 +54,7 @@ export const NumberParameter = memo(function NumberParameter({
                         <p className="truncate w-full text-right">Базовое значение</p>
 
                         <Input
-                            value={parameter.data.currentValue.toString()}
+                            value={parameter.value.currentValue.toString()}
                             onChange={handleUpdateCurrentValue}
                             className="bg-depth-3 border border-depth-4"
                             max={16}
@@ -66,7 +66,7 @@ export const NumberParameter = memo(function NumberParameter({
                         <p className="truncate w-full text-right">Минимальное значение</p>
 
                         <Input
-                            value={parameter.data.min.toString()}
+                            value={parameter.value.min.toString()}
                             onChange={handleUpdateMinValue}
                             className="bg-depth-3 border border-depth-4"
                             max={16}
@@ -78,7 +78,7 @@ export const NumberParameter = memo(function NumberParameter({
                         <p className="truncate w-full text-right">Максимальное значение</p>
 
                         <Input
-                            value={parameter.data.max.toString()}
+                            value={parameter.value.max.toString()}
                             onChange={handleUpdateMaxValue}
                             className="bg-depth-3 border border-depth-4"
                             max={16}
@@ -90,7 +90,7 @@ export const NumberParameter = memo(function NumberParameter({
                         <p className="truncate w-full text-right">Шаг изменения</p>
 
                         <Input
-                            value={parameter.data.step.toString()}
+                            value={parameter.value.step.toString()}
                             onChange={handleUpdateStepValue}
                             className="bg-depth-3 border border-depth-4"
                             max={16}

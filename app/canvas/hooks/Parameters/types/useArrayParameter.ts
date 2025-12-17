@@ -1,4 +1,4 @@
-import { Parameter, ParameterData } from '@/canvas/utils/parameters/parameter.types';
+import { Parameter, ParameterValue } from '@/canvas/utils/parameters/parameter.types';
 import { isArrayValue } from '@/canvas/utils/parameters/parameter.type-guards';
 
 interface useArrayParameterProps {
@@ -11,11 +11,11 @@ export const useArrayParameter = ({ parameter, updateParameter }: useArrayParame
         if (!parameter) return;
         if (!isArrayValue(parameter)) return;
 
-        const updatedArray = [...parameter.data, newParameter];
+        const updatedArray = [...parameter.value, newParameter];
 
         updateParameter(parameter.id, {
             ...parameter,
-            data: updatedArray,
+            value: updatedArray,
         });
     };
 
@@ -23,11 +23,11 @@ export const useArrayParameter = ({ parameter, updateParameter }: useArrayParame
         if (!parameter) return;
         if (!isArrayValue(parameter)) return;
 
-        const updatedArray = parameter.data.filter((item) => item.id !== parameterId);
+        const updatedArray = parameter.value.filter((item) => item.id !== parameterId);
 
         updateParameter(parameter.id, {
             ...parameter,
-            data: updatedArray,
+            value: updatedArray,
         });
     };
 
@@ -35,19 +35,19 @@ export const useArrayParameter = ({ parameter, updateParameter }: useArrayParame
         if (!parameter) return;
         if (!isArrayValue(parameter)) return;
 
-        const updatedArray = parameter.data.map((item) => (item.id === parameterId ? { ...item, name: newName } : item));
+        const updatedArray = parameter.value.map((item) => (item.id === parameterId ? { ...item, name: newName } : item));
 
         updateParameter(parameter.id, {
             ...parameter,
-            data: updatedArray,
+            value: updatedArray,
         });
     };
 
-    const handleUpdateArrayParameterValue = (parameterId: string, newData: ParameterData) => {
+    const handleUpdateArrayParameterValue = (parameterId: string, newData: ParameterValue) => {
         if (!parameter) return;
         if (!isArrayValue(parameter)) return;
 
-        const updatedArray = parameter.data.map((item) => {
+        const updatedArray = parameter.value.map((item) => {
             if (item.id !== parameterId) return item;
 
             return {
@@ -58,7 +58,7 @@ export const useArrayParameter = ({ parameter, updateParameter }: useArrayParame
 
         updateParameter(parameter.id, {
             ...parameter,
-            data: updatedArray,
+            value: updatedArray,
         });
     };
 

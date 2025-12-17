@@ -1,6 +1,6 @@
 import type {
     ParameterType,
-    ParameterData,
+    ParameterValue,
     Parameter,
     NumberConfig,
     EnumConfig,
@@ -14,7 +14,7 @@ export const parameterTypes: { type: ParameterType; label: string }[] = [
     { type: 'array', label: 'Массив' },
 ];
 
-export function createInitialParameterValue(type: ParameterType): ParameterData {
+export function createInitialParameterValue(type: ParameterType): ParameterValue {
     switch (type) {
         case 'number': {
             const numberConfig: NumberConfig = {

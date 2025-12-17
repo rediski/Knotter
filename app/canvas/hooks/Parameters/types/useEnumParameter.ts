@@ -12,7 +12,7 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
         if (!parameter) return;
         if (!isEnumValue(parameter)) return;
 
-        const thisParameterData = parameter.data as EnumConfig;
+        const thisParameterData = parameter.value as EnumConfig;
         const ordinalNumber = thisParameterData.options.length + 1;
 
         const newOption = {
@@ -23,7 +23,7 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
 
         updateParameter(parameter.id, {
             ...parameter,
-            data: {
+            value: {
                 ...thisParameterData,
                 options: [...thisParameterData.options, newOption],
             },
@@ -34,13 +34,13 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
         if (!parameter) return;
         if (!isEnumValue(parameter)) return;
 
-        const thisParameterData = parameter.data as EnumConfig;
+        const thisParameterData = parameter.value as EnumConfig;
 
         const updatedOptions = thisParameterData.options.filter((option) => option.id !== optionId);
 
         updateParameter(parameter.id, {
             ...parameter,
-            data: {
+            value: {
                 ...thisParameterData,
                 options: updatedOptions,
             },
@@ -51,7 +51,7 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
         if (!parameter) return;
         if (!isEnumValue(parameter)) return;
 
-        const thisParameterData = parameter.data as EnumConfig;
+        const thisParameterData = parameter.value as EnumConfig;
 
         const updatedOptions = thisParameterData.options.map((option) =>
             option.id === optionId ? { ...option, name: newName } : option,
@@ -59,7 +59,7 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
 
         updateParameter(parameter.id, {
             ...parameter,
-            data: {
+            value: {
                 ...thisParameterData,
                 options: updatedOptions,
             },
@@ -70,7 +70,7 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
         if (!parameter) return;
         if (!isEnumValue(parameter)) return;
 
-        const thisParameterData = parameter.data as EnumConfig;
+        const thisParameterData = parameter.value as EnumConfig;
 
         const updatedOptions = thisParameterData.options.map((option) =>
             option.id === optionId ? { ...option, value: newValue } : option,
@@ -78,7 +78,7 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
 
         updateParameter(parameter.id, {
             ...parameter,
-            data: {
+            value: {
                 ...thisParameterData,
                 options: updatedOptions,
             },

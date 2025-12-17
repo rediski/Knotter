@@ -4,7 +4,7 @@ import { memo } from 'react';
 
 import { EditableName } from '@/components/UI/EditableName';
 
-import { Parameter, ParameterData } from '@/canvas/utils/parameters/parameter.types';
+import { Parameter, ParameterValue } from '@/canvas/utils/parameters/parameter.types';
 
 import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
 import { isArrayValue } from '@/canvas/utils/parameters/parameter.type-guards';
@@ -16,7 +16,7 @@ interface ArrayParamterProps {
     handleAddArrayParameter: (newParameter: Parameter) => void;
     handleRemoveArrayParameter: (parameterId: string) => void;
     handleUpdateArrayParameterName: (parameterId: string, newName: string) => void;
-    handleUpdateArrayParameterValue: (parameterId: string, newData: ParameterData) => void;
+    handleUpdateArrayParameterValue: (parameterId: string, newData: ParameterValue) => void;
     handleUpdateEnumOptionValue: (optionId: string, newValue: string) => void;
     removeParameter: (parameterId: string) => void;
 }

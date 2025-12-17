@@ -1,11 +1,11 @@
 export type ParameterType = 'number' | 'string' | 'boolean' | 'enum' | 'array';
-export type ParameterData = NumberConfig | string | boolean | EnumConfig | Parameter[];
+export type ParameterValue = NumberConfig | string | boolean | EnumConfig | Parameter[];
 
 export interface Parameter {
     id: string;
     name: string;
     type: ParameterType;
-    data: ParameterData;
+    value: ParameterValue;
 }
 
 export type NumberConfig = {

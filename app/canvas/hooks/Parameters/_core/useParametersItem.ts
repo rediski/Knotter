@@ -23,13 +23,13 @@ export const useParametersItem = (parameterId: string) => {
 
     const handleInputChange = (value: string) => {
         updateParameter(parameter.id, {
-            data: value,
+            value: value,
         });
     };
 
     const handleCheckboxChange = (checked: boolean) => {
         updateParameter(parameter.id, {
-            data: checked,
+            value: checked,
         });
     };
 

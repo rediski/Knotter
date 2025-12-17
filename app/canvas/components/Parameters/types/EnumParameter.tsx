@@ -48,7 +48,7 @@ export const EnumParameter = memo(function EnumParameter({
             </div>
 
             <div className="flex flex-col gap-1 border-l border-depth-6 pl-6">
-                {parameter.data.options.map((parameter) => {
+                {parameter.value.options.map((parameter) => {
                     return (
                         <div key={parameter.id} className={`flex gap-2 items-center rounded-md`}>
                             <StringIcon size={16} className="min-w-4" />
@@ -80,7 +80,7 @@ export const EnumParameter = memo(function EnumParameter({
                 <div
                     className={`
                         flex flex-col gap-1 rounded-md p-2 border border-dashed border-depth-6 hover:bg-bg-accent/10 hover:border-text-accent cursor-pointer              
-                        ${parameter.data.options.length > 0 && 'mt-2'}
+                        ${parameter.value.options.length > 0 && 'mt-2'}
                     `}
                     onClick={handleAddEnumOption}
                 >

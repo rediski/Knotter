@@ -49,7 +49,7 @@ export const BooleanParameter = memo(function BooleanParameter({
 
                         <div className="w-full">
                             <Checkbox
-                                checked={parameter.data}
+                                checked={parameter.value}
                                 onChange={(checked) => handleCheckboxChange(checked)}
                                 className="bg-depth-3 border border-depth-4"
                             />

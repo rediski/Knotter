@@ -15,14 +15,14 @@ export const useNumberParameter = ({ parameter, updateParameter }: useNumberPara
         if (!isNumberValue(parameter)) return;
         if (isNaN(numValue)) return;
 
-        const thisParameterData = parameter.data as NumberConfig;
+        const thisParameterData = parameter.value as NumberConfig;
 
         const clampedValue = Math.max(thisParameterData.min, Math.min(numValue, thisParameterData.max));
 
         updateParameter(parameter.id, {
             ...parameter,
 
-            data: {
+            value: {
                 ...thisParameterData,
                 currentValue: clampedValue,
             },
@@ -36,14 +36,14 @@ export const useNumberParameter = ({ parameter, updateParameter }: useNumberPara
         if (!isNumberValue(parameter)) return;
         if (isNaN(numValue)) return;
 
-        const thisParameterData = parameter.data as NumberConfig;
+        const thisParameterData = parameter.value as NumberConfig;
 
         const minValue = Math.min(numValue, thisParameterData.max);
 
         updateParameter(parameter.id, {
             ...parameter,
 
-            data: {
+            value: {
                 ...thisParameterData,
                 min: minValue,
             },
@@ -57,14 +57,14 @@ export const useNumberParameter = ({ parameter, updateParameter }: useNumberPara
         if (!isNumberValue(parameter)) return;
         if (isNaN(numValue)) return;
 
-        const thisParameterData = parameter.data as NumberConfig;
+        const thisParameterData = parameter.value as NumberConfig;
 
         const maxValue = Math.max(numValue, thisParameterData.min);
 
         updateParameter(parameter.id, {
             ...parameter,
 
-            data: {
+            value: {
                 ...thisParameterData,
                 max: maxValue,
             },
@@ -78,7 +78,7 @@ export const useNumberParameter = ({ parameter, updateParameter }: useNumberPara
         if (!isNumberValue(parameter)) return;
         if (isNaN(numValue)) return;
 
-        const thisParameterData = parameter.data as NumberConfig;
+        const thisParameterData = parameter.value as NumberConfig;
 
         const range = thisParameterData.max - thisParameterData.min;
 
@@ -87,7 +87,7 @@ export const useNumberParameter = ({ parameter, updateParameter }: useNumberPara
         updateParameter(parameter.id, {
             ...parameter,
 
-            data: {
+            value: {
                 ...thisParameterData,
                 step: numValue,
             },
