@@ -32,7 +32,7 @@ export interface Node {
     height?: number;
     position: Position;
     kind: 'node';
-    parameters: Parameter[];
+    nodeParameters: Parameter[];
 }
 
 export interface Edge {
@@ -43,5 +43,4 @@ export interface Edge {
     to: string;
     position: Position;
     kind: 'edge';
-    parameters: Parameter[];
 }
