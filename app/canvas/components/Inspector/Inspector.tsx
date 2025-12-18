@@ -24,15 +24,17 @@ import { OptionPicker } from '@/components/UI/OptionPicker';
 export const Inspector = memo(function Inspector() {
     const {
         staticDropdowns,
+
         isEdge,
-        node,
+        selectedNode,
         shapeType,
         positionX,
         positionY,
-        handleChangeName,
-        handleChangeDescription,
-        handleChangeNodeShapeType,
-        handleMove,
+
+        сhangeItemName,
+        changeItemDescription,
+        changeNodeShapeType,
+        changeNodePosition,
     } = useInspector();
 
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
@@ -41,9 +43,11 @@ export const Inspector = memo(function Inspector() {
 
     const selectedItem = useCanvasStore((state) => state.selectedItem);
 
-    const nodeParameters = node?.nodeParameters;
+    const nodeParameters = selectedNode?.nodeParameters;
 
-    if (!nodeParameters) return;
+    if (!selectedItem || !nodeParameters) {
+        return <EmptyState message="Выберите элемент для инспектора" />;
+    }
 
     const filteredParameters = parameters.filter(
         (template) => !nodeParameters.some((nodeParam) => nodeParam.id === template.id),
@@ -57,22 +61,18 @@ export const Inspector = memo(function Inspector() {
 
     const Icon = getDynamicIcon(selectedItem?.kind || 'bug');
 
-    if (!selectedItem) {
-        return <EmptyState message="Выберите элемент для инспектора" />;
-    }
-
     return (
         <div className="flex flex-col h-screen overflow-y-auto pb-1">
             <div className="flex flex-col gap-1 m-1">
                 <Input
                     value={selectedItem.name}
-                    onChange={handleChangeName}
+                    onChange={сhangeItemName}
                     placeholder="Название"
                     icon={Icon}
                     className="bg-depth-2"
                 />
 
-                <Textarea value={selectedItem.description} onChange={handleChangeDescription} placeholder="Описание" />
+                <Textarea value={selectedItem.description} onChange={changeItemDescription} placeholder="Описание" />
             </div>
 
             <div className="flex flex-col gap-1">
@@ -86,11 +86,14 @@ export const Inspector = memo(function Inspector() {
                             onToggle={() => toggleDropdown(dd.id)}
                         >
                             {dd.id === 1 && !isEdge && (
-                                <ShapeButtons shapeType={shapeType} onTypeChange={handleChangeNodeShapeType} />
+                                <ShapeButtons
+                                    shapeType={shapeType}
+                                    onTypeChange={(newShapeType) => changeNodeShapeType([selectedNode.id], newShapeType)}
+                                />
                             )}
 
                             {dd.id === 2 && !isEdge && (
-                                <PositionInputs positionX={positionX} positionY={positionY} onMove={handleMove} />
+                                <PositionInputs positionX={positionX} positionY={positionY} onMove={changeNodePosition} />
                             )}
                         </Dropdown>
                     ))}
@@ -98,10 +101,10 @@ export const Inspector = memo(function Inspector() {
 
                 <hr className="border-b-0 border-depth-3" />
 
-                {node && selectedItem.kind === 'node' && (
+                {selectedNode && selectedItem.kind === 'node' && (
                     <div className="mx-1 flex flex-col gap-1">
                         <div className="flex flex-col gap-1">
-                            <NodeParameters node={node} />
+                            <NodeParameters node={selectedNode} />
 
                             {filteredParameters.length > 0 && (
                                 <div className="max-w-sm w-full m-auto">

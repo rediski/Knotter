@@ -2,14 +2,11 @@
 
 import { useCallback, useMemo } from 'react';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { CanvasItem } from '@/canvas/canvas.types';
 
 import { useCanvasHandlers } from '@/canvas/hooks/useCanvasHandlers';
 
 import { moveNodes } from '@/canvas/utils/nodes/moveNodes';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
-
-import { NodeShapeType } from '@/canvas/utils/nodes/getShape';
 
 import { Position, Node } from '@/canvas/canvas.types';
 
@@ -35,23 +32,16 @@ export function useInspector() {
     const staticDropdowns = useMemo(() => DROPDOWNS, []);
 
     const isEdge = selectedItem?.kind === 'edge';
-    const node: Node | null = selectedItem?.kind === 'node' ? selectedItem : null;
 
-    const shapeType = node?.shapeType ?? null;
-    const positionX = node?.position.x ?? 0;
-    const positionY = node?.position.y ?? 0;
+    const selectedNode: Node | null = selectedItem?.kind === 'node' ? selectedItem : null;
 
-    const handleChangeNodeShapeType = useCallback(
-        (type: NodeShapeType) => {
-            if (selectedItemIds.length === 0) return;
-            changeNodeShapeType(selectedItemIds, type);
-        },
-        [selectedItemIds, changeNodeShapeType],
-    );
+    const shapeType = selectedNode?.shapeType ?? null;
+    const positionX = selectedNode?.position?.x ?? 0;
+    const positionY = selectedNode?.position?.y ?? 0;
 
-    const handleMove = useCallback(
+    const changeNodePosition = useCallback(
         (axis: 'x' | 'y', value: number) => {
-            if (!node) return;
+            if (!selectedNode) return;
 
             const initialPositions = new Map<string, Position>();
 
@@ -61,8 +51,8 @@ export function useInspector() {
             });
 
             const delta: Position = {
-                x: axis === 'x' ? value - node.position.x : 0,
-                y: axis === 'y' ? value - node.position.y : 0,
+                x: axis === 'x' ? value - selectedNode.position.x : 0,
+                y: axis === 'y' ? value - selectedNode.position.y : 0,
             };
 
             const updatedNodes = moveNodes(getNodes(items), selectedItemIds, initialPositions, delta, nodeMoveStep);
@@ -70,47 +60,45 @@ export function useInspector() {
 
             setItems(updatedItems);
         },
-        [node, selectedItemIds, nodeMoveStep, items, setItems],
+        [selectedNode, selectedItemIds, nodeMoveStep, items, setItems],
     );
 
-    const handleItemNameChange = (items: CanvasItem[], item: CanvasItem, newName: string): CanvasItem[] => {
-        return items.map((i) => (i.id === item.id && i.name !== newName ? { ...i, name: newName } : i));
-    };
-
-    const handleChangeName = useCallback(
+    const сhangeItemName = useCallback(
         (newName: string) => {
             if (!selectedItem) return;
 
-            const updatedItems = handleItemNameChange(items, selectedItem, newName);
+            const updatedItems = items.map((item) => (item.id === selectedItem.id ? { ...item, name: newName } : item));
+
             setItems(updatedItems);
         },
         [selectedItem, items, setItems],
     );
 
-    const handleChangeDescription = useCallback(
+    const changeItemDescription = useCallback(
         (newDesc: string) => {
             if (!selectedItem) return;
 
             const updatedItems = items.map((item) =>
                 item.id === selectedItem.id ? { ...item, description: newDesc } : item,
             );
+
             setItems(updatedItems);
         },
         [selectedItem, items, setItems],
     );
 
     return {
-        handleChangeName,
-        handleChangeDescription,
         staticDropdowns,
 
         isEdge,
-        node,
+        selectedNode,
         shapeType,
         positionX,
         positionY,
 
-        handleChangeNodeShapeType,
-        handleMove,
+        сhangeItemName,
+        changeItemDescription,
+        changeNodeShapeType,
+        changeNodePosition,
     };
 }
