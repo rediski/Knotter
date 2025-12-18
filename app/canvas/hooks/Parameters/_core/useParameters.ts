@@ -60,7 +60,7 @@ export const useParameters = () => {
 
         const updatedNode = {
             ...node,
-            parameters: [...node.nodeParameters, nodeParameter],
+            nodeParameters: [...node.nodeParameters, nodeParameter],
         };
 
         const updatedItems = [...items];
