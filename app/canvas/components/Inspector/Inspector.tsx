@@ -17,9 +17,6 @@ import { ShapeButtons } from '@/canvas/components/Inspector/ShapeButtons';
 import { PositionInputs } from '@/canvas/components/Inspector/PositionInputs';
 
 import { useDropdownStore } from '@/canvas/store/dropdownStore';
-import { useParameters } from '@/canvas/hooks/Parameters/_core/useParameters';
-import { NodeParameters } from '../CanvasNodes/NodeParameters';
-import { OptionPicker } from '@/components/UI/OptionPicker';
 
 export const Inspector = memo(function Inspector() {
     const {
@@ -39,8 +36,6 @@ export const Inspector = memo(function Inspector() {
 
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
 
-    const { parameters, addParameterToNode } = useParameters();
-
     const selectedItem = useCanvasStore((state) => state.selectedItem);
 
     const nodeParameters = selectedNode?.nodeParameters;
@@ -48,16 +43,6 @@ export const Inspector = memo(function Inspector() {
     if (!selectedItem || !nodeParameters) {
         return <EmptyState message="Выберите элемент для инспектора" />;
     }
-
-    const filteredParameters = parameters.filter(
-        (template) => !nodeParameters.some((nodeParam) => nodeParam.id === template.id),
-    );
-
-    const options = filteredParameters.map((param) => ({
-        value: param.id,
-        label: param.name,
-        icon: getDynamicIcon(param.type),
-    }));
 
     const Icon = getDynamicIcon(selectedItem?.kind || 'bug');
 
@@ -98,27 +83,6 @@ export const Inspector = memo(function Inspector() {
                         </Dropdown>
                     ))}
                 </div>
-
-                <hr className="border-b-0 border-depth-3" />
-
-                {selectedNode && selectedItem.kind === 'node' && (
-                    <div className="mx-1 flex flex-col gap-1">
-                        <div className="flex flex-col gap-1">
-                            <NodeParameters node={selectedNode} />
-
-                            {filteredParameters.length > 0 && (
-                                <div className="max-w-sm w-full m-auto">
-                                    <OptionPicker
-                                        options={options}
-                                        onSelect={(parameterId) => addParameterToNode(selectedItem.id, parameterId)}
-                                        placeholder="Выберите параметр"
-                                        className="flex-1"
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     );
