@@ -21,24 +21,12 @@ export const OptionPicker = memo(function OptionPicker({
     options,
     onSelect,
     placeholder = 'Выберите...',
-    className = '',
 }: OptionPickerProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [query, setQuery] = useState('');
+
     const pickerRef = useRef<HTMLDivElement>(null);
     const pickerContentRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
-                setIsOpen(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
 
     useEffect(() => {
         const dropdown = pickerContentRef.current;
@@ -56,7 +44,7 @@ export const OptionPicker = memo(function OptionPicker({
         };
     }, [isOpen]);
 
-    const filtered = options.filter((opt) => opt.label.toLowerCase().includes(query.toLowerCase()));
+    const filteredOptions = options.filter((opt) => opt.label.toLowerCase().includes(query.toLowerCase()));
 
     const handleSelect = (value: string) => {
         onSelect(value);
@@ -65,51 +53,49 @@ export const OptionPicker = memo(function OptionPicker({
     };
 
     return (
-        <div ref={pickerRef} className={`relative w-full ${className}`}>
+        <div
+            ref={pickerRef}
+            className="relative flex flex-col justify-start items-center gap-1 bg-depth-1 w-full text-sm rounded-md cursor-pointer "
+        >
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between px-3 py-2 h-8 bg-depth-2 hover:bg-depth-3 border border-depth-3 rounded-md text-sm cursor-pointer"
+                className="flex items-center gap-2 h-8 w-full px-3 py-2 cursor-pointer"
             >
-                <span>{placeholder}</span>
-
                 <ChevronDown size={16} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+
+                <span>{placeholder}</span>
             </button>
 
             {isOpen && (
-                <div
-                    ref={pickerContentRef}
-                    className="flex flex-col w-full max-h-64 bg-depth-2 border border-depth-3 rounded-md shadow-lg overflow-auto mt-1"
-                >
+                <div ref={pickerContentRef} className="flex flex-col gap-1 w-full max-h-64 overflow-auto px-3 pb-2">
                     <Input
                         value={query}
                         onChange={(value) => setQuery(value)}
                         icon={Search}
                         iconSize={14}
                         placeholder="Поиск..."
-                        className="bg-depth-3 m-1"
+                        className="bg-depth-2 border border-depth-3"
                     />
 
-                    <hr className="border-b-0 border-depth-3" />
-
-                    <div className="flex flex-col gap-1 m-1">
-                        {filtered.map((opt) => {
-                            const Icon = opt.icon;
+                    <div className="flex flex-col gap-1">
+                        {filteredOptions.map((option) => {
+                            const Icon = option.icon;
 
                             return (
                                 <button
-                                    key={opt.value}
-                                    onClick={() => handleSelect(opt.value)}
-                                    className="flex items-center gap-2 px-3 py-2 bg-depth-3 hover:bg-depth-4 text-left text-sm rounded-md"
+                                    key={option.value}
+                                    onClick={() => handleSelect(option.value)}
+                                    className="flex items-center gap-2 px-3 h-8 bg-depth-2 hover:bg-depth-3 border border-depth-3 text-left text-sm rounded-md cursor-pointer"
                                 >
                                     {Icon && <Icon size={16} />}
 
-                                    {opt.label}
+                                    {option.label}
                                 </button>
                             );
                         })}
 
-                        {filtered.length === 0 && (
+                        {filteredOptions.length === 0 && (
                             <div className="text-gray text-center text-sm py-2">Ничего не найдено</div>
                         )}
                     </div>
