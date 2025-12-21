@@ -37,6 +37,7 @@ export function createInitialParameterValue(type: ParameterType): ParameterValue
 
         case 'enum': {
             const enumConfig: EnumConfig = {
+                currentValue: null,
                 options: [],
             };
 
