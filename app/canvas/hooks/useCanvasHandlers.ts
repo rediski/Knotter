@@ -46,7 +46,6 @@ export function useCanvasHandlers() {
         delete: () => {
             const newItems = handleDeleteItems(items, selectedItemIds);
             setItems(newItems);
-            setSelectedItemIds([]);
         },
 
         selectAll: () => setSelectedItemIds(items.map((i) => i.id)),
@@ -105,8 +104,10 @@ export function useCanvasHandlers() {
 
         startEdge: () => {
             if (!setTempEdge || selectedItemIds.length === 0) return;
+
             const nodes = getNodes(items);
             const fromNode = nodes.find((n) => n.id === selectedItemIds[0]);
+
             if (!fromNode) return;
 
             setTempEdge({ from: fromNode.id, toPos: { ...fromNode.position } });
@@ -135,9 +136,11 @@ export function useCanvasHandlers() {
 
         changeNodeShapeType: (nodeIds: string[], newShape: NodeShapeType) => {
             pushHistory();
+
             const updatedItems = items.map((i) =>
                 i.kind === 'node' && nodeIds.includes(i.id) ? { ...i, shapeType: newShape } : i,
             );
+
             setItems(updatedItems);
         },
     };
