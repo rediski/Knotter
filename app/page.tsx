@@ -24,8 +24,9 @@ export default function Home() {
                     <h1 className="text-6xl font-extrabold uppercase">Knotter</h1>
                 </div>
 
-                <div className="max-w-2xl text-center text-lg">
-                    Open-source нодовый редактор для проектирования сложных систем в наглядном виде. Построен на{' '}
+                <div className="max-w-2xl text-center text-lg gap-1">
+                    Knotter - это нодовый редактор для работы с данными, распространяемый под лицензией GPL-3.0. Построен
+                    на&nbsp;
                     <strong>React</strong>, <strong>TypeScript</strong> и <strong>Tailwind CSS</strong>.
                 </div>
 
