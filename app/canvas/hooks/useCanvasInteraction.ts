@@ -53,6 +53,7 @@ export function useCanvasInteraction({
         panHandlers.current = getPanEventHandler({ isPanningRef, lastMouseRef });
 
         selectHandlers.current = getSelectionEventHandler(
+            canvasRef,
             selectionStart,
             setSelectionStart,
             setSelectionEnd,
