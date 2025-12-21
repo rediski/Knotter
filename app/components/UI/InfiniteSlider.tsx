@@ -2,13 +2,14 @@
 
 import { memo, useRef, useCallback, useMemo, useState, useEffect } from 'react';
 
-type InfiniteSliderInputProps = {
+type InfiniteSliderProps = {
     value: number;
     step?: number;
     min?: number;
     max?: number;
     name?: string;
     showFill?: boolean;
+    className?: string;
     onChange: (value: number) => void;
 };
 
@@ -16,15 +17,16 @@ const DEFAULT_MIN = 0;
 const DEFAULT_MAX = 100;
 const PIXELS_PER_VALUE_CHANGE = 10;
 
-export const InfiniteSliderInput = memo(function InfiniteSliderInput({
+export const InfiniteSlider = memo(function InfiniteSliderInput({
     value,
     step = 1,
     min = DEFAULT_MIN,
     max = DEFAULT_MAX,
     name,
     showFill = false,
+    className = '',
     onChange,
-}: InfiniteSliderInputProps) {
+}: InfiniteSliderProps) {
     const draggingRef = useRef(false);
     const startXRef = useRef(0);
     const startValueRef = useRef(0);
@@ -114,17 +116,18 @@ export const InfiniteSliderInput = memo(function InfiniteSliderInput({
                 onMouseDown={handleMouseDown}
                 data-interactive-element="true"
                 className={`
-                    relative w-full bg-depth-3 border border-depth-4 h-8 px-2 flex items-center justify-between cursor-ew-resize text-sm rounded-md select-none hover:bg-depth-4 active:border-depth-6 active:bg-depth-5
-                    ${showFill ? 'overflow-hidden' : ''}
+                    relative w-full  h-8 px-2 flex items-center justify-between cursor-ew-resize text-sm rounded-md select-none
+                    ${showFill && 'overflow-hidden'}
+                    ${className}
                 `}
             >
                 {showFill && (
                     <div className="absolute left-0 top-0 h-full bg-bg-accent" style={{ width: `${fillPercentage}%` }} />
                 )}
 
-                <span className="relative z-10 text-foreground truncate mr-2">{name}</span>
+                <span className="relative text-foreground truncate mr-2">{name}</span>
 
-                <span className="relative z-10 text-foreground whitespace-nowrap tabular-nums min-w-[8ch] text-right">
+                <span className="relative text-foreground whitespace-nowrap tabular-nums min-w-[8ch] text-right">
                     {formatDisplayValue}
                 </span>
             </div>

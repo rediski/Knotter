@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import { InfiniteSliderInput } from '@/components/UI/InfiniteSliderInput';
+import { InfiniteSlider } from '@/components/UI/InfiniteSlider';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
@@ -19,7 +19,7 @@ export const PositionInputs = memo(function PositionInputs({ positionX, position
 
     return (
         <>
-            <InfiniteSliderInput
+            <InfiniteSlider
                 name="Положение X"
                 min={-Infinity}
                 max={Infinity}
@@ -28,7 +28,7 @@ export const PositionInputs = memo(function PositionInputs({ positionX, position
                 onChange={(value) => onMove('x', value)}
             />
 
-            <InfiniteSliderInput
+            <InfiniteSlider
                 name="Положение Y"
                 min={-Infinity}
                 max={Infinity}
