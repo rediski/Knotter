@@ -22,7 +22,7 @@ export function CanvasNodes({ nodes, selectedNodeIds, hoveredNodeId }: CanvasNod
     const invertY = useCanvasStore((state) => state.invertY);
 
     return (
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute">
             {nodes.map((node) => {
                 const isSelected = selectedNodeIds.includes(node.id);
 
