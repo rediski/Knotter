@@ -1,13 +1,12 @@
+import { RefObject } from 'react';
 import { Position } from '@/canvas/canvas.types';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { findNodeUnderCursor } from '@/canvas/utils/nodes/findNodeUnderCursor';
-import { findEdgeUnderCursor } from '@/canvas/utils/edges/findEdgeUnderCursor';
-import { getNodes } from '@/canvas/utils/nodes/getNodes';
-import { getEdges } from '@/canvas/utils/edges/getEdges';
+import { findCanvasUnderCursor } from '@/canvas/utils/canvas/findCanvasUnderCursor';
 
 export function getSelectionEventHandler(
+    canvasRef: RefObject<HTMLCanvasElement | null>,
     selectionStart: Position | null,
     setSelectionStart: (value: Position | null) => void,
     setSelectionEnd: (value: Position | null) => void,
@@ -16,20 +15,12 @@ export function getSelectionEventHandler(
     const handleMouseDown = (e: MouseEvent) => {
         if (e.button !== 0) return;
 
+        if (!findCanvasUnderCursor(e, canvasRef.current)) return;
+
         const mousePos = useCanvasStore.getState().mousePosition;
 
-        const { items } = useCanvasStore.getState();
-
-        const nodes = getNodes(items);
-        const edges = getEdges(items);
-
-        const clickedNode = findNodeUnderCursor(nodes, mousePos);
-        const clickedEdge = !clickedNode ? findEdgeUnderCursor(edges, nodes, mousePos) : null;
-
-        if (!clickedNode && !clickedEdge) {
-            setSelectionStart(mousePos);
-            setSelectionEnd(mousePos);
-        }
+        setSelectionStart(mousePos);
+        setSelectionEnd(mousePos);
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -44,6 +35,7 @@ export function getSelectionEventHandler(
 
         const mousePos = useCanvasStore.getState().mousePosition;
         selectItemsInArea?.(selectionStart, mousePos);
+
         setSelectionStart(null);
         setSelectionEnd(null);
     };
