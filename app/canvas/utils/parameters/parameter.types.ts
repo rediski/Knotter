@@ -16,6 +16,7 @@ export type NumberConfig = {
 };
 
 export type EnumConfig = {
+    currentValue: string;
     options: EnumOption[];
 };
 
