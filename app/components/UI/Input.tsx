@@ -11,6 +11,7 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChan
     icon?: LucideIcon;
     iconSize?: number;
     className?: string;
+    type?: 'text' | 'number';
 }
 
 export const Input = memo(function Input({
@@ -19,19 +20,29 @@ export const Input = memo(function Input({
     icon: Icon,
     iconSize = 16,
     className = 'bg-depth-2',
+    type = 'text',
     ...props
 }: InputProps) {
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             let newValue = e.target.value;
 
-            if (MAX_INPUT_LENGTH && newValue.length > MAX_INPUT_LENGTH) {
-                newValue = newValue.slice(0, MAX_INPUT_LENGTH);
-            }
+            if (type === 'number') {
+                if (newValue === '' || newValue === '-' || /^-?\d*\.?\d*$/.test(newValue)) {
+                    if (MAX_INPUT_LENGTH) {
+                        newValue = newValue.slice(0, MAX_INPUT_LENGTH);
+                    }
 
-            onChange(newValue);
+                    onChange(newValue);
+                }
+            } else {
+                if (MAX_INPUT_LENGTH && newValue.length > MAX_INPUT_LENGTH) {
+                    newValue = newValue.slice(0, MAX_INPUT_LENGTH);
+                }
+                onChange(newValue);
+            }
         },
-        [onChange],
+        [onChange, type],
     );
 
     const hasIcon = Boolean(Icon);
@@ -39,7 +50,7 @@ export const Input = memo(function Input({
     return (
         <div className="relative flex w-full">
             <input
-                type="text"
+                type={type}
                 value={value}
                 onChange={handleChange}
                 className={`
