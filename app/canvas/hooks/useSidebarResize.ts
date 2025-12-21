@@ -25,6 +25,7 @@ export default function useSidebarResize({
 }: UseSidebarResizeProps): UseSidebarResizeReturn {
     const sidebarWidth = useCanvasStore((state) => state.sidebarWidth);
     const setSidebarWidth = useCanvasStore((state) => state.setSidebarWidth);
+
     const activeTab = useCanvasStore((state) => state.activeTab);
     const setActiveTab = useCanvasStore((state) => state.setActiveTab);
 

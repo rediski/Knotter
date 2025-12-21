@@ -1,6 +1,6 @@
 import { ReactNode, memo, useEffect } from 'react';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import useSidebarResize from '@/hooks/useSidebarResize';
+import useSidebarResize from '@/canvas/hooks/useSidebarResize';
 import { type Tab } from '@/canvas/components/CanvasSidebar/CanvasSidebar';
 
 type SidebarProps = {
