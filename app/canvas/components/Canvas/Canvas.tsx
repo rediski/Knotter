@@ -9,7 +9,7 @@ import { CanvasNodes } from '@/canvas/components/CanvasNodes/CanvasNodes';
 import { useCanvasSelection } from '@/canvas/hooks/useCanvasSelection';
 import { useCanvasInteraction } from '@/canvas/hooks/useCanvasInteraction';
 import { useCanvasRenderer } from '@/canvas/hooks/useCanvasRenderer';
-import { useContextMenu } from '@/hooks/useContextMenu';
+import { useContextMenu } from '@/canvas/hooks/useContextMenu';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
