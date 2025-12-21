@@ -1,7 +1,3 @@
-import { useMemo } from 'react';
-
-import { NodeShapeType } from '@/canvas/utils/nodes/getShape';
-
 import { useCanvasHandlers } from '@/canvas/hooks/useCanvasHandlers';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
@@ -22,83 +18,61 @@ export type MenuItem = {
     icon?: LucideIcon;
 };
 
-export function getShapeMenuItems(
-    selectedIds: string[],
-    changeShape: (ids: string[], type: NodeShapeType) => void,
-): MenuItem[] {
-    return getAllShapes().map((type) => {
-        const { label, icon } = getShape(type);
-
-        return {
-            label,
-            icon,
-            onClick: () => changeShape(selectedIds, type),
-        };
-    });
-}
-
 export function useContextMenuItems() {
     const items = useCanvasStore((state) => state.items);
     const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
     const offset = useCanvasStore((state) => state.offset);
 
-    const nodes = useMemo(() => getNodes(items), [items]);
-    const edges = useMemo(() => getEdges(items), [items]);
-
+    const nodes = getNodes(items);
+    const edges = getEdges(items);
     const handlers = useCanvasHandlers();
 
-    const createItem = (
-        label: string,
-        onClick: () => void,
-        options?: { disabled?: boolean; shortcut?: string; icon?: LucideIcon },
-    ): MenuItem => ({
-        label,
-        onClick,
-        disabled: options?.disabled,
-        shortcut: options?.shortcut,
-        icon: options?.icon,
-    });
+    const onlyNodesSelected = selectedItemIds.every((id) => nodes.some((node) => node.id === id));
 
-    const createDivider = (): MenuItem => ({ type: 'divider' });
+    const menuItems: MenuItem[] = [
+        {
+            label: 'Выбрать',
+            submenu: [
+                { label: 'Выбрать всё', onClick: handlers.selectAll, disabled: items.length === 0, shortcut: 'Ctrl + A' },
+                { label: 'Выбрать все узлы', onClick: handlers.selectAllNodes, disabled: nodes.length === 0 },
+                {
+                    label: 'Выбрать все связи',
+                    onClick: handlers.selectAllEdges,
+                    disabled: edges.length === 0,
+                    shortcut: 'Ctrl + E',
+                },
+            ],
+        },
+        {
+            label: 'Создать',
+            submenu: [
+                { label: 'Создать узел', onClick: handlers.addNode, shortcut: 'Shift + A' },
+                {
+                    label: 'Создать связь',
+                    onClick: handlers.startEdge,
+                    disabled: selectedItemIds.length !== 1 || !nodes.some((n) => n.id === selectedItemIds[0]),
+                    shortcut: 'Shift + E',
+                },
+            ],
+        },
+        {
+            label: 'Изменить форму',
+            submenu: getAllShapes().map((type) => {
+                const { label, icon } = getShape(type);
 
-    const menuItems: MenuItem[] = useMemo(() => {
-        const onlyNodesSelected =
-            selectedItemIds.length > 0 && selectedItemIds.every((id) => nodes.some((n) => n.id === id));
-
-        const shapeGroup = getShapeMenuItems(selectedItemIds, handlers.changeNodeShapeType);
-
-        const selectGroup: MenuItem[] = [
-            createItem('Выбрать всё', handlers.selectAll, { disabled: items.length === 0, shortcut: 'Ctrl + A' }),
-            createItem('Выбрать все узлы', handlers.selectAllNodes, { disabled: nodes.length === 0 }),
-            createItem('Выбрать все связи', handlers.selectAllEdges, { disabled: edges.length === 0, shortcut: 'Ctrl + E' }),
-        ];
-
-        const createGroup: MenuItem[] = [
-            createItem('Создать узел', handlers.addNode, { shortcut: 'Shift + A' }),
-            createItem('Создать связь', handlers.startEdge, {
-                disabled: selectedItemIds.length !== 1 || !nodes.some((n) => n.id === selectedItemIds[0]),
-                shortcut: 'Shift + E',
+                return {
+                    label,
+                    icon,
+                    onClick: () => {
+                        handlers.changeNodeShapeType(selectedItemIds, type);
+                    },
+                };
             }),
-        ];
-
-        const deleteGroup: MenuItem[] = [
-            createItem('Удалить выбранное', handlers.delete, { disabled: selectedItemIds.length === 0, shortcut: 'Del' }),
-        ];
-
-        return [
-            { label: 'Выбрать', submenu: selectGroup },
-            { label: 'Создать', submenu: createGroup },
-            {
-                label: 'Изменить форму',
-                submenu: shapeGroup,
-                disabled: !onlyNodesSelected,
-            },
-
-            createDivider(),
-
-            ...deleteGroup,
-        ];
-    }, [items, nodes, edges, selectedItemIds, handlers]);
+            disabled: !onlyNodesSelected,
+        },
+        { type: 'divider' },
+        { label: 'Удалить выбранное', onClick: handlers.delete, disabled: selectedItemIds.length === 0, shortcut: 'Del' },
+    ];
 
     return { menuItems, offset };
 }
