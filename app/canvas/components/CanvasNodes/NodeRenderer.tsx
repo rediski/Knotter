@@ -53,7 +53,7 @@ function EditMode({ node, isSelected }: NodeProps) {
         <div
             ref={nodeRef}
             className={`
-                relative flex flex-col gap-1 max-w-96 min-w-16 w-max border-1 rounded-lg bg-background text-sm hover:cursor-move active:cursor-grabbing p-2
+                relative flex flex-col gap-1 max-w-96 min-w-16 w-max border-1 rounded-lg bg-background text-sm hover:cursor-move active:cursor-grabbing p-2 shadow-lg
                 ${isSelected ? 'border-bg-accent' : 'border-depth-4'} 
             `}
         >
