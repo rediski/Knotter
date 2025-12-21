@@ -26,6 +26,7 @@ export const PositionInputs = memo(function PositionInputs({ positionX, position
                 value={positionX}
                 step={isMagnet ? NODE_MOVE_MAX_STEP : NODE_MOVE_MIN_STEP}
                 onChange={(value) => onMove('x', value)}
+                className="bg-depth-3 hover:bg-depth-4 active:bg-depth-5"
             />
 
             <InfiniteSlider
@@ -35,6 +36,7 @@ export const PositionInputs = memo(function PositionInputs({ positionX, position
                 value={positionY}
                 step={isMagnet ? NODE_MOVE_MAX_STEP : NODE_MOVE_MIN_STEP}
                 onChange={(value) => onMove('y', value)}
+                className="bg-depth-3 hover:bg-depth-4 active:bg-depth-5"
             />
         </>
     );
