@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, memo } from 'react';
+import { useState, memo } from 'react';
 
 interface EditableNameProps {
     name: string;
@@ -21,36 +21,21 @@ export const EditableName = memo(function EditableName({
     const [editing, setEditing] = useState(false);
     const [value, setValue] = useState(name);
 
-    useEffect(() => {
-        setValue(name);
-    }, [name]);
-
     const finishEditing = () => {
         setEditing(false);
         onChange(value.trim() || name);
     };
 
     const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') finishEditing();
+        if (e.key === 'Enter') {
+            finishEditing();
+        }
 
         if (e.key === 'Escape') {
             setEditing(false);
             setValue(name);
         }
     };
-
-    useEffect(() => {
-        const handleGlobalKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'F2' && isSelected) {
-                e.preventDefault();
-                setEditing(true);
-            }
-        };
-
-        document.addEventListener('keydown', handleGlobalKeyDown);
-
-        return () => document.removeEventListener('keydown', handleGlobalKeyDown);
-    }, [isSelected]);
 
     if (editing) {
         return (
@@ -61,7 +46,7 @@ export const EditableName = memo(function EditableName({
                 onChange={(e) => setValue(e.target.value)}
                 onBlur={finishEditing}
                 onKeyDown={handleInputKeyDown}
-                className="bg-depth-2 border border-bg-accent rounded px-1 text-foreground text-sm outline-none w-full tabular-nums"
+                className="bg-depth-1 border border-bg-accent rounded px-1 text-foreground text-sm outline-none w-full tabular-nums"
                 onDoubleClick={(e) => e.stopPropagation()}
                 maxLength={maxLength}
             />
@@ -72,7 +57,7 @@ export const EditableName = memo(function EditableName({
         return (
             <span
                 className={`
-                    block px-[5px] py-[1px] text-sm cursor-pointer text-left overflow-hidden text-ellipsis whitespace-nowrap tabular-nums 
+                    block text-sm cursor-pointer text-left overflow-hidden text-ellipsis whitespace-nowrap tabular-nums 
                     ${isSelected ? 'text-text-accent' : 'text-foreground'} 
                     ${className}
                 `}
