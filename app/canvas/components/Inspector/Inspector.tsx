@@ -20,9 +20,6 @@ import { useDropdownStore } from '@/canvas/store/dropdownStore';
 
 export const Inspector = memo(function Inspector() {
     const {
-        staticDropdowns,
-
-        isEdge,
         selectedNode,
         shapeType,
         positionX,
@@ -62,26 +59,20 @@ export const Inspector = memo(function Inspector() {
 
             <div className="flex flex-col gap-1">
                 <div className="mx-1 flex flex-col gap-1">
-                    {staticDropdowns.map((dd) => (
-                        <Dropdown
-                            key={dd.id}
-                            title={dd.title}
-                            disabled={isEdge}
-                            isOpen={isDropdownOpen(dd.id)}
-                            onToggle={() => toggleDropdown(dd.id)}
-                        >
-                            {dd.id === 1 && !isEdge && (
+                    {selectedItem.kind === 'node' && (
+                        <>
+                            <Dropdown title={'Форма'} isOpen={isDropdownOpen(1)} onToggle={() => toggleDropdown(1)}>
                                 <ShapeButtons
                                     shapeType={shapeType}
                                     onTypeChange={(newShapeType) => changeNodeShapeType([selectedNode.id], newShapeType)}
                                 />
-                            )}
+                            </Dropdown>
 
-                            {dd.id === 2 && !isEdge && (
+                            <Dropdown title={'Трансформация'} isOpen={isDropdownOpen(2)} onToggle={() => toggleDropdown(2)}>
                                 <PositionInputs positionX={positionX} positionY={positionY} onMove={changeNodePosition} />
-                            )}
-                        </Dropdown>
-                    ))}
+                            </Dropdown>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

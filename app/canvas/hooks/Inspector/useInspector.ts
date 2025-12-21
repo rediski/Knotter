@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { useCanvasHandlers } from '@/canvas/hooks/useCanvasHandlers';
@@ -10,16 +10,6 @@ import { getNodes } from '@/canvas/utils/nodes/getNodes';
 
 import { Position, Node } from '@/canvas/canvas.types';
 
-export interface IDropdown {
-    id: number | string;
-    title: string;
-}
-
-const DROPDOWNS: IDropdown[] = [
-    { id: 1, title: 'Форма' },
-    { id: 2, title: 'Трансформация' },
-];
-
 export function useInspector() {
     const items = useCanvasStore((state) => state.items);
     const setItems = useCanvasStore((state) => state.setItems);
@@ -28,10 +18,6 @@ export function useInspector() {
     const nodeMoveStep = useCanvasStore((state) => state.nodeMoveStep);
 
     const { changeNodeShapeType } = useCanvasHandlers();
-
-    const staticDropdowns = useMemo(() => DROPDOWNS, []);
-
-    const isEdge = selectedItem?.kind === 'edge';
 
     const selectedNode: Node | null = selectedItem?.kind === 'node' ? selectedItem : null;
 
@@ -88,9 +74,6 @@ export function useInspector() {
     );
 
     return {
-        staticDropdowns,
-
-        isEdge,
         selectedNode,
         shapeType,
         positionX,
