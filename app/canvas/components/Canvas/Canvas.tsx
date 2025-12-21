@@ -41,12 +41,12 @@ export default function Canvas() {
     const nodes = getNodes(items);
 
     return (
-        <div ref={containerRef} className="flex h-screen relative select-none" onClick={closeMenu}>
+        <div ref={containerRef} className="flex h-screen relative select-none" onContextMenu={handleContextMenu}>
             <CanvasControls />
 
             <CanvasContextMenu isOpen={isOpen} position={position} closeMenu={closeMenu} />
 
-            <canvas ref={canvasRef} className="absolute w-full h-full" onContextMenu={handleContextMenu} />
+            <canvas ref={canvasRef} className="absolute w-full h-full" />
 
             <CanvasNodes nodes={nodes} selectedNodeIds={selectedItemIds} hoveredNodeId={hoveredNodeId} />
         </div>
