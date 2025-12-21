@@ -1,11 +1,9 @@
 'use client';
-
 import React, { forwardRef, memo } from 'react';
 
 interface ContextMenuProps {
     isOpen: boolean;
     position: { x: number; y: number };
-    onClose: () => void;
     children: React.ReactNode;
 }
 

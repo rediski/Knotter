@@ -48,7 +48,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
     };
 
     return (
-        <ContextMenu isOpen={isOpen} position={position} onClose={closeMenu} ref={menuRef}>
+        <ContextMenu isOpen={isOpen} position={position} ref={menuRef}>
             {menuItems.map((item, idx) => renderMenuItem(item, closeMenu, idx))}
         </ContextMenu>
     );
