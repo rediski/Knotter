@@ -8,11 +8,12 @@ export type Position = { x: number; y: number };
 export interface CanvasState {
     nodes: Node[];
     edges: Edge[];
+    texts: TextElement[];
 }
 
 export type EditorMode = 'edit' | 'view';
 
-export type CanvasItem = Node | Edge;
+export type CanvasItem = Node | Edge | TextElement;
 
 export type TooltipMode = 'always' | 'hover' | 'never';
 
@@ -43,4 +44,15 @@ export interface Edge {
     to: string;
     position: Position;
     kind: 'edge';
+}
+
+export interface TextElement {
+    id: string;
+    content: string;
+    width?: number;
+    height?: number;
+    position: Position;
+    textAlign?: 'left' | 'center' | 'right';
+    isEditing?: boolean;
+    kind: 'text';
 }
