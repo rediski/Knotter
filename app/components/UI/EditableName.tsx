@@ -57,7 +57,7 @@ export const EditableName = memo(function EditableName({
         return (
             <span
                 className={`
-                    block text-sm cursor-pointer text-left overflow-hidden text-ellipsis whitespace-nowrap tabular-nums 
+                    block text-sm text-left overflow-hidden text-ellipsis whitespace-nowrap tabular-nums 
                     ${isSelected ? 'text-text-accent' : 'text-foreground'} 
                     ${className}
                 `}
