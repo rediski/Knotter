@@ -60,7 +60,7 @@ function EditMode({ node, isSelected }: NodeProps) {
             <EditableName
                 name={node.name}
                 onChange={сhangeItemName}
-                className="flex items-center bg-depth-1 rounded-md px-3 text-foreground outline-none w-full tabular-nums h-8"
+                className="flex items-center bg-depth-1 rounded-md px-3 text-foreground outline-none w-full tabular-nums h-8 hover:cursor-move"
             />
 
             {node.description && (
