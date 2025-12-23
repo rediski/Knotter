@@ -39,7 +39,10 @@ export const Select = memo(function Select({ value, options, onChange, className
             <button
                 type="button"
                 onClick={() => setIsOpen((v) => !v)}
-                className={`flex items-center justify-between h-8 px-3 w-full rounded-md bg-depth-1 hover:bg-depth-2 ${className}`}
+                className={`
+                    flex items-center justify-between h-8 px-3 w-full rounded-md bg-depth-1 hover:bg-depth-2 cursor-pointer
+                    ${className}
+                `}
             >
                 <span className="truncate">{selected?.label ?? '-'}</span>
                 <ChevronDown size={14} />
@@ -58,7 +61,7 @@ export const Select = memo(function Select({ value, options, onChange, className
                                     onChange(option.value);
                                     setIsOpen(false);
                                 }}
-                                className={`w-full px-3 py-2 text-left text-sm truncate  rounded-md
+                                className={`w-full px-3 py-2 text-left text-sm truncate rounded-md cursor-pointer
                                     ${isSelected ? 'bg-bg-accent text-white' : 'hover:bg-depth-2'}
                                 `}
                             >
