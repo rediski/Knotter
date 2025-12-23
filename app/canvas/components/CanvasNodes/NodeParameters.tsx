@@ -134,15 +134,13 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                         if (parameter.type === 'enum') {
                             const enumValue = parameter.value as EnumConfig;
 
-                            if (enumValue.currentValue === null) return;
-
                             return (
                                 <div key={parameter.id} className="flex items-center gap-2">
                                     <Select
-                                        value={enumValue.currentValue}
-                                        options={enumValue.options.map((option) => ({
-                                            value: option.value,
-                                            label: option.value,
+                                        value={enumValue.currentValue || '-'}
+                                        options={enumValue.options.map((opt) => ({
+                                            value: opt.value,
+                                            label: opt.value,
                                         }))}
                                         onChange={(newValue) => {
                                             updateNodeParameter(node.id, parameter.id, {
