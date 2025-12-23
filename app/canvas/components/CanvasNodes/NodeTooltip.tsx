@@ -9,7 +9,7 @@ interface NodeTooltipProps {
 export function NodeTooltip({ label, position, zoomLevel }: NodeTooltipProps) {
     return (
         <div
-            className="absolute px-2 py-1 bg-bg-accent text-foreground text-xs rounded whitespace-nowrap shadow-lg border border-bg-accent"
+            className="absolute px-2 py-1 bg-bg-accent text-white text-xs rounded whitespace-nowrap shadow-lg border border-bg-accent"
             style={{
                 left: `${position.x}px`,
                 top: `${position.y}px`,
