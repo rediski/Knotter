@@ -96,8 +96,6 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                         if (parameter.type === 'string') {
                             return (
                                 <div key={parameter.id} className="flex items-center gap-2">
-                                    <span className="max-w-24 w-full truncate">{parameter.name}:</span>
-
                                     <Input
                                         value={parameter.value as string}
                                         onChange={(newValue) => {
@@ -105,8 +103,8 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                                                 value: newValue,
                                             });
                                         }}
-                                        placeholder="Введите текст"
-                                        className="bg-depth-1 hover:bg-depth-2 active:bg-depth-3"
+                                        placeholder={parameter.name}
+                                        className="bg-depth-1 hover:bg-depth-2"
                                     />
                                 </div>
                             );
@@ -140,13 +138,11 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
 
                             return (
                                 <div key={parameter.id} className="flex items-center gap-2">
-                                    <span className="max-w-24 w-full truncate">{parameter.name}:</span>
-
                                     <Select
                                         value={enumValue.currentValue}
-                                        options={enumValue.options.map((opt) => ({
-                                            value: opt.value,
-                                            label: opt.value,
+                                        options={enumValue.options.map((option) => ({
+                                            value: option.value,
+                                            label: option.value,
                                         }))}
                                         onChange={(newValue) => {
                                             updateNodeParameter(node.id, parameter.id, {
