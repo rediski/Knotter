@@ -17,13 +17,6 @@ export type CanvasItem = Node | Edge | TextElement;
 
 export type TooltipMode = 'always' | 'hover' | 'never';
 
-export interface DrawOptions {
-    fillStyle?: string;
-    strokeStyle?: string;
-    lineWidth?: number;
-    cornerRadius?: number;
-}
-
 export interface Node {
     id: string;
     name: string;
@@ -48,6 +41,7 @@ export interface Edge {
 
 export interface TextElement {
     id: string;
+    name: string;
     content: string;
     width?: number;
     height?: number;
