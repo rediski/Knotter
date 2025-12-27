@@ -48,19 +48,17 @@ export const OptionPicker = memo(function OptionPicker({
 
     const handleSelect = (value: string) => {
         onSelect(value);
-        setIsOpen(false);
         setQuery('');
     };
 
     return (
-        <div
-            ref={pickerRef}
-            className="relative flex flex-col justify-start items-center gap-1 bg-depth-1 w-full text-sm rounded-md cursor-pointer "
-        >
+        <div ref={pickerRef} className="relative flex flex-col justify-start items-center w-full text-sm cursor-pointer">
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 h-8 w-full px-3 py-2 cursor-pointer"
+                className={`flex items-center gap-2 h-8 w-full px-3 py-2 cursor-pointer
+                    ${isOpen ? 'bg-depth-3 rounded-t-md' : 'bg-depth-2 hover:bg-depth-3 rounded-md'}
+                `}
             >
                 <ChevronDown size={16} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
 
@@ -68,14 +66,17 @@ export const OptionPicker = memo(function OptionPicker({
             </button>
 
             {isOpen && (
-                <div ref={pickerContentRef} className="flex flex-col gap-1 w-full max-h-64 overflow-auto px-3 pb-2">
+                <div
+                    ref={pickerContentRef}
+                    className="flex flex-col gap-1 bg-depth-2 w-full max-h-64 overflow-auto p-1 rounded-b-md"
+                >
                     <Input
                         value={query}
                         onChange={(value) => setQuery(value)}
                         icon={Search}
                         iconSize={14}
                         placeholder="Поиск..."
-                        className="bg-depth-2 border border-depth-3"
+                        className="bg-depth-3"
                     />
 
                     <div className="flex flex-col gap-1">
@@ -86,7 +87,7 @@ export const OptionPicker = memo(function OptionPicker({
                                 <button
                                     key={option.value}
                                     onClick={() => handleSelect(option.value)}
-                                    className="flex items-center gap-2 px-3 h-8 bg-depth-2 hover:bg-depth-3 border border-depth-3 text-left text-sm rounded-md cursor-pointer"
+                                    className="flex items-center gap-2 px-3 h-8 bg-depth-3 hover:bg-depth-4 text-left text-sm rounded-md cursor-pointer"
                                 >
                                     {Icon && <Icon size={16} />}
 
