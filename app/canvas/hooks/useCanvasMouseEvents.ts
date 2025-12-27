@@ -16,6 +16,7 @@ import { getSelectedNodesPositions } from '@/canvas/utils/nodes/getSelectedNodes
 import { handleAddItem } from '@/canvas/utils/items/handleAddItem';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getEdges } from '@/canvas/utils/edges/getEdges';
+import { getTexts } from '@/canvas/utils/texts/getTexts';
 
 export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | null>, isPanningRef?: RefObject<boolean>) {
     const items = useCanvasStore((state) => state.items);
@@ -52,12 +53,14 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
 
             const target = e.target as HTMLElement;
 
+            if (target.closest('[data-interactive-element="true"]')) {
+                return;
+            }
+
             const isStandardInteractive =
                 target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'BUTTON';
 
-            if (isStandardInteractive) {
-                return;
-            }
+            if (isStandardInteractive) return;
 
             const mousePos = getMousePosition(e, canvas);
             trackMousePosition(mousePos, setMousePosition);
@@ -168,6 +171,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             if (tempEdge) {
                 const nodes = getNodes(items);
                 const edges = getEdges(items);
+                const texts = getTexts(items);
 
                 const targetNode = findNodeUnderCursor(nodes, mousePos);
                 const edgeExists = targetNode
@@ -180,7 +184,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
                     if (fromNode) {
                         const newEdge = handleAddItem({
                             type: 'edge',
-                            state: { nodes, edges },
+                            state: { nodes, edges, texts },
                             fromNode,
                             toNode: targetNode,
                         });
