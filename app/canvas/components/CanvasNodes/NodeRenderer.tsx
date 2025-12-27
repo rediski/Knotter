@@ -53,18 +53,18 @@ function EditMode({ node, isSelected }: NodeProps) {
         <div
             ref={nodeRef}
             className={`
-                relative flex flex-col gap-1 max-w-96 min-w-16 w-max border-1 rounded-lg bg-background text-sm hover:cursor-move active:cursor-grabbing p-2 shadow-lg
+                relative flex flex-col gap-1 max-w-96 min-w-16 w-max border-1 rounded-lg bg-depth-1 text-sm hover:cursor-move active:cursor-grabbing p-2 shadow-lg
                 ${isSelected ? 'border-bg-accent' : 'border-depth-4'} 
             `}
         >
             <EditableName
                 name={node.name}
                 onChange={сhangeItemName}
-                className="flex items-center bg-depth-1 rounded-md px-3 text-foreground outline-none w-full tabular-nums h-8 hover:cursor-move"
+                className="flex items-center bg-depth-2 rounded-md px-3 text-foreground outline-none w-full tabular-nums h-8 hover:cursor-move"
             />
 
             {node.description && (
-                <div className="px-3 py-1 rounded-md bg-depth-1 text-foreground overflow-hidden break-words">
+                <div className="flex flex-wrap items-center px-3 py-1 rounded-md bg-depth-2 min-h-8 text-foreground overflow-x-auto">
                     {node.description}
                 </div>
             )}

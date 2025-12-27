@@ -79,7 +79,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                                         value={numberValue.currentValue}
                                         step={numberValue.step}
                                         showFill
-                                        className="bg-depth-1 hover:bg-depth-2 active:bg-depth-3"
+                                        className="bg-depth-2 hover:bg-depth-3 active:bg-depth-4"
                                         onChange={(value) => {
                                             updateNodeParameter(node.id, parameter.id, {
                                                 value: {
@@ -104,7 +104,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                                             });
                                         }}
                                         placeholder={parameter.name}
-                                        className="bg-depth-1 hover:bg-depth-2"
+                                        className="bg-depth-2 hover:bg-depth-3"
                                     />
                                 </div>
                             );
@@ -120,10 +120,10 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                                                 value: checked,
                                             });
                                         }}
-                                        className={`bg-depth-1 ${
+                                        className={`bg-depth-2 ${
                                             parameter.value === true
                                                 ? 'hover:bg-bg-accent'
-                                                : 'hover:bg-depth-2 active:bg-depth-3'
+                                                : 'hover:bg-depth-3 active:bg-depth-4'
                                         }`}
                                     />
                                     <span className="w-full truncate">{parameter.name}</span>
@@ -135,18 +135,19 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                             const enumValue = parameter.value as EnumConfig;
 
                             return (
-                                <div key={parameter.id} className="flex items-center gap-2">
+                                <div key={parameter.id}>
                                     <Select
-                                        value={enumValue.currentValue || '-'}
-                                        options={enumValue.options.map((opt) => ({
-                                            value: opt.value,
-                                            label: opt.value,
-                                        }))}
+                                        value={enumValue.currentValue}
+                                        options={enumValue.options}
                                         onChange={(newValue) => {
                                             updateNodeParameter(node.id, parameter.id, {
-                                                value: { ...enumValue, currentValue: newValue },
+                                                value: {
+                                                    ...enumValue,
+                                                    currentValue: newValue,
+                                                },
                                             });
                                         }}
+                                        label={parameter.name}
                                     />
                                 </div>
                             );
