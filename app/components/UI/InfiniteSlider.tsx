@@ -30,7 +30,6 @@ export const InfiniteSlider = memo(function InfiniteSliderInput({
     const draggingRef = useRef(false);
     const startXRef = useRef(0);
     const startValueRef = useRef(0);
-    const containerRef = useRef<HTMLDivElement>(null);
 
     const [displayValue, setDisplayValue] = useState(value);
 
@@ -42,39 +41,27 @@ export const InfiniteSlider = memo(function InfiniteSliderInput({
 
     const precisionFactor = useMemo(() => Math.pow(10, precision), [precision]);
 
-    const sensitivity = useMemo(() => {
-        return PIXELS_PER_VALUE_CHANGE / step;
-    }, [step]);
+    const sensitivity = useMemo(() => PIXELS_PER_VALUE_CHANGE / step, [step]);
 
     useEffect(() => {
-        if (!draggingRef.current) {
-            setDisplayValue(value);
-        }
+        if (!draggingRef.current) setDisplayValue(value);
     }, [value]);
 
     const handleMouseMove = useCallback(
         (e: MouseEvent) => {
             if (!draggingRef.current) return;
 
-            const totalPixelDelta = e.clientX - startXRef.current;
-            const valueDelta = totalPixelDelta / sensitivity;
+            const dx = e.clientX - startXRef.current;
+            const valueDelta = dx / sensitivity;
             const newValue = startValueRef.current + valueDelta;
 
-            const steppedValue = Math.round(newValue / step) * step;
-            const clampedValue = Math.round(steppedValue * precisionFactor) / precisionFactor;
+            const stepped = Math.round(newValue / step) * step;
+            const clamped = Math.round(stepped * precisionFactor) / precisionFactor;
 
-            const finalValue = Math.max(min, Math.min(max, clampedValue));
+            const finalValue = Math.max(min, Math.min(max, clamped));
 
             setDisplayValue(finalValue);
-
-            if (finalValue !== value) {
-                onChange(finalValue);
-            }
-
-            if ((finalValue === max && newValue > max) || (finalValue === min && newValue < min)) {
-                startXRef.current = e.clientX;
-                startValueRef.current = finalValue;
-            }
+            if (finalValue !== value) onChange(finalValue);
         },
         [onChange, step, min, max, sensitivity, precisionFactor, value],
     );
@@ -89,7 +76,6 @@ export const InfiniteSlider = memo(function InfiniteSliderInput({
     const handleMouseDown = useCallback(
         (e: React.MouseEvent) => {
             e.preventDefault();
-            e.stopPropagation();
 
             draggingRef.current = true;
 
@@ -111,25 +97,37 @@ export const InfiniteSlider = memo(function InfiniteSliderInput({
     const fillPercentage = Math.max(0, Math.min(100, ((displayValue - min) / (max - min)) * 100));
 
     return (
-        <div ref={containerRef} className="flex justify-end gap-2 items-center select-none w-full">
+        <div className="flex w-full select-none">
             <div
-                onMouseDown={handleMouseDown}
                 data-interactive-element="true"
+                onMouseDown={handleMouseDown}
                 className={`
-                    relative w-full  h-8 px-2 flex items-center justify-between cursor-ew-resize text-sm rounded-md select-none
-                    ${showFill && 'overflow-hidden'}
+                    relative w-full h-8 px-3 flex items-center justify-between
+                    cursor-ew-resize text-sm rounded-md
+                    ${showFill ? 'overflow-hidden' : ''}
                     ${className}
                 `}
             >
                 {showFill && (
-                    <div className="absolute left-0 top-0 h-full bg-bg-accent" style={{ width: `${fillPercentage}%` }} />
+                    <div className="absolute inset-y-0 left-0 bg-bg-accent" style={{ width: `${fillPercentage}%` }} />
                 )}
 
-                <span className="relative text-foreground truncate mr-2">{name}</span>
+                <div className="relative z-10 w-full flex items-center justify-between text-foreground">
+                    <span className="truncate mr-2">{name}</span>
+                    <span className="tabular-nums min-w-[8ch] text-right">{formatDisplayValue}</span>
+                </div>
 
-                <span className="relative text-foreground whitespace-nowrap tabular-nums min-w-[8ch] text-right">
-                    {formatDisplayValue}
-                </span>
+                {showFill && (
+                    <div
+                        className="absolute inset-0 z-20 pointer-events-none flex items-center justify-between px-3 text-white"
+                        style={{
+                            clipPath: `inset(0 ${100 - fillPercentage}% 0 0)`,
+                        }}
+                    >
+                        <span className="truncate mr-2">{name}</span>
+                        <span className="tabular-nums min-w-[8ch] text-right">{formatDisplayValue}</span>
+                    </div>
+                )}
             </div>
         </div>
     );
