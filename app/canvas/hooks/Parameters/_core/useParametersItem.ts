@@ -45,8 +45,7 @@ export const useParametersItem = (parameterId: string) => {
     const { 
         handleAddEnumOption, 
         handleRemoveEnumOption, 
-        handleUpdateEnumOptionName, 
-        handleUpdateEnumOptionValue 
+        handleUpdateEnumOption, 
     } = useEnumParameter({ parameter, updateParameter });
 
     // prettier-ignore
@@ -72,8 +71,7 @@ export const useParametersItem = (parameterId: string) => {
 
         handleAddEnumOption,
         handleRemoveEnumOption,
-        handleUpdateEnumOptionName,
-        handleUpdateEnumOptionValue,
+        handleUpdateEnumOption,
 
         handleAddArrayParameter,
         handleRemoveArrayParameter,

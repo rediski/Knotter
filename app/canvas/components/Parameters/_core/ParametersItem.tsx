@@ -39,8 +39,7 @@ export const ParametersItem = memo(function ParametersItem({ parameterId, remove
 
         handleAddEnumOption,
         handleRemoveEnumOption,
-        handleUpdateEnumOptionName,
-        handleUpdateEnumOptionValue,
+        handleUpdateEnumOption,
 
         handleAddArrayParameter,
         handleRemoveArrayParameter,
@@ -90,8 +89,7 @@ export const ParametersItem = memo(function ParametersItem({ parameterId, remove
                 parameter={parameter}
                 handleAddEnumOption={handleAddEnumOption}
                 handleRemoveEnumOption={handleRemoveEnumOption}
-                handleUpdateEnumOptionName={handleUpdateEnumOptionName}
-                handleUpdateEnumOptionValue={handleUpdateEnumOptionValue}
+                handleUpdateEnumOption={handleUpdateEnumOption}
                 handleUpdateParameterName={handleUpdateParameterName}
                 removeParameter={removeParameter}
             />
@@ -106,7 +104,7 @@ export const ParametersItem = memo(function ParametersItem({ parameterId, remove
                 handleRemoveArrayParameter={handleRemoveArrayParameter}
                 handleUpdateArrayParameterName={handleUpdateArrayParameterName}
                 handleUpdateArrayParameterValue={handleUpdateArrayParameterValue}
-                handleUpdateEnumOptionValue={handleUpdateEnumOptionValue}
+                handleUpdateEnumOption={handleUpdateEnumOption}
                 removeParameter={removeParameter}
             />
         );

@@ -1,6 +1,5 @@
 import { Parameter, EnumConfig } from '@/canvas/utils/parameters/parameter.types';
 import { isEnumValue } from '@/canvas/utils/parameters/parameter.type-guards';
-import { v4 as uuid } from 'uuid';
 
 interface useEnumParameterProps {
     parameter: Parameter | undefined;
@@ -15,47 +14,29 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
         const thisParameterData = parameter.value as EnumConfig;
         const ordinalNumber = thisParameterData.options.length + 1;
 
-        const newOption = {
-            id: uuid(),
-            name: `${ordinalNumber}.`,
-            value: '',
-        };
+        let newValue = `Опция ${ordinalNumber}`;
+        let counter = 1;
+
+        while (thisParameterData.options.includes(newValue)) {
+            newValue = `Опция ${ordinalNumber} (${counter})`;
+            counter++;
+        }
 
         updateParameter(parameter.id, {
             ...parameter,
             value: {
                 ...thisParameterData,
-                options: [...thisParameterData.options, newOption],
+                options: [...thisParameterData.options, newValue],
             },
         });
     };
 
-    const handleRemoveEnumOption = (optionId: string) => {
+    const handleRemoveEnumOption = (index: number) => {
         if (!parameter) return;
         if (!isEnumValue(parameter)) return;
 
         const thisParameterData = parameter.value as EnumConfig;
-
-        const updatedOptions = thisParameterData.options.filter((option) => option.id !== optionId);
-
-        updateParameter(parameter.id, {
-            ...parameter,
-            value: {
-                ...thisParameterData,
-                options: updatedOptions,
-            },
-        });
-    };
-
-    const handleUpdateEnumOptionName = (optionId: string, newName: string) => {
-        if (!parameter) return;
-        if (!isEnumValue(parameter)) return;
-
-        const thisParameterData = parameter.value as EnumConfig;
-
-        const updatedOptions = thisParameterData.options.map((option) =>
-            option.id === optionId ? { ...option, name: newName } : option,
-        );
+        const updatedOptions = thisParameterData.options.filter((_, i) => i !== index);
 
         updateParameter(parameter.id, {
             ...parameter,
@@ -66,15 +47,17 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
         });
     };
 
-    const handleUpdateEnumOptionValue = (optionId: string, newValue: string) => {
+    const handleUpdateEnumOption = (index: number, newValue: string) => {
         if (!parameter) return;
         if (!isEnumValue(parameter)) return;
 
         const thisParameterData = parameter.value as EnumConfig;
 
-        const updatedOptions = thisParameterData.options.map((option) =>
-            option.id === optionId ? { ...option, value: newValue } : option,
-        );
+        if (thisParameterData.options.some((option, i) => i !== index && option === newValue)) {
+            return;
+        }
+
+        const updatedOptions = thisParameterData.options.map((option, i) => (i === index ? newValue : option));
 
         updateParameter(parameter.id, {
             ...parameter,
@@ -88,7 +71,6 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
     return {
         handleAddEnumOption,
         handleRemoveEnumOption,
-        handleUpdateEnumOptionName,
-        handleUpdateEnumOptionValue,
+        handleUpdateEnumOption,
     };
 };

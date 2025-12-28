@@ -17,7 +17,7 @@ interface ArrayParamterProps {
     handleRemoveArrayParameter: (parameterId: string) => void;
     handleUpdateArrayParameterName: (parameterId: string, newName: string) => void;
     handleUpdateArrayParameterValue: (parameterId: string, newData: ParameterValue) => void;
-    handleUpdateEnumOptionValue: (optionId: string, newValue: string) => void;
+    handleUpdateEnumOption: (index: number, newValue: string) => void;
     removeParameter: (parameterId: string) => void;
 }
 
