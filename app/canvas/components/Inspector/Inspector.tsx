@@ -54,7 +54,11 @@ export const Inspector = memo(function Inspector() {
                     className="bg-depth-2"
                 />
 
-                <Textarea value={selectedItem.description} onChange={changeItemDescription} placeholder="Описание" />
+                <Textarea
+                    value={selectedItem.kind !== 'text' ? selectedItem.description : selectedItem.content}
+                    onChange={changeItemDescription}
+                    placeholder="Описание"
+                />
             </div>
 
             <div className="flex flex-col gap-1">
