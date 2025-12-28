@@ -6,7 +6,7 @@ import { CanvasItem } from '@/canvas/canvas.types';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { selectCanvasItem } from '@/canvas/utils/items/selectCanvasItem';
+import { selectCanvasItem } from '@/canvas/utils/items/selectItem';
 
 import { DragEndEvent } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
