@@ -1,8 +1,7 @@
 'use client';
 
-import React, { ReactNode, MouseEvent, memo } from 'react';
-import { ChevronRight } from 'lucide-react';
-import { LucideIcon } from 'lucide-react';
+import { ReactNode, MouseEvent, memo } from 'react';
+import { LucideIcon, ChevronRight } from 'lucide-react';
 
 interface ContextMenuItemProps {
     onClick?: (e?: MouseEvent<HTMLButtonElement>) => void;
