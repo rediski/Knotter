@@ -5,6 +5,7 @@ import { useRef } from 'react';
 import { CanvasContextMenu } from '@/canvas/components/CanvasContextMenu/CanvasContextMenu';
 import { CanvasControls } from '@/canvas/components/CanvasControls/CanvasControls';
 import { CanvasNodes } from '@/canvas/components/CanvasNodes/CanvasNodes';
+import { CanvasTexts } from '@/canvas/components/CanvasTexts/CanvasTexts';
 
 import { useCanvasSelection } from '@/canvas/hooks/useCanvasSelection';
 import { useCanvasInteraction } from '@/canvas/hooks/useCanvasInteraction';
@@ -49,6 +50,7 @@ export default function Canvas() {
             <canvas ref={canvasRef} className="absolute w-full h-full" />
 
             <CanvasNodes nodes={nodes} selectedNodeIds={selectedItemIds} hoveredNodeId={hoveredNodeId} />
+            <CanvasTexts />
         </div>
     );
 }
