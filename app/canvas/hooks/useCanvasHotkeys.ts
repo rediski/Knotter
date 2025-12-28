@@ -76,6 +76,7 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             if (e.shiftKey) {
                 if (key === 'a' || key === 'ф') return handlers.addNode();
                 if (key === 'e' || key === 'у') return handlers.startEdge();
+                if (key === 't' || key === 'е') return handlers.addText();
             }
 
             const step = NODE_MOVE_MAX_STEP;
