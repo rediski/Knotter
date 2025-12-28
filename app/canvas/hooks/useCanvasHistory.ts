@@ -1,8 +1,13 @@
 import { useRef } from 'react';
-import { CanvasState } from '@/canvas/canvas.types';
+
+import type { CanvasState } from '@/canvas/canvas.types';
+
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getEdges } from '@/canvas/utils/edges/getEdges';
+import { getTexts } from '@/canvas/utils/texts/getTexts';
+
 import { useCanvasStore } from '@/canvas/store/canvasStore';
+
 import { MAX_UNDO_STEPS } from '@/canvas/canvas.constants';
 
 export function useCanvasHistory() {
@@ -11,9 +16,11 @@ export function useCanvasHistory() {
 
     const pushHistory = () => {
         const state = useCanvasStore.getState();
+
         const snapshot = {
             nodes: getNodes(state.items),
             edges: getEdges(state.items),
+            texts: getTexts(state.items),
         };
 
         const history = historyRef.current;
@@ -31,6 +38,7 @@ export function useCanvasHistory() {
         redoRef.current.push({
             nodes: getNodes(state.items),
             edges: getEdges(state.items),
+            texts: getTexts(state.items),
         });
 
         state.setItems([...lastState.nodes, ...lastState.edges]);
@@ -45,6 +53,7 @@ export function useCanvasHistory() {
         historyRef.current.push({
             nodes: getNodes(state.items),
             edges: getEdges(state.items),
+            texts: getTexts(state.items),
         });
 
         state.setItems([...redoState.nodes, ...redoState.edges]);
