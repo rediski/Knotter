@@ -53,6 +53,7 @@ export function useContextMenuItems() {
                     disabled: selectedItemIds.length !== 1 || !nodes.some((n) => n.id === selectedItemIds[0]),
                     shortcut: 'Shift + E',
                 },
+                { label: 'Создать текст', onClick: handlers.addText, shortcut: 'Shift + T' },
             ],
         },
         {
