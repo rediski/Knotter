@@ -8,15 +8,17 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { useMousePosition } from '@/canvas/hooks/useMousePosition';
 
 import { getMousePosition } from '@/canvas/utils/canvas/getMousePosition';
+
+import { selectCanvasItem } from '@/canvas/utils/items/selectItem';
+import { createItem } from '@/canvas/utils/items/createItem';
+
 import { findNodeUnderCursor } from '@/canvas/utils/nodes/findNodeUnderCursor';
-import { findEdgeUnderCursor } from '@/canvas/utils/edges/findEdgeUnderCursor';
-import { selectCanvasItem } from '@/canvas/utils/items/selectCanvasItem';
 import { moveNodes } from '@/canvas/utils/nodes/moveNodes';
 import { getSelectedNodesPositions } from '@/canvas/utils/nodes/getSelectedNodesPositions';
-import { handleAddItem } from '@/canvas/utils/items/handleAddItem';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
+
+import { findEdgeUnderCursor } from '@/canvas/utils/edges/findEdgeUnderCursor';
 import { getEdges } from '@/canvas/utils/edges/getEdges';
-import { getTexts } from '@/canvas/utils/texts/getTexts';
 
 export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | null>, isPanningRef?: RefObject<boolean>) {
     const items = useCanvasStore((state) => state.items);
@@ -171,9 +173,9 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             if (tempEdge) {
                 const nodes = getNodes(items);
                 const edges = getEdges(items);
-                const texts = getTexts(items);
 
                 const targetNode = findNodeUnderCursor(nodes, mousePos);
+
                 const edgeExists = targetNode
                     ? edges.some((edge) => edge.from === tempEdge.from && edge.to === targetNode.id)
                     : true;
@@ -182,9 +184,9 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
                     const fromNode = nodes.find((n) => n.id === tempEdge.from);
 
                     if (fromNode) {
-                        const newEdge = handleAddItem({
+                        const newEdge = createItem({
                             type: 'edge',
-                            state: { nodes, edges, texts },
+                            state: { nodes, edges },
                             fromNode,
                             toNode: targetNode,
                         });
