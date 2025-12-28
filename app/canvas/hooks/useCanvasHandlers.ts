@@ -1,26 +1,31 @@
 import { useRef } from 'react';
 
-import { CanvasState, Position } from '@/canvas/canvas.types';
+import type { CanvasState, Position, Edge } from '@/canvas/canvas.types';
 
 import { NodeShapeType } from '@/canvas/utils/nodes/getShape';
 
 import { NODE_MOVE_MAX_STEP } from '@/canvas/canvas.constants';
 
 import { useCanvasHistory } from '@/canvas/hooks/useCanvasHistory';
+import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { handleAddItem } from '@/canvas/utils/items/handleAddItem';
-import { handleDeleteItems } from '@/canvas/utils/items/handleDeleteItems';
-import { moveNodes } from '@/canvas/utils/nodes/moveNodes';
-import { getNodes } from '@/canvas/utils/nodes/getNodes';
-import { getEdges } from '@/canvas/utils/edges/getEdges';
-import { getSelectedNodes } from '@/canvas/utils/nodes/getSelectedNodes';
-import { getSelectedEdges } from '@/canvas/utils/edges/getSelectedEdges';
-import { cloneNodesWithInsertionGap } from '@/canvas/utils/nodes/cloneNodesWithInsertionGap';
-import { cloneEdgesForNewNodes } from '@/canvas/utils/edges/cloneEdgesForNewNodes';
 import { toggleMagnetMode } from '@/canvas/utils/canvas/toggleMagnetMode';
 import { toggleTooltipMode } from '@/canvas/utils/canvas/toggleTooltipMode';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { createItem } from '@/canvas/utils/items/createItem';
+import { deleteItems } from '@/canvas/utils/items/deleteItems';
+
+import { moveNodes } from '@/canvas/utils/nodes/moveNodes';
+import { getNodes } from '@/canvas/utils/nodes/getNodes';
+import { getSelectedNodes } from '@/canvas/utils/nodes/getSelectedNodes';
+
+import { getEdges } from '@/canvas/utils/edges/getEdges';
+import { getSelectedEdges } from '@/canvas/utils/edges/getSelectedEdges';
+
+import { getSelectedTexts } from '@/canvas/utils/texts/getSelectedTexts';
+import { getTexts } from '@/canvas/utils/texts/getTexts';
+
+import { v4 as uuidv4 } from 'uuid';
 
 export function useCanvasHandlers() {
     const items = useCanvasStore((state) => state.items);
@@ -33,7 +38,7 @@ export function useCanvasHandlers() {
     const toggleGrid = useCanvasStore((state) => state.toggleShowGrid);
     const toggleAxes = useCanvasStore((state) => state.toggleShowAxes);
 
-    const clipboardRef = useRef<CanvasState>({ nodes: [], edges: [] });
+    const clipboardRef = useRef<CanvasState>({ nodes: [], edges: [], texts: [] });
 
     const { pushHistory } = useCanvasHistory();
 
@@ -44,7 +49,7 @@ export function useCanvasHandlers() {
         toggleAxes,
 
         delete: () => {
-            const newItems = handleDeleteItems(items, selectedItemIds);
+            const newItems = deleteItems(items, selectedItemIds);
             setItems(newItems);
         },
 
@@ -56,27 +61,53 @@ export function useCanvasHandlers() {
             clipboardRef.current = {
                 nodes: getSelectedNodes(items, selectedItemIds),
                 edges: getSelectedEdges(items, selectedItemIds),
+                texts: getSelectedTexts(items, selectedItemIds),
             };
         },
 
         paste: () => {
-            const { nodes, edges } = clipboardRef.current;
+            const { nodes, edges, texts } = clipboardRef.current;
             if (!nodes.length) return;
 
             pushHistory();
 
             const insertionGap = NODE_MOVE_MAX_STEP;
-            const existingCount = items.length;
 
-            const newNodes = cloneNodesWithInsertionGap(nodes, insertionGap, existingCount);
+            const newNodes = nodes.map((node) => ({
+                ...node,
+                id: uuidv4(),
+                position: {
+                    x: node.position.x + insertionGap,
+                    y: node.position.y + insertionGap,
+                },
+            }));
 
-            if (!newNodes.length) return;
+            const nodeIdMap = new Map(nodes.map((node, i) => [node.id, newNodes[i].id]));
 
-            const nodeIdMap = new Map(nodes.slice(0, newNodes.length).map((node, i) => [node.id, newNodes[i].id]));
+            const newEdges = edges
+                .map((edge) => {
+                    const fromId = nodeIdMap.get(edge.from);
+                    const toId = nodeIdMap.get(edge.to);
+                    if (!fromId || !toId) return null;
+                    return {
+                        ...edge,
+                        id: uuidv4(),
+                        from: fromId,
+                        to: toId,
+                    };
+                })
+                .filter((e): e is Edge => e !== null);
 
-            const newEdges = cloneEdgesForNewNodes(edges, newNodes, nodeIdMap, existingCount + newNodes.length);
+            const newTexts = texts.map((t) => ({
+                ...t,
+                id: uuidv4(),
+                position: {
+                    x: t.position.x + insertionGap,
+                    y: t.position.y + insertionGap,
+                },
+            }));
 
-            setItems([...items, ...newNodes, ...newEdges]);
+            setItems([...items, ...newNodes, ...newEdges, ...newTexts]);
             setSelectedItemIds(newNodes.map((n) => n.id));
         },
 
@@ -90,9 +121,9 @@ export function useCanvasHandlers() {
                   }
                 : mousePosition;
 
-            const newNode = handleAddItem({
+            const newNode = createItem({
                 type: 'node',
-                state: { nodes: getNodes(items), edges: getEdges(items) },
+                state: { nodes: getNodes(items) },
                 position: adjustedMousePosition,
             });
 
@@ -111,6 +142,29 @@ export function useCanvasHandlers() {
             if (!fromNode) return;
 
             setTempEdge({ from: fromNode.id, toPos: { ...fromNode.position } });
+        },
+
+        addText: (content: string = '') => {
+            pushHistory();
+
+            const adjustedMousePosition = isMagnet
+                ? {
+                      x: Math.round(mousePosition.x / NODE_MOVE_MAX_STEP) * NODE_MOVE_MAX_STEP,
+                      y: Math.round(mousePosition.y / NODE_MOVE_MAX_STEP) * NODE_MOVE_MAX_STEP,
+                  }
+                : mousePosition;
+
+            const newText = createItem({
+                type: 'text',
+                state: { texts: getTexts(items) },
+                content,
+                position: adjustedMousePosition,
+            });
+
+            if (!newText) return;
+
+            setItems([...items, newText]);
+            setSelectedItemIds([newText.id]);
         },
 
         moveSelection: (dx: number, dy: number) => {
