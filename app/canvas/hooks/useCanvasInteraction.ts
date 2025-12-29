@@ -12,8 +12,6 @@ import { getScrollEventHandler } from '@/canvas/utils/eventHandlers/getScrollEve
 import { getSelectionEventHandler } from '@/canvas/utils/eventHandlers/getSelectionEventHandler';
 import { getZoomEventHandler } from '@/canvas/utils/eventHandlers/getZoomEventHandler';
 
-import { MouseHandler } from '@/canvas/canvas.types';
-
 interface useCanvasInteractionProps {
     containerRef: RefObject<HTMLDivElement | null>;
     canvasRef: RefObject<HTMLCanvasElement | null>;
@@ -62,19 +60,19 @@ export function useCanvasInteraction({
 
         handleZoom.current = getZoomEventHandler(canvas);
 
-        const handleMouseDown: MouseHandler = (e) => {
+        const handleMouseDown: (e: MouseEvent) => void = (e) => {
             panHandlers.current?.handleMouseDown(e);
             onMouseDown(e);
             selectHandlers.current?.handleMouseDown(e);
         };
 
-        const handleMouseMove: MouseHandler = (e) => {
+        const handleMouseMove: (e: MouseEvent) => void = (e) => {
             panHandlers.current?.handleMouseMove(e);
             onMouseMove(e);
             selectHandlers.current?.handleMouseMove(e);
         };
 
-        const handleMouseUp: MouseHandler = (e) => {
+        const handleMouseUp: (e: MouseEvent) => void = (e) => {
             panHandlers.current?.handleMouseUp();
             onMouseUp(e);
             selectHandlers.current?.handleMouseUp(e);

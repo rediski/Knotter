@@ -1,8 +1,6 @@
 import { type NodeShapeType } from '@/canvas/utils/nodes/getShape';
 import { Parameter } from '@/canvas/utils/parameters/parameter.types';
 
-export type MouseHandler = (e: MouseEvent) => void;
-
 export type Position = { x: number; y: number };
 
 export interface CanvasState {
