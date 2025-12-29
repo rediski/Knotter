@@ -6,12 +6,14 @@ import { TextElement } from '@/canvas/canvas.types';
 import { getTexts } from '@/canvas/utils/texts/getTexts';
 
 export function CanvasTexts() {
-    const items = useCanvasStore((s) => s.items);
-    const setItems = useCanvasStore((s) => s.setItems);
+    const items = useCanvasStore((state) => state.items);
+    const setItems = useCanvasStore((state) => state.setItems);
 
-    const zoomLevel = useCanvasStore((s) => s.zoomLevel);
-    const offset = useCanvasStore((s) => s.offset);
-    const invertY = useCanvasStore((s) => s.invertY);
+    const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
+
+    const zoomLevel = useCanvasStore((state) => state.zoomLevel);
+    const offset = useCanvasStore((state) => state.offset);
+    const invertY = useCanvasStore((state) => state.invertY);
 
     const texts = getTexts(items);
 
@@ -40,6 +42,7 @@ export function CanvasTexts() {
                 const screenY = invertY ? -baseY + window.innerHeight : baseY;
 
                 const isEditing = editingId === text.id || text.isEditing;
+                const isSelected = selectedItemIds.includes(text.id);
 
                 return (
                     <div
@@ -63,7 +66,14 @@ export function CanvasTexts() {
                                 className="px-3 py-2"
                             />
                         ) : (
-                            <div className="border px-3 py-1">{text.content}</div>
+                            <div
+                                className={`
+                                    border px-3 py-1
+                                    ${isSelected && 'border-bg-accent'}
+                                `}
+                            >
+                                {text.content}
+                            </div>
                         )}
                     </div>
                 );
