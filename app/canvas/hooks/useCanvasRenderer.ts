@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, RefObject } from 'react';
-import { useTheme } from 'next-themes';
 
 import { Node, Edge, Position } from '@/canvas/canvas.types';
 
@@ -21,8 +20,6 @@ interface useCanvasRendererProps {
 }
 
 export function useCanvasRenderer({ canvasRef, selectionStart, selectionEnd }: useCanvasRendererProps) {
-    const { resolvedTheme } = useTheme();
-
     const items = useCanvasStore((s) => s.items);
     const selectedItemIds = useCanvasStore((s) => s.selectedItemIds);
     const offset = useCanvasStore((state) => state.offset);
@@ -111,7 +108,6 @@ export function useCanvasRenderer({ canvasRef, selectionStart, selectionEnd }: u
         zoomLevel,
         offset,
         invertY,
-        resolvedTheme,
         hoveredNodeId,
         tooltipMode,
     ]);
