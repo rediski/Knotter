@@ -63,7 +63,7 @@ export function CanvasTexts() {
                                 className="px-3 py-2"
                             />
                         ) : (
-                            <span className="border px-3 py-1">{text.content}</span>
+                            <div className="border px-3 py-1">{text.content}</div>
                         )}
                     </div>
                 );
