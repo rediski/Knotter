@@ -28,12 +28,15 @@ export function getSelectionEventHandler(
 
         const mousePos = useCanvasStore.getState().mousePosition;
         setSelectionEnd(mousePos);
+
+        selectItemsInArea?.(selectionStart, mousePos);
     };
 
     const handleMouseUp = (e: MouseEvent) => {
         if (!selectionStart || e.button !== 0) return;
 
         const mousePos = useCanvasStore.getState().mousePosition;
+
         selectItemsInArea?.(selectionStart, mousePos);
 
         setSelectionStart(null);
