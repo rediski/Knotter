@@ -1,30 +1,32 @@
 'use client';
 
-import { Node } from '@/canvas/canvas.types';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { NodeRenderer } from '@/canvas/components/CanvasNodes/NodeRenderer';
 import { NodeTooltip } from '@/canvas/components/CanvasNodes/NodeTooltip';
 
+import { getNodes } from '@/canvas/utils/nodes/getNodes';
+
 import { NODE_SIZE } from '@/canvas/canvas.constants';
 
-interface CanvasNodesProps {
-    nodes: Node[];
-    selectedNodeIds: string[];
-    hoveredNodeId?: string | null;
-}
-
-export function CanvasNodes({ nodes, selectedNodeIds, hoveredNodeId }: CanvasNodesProps) {
+export function CanvasNodes() {
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
     const offset = useCanvasStore((state) => state.offset);
+
     const tooltipMode = useCanvasStore((state) => state.tooltipMode);
     const editorMode = useCanvasStore((state) => state.editorMode);
     const invertY = useCanvasStore((state) => state.invertY);
 
+    const items = useCanvasStore((state) => state.items);
+    const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
+    const hoveredNodeId = useCanvasStore((state) => state.hoveredNodeId);
+
+    const nodes = getNodes(items);
+
     return (
         <div className="absolute">
             {nodes.map((node) => {
-                const isSelected = selectedNodeIds.includes(node.id);
+                const isSelected = selectedItemIds.includes(node.id);
 
                 const baseX = node.position.x * zoomLevel + offset.x;
                 const baseY = node.position.y * zoomLevel + offset.y;
