@@ -183,7 +183,7 @@ export function useCanvasHandlers() {
                 }
             });
 
-            const movedNodes = moveNodes(nodes, selectedItemIds, initialPositions, { x: dx, y: dy }, 1);
+            const movedNodes = moveNodes({ x: dx, y: dy }, initialPositions);
 
             setItems([...movedNodes, ...edges]);
         },

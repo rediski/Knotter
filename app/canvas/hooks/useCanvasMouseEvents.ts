@@ -14,7 +14,7 @@ import { createItem } from '@/canvas/utils/items/createItem';
 
 import { findNodeUnderCursor } from '@/canvas/utils/nodes/findNodeUnderCursor';
 import { moveNodes } from '@/canvas/utils/nodes/moveNodes';
-import { getSelectedNodesPositions } from '@/canvas/utils/nodes/getSelectedNodesPositions';
+import { getSelectedItemsPositions } from '@/canvas/utils/items/getSelectedItemsPositions';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 
 import { findEdgeUnderCursor } from '@/canvas/utils/edges/findEdgeUnderCursor';
@@ -25,7 +25,6 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
     const setItems = useCanvasStore((state) => state.setItems);
     const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
     const setSelectedItemIds = useCanvasStore((state) => state.setSelectedItemIds);
-    const nodeMoveStep = useCanvasStore((state) => state.nodeMoveStep);
     const tempEdge = useCanvasStore((state) => state.tempEdge);
     const setTempEdge = useCanvasStore((state) => state.setTempEdge);
     const setMousePosition = useCanvasStore((state) => state.setMousePosition);
@@ -113,14 +112,14 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
 
             if (!isDraggingNodes && pendingClickItemId && dragStartMouse) {
                 setIsDraggingNodes(true);
-                setInitialNodePositions(getSelectedNodesPositions(nodes, selectedItemIds));
+                setInitialNodePositions(getSelectedItemsPositions(nodes, selectedItemIds));
             }
 
             if (isDraggingNodes && dragStartMouse) {
                 const dx = mousePos.x - dragStartMouse.x;
                 const dy = mousePos.y - dragStartMouse.y;
 
-                const updatedNodes = moveNodes(nodes, selectedItemIds, initialNodePositions, { x: dx, y: dy }, nodeMoveStep);
+                const updatedNodes = moveNodes({ x: dx, y: dy }, initialNodePositions);
 
                 setItems(
                     items.map((item) =>
@@ -139,7 +138,6 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             pendingClickItemId,
             dragStartMouse,
             initialNodePositions,
-            nodeMoveStep,
             tempEdge,
             setItems,
             setTempEdge,
@@ -201,7 +199,6 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             setIsDraggingNodes(false);
             setDragStartMouse(null);
             setPendingClickItemId(null);
-            setInitialNodePositions(new Map());
         },
         [
             canvasRef,
