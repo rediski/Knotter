@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware';
 import type { CanvasItem, Position, TooltipMode, EditorMode } from '@/canvas/canvas.types';
 import type { Parameter } from '@/canvas/utils/parameters/parameter.types';
 
-import { NODE_MOVE_MIN_STEP, INITIAL_ZOOM } from '@/canvas/canvas.constants';
+import { INITIAL_ZOOM } from '@/canvas/canvas.constants';
 
 export interface CanvasState {
     offset: Position;
@@ -15,9 +15,6 @@ export interface CanvasState {
 
     mousePosition: Position;
     setMousePosition: (pos: Position) => void;
-
-    nodeMoveStep: number;
-    setNodeMoveStep: (step: number) => void;
 
     invertY: boolean;
     setInvertY: (value: boolean) => void;
@@ -80,9 +77,6 @@ export const useCanvasStore = create<CanvasState>()(
 
             mousePosition: { x: 0, y: 0 },
             setMousePosition: (mousePosition) => set({ mousePosition }),
-
-            nodeMoveStep: NODE_MOVE_MIN_STEP,
-            setNodeMoveStep: (step) => set({ nodeMoveStep: step }),
 
             invertY: true,
             setInvertY: (value) => set({ invertY: value }),
@@ -149,7 +143,6 @@ export const useCanvasStore = create<CanvasState>()(
             partialize: (state) => ({
                 offset: state.offset,
                 zoomLevel: state.zoomLevel,
-                nodeMoveStep: state.nodeMoveStep,
                 invertY: state.invertY,
 
                 // ---

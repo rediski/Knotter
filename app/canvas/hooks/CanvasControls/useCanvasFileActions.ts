@@ -14,7 +14,6 @@ export function useCanvasFileActions() {
     const setItems = useCanvasStore((state) => state.setItems);
     const setOffset = useCanvasStore((state) => state.setOffset);
     const setZoomLevel = useCanvasStore((state) => state.setZoomLevel);
-    const setNodeMoveStep = useCanvasStore((state) => state.setNodeMoveStep);
     const setInvertY = useCanvasStore((state) => state.setInvertY);
     const setParameters = useCanvasStore((state) => state.setParameters);
     const setSelectedItemIds = useCanvasStore((state) => state.setSelectedItemIds);
@@ -72,7 +71,6 @@ export function useCanvasFileActions() {
 
             if (parsed.offset) setOffset(parsed.offset);
             if (parsed.zoomLevel !== undefined) setZoomLevel(parsed.zoomLevel);
-            if (parsed.nodeMoveStep !== undefined) setNodeMoveStep(parsed.nodeMoveStep);
             if (parsed.invertY !== undefined) setInvertY(parsed.invertY);
 
             if (Array.isArray(parsed.items)) {
@@ -103,7 +101,6 @@ export function useCanvasFileActions() {
         setItems,
         setOffset,
         setZoomLevel,
-        setNodeMoveStep,
         setInvertY,
         setParameters,
         setSelectedItemIds,
@@ -121,7 +118,6 @@ export function useCanvasFileActions() {
             const stateToSave: Partial<CanvasState> = {
                 offset: currentState.offset,
                 zoomLevel: currentState.zoomLevel,
-                nodeMoveStep: currentState.nodeMoveStep,
                 invertY: currentState.invertY,
                 items: currentState.items,
                 parameters: currentState.parameters,

@@ -6,7 +6,6 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { useCanvasHandlers } from '@/canvas/hooks/useCanvasHandlers';
 
 import { moveNodes } from '@/canvas/utils/nodes/moveNodes';
-import { getNodes } from '@/canvas/utils/nodes/getNodes';
 
 import { Position, Node } from '@/canvas/canvas.types';
 
@@ -15,7 +14,6 @@ export function useInspector() {
     const setItems = useCanvasStore((state) => state.setItems);
     const selectedItem = useCanvasStore((state) => state.selectedItem);
     const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
-    const nodeMoveStep = useCanvasStore((state) => state.nodeMoveStep);
 
     const { changeNodeShapeType } = useCanvasHandlers();
 
@@ -41,12 +39,12 @@ export function useInspector() {
                 y: axis === 'y' ? value - selectedNode.position.y : 0,
             };
 
-            const updatedNodes = moveNodes(getNodes(items), selectedItemIds, initialPositions, delta, nodeMoveStep);
+            const updatedNodes = moveNodes(delta, initialPositions);
             const updatedItems = items.map((item) => updatedNodes.find((node) => node.id === item.id) ?? item);
 
             setItems(updatedItems);
         },
-        [selectedNode, selectedItemIds, nodeMoveStep, items, setItems],
+        [selectedNode, selectedItemIds, items, setItems],
     );
 
     const сhangeItemName = useCallback(
