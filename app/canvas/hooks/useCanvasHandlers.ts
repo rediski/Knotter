@@ -15,7 +15,7 @@ import { toggleTooltipMode } from '@/canvas/utils/canvas/toggleTooltipMode';
 import { createItem } from '@/canvas/utils/items/createItem';
 import { deleteItems } from '@/canvas/utils/items/deleteItems';
 
-import { moveNodes } from '@/canvas/utils/nodes/moveNodes';
+import { moveItems } from '@/canvas/utils/items/moveItems';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getSelectedNodes } from '@/canvas/utils/nodes/getSelectedNodes';
 
@@ -183,9 +183,9 @@ export function useCanvasHandlers() {
                 }
             });
 
-            const movedNodes = moveNodes({ x: dx, y: dy }, initialPositions);
+            const movedItems = moveItems({ x: dx, y: dy }, initialPositions);
 
-            setItems([...movedNodes, ...edges]);
+            setItems([...movedItems, ...edges]);
         },
 
         changeNodeShapeType: (nodeIds: string[], newShape: NodeShapeType) => {

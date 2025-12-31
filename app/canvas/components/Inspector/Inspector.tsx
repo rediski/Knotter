@@ -27,8 +27,8 @@ export const Inspector = memo(function Inspector() {
 
         сhangeItemName,
         changeItemDescription,
+        changeItemsPosition,
         changeNodeShapeType,
-        changeNodePosition,
     } = useInspector();
 
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
@@ -73,7 +73,7 @@ export const Inspector = memo(function Inspector() {
                             </Dropdown>
 
                             <Dropdown title={'Трансформация'} isOpen={isDropdownOpen(2)} onToggle={() => toggleDropdown(2)}>
-                                <PositionInputs positionX={positionX} positionY={positionY} onMove={changeNodePosition} />
+                                <PositionInputs positionX={positionX} positionY={positionY} onMove={changeItemsPosition} />
                             </Dropdown>
                         </>
                     )}

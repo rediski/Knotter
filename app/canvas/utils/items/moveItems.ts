@@ -4,7 +4,7 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { NODE_MOVE_MIN_STEP, NODE_MOVE_MAX_STEP } from '@/canvas/canvas.constants';
 
-export function moveNodes(dragDelta: Position, initialPositions: Map<string, Position>): CanvasItem[] {
+export function moveItems(dragDelta: Position, initialPositions: Map<string, Position>): CanvasItem[] {
     const selectedItemIds = useCanvasStore.getState().selectedItemIds;
     const items = useCanvasStore.getState().items;
     const isMagnet = useCanvasStore.getState().isMagnet;
@@ -13,29 +13,29 @@ export function moveNodes(dragDelta: Position, initialPositions: Map<string, Pos
 
     let changed = false;
 
-    const updatedNodes = items.map((node) => {
-        if (!selectedItemIds.includes(node.id)) return node;
+    const updatedItems = items.map((item) => {
+        if (!selectedItemIds.includes(item.id)) return item;
 
-        const initialPos = initialPositions.get(node.id);
+        const initialPos = initialPositions.get(item.id);
 
-        if (!initialPos) return node;
+        if (!initialPos) return item;
 
         const step = isMagnet ? NODE_MOVE_MAX_STEP : NODE_MOVE_MIN_STEP;
 
         const newX = Math.round((initialPos.x + dx) / step) * step;
         const newY = Math.round((initialPos.y + dy) / step) * step;
 
-        if (newX === node.position.x && newY === node.position.y) {
-            return node;
+        if (newX === item.position.x && newY === item.position.y) {
+            return item;
         }
 
         changed = true;
 
         return {
-            ...node,
+            ...item,
             position: { x: newX, y: newY },
         };
     });
 
-    return changed ? updatedNodes : items;
+    return changed ? updatedItems : items;
 }
