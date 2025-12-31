@@ -13,18 +13,6 @@ interface MenuContentProps {
     onSaveAs: () => void;
 }
 
-const HomeLink = memo(function HomeLink() {
-    return (
-        <Link
-            href="/"
-            className="flex items-center justify-between gap-2 bg-depth-2 hover:bg-depth-3 px-3 py-2 rounded-md text-red"
-        >
-            На главную
-            <Home size={16} />
-        </Link>
-    );
-});
-
 export const MenuContent = memo(function MenuContent({ onOpenProject, onSaveAs }: MenuContentProps) {
     const invertY = useCanvasStore((state) => state.invertY);
     const setInvertY = useCanvasStore((state) => state.setInvertY);
@@ -62,7 +50,13 @@ export const MenuContent = memo(function MenuContent({ onOpenProject, onSaveAs }
             <hr className="border-b-0 border-depth-3" />
 
             <div className="m-1">
-                <HomeLink />
+                <Link
+                    href="/"
+                    className="flex items-center justify-between gap-2 bg-depth-2 hover:bg-depth-3 px-3 py-2 rounded-md text-red"
+                >
+                    На главную
+                    <Home size={16} />
+                </Link>
             </div>
         </div>
     );
