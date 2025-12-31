@@ -1,7 +1,5 @@
 import { useEffect, RefObject } from 'react';
 
-import { NODE_MOVE_MAX_STEP } from '@/canvas/canvas.constants';
-
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { useCanvasHistory } from '@/canvas/hooks/useCanvasHistory';
@@ -77,23 +75,6 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
                 if (key === 'a' || key === 'ф') return handlers.addNode();
                 if (key === 'e' || key === 'у') return handlers.startEdge();
                 if (key === 't' || key === 'е') return handlers.addText();
-            }
-
-            const step = NODE_MOVE_MAX_STEP;
-
-            switch (key) {
-                case 'arrowup':
-                    handlers.moveSelection(0, -step);
-                    break;
-                case 'arrowdown':
-                    handlers.moveSelection(0, step);
-                    break;
-                case 'arrowleft':
-                    handlers.moveSelection(-step, 0);
-                    break;
-                case 'arrowright':
-                    handlers.moveSelection(step, 0);
-                    break;
             }
         };
 
