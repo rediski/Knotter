@@ -41,9 +41,10 @@ export interface TextElement {
     id: string;
     name: string;
     content: string;
-    width?: number;
-    height?: number;
+    width: number;
+    height: number;
     position: Position;
+    fontSize?: number;
     textAlign?: 'left' | 'center' | 'right';
     isEditing?: boolean;
     kind: 'text';
