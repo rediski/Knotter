@@ -49,6 +49,7 @@ export function CanvasTexts() {
                         key={text.id}
                         className="absolute"
                         onDoubleClick={() => startEditing(text)}
+                        data-text-id={text.id}
                         style={{
                             left: screenX,
                             top: screenY,
@@ -68,7 +69,7 @@ export function CanvasTexts() {
                         ) : (
                             <div
                                 className={`
-                                    border px-3 py-1
+                                    border px-3 py-1 cursor-move
                                     ${isSelected && 'border-bg-accent'}
                                 `}
                             >
