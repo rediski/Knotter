@@ -2,23 +2,25 @@
 
 import { useCallback, RefObject, useState } from 'react';
 
-import { Position } from '@/canvas/canvas.types';
+import type { Position } from '@/canvas/canvas.types';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { useMousePosition } from '@/canvas/hooks/useMousePosition';
 
 import { getMousePosition } from '@/canvas/utils/canvas/getMousePosition';
+import { findCanvasUnderCursor } from '@/canvas/utils/canvas/findCanvasUnderCursor';
 
 import { selectCanvasItem } from '@/canvas/utils/items/selectItem';
 import { createItem } from '@/canvas/utils/items/createItem';
-
-import { findNodeUnderCursor } from '@/canvas/utils/nodes/findNodeUnderCursor';
-import { moveNodes } from '@/canvas/utils/nodes/moveNodes';
+import { moveItems } from '@/canvas/utils/items/moveItems';
 import { getSelectedItemsPositions } from '@/canvas/utils/items/getSelectedItemsPositions';
-import { getNodes } from '@/canvas/utils/nodes/getNodes';
 
-import { findEdgeUnderCursor } from '@/canvas/utils/edges/findEdgeUnderCursor';
+import { getNodes } from '@/canvas/utils/nodes/getNodes';
+import { getNodeIdUnderCursor } from '@/canvas/utils/nodes/getNodeIdUnderCursor';
+
 import { getEdges } from '@/canvas/utils/edges/getEdges';
+
+import { getTextIdUnderCursor } from '@/canvas/utils/texts/getTextIdUnderCursor';
 
 export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | null>, isPanningRef?: RefObject<boolean>) {
     const items = useCanvasStore((state) => state.items);
@@ -38,12 +40,15 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
     const [initialNodePositions, setInitialNodePositions] = useState<Map<string, Position>>(new Map());
 
     const updateHoveredNodeId = useCallback(
-        (mousePos: Position) => {
-            const nodes = getNodes(items);
-            const hoveredNode = findNodeUnderCursor(nodes, mousePos);
-            setHoveredNodeId(hoveredNode?.id || null);
+        (e: MouseEvent) => {
+            const hoveredNodeId = getNodeIdUnderCursor({
+                x: e.clientX,
+                y: e.clientY,
+            });
+
+            setHoveredNodeId(hoveredNodeId);
         },
-        [items, setHoveredNodeId],
+        [setHoveredNodeId],
     );
 
     const onMouseDown = useCallback(
@@ -66,15 +71,24 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             const mousePos = getMousePosition(e, canvas);
             trackMousePosition(mousePos, setMousePosition);
 
-            const nodes = getNodes(items);
-            const edges = getEdges(items);
+            const clickedCanvas = findCanvasUnderCursor(e, canvas);
+            if (clickedCanvas) return;
 
-            const clickedNode = findNodeUnderCursor(nodes, mousePos);
-            const clickedEdge = !clickedNode ? findEdgeUnderCursor(edges, nodes, mousePos) : null;
+            const clickedNodeId = getNodeIdUnderCursor({
+                x: e.clientX,
+                y: e.clientY,
+            });
 
-            if (!clickedNode && !clickedEdge) return;
+            const clickedTextId = getTextIdUnderCursor({
+                x: e.clientX,
+                y: e.clientY,
+            });
 
-            const clickedItemId = (clickedNode || clickedEdge)!.id;
+            const clickedItemId = clickedNodeId || clickedTextId;
+
+            console.log(clickedNodeId, clickedTextId);
+
+            if (!clickedItemId) return;
 
             setPendingClickItemId(clickedItemId);
             setDragStartMouse(mousePos);
@@ -85,7 +99,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
                 }
             }
         },
-        [canvasRef, items, selectedItemIds, setSelectedItemIds, trackMousePosition, setMousePosition],
+        [canvasRef, selectedItemIds, setSelectedItemIds, trackMousePosition, setMousePosition],
     );
 
     const onMouseMove = useCallback(
@@ -98,12 +112,10 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             trackMousePosition(mousePos, setMousePosition);
 
             if (!isPanningRef?.current && !isDraggingNodes && !tempEdge) {
-                updateHoveredNodeId(mousePos);
+                updateHoveredNodeId(e);
             }
 
             if (isPanningRef?.current) return;
-
-            const nodes = getNodes(items);
 
             if (tempEdge) {
                 setTempEdge({ ...tempEdge, toPos: mousePos });
@@ -112,18 +124,18 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
 
             if (!isDraggingNodes && pendingClickItemId && dragStartMouse) {
                 setIsDraggingNodes(true);
-                setInitialNodePositions(getSelectedItemsPositions(nodes, selectedItemIds));
+                setInitialNodePositions(getSelectedItemsPositions(items, selectedItemIds));
             }
 
             if (isDraggingNodes && dragStartMouse) {
                 const dx = mousePos.x - dragStartMouse.x;
                 const dy = mousePos.y - dragStartMouse.y;
 
-                const updatedNodes = moveNodes({ x: dx, y: dy }, initialNodePositions);
+                const updatedNodes = moveItems({ x: dx, y: dy }, initialNodePositions);
 
                 setItems(
                     items.map((item) =>
-                        item.kind === 'node' && selectedItemIds.includes(item.id)
+                        item.kind !== 'edge' && selectedItemIds.includes(item.id)
                             ? (updatedNodes.find((n) => n.id === item.id) ?? item)
                             : item,
                     ),
@@ -172,7 +184,12 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
                 const nodes = getNodes(items);
                 const edges = getEdges(items);
 
-                const targetNode = findNodeUnderCursor(nodes, mousePos);
+                const targetNodeId = getNodeIdUnderCursor({
+                    x: e.clientX,
+                    y: e.clientY,
+                });
+
+                const targetNode = nodes.find((n) => n.id === targetNodeId) ?? null;
 
                 const edgeExists = targetNode
                     ? edges.some((edge) => edge.from === tempEdge.from && edge.to === targetNode.id)
