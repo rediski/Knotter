@@ -16,7 +16,6 @@ export const Select = memo(function Select({ value, options, onChange, label }: 
 
     const selected = options.find((option) => option === value);
 
-    console.log(selected);
     return (
         <div ref={selectRef} className="flex flex-col w-full">
             <button
