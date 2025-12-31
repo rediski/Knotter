@@ -86,8 +86,6 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
 
             const clickedItemId = clickedNodeId || clickedTextId;
 
-            console.log(clickedNodeId, clickedTextId);
-
             if (!clickedItemId) return;
 
             setPendingClickItemId(clickedItemId);
