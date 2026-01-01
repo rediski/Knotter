@@ -73,6 +73,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             trackMousePosition(mousePos, setMousePosition);
 
             const clickedCanvas = findCanvasUnderCursor(e, canvas);
+
             if (clickedCanvas) return;
 
             const clickedNodeId = getNodeIdUnderCursor({
@@ -85,9 +86,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
                 y: e.clientY,
             });
 
-            if (!clickedTextId) return;
-
-            const textItem = getTextById(items, clickedTextId);
+            const textItem = getTextById(items, clickedTextId!);
 
             if (textItem?.isEditing) {
                 return;
