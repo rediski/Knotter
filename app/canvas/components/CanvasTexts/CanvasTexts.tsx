@@ -21,14 +21,22 @@ export function CanvasTexts() {
     const textareaRef = useRef<HTMLDivElement | null>(null);
 
     const resizingRef = useRef<{
-        startX: number;
-        startY: number;
-        startFontSize: number;
-        startWidth: number;
-        startXPos: number;
-        startYPos: number;
-        id: string;
-        direction: string;
+        targetId: string;
+        handleDirection: string;
+        aspectRatio: number;
+
+        initialMousePos: {
+            x: number;
+            y: number;
+        };
+
+        initialElementState: {
+            fontSize: number;
+            width: number;
+            height: number;
+            x: number;
+            y: number;
+        };
     } | null>(null);
 
     const startEditing = useCallback((text: TextElement) => {
@@ -78,56 +86,75 @@ export function CanvasTexts() {
             e.stopPropagation();
             e.preventDefault();
 
+            const currentHeight = text.height ?? 100;
+
+            const aspectRatio = (text.width ?? 100) / currentHeight;
+
             resizingRef.current = {
-                startX: e.clientX,
-                startY: e.clientY,
-                startFontSize: text.fontSize ?? 16,
-                startWidth: text.width ?? 100,
-                startXPos: text.position.x,
-                startYPos: text.position.y,
-                id: text.id,
-                direction,
+                targetId: text.id,
+                handleDirection: direction,
+                aspectRatio,
+
+                initialMousePos: {
+                    x: e.clientX,
+                    y: e.clientY,
+                },
+
+                initialElementState: {
+                    fontSize: text.fontSize ?? 16,
+                    width: text.width ?? 100,
+                    height: currentHeight,
+                    x: text.position.x,
+                    y: text.position.y,
+                },
             };
 
             const onMove = (ev: MouseEvent) => {
                 if (!resizingRef.current) return;
 
-                const { direction, startX, startY, startWidth, startFontSize } = resizingRef.current;
+                const { handleDirection, initialMousePos, initialElementState, aspectRatio } = resizingRef.current;
 
-                const dx = (ev.clientX - startX) / zoomLevel;
-                const dy = (ev.clientY - startY) / zoomLevel;
+                const dx = (ev.clientX - initialMousePos.x) / zoomLevel;
 
-                let newWidth = startWidth;
-                let newFontSize = startFontSize;
+                let newWidth = initialElementState.width;
+                let newFontSize = initialElementState.fontSize;
+                let newHeight = initialElementState.height;
 
-                switch (direction) {
+                switch (handleDirection) {
                     case 'top-left':
-                        newWidth = Math.max(startWidth - dx, 10);
-                        newFontSize = Math.max(startFontSize - dy, 6);
+                        newWidth = Math.max(initialElementState.width - dx, 10);
+                        newHeight = newWidth / aspectRatio;
+                        newFontSize = initialElementState.fontSize * (newWidth / initialElementState.width);
                         break;
                     case 'top-right':
-                        newWidth = Math.max(startWidth + dx, 10);
-                        newFontSize = Math.max(startFontSize - dy, 6);
+                        newWidth = Math.max(initialElementState.width + dx, 10);
+                        newHeight = newWidth / aspectRatio;
+                        newFontSize = initialElementState.fontSize * (newWidth / initialElementState.width);
                         break;
                     case 'bottom-left':
-                        newWidth = Math.max(startWidth - dx, 10);
-                        newFontSize = Math.max(startFontSize + dy, 6);
+                        newWidth = Math.max(initialElementState.width - dx, 10);
+                        newHeight = newWidth / aspectRatio;
+                        newFontSize = initialElementState.fontSize * (newWidth / initialElementState.width);
                         break;
                     case 'bottom-right':
-                        newWidth = Math.max(startWidth + dx, 10);
-                        newFontSize = Math.max(startFontSize + dy, 6);
+                        newWidth = Math.max(initialElementState.width + dx, 10);
+                        newHeight = newWidth / aspectRatio;
+                        newFontSize = initialElementState.fontSize * (newWidth / initialElementState.width);
                         break;
                 }
 
+                newFontSize = Math.max(newFontSize, 6);
+
                 setItems(
                     items.map((item) => {
-                        if (item.kind !== 'text' || item.id !== resizingRef.current!.id) return item;
+                        if (item.kind !== 'text' || item.id !== resizingRef.current!.targetId) return item;
                         if (editingId === item.id) return item;
+
                         return {
                             ...item,
                             width: newWidth,
+                            height: newHeight,
                             fontSize: newFontSize,
-                            position: item.position,
                         };
                     }),
                 );
