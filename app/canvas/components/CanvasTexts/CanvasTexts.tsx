@@ -39,26 +39,36 @@ export function CanvasTexts() {
         };
     } | null>(null);
 
-    const startEditing = useCallback((text: TextElement) => {
-        setEditingId(text.id);
-        setTimeout(() => {
-            if (!textareaRef.current) return;
+    const startEditing = useCallback(
+        (text: TextElement) => {
+            setEditingId(text.id);
 
-            const el = textareaRef.current;
+            const updatedItems = items.map((item) =>
+                item.kind === 'text' && item.id === text.id ? { ...item, isEditing: true } : item,
+            );
 
-            el.focus();
+            setItems(updatedItems);
 
-            const range = document.createRange();
+            setTimeout(() => {
+                if (!textareaRef.current) return;
 
-            range.selectNodeContents(el);
-            range.collapse(false);
+                const el = textareaRef.current;
 
-            const sel = window.getSelection();
+                el.focus();
 
-            sel?.removeAllRanges();
-            sel?.addRange(range);
-        }, 0);
-    }, []);
+                const range = document.createRange();
+
+                range.selectNodeContents(el);
+                range.collapse(false);
+
+                const sel = window.getSelection();
+
+                sel?.removeAllRanges();
+                sel?.addRange(range);
+            }, 0);
+        },
+        [items, setItems],
+    );
 
     const finishEditing = useCallback(() => {
         if (!textareaRef.current || !editingId) return;
@@ -73,7 +83,7 @@ export function CanvasTexts() {
             .trim();
 
         const updatedItems = items.map((item) =>
-            item.kind === 'text' && item.id === editingId ? { ...item, content: newText } : item,
+            item.kind === 'text' && item.id === editingId ? { ...item, content: newText, isEditing: false } : item,
         );
 
         setItems(updatedItems);
@@ -203,9 +213,9 @@ export function CanvasTexts() {
                             contentEditable={isEditing}
                             suppressContentEditableWarning
                             onBlur={finishEditing}
-                            className={`relative cursor-text border
+                            className={`relative  border cursor-move
                                 ${isSelected ? 'border-bg-accent' : 'border-transparent'}
-                                ${isEditing ? 'border-bg-accent outline-1 outline-bg-accent' : ''}
+                                ${isEditing ? 'border-bg-accent outline-1 outline-bg-accent cursor-text' : ''}
                             `}
                             style={{
                                 minWidth: (text.width ?? 100) * zoomLevel,
