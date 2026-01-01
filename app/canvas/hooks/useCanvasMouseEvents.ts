@@ -20,6 +20,7 @@ import { getNodeIdUnderCursor } from '@/canvas/utils/nodes/getNodeIdUnderCursor'
 
 import { getEdges } from '@/canvas/utils/edges/getEdges';
 
+import { getTextById } from '@/canvas/utils/texts/getTextById';
 import { getTextIdUnderCursor } from '@/canvas/utils/texts/getTextIdUnderCursor';
 
 export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | null>, isPanningRef?: RefObject<boolean>) {
@@ -84,6 +85,14 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
                 y: e.clientY,
             });
 
+            if (!clickedTextId) return;
+
+            const textItem = getTextById(items, clickedTextId);
+
+            if (textItem?.isEditing) {
+                return;
+            }
+
             const clickedItemId = clickedNodeId || clickedTextId;
 
             if (!clickedItemId) return;
@@ -97,7 +106,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
                 }
             }
         },
-        [canvasRef, selectedItemIds, setSelectedItemIds, trackMousePosition, setMousePosition],
+        [canvasRef, items, selectedItemIds, setSelectedItemIds, trackMousePosition, setMousePosition],
     );
 
     const onMouseMove = useCallback(
