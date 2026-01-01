@@ -20,9 +20,9 @@ export function createText(texts: TextElement[], content: string, position: Posi
     return {
         id: uuidv4(),
         name: name,
-        content: content,
-        width: 0,
-        height: 0,
+        content: (content = 'Текст'),
+        width: 40,
+        height: 40,
         position: { x, y },
         textAlign: 'left',
         isEditing: false,
