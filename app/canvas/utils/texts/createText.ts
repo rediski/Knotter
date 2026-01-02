@@ -24,6 +24,7 @@ export function createText(texts: TextElement[], content: string, position: Posi
         width: 40,
         height: 40,
         position: { x, y },
+        fontSize: 14,
         textAlign: 'left',
         isEditing: false,
         kind: 'text',
