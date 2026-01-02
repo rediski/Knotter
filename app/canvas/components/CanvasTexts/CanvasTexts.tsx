@@ -1,8 +1,11 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
+
+import type { TextElement } from '@/canvas/canvas.types';
+
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { TextElement } from '@/canvas/canvas.types';
+
 import { getTexts } from '@/canvas/utils/texts/getTexts';
 
 export function CanvasTexts() {
@@ -39,7 +42,7 @@ export function CanvasTexts() {
         };
     } | null>(null);
 
-    const startEditing = useCallback(
+    const enterEditMode = useCallback(
         (text: TextElement) => {
             setEditingId(text.id);
 
@@ -48,57 +51,37 @@ export function CanvasTexts() {
             );
 
             setItems(updatedItems);
-
-            setTimeout(() => {
-                if (!textareaRef.current) return;
-
-                const el = textareaRef.current;
-
-                el.focus();
-
-                const range = document.createRange();
-
-                range.selectNodeContents(el);
-                range.collapse(false);
-
-                const sel = window.getSelection();
-
-                sel?.removeAllRanges();
-                sel?.addRange(range);
-            }, 0);
         },
         [items, setItems],
     );
 
-    const finishEditing = useCallback(() => {
+    const exitEditMode = useCallback(() => {
         if (!textareaRef.current || !editingId) return;
 
-        const html = textareaRef.current.innerHTML || '';
-
-        const newText = html
-            .replace(/<div>/g, '\n')
-            .replace(/<\/div>/g, '')
-            .replace(/<br>/g, '\n')
-            .replace(/&nbsp;/g, ' ')
-            .trim();
+        const textContent = textareaRef.current.innerText;
 
         const updatedItems = items.map((item) =>
-            item.kind === 'text' && item.id === editingId ? { ...item, content: newText, isEditing: false } : item,
+            item.kind === 'text' && item.id === editingId
+                ? {
+                      ...item,
+                      content: textContent,
+                      isEditing: false,
+                  }
+                : item,
         );
 
         setItems(updatedItems);
-
         setEditingId(null);
     }, [editingId, items, setItems]);
 
-    const startResize = useCallback(
+    const beginTextResize = useCallback(
         (text: TextElement, e: React.MouseEvent, direction: string) => {
             e.stopPropagation();
             e.preventDefault();
 
-            const currentHeight = text.height ?? 100;
+            const currentHeight = text.height;
 
-            const aspectRatio = (text.width ?? 100) / currentHeight;
+            const aspectRatio = text.width / currentHeight;
 
             resizingRef.current = {
                 targetId: text.id,
@@ -111,15 +94,15 @@ export function CanvasTexts() {
                 },
 
                 initialElementState: {
-                    fontSize: text.fontSize ?? 16,
-                    width: text.width ?? 100,
+                    fontSize: text.fontSize,
+                    width: text.width,
                     height: currentHeight,
                     x: text.position.x,
                     y: text.position.y,
                 },
             };
 
-            const onMove = (ev: MouseEvent) => {
+            const handleResizeMove = (ev: MouseEvent) => {
                 if (!resizingRef.current) return;
 
                 const { handleDirection, initialMousePos, initialElementState, aspectRatio } = resizingRef.current;
@@ -127,33 +110,34 @@ export function CanvasTexts() {
                 const dx = (ev.clientX - initialMousePos.x) / zoomLevel;
 
                 let newWidth = initialElementState.width;
-                let newFontSize = initialElementState.fontSize;
                 let newHeight = initialElementState.height;
+                let newX = initialElementState.x;
+                let newY = initialElementState.y;
 
                 switch (handleDirection) {
                     case 'top-left':
                         newWidth = Math.max(initialElementState.width - dx, 10);
                         newHeight = newWidth / aspectRatio;
-                        newFontSize = initialElementState.fontSize * (newWidth / initialElementState.width);
+                        newX = initialElementState.x + (initialElementState.width - newWidth);
+                        newY = initialElementState.y + (initialElementState.height - newHeight);
                         break;
                     case 'top-right':
                         newWidth = Math.max(initialElementState.width + dx, 10);
                         newHeight = newWidth / aspectRatio;
-                        newFontSize = initialElementState.fontSize * (newWidth / initialElementState.width);
+                        newY = initialElementState.y + (initialElementState.height - newHeight);
                         break;
                     case 'bottom-left':
                         newWidth = Math.max(initialElementState.width - dx, 10);
                         newHeight = newWidth / aspectRatio;
-                        newFontSize = initialElementState.fontSize * (newWidth / initialElementState.width);
+                        newX = initialElementState.x + (initialElementState.width - newWidth);
                         break;
                     case 'bottom-right':
                         newWidth = Math.max(initialElementState.width + dx, 10);
                         newHeight = newWidth / aspectRatio;
-                        newFontSize = initialElementState.fontSize * (newWidth / initialElementState.width);
                         break;
                 }
 
-                newFontSize = Math.max(newFontSize, 6);
+                const newFontSize = Math.max(initialElementState.fontSize * (newWidth / initialElementState.width), 6);
 
                 setItems(
                     items.map((item) => {
@@ -165,19 +149,24 @@ export function CanvasTexts() {
                             width: newWidth,
                             height: newHeight,
                             fontSize: newFontSize,
+                            position: {
+                                ...item.position,
+                                x: newX,
+                                y: newY,
+                            },
                         };
                     }),
                 );
             };
 
-            const onUp = () => {
+            const handleResizeEnd = () => {
                 resizingRef.current = null;
-                window.removeEventListener('mousemove', onMove);
-                window.removeEventListener('mouseup', onUp);
+                window.removeEventListener('mousemove', handleResizeMove);
+                window.removeEventListener('mouseup', handleResizeEnd);
             };
 
-            window.addEventListener('mousemove', onMove);
-            window.addEventListener('mouseup', onUp);
+            window.addEventListener('mousemove', handleResizeMove);
+            window.addEventListener('mouseup', handleResizeEnd);
         },
         [editingId, items, setItems, zoomLevel],
     );
@@ -205,14 +194,14 @@ export function CanvasTexts() {
                             textAlign: text.textAlign ?? 'left',
                             whiteSpace: 'pre',
                         }}
-                        onDoubleClick={() => startEditing(text)}
+                        onDoubleClick={() => enterEditMode(text)}
                     >
                         <div
                             key={isEditing ? `editing-${text.id}` : text.id}
                             ref={isEditing ? textareaRef : null}
                             contentEditable={isEditing}
                             suppressContentEditableWarning
-                            onBlur={finishEditing}
+                            onBlur={exitEditMode}
                             className={`relative  border cursor-move
                                 ${isSelected ? 'border-bg-accent' : 'border-transparent'}
                                 ${isEditing ? 'border-bg-accent outline-1 outline-bg-accent cursor-text' : ''}
@@ -227,7 +216,7 @@ export function CanvasTexts() {
                             {text.content}
                             {isSelected && !isEditing && (
                                 <ResizeHandle
-                                    onResizeStart={(e, direction) => startResize(text, e, direction)}
+                                    onResizeStart={(e, direction) => beginTextResize(text, e, direction)}
                                     zoomLevel={zoomLevel}
                                 />
                             )}
@@ -259,19 +248,19 @@ function ResizeHandle({
 
     return (
         <>
-            {handles.map((h) => (
+            {handles.map((handle) => (
                 <div
-                    key={h.direction}
-                    onMouseDown={(e) => onResizeStart(e, h.direction)}
+                    key={handle.direction}
+                    onMouseDown={(e) => onResizeStart(e, handle.direction)}
                     className="absolute bg-depth-1 border border-bg-accent rounded-xs"
                     style={{
                         width: size,
                         height: size,
-                        top: h.top,
-                        bottom: h.bottom,
-                        left: h.left,
-                        right: h.right,
-                        cursor: h.cursor,
+                        top: handle.top,
+                        bottom: handle.bottom,
+                        left: handle.left,
+                        right: handle.right,
+                        cursor: handle.cursor,
                     }}
                 />
             ))}
