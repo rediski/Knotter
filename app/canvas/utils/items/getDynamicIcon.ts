@@ -1,5 +1,5 @@
 import { LucideIcon } from 'lucide-react';
-import { Box, Link2, Hash, Type, FlagTriangleRight, List, Brackets, Bug } from 'lucide-react';
+import { Box, Link2, Hash, Type, Feather, FlagTriangleRight, List, Brackets, Bug } from 'lucide-react';
 
 const dynamicIconMap: Record<string, LucideIcon> = {
     node: Box,
@@ -7,6 +7,7 @@ const dynamicIconMap: Record<string, LucideIcon> = {
 
     number: Hash,
     string: Type,
+    text: Feather,
     boolean: FlagTriangleRight,
     enum: List,
     array: Brackets,
