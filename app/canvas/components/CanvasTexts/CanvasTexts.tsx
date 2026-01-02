@@ -185,7 +185,7 @@ export function CanvasTexts() {
                 return (
                     <div
                         key={text.id}
-                        className="absolute pointer-events-auto select-none"
+                        className="fixed pointer-events-auto select-none"
                         data-text-id={text.id}
                         style={{
                             left: screenX,
@@ -202,7 +202,7 @@ export function CanvasTexts() {
                             contentEditable={isEditing}
                             suppressContentEditableWarning
                             onBlur={exitEditMode}
-                            className={`relative  border cursor-move
+                            className={`border cursor-move
                                 ${isSelected ? 'border-bg-accent' : 'border-transparent'}
                                 ${isEditing ? 'border-bg-accent outline-1 outline-bg-accent cursor-text' : ''}
                             `}
