@@ -52,8 +52,12 @@ export const HierarchyItem = memo(function HierarchyItem({
                 onKeyDown={onKeyDown}
             >
                 <div className="flex items-center justify-between gap-1">
-                    <div className="flex items-center gap-1 w-full">
-                        <Icon size={16} className={`${isSelected ? 'text-text-accent' : 'text-foreground'} min-w-4`} />
+                    <div className="flex items-center gap-2 w-full">
+                        <div className={`max-w-4 w-full ${isSelected ? 'text-text-accent' : 'text-foreground'} `}>
+                            <Icon size={16} />
+                        </div>
+
+                        <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/10' : 'border-depth-4'}`} />
 
                         <EditableName
                             name={canvasItem.name}
