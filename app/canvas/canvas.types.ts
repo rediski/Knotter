@@ -44,8 +44,8 @@ export interface TextElement {
     width: number;
     height: number;
     position: Position;
-    fontSize?: number;
-    textAlign?: 'left' | 'center' | 'right';
-    isEditing?: boolean;
+    fontSize: number;
+    textAlign: 'left' | 'center' | 'right';
+    isEditing: boolean;
     kind: 'text';
 }
