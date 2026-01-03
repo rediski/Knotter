@@ -44,7 +44,7 @@ export const Inspector = memo(function Inspector() {
     const Icon = getDynamicIcon(selectedItem?.kind || 'bug');
 
     return (
-        <div className="flex flex-col h-screen overflow-y-auto pb-1">
+        <div className="flex flex-col overflow-y-auto pb-1">
             <div className="flex flex-col gap-1 m-1">
                 <Input
                     value={selectedItem.name}
