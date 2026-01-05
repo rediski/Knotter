@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { ToastProvider } from '@/components/UI/Toast';
 
 import Canvas from '@/canvas/components/Canvas/Canvas';
-import { CanvasSidebar } from '@/canvas/components/CanvasSidebar/CanvasSidebar';
+
+import { Sidebar } from '@/components/UI/Sidebar';
 
 import { useMobileDetection } from '@/canvas/hooks/useMobileDetection';
 
@@ -63,7 +64,7 @@ export default function CanvasPage() {
                     <Canvas />
                 </main>
 
-                <CanvasSidebar />
+                <Sidebar />
             </div>
         </ToastProvider>
     );
