@@ -48,11 +48,11 @@ export const DropdownAbsolute = memo(function DropdownAbsolute({
     );
 
     return (
-        <div ref={dropdownRef} className="relative w-full">
+        <div ref={dropdownRef} className="relative w-fit">
             <button
                 onClick={toggle}
                 className={`
-                    flex justify-between items-center px-3 py-1 h-8 w-full text-sm rounded-md cursor-pointer 
+                    flex justify-between items-center gap-1 px-3 py-1 h-8 w-full text-sm rounded-md cursor-pointer 
                     ${light ? 'bg-depth-3 hover:bg-depth-4' : 'bg-depth-2 hover:bg-border'}
                 `}
             >
@@ -61,6 +61,7 @@ export const DropdownAbsolute = memo(function DropdownAbsolute({
 
                     {title}
                 </div>
+
                 <ChevronDown
                     className={`
                         transition-transform 
@@ -73,7 +74,7 @@ export const DropdownAbsolute = memo(function DropdownAbsolute({
             {isOpen && (
                 <div
                     className={`
-                        absolute top-full left-0 flex flex-col gap-1 w-full text-sm shadow-md rounded-md mt-1 p-1 z-50 
+                        absolute top-full right-0 flex flex-col gap-1 w-[200px] text-sm shadow-md rounded-md mt-1 p-1 z-50
                         ${light ? 'bg-border' : 'bg-depth-2'}
                     `}
                     onClick={handleContentClick}
