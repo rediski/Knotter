@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import type { CanvasItem, Position, TooltipMode, EditorMode } from '@/canvas/canvas.types';
+import type { SidebarPanel } from '@/canvas/components/CanvasSidebar/_sidebarPanel.types';
 import type { Parameter } from '@/canvas/utils/parameters/parameter.types';
 
 import { INITIAL_ZOOM } from '@/canvas/canvas.constants';
@@ -59,8 +60,9 @@ export interface CanvasState {
 
     // ---
 
-    activeTab: string | null;
-    setActiveTab: (tabId: string | null) => void;
+    sidebarPanels: SidebarPanel[];
+    setSidebarPanels: (panels: SidebarPanel[]) => void;
+    setPanelHeight: (id: string, height: number) => void;
 
     sidebarWidth: number;
     setSidebarWidth: (width: number) => void;
@@ -130,10 +132,14 @@ export const useCanvasStore = create<CanvasState>()(
             showAxes: false,
             toggleShowAxes: () => set((s) => ({ showAxes: !s.showAxes })),
 
-            //  ---
+            sidebarPanels: [],
 
-            activeTab: null,
-            setActiveTab: (activeTab) => set({ activeTab }),
+            setSidebarPanels: (sidebarPanels) => set({ sidebarPanels }),
+
+            setPanelHeight: (id, height) =>
+                set((state) => ({
+                    sidebarPanels: state.sidebarPanels.map((panel) => (panel.id === id ? { ...panel, height } : panel)),
+                })),
 
             sidebarWidth: 380,
             setSidebarWidth: (sidebarWidth) => set({ sidebarWidth }),
@@ -160,9 +166,7 @@ export const useCanvasStore = create<CanvasState>()(
                 showGrid: state.showGrid,
                 showAxes: state.showAxes,
 
-                //---
-
-                activeTab: state.activeTab,
+                sidebarPanels: state.sidebarPanels,
                 sidebarWidth: state.sidebarWidth,
             }),
         },
