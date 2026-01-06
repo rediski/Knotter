@@ -100,7 +100,7 @@ export const CanvasControls = memo(function CanvasControls() {
     if (!mounted) return null;
 
     return (
-        <div className="absolute top-4 left-0 right-0 px-4 flex justify-between items-start z-10 text-sm">
+        <div className="flex justify-between items-start gap-12 absolute top-4 left-0 right-0 px-4  z-10 text-sm">
             <CanvasControlsMenu />
             <CanvasControlButtons controls={controls} />
         </div>
