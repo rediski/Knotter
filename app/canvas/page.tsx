@@ -59,10 +59,8 @@ export default function CanvasPage() {
     }
     return (
         <ToastProvider>
-            <div className="flex overflow-hidden w-full">
-                <main className="w-full relative">
-                    <Canvas />
-                </main>
+            <div className="flex overflow-hidden w-full select-none">
+                <Canvas />
 
                 <Sidebar />
             </div>
