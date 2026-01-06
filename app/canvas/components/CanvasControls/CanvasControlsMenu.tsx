@@ -24,7 +24,10 @@ export const CanvasControlsMenu = memo(function CanvasControlsMenu() {
         <div className="flex flex-col gap-2 max-w-60 w-full" ref={menuRef}>
             <button
                 onClick={toggleMenu}
-                className={`p-2 rounded-md w-fit cursor-pointer ${open ? 'bg-bg-accent text-white' : 'bg-depth-2 hover:bg-border'}`}
+                className={`
+                    p-2 rounded-md w-fit cursor-pointer 
+                    ${open ? 'bg-bg-accent text-white' : 'bg-depth-2 hover:bg-border'}
+                `}
             >
                 <Menu size={16} />
             </button>
