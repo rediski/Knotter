@@ -15,6 +15,8 @@ export function getPanEventHandler({ isPanningRef, lastMouseRef }: getPanEventHa
 
         isPanningRef.current = true;
         lastMouseRef.current = { x: e.clientX, y: e.clientY };
+
+        document.body.style.cursor = 'grabbing';
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -40,6 +42,7 @@ export function getPanEventHandler({ isPanningRef, lastMouseRef }: getPanEventHa
     const handleMouseUp = () => {
         isPanningRef.current = false;
         lastMouseRef.current = null;
+        document.body.style.cursor = '';
     };
 
     const handleWheelForTouchpad = (e: WheelEvent) => {
