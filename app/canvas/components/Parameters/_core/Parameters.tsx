@@ -74,7 +74,7 @@ export const Parameters = memo(function Parameters() {
             <hr className="border-b-0 border-depth-3" />
 
             {parameters.length !== 0 && (
-                <div className="flex flex-col gap-1 m-1">
+                <div className="flex flex-col gap-1 m-1 mt-0">
                     {parameters.map((parameter) => (
                         <ParametersItem key={parameter.id} parameterId={parameter.id} removeParameter={removeParameter} />
                     ))}

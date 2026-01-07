@@ -33,7 +33,7 @@ export const Hierarchy = memo(function Hierarchy() {
 
     return (
         <div className="flex flex-col flex-1 h-full">
-            <div className="flex items-center gap-2 m-1">
+            <div className="flex items-center gap-2 m-1 mt-0">
                 <Input
                     value={filterText}
                     onChange={setFilterText}
@@ -55,7 +55,7 @@ export const Hierarchy = memo(function Hierarchy() {
                 >
                     <SortableContext items={filteredItems.map((i) => i.id)} strategy={verticalListSortingStrategy}>
                         {filteredItems.length !== 0 && (
-                            <ul className="flex flex-col gap-1 m-1">
+                            <ul className="flex flex-col gap-1 m-1 mt-0">
                                 {filteredItems.map((item) => (
                                     <HierarchyItem
                                         key={item.id}

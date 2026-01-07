@@ -45,7 +45,7 @@ export const Inspector = memo(function Inspector() {
 
     return (
         <div className="flex flex-col overflow-y-auto pb-1">
-            <div className="flex flex-col gap-1 m-1">
+            <div className="flex flex-col gap-1 m-1 mt-0">
                 <Input
                     value={selectedItem.name}
                     onChange={сhangeItemName}

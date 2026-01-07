@@ -19,7 +19,7 @@ export const Sidebar = memo(function Sidebar() {
     return (
         <div
             ref={sidebarRef}
-            className="absolute top-0 right-0 bottom-0 bg-depth-1 border-l border-depth-4 flex flex-col z-50 overflow-y-auto"
+            className="absolute top-0 right-0 bottom-0 bg-depth-1 border-l border-depth-4 flex flex-col z-50 overflow-y-hidden"
             style={{ width }}
             onContextMenu={menu.handleContextMenu}
             onClick={() => menu.closeMenu()}
