@@ -166,8 +166,8 @@ export const useCanvasStore = create<CanvasState>()(
                 showGrid: state.showGrid,
                 showAxes: state.showAxes,
 
-                sidebarPanels: state.sidebarPanels,
                 sidebarWidth: state.sidebarWidth,
+                sidebarPanels: state.sidebarPanels,
             }),
         },
     ),
