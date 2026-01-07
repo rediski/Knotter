@@ -19,7 +19,6 @@ export function useCanvasFileActions() {
     const setSelectedItemIds = useCanvasStore((state) => state.setSelectedItemIds);
     const setTooltipMode = useCanvasStore((state) => state.setTooltipMode);
     const setIsMagnet = useCanvasStore((state) => state.setIsMagnet);
-    const setActiveTab = useCanvasStore((state) => state.setActiveTab);
     const setSidebarWidth = useCanvasStore((state) => state.setSidebarWidth);
 
     const { addToast } = useToast();
@@ -82,7 +81,6 @@ export function useCanvasFileActions() {
 
             if (parsed.tooltipMode) setTooltipMode(parsed.tooltipMode);
             if (parsed.isMagnet !== undefined) setIsMagnet(parsed.isMagnet);
-            if (parsed.activeTab !== undefined) setActiveTab(parsed.activeTab);
             if (parsed.sidebarWidth !== undefined) setSidebarWidth(parsed.sidebarWidth);
 
             localStorage.setItem('canvas-storage', JSON.stringify(parsed));
@@ -106,7 +104,6 @@ export function useCanvasFileActions() {
         setSelectedItemIds,
         setTooltipMode,
         setIsMagnet,
-        setActiveTab,
         setSidebarWidth,
         isFileSystemAccessSupported,
     ]);
@@ -127,7 +124,6 @@ export function useCanvasFileActions() {
                 isMagnet: currentState.isMagnet,
                 showGrid: currentState.showGrid,
                 showAxes: currentState.showAxes,
-                activeTab: currentState.activeTab,
                 sidebarWidth: currentState.sidebarWidth,
             };
 
