@@ -6,7 +6,7 @@ import { ToastProvider } from '@/components/UI/Toast';
 
 import Canvas from '@/canvas/components/Canvas/Canvas';
 
-import { Sidebar } from '@/components/UI/Sidebar';
+import { CanvasSidebar } from '@/canvas/components/CanvasSidebar/CanvasSidebar';
 
 import { useMobileDetection } from '@/canvas/hooks/useMobileDetection';
 
@@ -62,7 +62,7 @@ export default function CanvasPage() {
             <div className="flex overflow-hidden w-full select-none">
                 <Canvas />
 
-                <Sidebar />
+                <CanvasSidebar />
             </div>
         </ToastProvider>
     );

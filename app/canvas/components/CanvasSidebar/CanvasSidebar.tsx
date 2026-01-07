@@ -8,7 +8,7 @@ import { useContextMenu } from '@/canvas/hooks/useContextMenu';
 import useSidebarResize from '@/canvas/hooks/useSidebarResize';
 import { useClickOutside } from '@/canvas/hooks/useClickOutside';
 
-export const Sidebar = memo(function Sidebar() {
+export const CanvasSidebar = memo(function Sidebar() {
     const menu = useContextMenu();
 
     const sidebarRef = useRef<HTMLDivElement | null>(null);
