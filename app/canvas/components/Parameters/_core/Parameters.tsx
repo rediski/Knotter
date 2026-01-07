@@ -31,8 +31,8 @@ export const Parameters = memo(function Parameters() {
     if (!currentType) return;
 
     return (
-        <div className="flex flex-col h-full">
-            <div className="flex gap-1 items-center m-1">
+        <div className="flex flex-col h-full flex-1 overflow-auto">
+            <div className="flex gap-1 items-center m-1 mt-0">
                 <Input
                     value={parameterName}
                     onChange={setParameterName}
