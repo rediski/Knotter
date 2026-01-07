@@ -18,10 +18,13 @@ export const useSidebarPanels = () => {
     };
 
     const movePanel = (dragIndex: number, hoverIndex: number) => {
-        const [dragged] = [...sidebarPanels].splice(dragIndex, 1);
-        [...sidebarPanels].splice(hoverIndex, 0, dragged);
+        const newPanels = [...sidebarPanels];
 
-        setSidebarPanels([...sidebarPanels]);
+        const [dragged] = newPanels.splice(dragIndex, 1);
+
+        newPanels.splice(hoverIndex, 0, dragged);
+
+        setSidebarPanels(newPanels);
     };
 
     return {
