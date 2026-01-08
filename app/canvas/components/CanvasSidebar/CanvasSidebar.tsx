@@ -12,7 +12,7 @@ export const CanvasSidebar = memo(function Sidebar() {
     const menu = useContextMenu();
 
     const sidebarRef = useRef<HTMLDivElement | null>(null);
-    const { width, startSidebarResize } = useSidebarResize();
+    const { width, isResizingSidebar, startSidebarResize } = useSidebarResize();
 
     useClickOutside(sidebarRef, () => menu.closeMenu());
 
@@ -26,7 +26,7 @@ export const CanvasSidebar = memo(function Sidebar() {
         >
             <div
                 onMouseDown={startSidebarResize}
-                className="absolute left-0 top-0 h-full w-1 cursor-ew-resize hover:bg-depth-3 z-50"
+                className={`absolute left-[] top-0 h-full w-1 cursor-ew-resize hover:bg-bg-accent/10 z-50 ${isResizingSidebar && 'bg-bg-accent/10'}`}
             />
 
             <SidebarPanels />

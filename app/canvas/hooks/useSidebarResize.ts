@@ -42,6 +42,7 @@ export default function useSidebarResize() {
 
     return {
         width: sidebarWidth,
+        isResizingSidebar,
         startSidebarResize,
     };
 }
