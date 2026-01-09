@@ -4,10 +4,16 @@ import { useState, useRef, useCallback } from 'react';
 
 import type { SidebarPanel, PanelType } from '@/canvas/components/CanvasSidebar/_sidebarPanel.types';
 
-import { panelDefinitions } from '@/canvas/components/CanvasSidebar/_panelDefinitions';
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
+import { Input } from '@/components/UI/Input';
+
+import { panelDefinitions } from '@/canvas/components/CanvasSidebar/_panelDefinitions';
 import { PanelContextMenu } from '@/canvas/components/CanvasSidebar/PanelContextMenu';
+
 import { useSidebarPanels } from '@/canvas/hooks/useSideBarPanels';
+import { useCanvasStore } from '@/canvas/store/canvasStore';
+
+import { Search } from 'lucide-react';
 
 let activeMenuId: string | null = null;
 const menuCallbacks: Map<string, () => void> = new Map();
@@ -17,6 +23,9 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
 
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
     const [isMenuOpenLocally, setIsMenuOpenLocally] = useState(false);
+
+    const filterText = useCanvasStore((state) => state.filterText[panel.id] || '');
+    const setFilterText = useCanvasStore((state) => state.setFilterText);
 
     const content = panel.type ? panelDefinitions[panel.type] : null;
 
@@ -33,6 +42,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
 
     const handleSelect = (value: PanelType) => {
         setPanelType(panel.id, value);
+        setFilterText(panel.id, '');
     };
 
     const openMenu = (e: React.MouseEvent) => {
@@ -62,6 +72,12 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
         }
     }, [panel.id]);
 
+    const handleFilterChange = (value: string) => {
+        setFilterText(panel.id, value);
+    };
+
+    const PanelComponent = content?.component;
+
     return (
         <div
             ref={panelRef}
@@ -78,7 +94,19 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
                 position={menuPosition}
             />
 
-            <div className="flex justify-end items-center gap-2 p-1">
+            <div className="flex justify-between items-center gap-1 p-1">
+                <div className="flex-1">
+                    <Input
+                        value={filterText}
+                        onChange={handleFilterChange}
+                        placeholder="Фильтр..."
+                        icon={Search}
+                        iconSize={14}
+                        className="h-8 text-sm bg-depth-2"
+                        disabled={!panel.type}
+                    />
+                </div>
+
                 <DropdownAbsolute title={currentPanelTitle} icon={currentPanelIcon}>
                     {panelOptions.map((option) => (
                         <button
@@ -97,7 +125,9 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
                 </DropdownAbsolute>
             </div>
 
-            {content?.component ?? (
+            {content && PanelComponent ? (
+                <PanelComponent panelId={panel.id} />
+            ) : (
                 <div className="h-full flex items-center justify-center text-gray text-sm">Выберите тип панели</div>
             )}
         </div>
