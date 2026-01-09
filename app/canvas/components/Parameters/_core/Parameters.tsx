@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, Fragment } from 'react';
+import { memo, Fragment, useMemo } from 'react';
 
 import { Input } from '@/components/UI/Input';
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
@@ -8,6 +8,7 @@ import { EmptyState } from '@/components/UI/EmptyState';
 
 import { ParametersItem } from '@/canvas/components/Parameters/_core/ParametersItem';
 
+import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { useParameters } from '@/canvas/hooks/Parameters/_core/useParameters';
 
 import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
@@ -15,7 +16,11 @@ import { parameterTypes } from '@/canvas/utils/parameters/parameter.utils';
 
 import { Plus } from 'lucide-react';
 
-export const Parameters = memo(function Parameters() {
+interface ParametersProps {
+    panelId?: string;
+}
+
+export const Parameters = memo(function Parameters({ panelId }: ParametersProps) {
     const {
         parameters,
         parameterName,
@@ -26,9 +31,24 @@ export const Parameters = memo(function Parameters() {
         removeParameter,
     } = useParameters();
 
+    const filterText = useCanvasStore((state) => (panelId ? state.filterText[panelId] : ''));
+
+    const filteredParameters = useMemo(() => {
+        if (!filterText) return parameters;
+
+        const searchText = filterText.toLowerCase();
+        return parameters.filter(
+            (parameter) =>
+                parameter.name.toLowerCase().includes(searchText) || parameter.type.toLowerCase().includes(searchText),
+        );
+    }, [parameters, filterText]);
+
     const currentType = parameterTypes.find((parameter) => parameter.type === parameterType);
 
     if (!currentType) return;
+
+    const showFilteredEmptyState = parameters.length > 0 && filteredParameters.length === 0;
+    const showNoParametersState = parameters.length === 0;
 
     return (
         <div className="flex flex-col h-full flex-1 overflow-auto">
@@ -73,17 +93,19 @@ export const Parameters = memo(function Parameters() {
 
             <hr className="border-b-0 border-depth-3" />
 
-            {parameters.length !== 0 && (
-                <div className="flex flex-col gap-1 m-1 mt-0">
-                    {parameters.map((parameter) => (
+            {filteredParameters.length > 0 ? (
+                <div className="flex flex-col gap-1 m-1">
+                    {filteredParameters.map((parameter) => (
                         <ParametersItem key={parameter.id} parameterId={parameter.id} removeParameter={removeParameter} />
                     ))}
                 </div>
-            )}
-
-            {parameters.length === 0 && (
+            ) : (
                 <Fragment>
-                    <EmptyState message="Создайте переменную для использования в инспекторе" />
+                    {showFilteredEmptyState ? (
+                        <EmptyState message={`Нет параметров по запросу "${filterText}"`} />
+                    ) : (
+                        showNoParametersState && <EmptyState message="Создайте переменную для использования в инспекторе" />
+                    )}
                 </Fragment>
             )}
         </div>
