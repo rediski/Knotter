@@ -1,11 +1,9 @@
 'use client';
 
-import { memo, useState } from 'react';
-import { Search } from 'lucide-react';
+import { memo } from 'react';
 
 import { EmptyState } from '@/components/UI/EmptyState';
 import { HierarchyItem } from '@/canvas/components/Hierarchy/HierarchyItem';
-import { Input } from '@/components/UI/Input';
 
 import { useHierarchy } from '@/canvas/hooks/Hierarchy/useHierarchy';
 
@@ -14,10 +12,14 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-export const Hierarchy = memo(function Hierarchy() {
+interface HierarchyProps {
+    panelId?: string;
+}
+
+export const Hierarchy = memo(function Hierarchy({ panelId }: HierarchyProps) {
     const items = useCanvasStore((state) => state.items);
 
-    const [filterText, setFilterText] = useState('');
+    const filterText = useCanvasStore((state) => (panelId ? state.filterText[panelId] : ''));
 
     const {
         filteredItems,
@@ -33,20 +35,9 @@ export const Hierarchy = memo(function Hierarchy() {
 
     return (
         <div className="flex flex-col flex-1 h-full">
-            <div className="flex items-center gap-2 m-1 mt-0">
-                <Input
-                    value={filterText}
-                    onChange={setFilterText}
-                    placeholder="Поиск..."
-                    icon={Search}
-                    iconSize={14}
-                    className="h-8 text-sm bg-depth-2"
-                />
-            </div>
-
             <hr className="border-b-0 border-depth-3" />
 
-            <div className="flex flex-col flex-1 overflow-y-auto gap-2" onClick={handleDeselectOnEmptyClick}>
+            <div className="flex flex-col flex-1 overflow-y-auto gap-2 pt-1" onClick={handleDeselectOnEmptyClick}>
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
@@ -72,7 +63,7 @@ export const Hierarchy = memo(function Hierarchy() {
                         {items.length === 0 && <EmptyState message="Создайте элемент, нажав ПКМ по холсту." />}
 
                         {filteredItems.length === 0 && items.length !== 0 && (
-                            <EmptyState message="Элемент с этим именем не найден." />
+                            <EmptyState message={`Не найдено элементов по запросу "${filterText}"`} />
                         )}
                     </SortableContext>
                 </DndContext>
