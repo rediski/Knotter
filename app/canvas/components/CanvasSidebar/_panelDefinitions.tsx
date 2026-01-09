@@ -11,23 +11,23 @@ import { ListTree, Info, Variable, type LucideIcon } from 'lucide-react';
 export interface PanelDefinition {
     label: string;
     icon: LucideIcon;
-    component: JSX.Element;
+    component: (props: { panelId: string }) => JSX.Element;
 }
 
 export const panelDefinitions: Record<PanelType, PanelDefinition> = {
     hierarchy: {
         label: 'Иерархия',
         icon: ListTree,
-        component: <Hierarchy />,
+        component: ({ panelId }) => <Hierarchy panelId={panelId} />,
     },
     inspector: {
         label: 'Инспектор',
         icon: Info,
-        component: <Inspector />,
+        component: ({ panelId }) => <Inspector panelId={panelId} />,
     },
     parameters: {
         label: 'Параметры',
         icon: Variable,
-        component: <Parameters />,
+        component: ({ panelId }) => <Parameters panelId={panelId} />,
     },
 };
