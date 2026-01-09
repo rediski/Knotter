@@ -62,10 +62,11 @@ export interface CanvasState {
 
     sidebarPanels: SidebarPanel[];
     setSidebarPanels: (panels: SidebarPanel[]) => void;
-    setPanelHeight: (id: string, height: number) => void;
-
     sidebarWidth: number;
     setSidebarWidth: (width: number) => void;
+
+    filterText: Record<string, string>;
+    setFilterText: (panelId: string, text: string) => void;
 }
 
 export const useCanvasStore = create<CanvasState>()(
@@ -132,17 +133,22 @@ export const useCanvasStore = create<CanvasState>()(
             showAxes: false,
             toggleShowAxes: () => set((s) => ({ showAxes: !s.showAxes })),
 
-            sidebarPanels: [],
-
-            setSidebarPanels: (sidebarPanels) => set({ sidebarPanels }),
-
-            setPanelHeight: (id, height) =>
-                set((state) => ({
-                    sidebarPanels: state.sidebarPanels.map((panel) => (panel.id === id ? { ...panel, height } : panel)),
-                })),
+            // ---
 
             sidebarWidth: 380,
             setSidebarWidth: (sidebarWidth) => set({ sidebarWidth }),
+
+            sidebarPanels: [],
+            setSidebarPanels: (sidebarPanels) => set({ sidebarPanels }),
+
+            filterText: {},
+            setFilterText: (panelId, text) =>
+                set((state) => ({
+                    filterText: {
+                        ...state.filterText,
+                        [panelId]: text,
+                    },
+                })),
         }),
         {
             name: 'canvas-storage',
@@ -151,14 +157,10 @@ export const useCanvasStore = create<CanvasState>()(
                 zoomLevel: state.zoomLevel,
                 invertY: state.invertY,
 
-                // ---
-
                 items: state.items,
                 parameters: state.parameters,
                 selectedItemIds: state.selectedItemIds,
                 selectedItem: state.selectedItem,
-
-                // ---
 
                 editorMode: state.editorMode,
                 tooltipMode: state.tooltipMode,
@@ -168,6 +170,7 @@ export const useCanvasStore = create<CanvasState>()(
 
                 sidebarWidth: state.sidebarWidth,
                 sidebarPanels: state.sidebarPanels,
+                filterText: state.filterText,
             }),
         },
     ),
