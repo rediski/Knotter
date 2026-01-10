@@ -37,7 +37,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: HierarchyProps) {
         <div className="flex flex-col flex-1 h-full">
             <hr className="border-b-0 border-depth-3" />
 
-            <div className="flex flex-col flex-1 overflow-y-auto gap-2 pt-1" onClick={handleDeselectOnEmptyClick}>
+            <div className="flex flex-col flex-1 overflow-y-auto gap-2" onClick={handleDeselectOnEmptyClick}>
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
@@ -46,7 +46,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: HierarchyProps) {
                 >
                     <SortableContext items={filteredItems.map((i) => i.id)} strategy={verticalListSortingStrategy}>
                         {filteredItems.length !== 0 && (
-                            <ul className="flex flex-col gap-1 m-1 mt-0">
+                            <ul className="flex flex-col gap-1 m-1">
                                 {filteredItems.map((item) => (
                                     <HierarchyItem
                                         key={item.id}

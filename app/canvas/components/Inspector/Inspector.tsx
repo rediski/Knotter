@@ -71,9 +71,9 @@ export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
         }
 
         return (
-            <div className="flex flex-col overflow-y-auto pb-1">
+            <div className="flex flex-col overflow-y-auto p-1 gap-1">
                 {showName && (
-                    <div className="flex flex-col gap-1 m-1 mt-0">
+                    <div className="flex flex-col gap-1">
                         <Input
                             value={selectedItem.name}
                             onChange={сhangeItemName}
@@ -85,7 +85,7 @@ export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
                 )}
 
                 {showDescription && (
-                    <div className="flex flex-col gap-1 m-1 mt-0">
+                    <div className="flex flex-col gap-1">
                         <Textarea
                             value={selectedItem.kind !== 'text' ? selectedItem.description : selectedItem.content}
                             onChange={changeItemDescription}
@@ -95,7 +95,7 @@ export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
                 )}
 
                 <div className="flex flex-col gap-1">
-                    <div className="mx-1 flex flex-col gap-1">
+                    <div className="flex flex-col gap-1">
                         {selectedItem.kind === 'node' && (
                             <>
                                 {showShape && (
@@ -135,8 +135,8 @@ export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
     }
 
     return (
-        <div className="flex flex-col overflow-y-auto pb-1">
-            <div className="flex flex-col gap-1 m-1 mt-0">
+        <div className="flex flex-col overflow-y-auto p-1 gap-1">
+            <div className="flex flex-col gap-1">
                 <Input
                     value={selectedItem.name}
                     onChange={сhangeItemName}
@@ -153,7 +153,7 @@ export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
             </div>
 
             <div className="flex flex-col gap-1">
-                <div className="mx-1 flex flex-col gap-1">
+                <div className="flex flex-col gap-1">
                     {selectedItem.kind === 'node' && (
                         <>
                             <Dropdown

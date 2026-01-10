@@ -52,7 +52,7 @@ export const Parameters = memo(function Parameters({ panelId }: ParametersProps)
 
     return (
         <div className="flex flex-col h-full flex-1 overflow-auto">
-            <div className="flex gap-1 items-center m-1 mt-0">
+            <div className="flex gap-1 items-center m-1">
                 <Input
                     value={parameterName}
                     onChange={setParameterName}

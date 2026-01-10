@@ -94,7 +94,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
                 position={menuPosition}
             />
 
-            <div className="flex justify-between items-center gap-1 p-1">
+            <div className="flex justify-between items-center gap-1 p-1 border-b border-depth-3">
                 <div className="flex-1">
                     <Input
                         value={filterText}
@@ -102,8 +102,6 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
                         placeholder="Фильтр..."
                         icon={Search}
                         iconSize={14}
-                        className="h-8 text-sm bg-depth-2"
-                        disabled={!panel.type}
                     />
                 </div>
 
