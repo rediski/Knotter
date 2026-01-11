@@ -14,7 +14,6 @@ export function CanvasNodes() {
     const offset = useCanvasStore((state) => state.offset);
 
     const tooltipMode = useCanvasStore((state) => state.tooltipMode);
-    const editorMode = useCanvasStore((state) => state.editorMode);
     const invertY = useCanvasStore((state) => state.invertY);
 
     const items = useCanvasStore((state) => state.items);
@@ -24,7 +23,7 @@ export function CanvasNodes() {
     const nodes = getNodes(items);
 
     return (
-        <div className="absolute">
+        <>
             {nodes.map((node) => {
                 const isSelected = selectedItemIds.includes(node.id);
 
@@ -46,20 +45,20 @@ export function CanvasNodes() {
                             transformOrigin: 'center',
                         }}
                     >
-                        <NodeRenderer editorMode={editorMode} node={node} isSelected={isSelected} />
+                        <NodeRenderer node={node} isSelected={isSelected} />
                     </div>
                 );
             })}
 
             {nodes.map((node) => {
                 const isHovered = hoveredNodeId === node.id;
-                const isViewEditorMode = editorMode === 'view';
+                const isSelected = selectedItemIds.includes(node.id);
 
                 const shouldShowTooltip = Boolean(
                     node.name && (tooltipMode === 'always' || (tooltipMode === 'hover' && isHovered)),
                 );
 
-                if (!shouldShowTooltip || !isViewEditorMode) return null;
+                if (!shouldShowTooltip) return null;
 
                 const baseX = node.position.x * zoomLevel + offset.x;
                 const baseY = node.position.y * zoomLevel + offset.y;
@@ -73,12 +72,13 @@ export function CanvasNodes() {
                 return (
                     <NodeTooltip
                         key={node.id}
-                        label={node.name}
+                        node={node}
                         position={{ x: screenX, y: tooltipY }}
                         zoomLevel={zoomLevel}
+                        isSelected={isSelected}
                     />
                 );
             })}
-        </div>
+        </>
     );
 }

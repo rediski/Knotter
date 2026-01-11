@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import type { CanvasItem, Position, TooltipMode, EditorMode } from '@/canvas/canvas.types';
+import type { CanvasItem, Position, TooltipMode } from '@/canvas/canvas.types';
 import type { SidebarPanel } from '@/canvas/components/CanvasSidebar/_sidebarPanel.types';
 import type { Parameter } from '@/canvas/utils/parameters/parameter.types';
 
@@ -45,9 +45,6 @@ export interface CanvasState {
 
     tooltipMode: TooltipMode;
     setTooltipMode: (tooltipMode: TooltipMode) => void;
-
-    editorMode: EditorMode;
-    setEditorMode: (editorMode: EditorMode) => void;
 
     isMagnet: boolean;
     setIsMagnet: (value: boolean) => void;
@@ -121,9 +118,6 @@ export const useCanvasStore = create<CanvasState>()(
             tooltipMode: 'always',
             setTooltipMode: (tooltipMode) => set({ tooltipMode }),
 
-            editorMode: 'edit',
-            setEditorMode: (editorMode) => set({ editorMode }),
-
             isMagnet: false,
             setIsMagnet: (value) => set({ isMagnet: value }),
 
@@ -162,7 +156,6 @@ export const useCanvasStore = create<CanvasState>()(
                 selectedItemIds: state.selectedItemIds,
                 selectedItem: state.selectedItem,
 
-                editorMode: state.editorMode,
                 tooltipMode: state.tooltipMode,
                 isMagnet: state.isMagnet,
                 showGrid: state.showGrid,

@@ -9,8 +9,6 @@ export interface CanvasState {
     texts: TextElement[];
 }
 
-export type EditorMode = 'edit' | 'view';
-
 export type CanvasItem = Node | Edge | TextElement;
 
 export type TooltipMode = 'always' | 'hover' | 'never';
