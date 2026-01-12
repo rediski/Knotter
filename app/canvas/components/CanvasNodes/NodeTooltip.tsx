@@ -1,15 +1,19 @@
-import { Position } from '@/canvas/canvas.types';
+import { Position, Node } from '@/canvas/canvas.types';
 
 interface NodeTooltipProps {
-    label?: string;
+    node: Node;
     position: Position;
     zoomLevel: number;
+    isSelected: boolean;
 }
 
-export function NodeTooltip({ label, position, zoomLevel }: NodeTooltipProps) {
+export function NodeTooltip({ node, position, zoomLevel, isSelected }: NodeTooltipProps) {
     return (
         <div
-            className="absolute px-2 py-1 bg-bg-accent text-white text-xs rounded whitespace-nowrap shadow-lg border border-bg-accent"
+            className={`
+                absolute flex flex-col gap-0.25 px-2 py-1 bg-depth-1 border-2 rounded-md text-foreground text-xs whitespace-nowrap shadow-lg select-text cursor-text
+                ${isSelected ? 'border-bg-accent' : 'border-foreground'}
+            `}
             style={{
                 left: `${position.x}px`,
                 top: `${position.y}px`,
@@ -17,8 +21,16 @@ export function NodeTooltip({ label, position, zoomLevel }: NodeTooltipProps) {
                 transformOrigin: 'bottom center',
             }}
         >
-            {label}
-            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-bg-accent" />
+            <h2 className="text-base">{node.name}</h2>
+
+            {node.description && <div className="text-wrap max-w-md text-foreground">{node.description}</div>}
+
+            <div
+                className={`
+                    absolute top-full left-1/2 -translate-x-1/2 border-6 border-transparent
+                    ${isSelected ? 'border-t-bg-accent' : 'border-t-foreground'}
+                `}
+            />
         </div>
     );
 }
