@@ -12,7 +12,7 @@ import { useParameters } from '@/canvas/hooks/Parameters/_core/useParameters';
 import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
 
 import { OptionPicker } from '@/components/UI/OptionPicker';
-import { InfiniteSlider } from '@/components/UI/InfiniteSlider';
+
 import { Input } from '@/components/UI/Input';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Select } from '@/components/UI/Select';
@@ -72,21 +72,27 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
 
                             return (
                                 <div key={parameter.id}>
-                                    <InfiniteSlider
+                                    <Input
                                         name={parameter.name}
                                         min={numberValue.min}
                                         max={numberValue.max}
-                                        value={numberValue.currentValue}
+                                        value={numberValue.currentValue.toString()}
                                         step={numberValue.step}
-                                        showFill
+                                        type="number"
                                         className="bg-depth-2 hover:bg-depth-3 active:bg-depth-4"
-                                        onChange={(value) => {
-                                            updateNodeParameter(node.id, parameter.id, {
-                                                value: {
-                                                    ...numberValue,
-                                                    currentValue: value,
-                                                },
-                                            });
+                                        onChange={(newValue) => {
+                                            const numValue = parseFloat(newValue);
+                                            if (!isNaN(numValue)) {
+                                                updateNodeParameter(node.id, parameter.id, {
+                                                    value: {
+                                                        ...numberValue,
+                                                        currentValue: Math.min(
+                                                            Math.max(numValue, numberValue.min),
+                                                            numberValue.max,
+                                                        ),
+                                                    },
+                                                });
+                                            }
                                         }}
                                     />
                                 </div>
