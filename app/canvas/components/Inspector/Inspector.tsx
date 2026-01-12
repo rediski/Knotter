@@ -15,6 +15,7 @@ import { Dropdown } from '@/components/UI/Dropdown';
 
 import { ShapeButtons } from '@/canvas/components/Inspector/ShapeButtons';
 import { PositionInputs } from '@/canvas/components/Inspector/PositionInputs';
+import { NodeParameters } from '@/canvas/components/CanvasNodes/NodeParameters';
 
 import { useDropdownStore } from '@/canvas/store/dropdownStore';
 
@@ -27,6 +28,7 @@ const FIELD_TITLES = {
     DESCRIPTION: 'Описание',
     SHAPE: 'Форма',
     TRANSFORM: 'Трансформация',
+    PARAMETERS: 'Параметры',
 } as const;
 
 export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
@@ -55,129 +57,83 @@ export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
 
     const Icon = getDynamicIcon(selectedItem?.kind || 'bug');
 
-    if (filterText) {
-        const searchText = filterText.toLowerCase();
-        const showName = FIELD_TITLES.NAME.toLowerCase().includes(searchText);
-        const showDescription = FIELD_TITLES.DESCRIPTION.toLowerCase().includes(searchText);
-        const showShape = FIELD_TITLES.SHAPE.toLowerCase().includes(searchText);
-        const showPosition = FIELD_TITLES.TRANSFORM.toLowerCase().includes(searchText);
+    const shouldShowField = (fieldTitle: string) => {
+        if (!filterText) return true;
+        return fieldTitle.toLowerCase().includes(filterText.toLowerCase());
+    };
 
-        if (!showName && !showDescription && !showShape && !showPosition) {
-            return (
-                <div className="flex flex-col items-center justify-center h-full p-4">
-                    <EmptyState message={`Не найдено полей по запросу "${filterText}"`} />
-                </div>
-            );
-        }
+    const showName = shouldShowField(FIELD_TITLES.NAME);
+    const showDescription = shouldShowField(FIELD_TITLES.DESCRIPTION);
+    const showShape = shouldShowField(FIELD_TITLES.SHAPE);
+    const showPosition = shouldShowField(FIELD_TITLES.TRANSFORM);
+    const showParameters = shouldShowField(FIELD_TITLES.PARAMETERS);
 
+    const hasVisibleFields = showName || showDescription || showShape || showPosition || showParameters;
+
+    if (filterText && !hasVisibleFields) {
         return (
-            <div className="flex flex-col overflow-y-auto p-1 gap-1">
-                {showName && (
-                    <div className="flex flex-col gap-1">
-                        <Input
-                            value={selectedItem.name}
-                            onChange={сhangeItemName}
-                            placeholder={FIELD_TITLES.NAME}
-                            icon={Icon}
-                            className="bg-depth-2"
-                        />
-                    </div>
-                )}
-
-                {showDescription && (
-                    <div className="flex flex-col gap-1">
-                        <Textarea
-                            value={selectedItem.kind !== 'text' ? selectedItem.description : selectedItem.content}
-                            onChange={changeItemDescription}
-                            placeholder={FIELD_TITLES.DESCRIPTION}
-                        />
-                    </div>
-                )}
-
-                <div className="flex flex-col gap-1">
-                    <div className="flex flex-col gap-1">
-                        {selectedItem.kind === 'node' && (
-                            <>
-                                {showShape && (
-                                    <Dropdown
-                                        title={FIELD_TITLES.SHAPE}
-                                        isOpen={isDropdownOpen(1)}
-                                        onToggle={() => toggleDropdown(1)}
-                                    >
-                                        <ShapeButtons
-                                            shapeType={shapeType}
-                                            onTypeChange={(newShapeType) =>
-                                                changeNodeShapeType([selectedNode.id], newShapeType)
-                                            }
-                                        />
-                                    </Dropdown>
-                                )}
-
-                                {showPosition && (
-                                    <Dropdown
-                                        title={FIELD_TITLES.TRANSFORM}
-                                        isOpen={isDropdownOpen(2)}
-                                        onToggle={() => toggleDropdown(2)}
-                                    >
-                                        <PositionInputs
-                                            positionX={positionX}
-                                            positionY={positionY}
-                                            onMove={changeItemsPosition}
-                                        />
-                                    </Dropdown>
-                                )}
-                            </>
-                        )}
-                    </div>
-                </div>
+            <div className="flex flex-col items-center justify-center h-full p-4">
+                <EmptyState message={`Не найдено полей по запросу "${filterText}"`} />
             </div>
         );
     }
 
     return (
         <div className="flex flex-col overflow-y-auto p-1 gap-1">
-            <div className="flex flex-col gap-1">
-                <Input
-                    value={selectedItem.name}
-                    onChange={сhangeItemName}
-                    placeholder={FIELD_TITLES.NAME}
-                    icon={Icon}
-                    className="bg-depth-2"
-                />
-
-                <Textarea
-                    value={selectedItem.kind !== 'text' ? selectedItem.description : selectedItem.content}
-                    onChange={changeItemDescription}
-                    placeholder={FIELD_TITLES.DESCRIPTION}
-                />
-            </div>
-
-            <div className="flex flex-col gap-1">
+            {showName && (
                 <div className="flex flex-col gap-1">
-                    {selectedItem.kind === 'node' && (
-                        <>
-                            <Dropdown
-                                title={FIELD_TITLES.SHAPE}
-                                isOpen={isDropdownOpen(1)}
-                                onToggle={() => toggleDropdown(1)}
-                            >
-                                <ShapeButtons
-                                    shapeType={shapeType}
-                                    onTypeChange={(newShapeType) => changeNodeShapeType([selectedNode.id], newShapeType)}
-                                />
-                            </Dropdown>
-
-                            <Dropdown
-                                title={FIELD_TITLES.TRANSFORM}
-                                isOpen={isDropdownOpen(2)}
-                                onToggle={() => toggleDropdown(2)}
-                            >
-                                <PositionInputs positionX={positionX} positionY={positionY} onMove={changeItemsPosition} />
-                            </Dropdown>
-                        </>
-                    )}
+                    <Input
+                        value={selectedItem.name}
+                        onChange={сhangeItemName}
+                        placeholder={FIELD_TITLES.NAME}
+                        icon={Icon}
+                        className="bg-depth-2"
+                    />
                 </div>
-            </div>
+            )}
+
+            {showDescription && (
+                <div className="flex flex-col gap-1">
+                    <Textarea
+                        value={selectedItem.kind !== 'text' ? selectedItem.description : selectedItem.content}
+                        onChange={changeItemDescription}
+                        placeholder={FIELD_TITLES.DESCRIPTION}
+                    />
+                </div>
+            )}
+
+            {selectedItem.kind === 'node' && (
+                <>
+                    {showShape && (
+                        <Dropdown title={FIELD_TITLES.SHAPE} isOpen={isDropdownOpen(1)} onToggle={() => toggleDropdown(1)}>
+                            <ShapeButtons
+                                shapeType={shapeType}
+                                onTypeChange={(newShapeType) => changeNodeShapeType([selectedNode.id], newShapeType)}
+                            />
+                        </Dropdown>
+                    )}
+
+                    {showPosition && (
+                        <Dropdown
+                            title={FIELD_TITLES.TRANSFORM}
+                            isOpen={isDropdownOpen(2)}
+                            onToggle={() => toggleDropdown(2)}
+                        >
+                            <PositionInputs positionX={positionX} positionY={positionY} onMove={changeItemsPosition} />
+                        </Dropdown>
+                    )}
+
+                    {showParameters && (
+                        <Dropdown
+                            title={FIELD_TITLES.PARAMETERS}
+                            isOpen={isDropdownOpen(3)}
+                            onToggle={() => toggleDropdown(3)}
+                        >
+                            <NodeParameters node={selectedItem} />
+                        </Dropdown>
+                    )}
+                </>
+            )}
         </div>
     );
 });
