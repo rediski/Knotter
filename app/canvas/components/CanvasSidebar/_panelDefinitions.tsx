@@ -6,7 +6,7 @@ import { Parameters } from '@/canvas/components/Parameters/_core/Parameters';
 
 import type { PanelType } from '@/canvas/components/CanvasSidebar/_sidebarPanel.types';
 
-import { ListTree, Info, Variable, type LucideIcon } from 'lucide-react';
+import { ListTree, Settings, Braces, type LucideIcon } from 'lucide-react';
 
 export interface PanelDefinition {
     label: string;
@@ -22,12 +22,12 @@ export const panelDefinitions: Record<PanelType, PanelDefinition> = {
     },
     inspector: {
         label: 'Инспектор',
-        icon: Info,
+        icon: Settings,
         component: ({ panelId }) => <Inspector panelId={panelId} />,
     },
     parameters: {
         label: 'Параметры',
-        icon: Variable,
+        icon: Braces,
         component: ({ panelId }) => <Parameters panelId={panelId} />,
     },
 };
