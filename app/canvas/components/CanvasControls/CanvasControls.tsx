@@ -40,11 +40,11 @@ export const CanvasControls = memo(function CanvasControls() {
     const getTooltipLabel = useCallback(() => {
         switch (tooltipMode) {
             case 'always':
-                return 'Тултипы: Всегда (T)';
+                return 'Подсказки: Всегда (T)';
             case 'hover':
-                return 'Тултипы: При наведении (T)';
+                return 'Подсказки: При наведении (T)';
             case 'never':
-                return 'Тултипы: Никогда (T)';
+                return 'Подсказки: Никогда (T)';
         }
     }, [tooltipMode]);
 
