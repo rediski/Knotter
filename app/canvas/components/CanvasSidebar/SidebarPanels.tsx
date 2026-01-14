@@ -13,7 +13,7 @@ export function SidebarPanels() {
             {panels.length > 0 ? (
                 panels.map((panel) => {
                     return (
-                        <div key={panel.id} className="relative bg-depth-1 border-t border-depth-5 flex-1 min-h-0">
+                        <div key={panel.id} className="relative flex-1 min-h-0">
                             <SidebarPanel panel={panel} />
                         </div>
                     );
