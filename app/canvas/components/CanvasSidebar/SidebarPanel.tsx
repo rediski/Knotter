@@ -38,7 +38,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
     const currentPanelTitle = panel.type ? panelDefinitions[panel.type]?.label : 'Пустая панель';
     const currentPanelIcon = panel.type ? panelDefinitions[panel.type]?.icon : undefined;
 
-    const { setPanelType } = useSidebarPanels();
+    const { setPanelType, sidebarPanels } = useSidebarPanels();
 
     const handleSelect = (value: PanelType) => {
         setPanelType(panel.id, value);
@@ -78,6 +78,8 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
 
     const PanelComponent = content?.component;
 
+    const panelIndex = sidebarPanels.findIndex((p) => p.id === panel.id);
+
     return (
         <div
             ref={panelRef}
@@ -94,7 +96,12 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
                 position={menuPosition}
             />
 
-            <div className="flex justify-between items-center gap-1 p-1 border-b border-depth-3">
+            <div
+                className={`
+                    flex justify-between items-center gap-1 p-1 
+                    ${panelIndex > 0 && 'border-t border-depth-3'}
+                `}
+            >
                 <div className="flex-1">
                     <Input
                         value={filterText}
@@ -102,6 +109,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
                         placeholder="Фильтр..."
                         icon={Search}
                         iconSize={14}
+                        className="bg-depth-2"
                     />
                 </div>
 
