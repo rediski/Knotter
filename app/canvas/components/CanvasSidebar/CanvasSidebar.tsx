@@ -17,21 +17,39 @@ export const CanvasSidebar = memo(function Sidebar() {
     useClickOutside(sidebarRef, () => menu.closeMenu());
 
     return (
-        <div
-            ref={sidebarRef}
-            className="absolute top-0 right-0 bottom-0 bg-depth-1 border-l border-depth-4 flex flex-col z-50 overflow-y-hidden"
-            style={{ width }}
-            onContextMenu={menu.handleContextMenu}
-            onClick={() => menu.closeMenu()}
-        >
+        <div className="flex h-full items-stretch z-50 bg-background">
             <div
                 onMouseDown={startSidebarResize}
-                className={`absolute left-[] top-0 h-full w-1 cursor-ew-resize hover:bg-bg-accent/10 z-50 ${isResizingSidebar && 'bg-bg-accent/10'}`}
-            />
+                className={`
+                    w-2 cursor-ew-resize flex items-center justify-center gap-0.25 flex-shrink-0 hover:bg-bg-accent/15 active:bg-bg-accent/30 group backdrop-blur-sm self-stretch
+                    ${isResizingSidebar ? 'bg-bg-accent/30' : 'bg-background'}
+                `}
+            >
+                <div
+                    className={`
+                        w-px h-8 group-hover:bg-bg-accent 
+                        ${isResizingSidebar ? 'bg-bg-accent' : 'bg-depth-3'}
+                    `}
+                />
 
-            <SidebarPanels />
+                <div
+                    className={`
+                        w-px h-8 group-hover:bg-bg-accent 
+                        ${isResizingSidebar ? 'bg-bg-accent' : 'bg-depth-3'}
+                    `}
+                />
+            </div>
 
-            <SidebarContextMenu menu={menu} />
+            <div
+                ref={sidebarRef}
+                className="flex flex-col flex-shrink-0 overflow-hidden bg-depth-1 border border-depth-3 rounded-md"
+                style={{ width: `${width}px` }}
+                onContextMenu={menu.handleContextMenu}
+                onClick={() => menu.closeMenu()}
+            >
+                <SidebarPanels />
+                <SidebarContextMenu menu={menu} />
+            </div>
         </div>
     );
 });
