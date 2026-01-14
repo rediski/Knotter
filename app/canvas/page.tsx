@@ -10,7 +10,7 @@ import { CanvasSidebar } from '@/canvas/components/CanvasSidebar/CanvasSidebar';
 
 import { useMobileDetection } from '@/canvas/hooks/useMobileDetection';
 
-import { LoaderCircle, Frown, X } from 'lucide-react';
+import { LoaderCircle, Frown, LandPlot, Box, X } from 'lucide-react';
 
 export default function CanvasPage() {
     const isMobile = useMobileDetection();
@@ -57,12 +57,31 @@ export default function CanvasPage() {
             </div>
         );
     }
+
     return (
         <ToastProvider>
-            <div className="flex overflow-hidden w-full select-none">
-                <Canvas />
+            <div className="flex flex-col h-screen w-screen bg-background">
+                <div className="flex items-center gap-1 flex-shrink-0 m-1 mb-0">
+                    <p className="flex items-center gap-1 px-3 py-1 bg-depth-1 text-text-accent border border-depth-3 rounded-md">
+                        <LandPlot size={16} />
+                        Холст
+                    </p>
 
-                <CanvasSidebar />
+                    <p className="flex items-center gap-1 px-3 py-1 bg-depth-1 text-foreground border border-depth-3 rounded-md">
+                        <Box size={16} />
+                        Узел
+                    </p>
+                </div>
+
+                <div className="flex flex-1 min-h-0 overflow-hidden bg-depth-1 m-1">
+                    <div className="flex-1 min-w-0 relative">
+                        <Canvas />
+                    </div>
+
+                    <div className="flex h-full items-stretch">
+                        <CanvasSidebar />
+                    </div>
+                </div>
             </div>
         </ToastProvider>
     );
