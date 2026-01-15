@@ -185,7 +185,7 @@ export function CanvasTexts() {
                 return (
                     <div
                         key={text.id}
-                        className="fixed pointer-events-auto select-none"
+                        className="absolute pointer-events-auto select-none"
                         data-text-id={text.id}
                         style={{
                             left: screenX,
