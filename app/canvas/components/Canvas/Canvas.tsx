@@ -41,8 +41,10 @@ export default function Canvas() {
                 className="absolute top-0 left-0 w-full h-full bg-depth-1 rounded-md border border-depth-3"
             />
 
-            <CanvasNodes />
-            <CanvasTexts />
+            <div className="absolute inset-0 overflow-hidden">
+                <CanvasNodes />
+                <CanvasTexts />
+            </div>
         </div>
     );
 }
