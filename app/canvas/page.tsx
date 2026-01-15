@@ -77,6 +77,7 @@ export default function CanvasPage() {
                                     Узел
                                 </div>
                             </div>
+
                             <Canvas />
                         </div>
                     </div>
