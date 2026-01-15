@@ -61,21 +61,24 @@ export default function CanvasPage() {
     return (
         <ToastProvider>
             <div className="flex flex-col h-screen w-screen bg-background">
-                <div className="flex items-center gap-1 flex-shrink-0 m-1 mb-0">
-                    <p className="flex items-center gap-1 px-3 py-1 bg-depth-1 text-text-accent border border-depth-3 rounded-md">
-                        <LandPlot size={16} />
-                        Холст
-                    </p>
-
-                    <p className="flex items-center gap-1 px-3 py-1 bg-depth-1 text-foreground border border-depth-3 rounded-md">
-                        <Box size={16} />
-                        Узел
-                    </p>
-                </div>
-
-                <div className="flex flex-1 min-h-0 overflow-hidden bg-depth-1 m-1">
+                <div className="flex flex-1 min-h-0 overflow-hidden m-1">
                     <div className="flex-1 min-w-0 relative">
-                        <Canvas />
+                        <div className="flex flex-col gap-1 h-full">
+                            <div className="flex items-center gap-1 flex-shrink-0">
+                                <div className="flex items-center gap-2 px-3 py-1 bg-depth-1 text-text-accent border border-depth-3 rounded-md w-full">
+                                    <LandPlot size={16} className="min-w-4" />
+                                    <div className="border-l h-5 border-depth-4" />
+                                    Холст
+                                </div>
+
+                                <div className="flex items-center gap-2 px-3 py-1 bg-depth-1 text-foreground border border-depth-3 rounded-md w-full">
+                                    <Box size={16} className="min-w-4" />
+                                    <div className="border-l h-5 border-depth-4" />
+                                    Узел
+                                </div>
+                            </div>
+                            <Canvas />
+                        </div>
                     </div>
 
                     <div className="flex h-full items-stretch">
