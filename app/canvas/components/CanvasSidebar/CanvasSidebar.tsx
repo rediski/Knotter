@@ -27,14 +27,7 @@ export const CanvasSidebar = memo(function Sidebar() {
             >
                 <div
                     className={`
-                        w-px h-8 group-hover:bg-bg-accent 
-                        ${isResizingSidebar ? 'bg-bg-accent' : 'bg-depth-3'}
-                    `}
-                />
-
-                <div
-                    className={`
-                        w-px h-8 group-hover:bg-bg-accent 
+                        w-0.5 h-8 group-hover:bg-bg-accent rounded-md
                         ${isResizingSidebar ? 'bg-bg-accent' : 'bg-depth-3'}
                     `}
                 />
