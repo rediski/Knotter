@@ -20,7 +20,7 @@ export interface EditorModeOption {
     icon: LucideIcon;
 }
 
-const tabs: EditorModeOption[] = [
+const editorModeOptions: EditorModeOption[] = [
     {
         label: 'Холст',
         icon: LandPlot,
@@ -84,19 +84,19 @@ export default function CanvasPage() {
                     <div className="flex-1 min-w-0 relative">
                         <div className="flex flex-col gap-1 h-full">
                             <div className="flex items-center gap-1 flex-shrink-0">
-                                {tabs.map((tab) => {
+                                {editorModeOptions.map((option) => {
                                     return (
                                         <button
-                                            key={tab.label}
+                                            key={option.label}
                                             className={`
                                                 flex items-center gap-2 px-3 py-1  border border-depth-3 rounded-md w-full cursor-pointer
-                                                ${editorMode === tab.label ? 'bg-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 text-foreground'}
+                                                ${editorMode === option.label ? 'bg-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 text-foreground'}
                                                 `}
-                                            onClick={() => setEditorMode(tab.label)}
+                                            onClick={() => setEditorMode(option.label)}
                                         >
-                                            <tab.icon size={16} className="min-w-4" />
+                                            <option.icon size={16} className="min-w-4" />
                                             <div className="border-l h-5 border-depth-4" />
-                                            {tab.label}
+                                            {option.label}
                                         </button>
                                     );
                                 })}
