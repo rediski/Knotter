@@ -10,9 +10,28 @@ import { CanvasSidebar } from '@/canvas/components/CanvasSidebar/CanvasSidebar';
 
 import { useMobileDetection } from '@/canvas/hooks/useMobileDetection';
 
-import { LoaderCircle, Frown, LandPlot, Box, X } from 'lucide-react';
+import { LoaderCircle, Frown, LandPlot, Box, X, type LucideIcon } from 'lucide-react';
+import { useCanvasStore } from './store/canvasStore';
+
+export type EditorMode = 'Холст' | 'Узел';
+
+export interface EditorModeOption {
+    label: EditorMode;
+    icon: LucideIcon;
+}
+
+const tabs: EditorModeOption[] = [
+    {
+        label: 'Холст',
+        icon: LandPlot,
+    },
+    { label: 'Узел', icon: Box },
+];
 
 export default function CanvasPage() {
+    const editorMode = useCanvasStore((state) => state.editorMode);
+    const setEditorMode = useCanvasStore((state) => state.setEditorMode);
+
     const isMobile = useMobileDetection();
 
     if (isMobile === null) {
@@ -65,20 +84,25 @@ export default function CanvasPage() {
                     <div className="flex-1 min-w-0 relative">
                         <div className="flex flex-col gap-1 h-full">
                             <div className="flex items-center gap-1 flex-shrink-0">
-                                <div className="flex items-center gap-2 px-3 py-1 bg-depth-1 text-text-accent border border-depth-3 rounded-md w-full">
-                                    <LandPlot size={16} className="min-w-4" />
-                                    <div className="border-l h-5 border-depth-4" />
-                                    Холст
-                                </div>
-
-                                <div className="flex items-center gap-2 px-3 py-1 bg-depth-1 text-foreground border border-depth-3 rounded-md w-full">
-                                    <Box size={16} className="min-w-4" />
-                                    <div className="border-l h-5 border-depth-4" />
-                                    Узел
-                                </div>
+                                {tabs.map((tab) => {
+                                    return (
+                                        <button
+                                            key={tab.label}
+                                            className={`
+                                                flex items-center gap-2 px-3 py-1  border border-depth-3 rounded-md w-full cursor-pointer
+                                                ${editorMode === tab.label ? 'bg-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 text-foreground'}
+                                                `}
+                                            onClick={() => setEditorMode(tab.label)}
+                                        >
+                                            <tab.icon size={16} className="min-w-4" />
+                                            <div className="border-l h-5 border-depth-4" />
+                                            {tab.label}
+                                        </button>
+                                    );
+                                })}
                             </div>
 
-                            <Canvas />
+                            {editorMode === 'Холст' && <Canvas />}
                         </div>
                     </div>
 
