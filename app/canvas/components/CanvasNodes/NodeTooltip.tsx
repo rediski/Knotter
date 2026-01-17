@@ -11,7 +11,7 @@ export function NodeTooltip({ node, position, zoomLevel, isSelected }: NodeToolt
     return (
         <div
             className={`
-                absolute flex flex-col gap-0.25 px-2 py-1 bg-depth-1 border-2 rounded-md text-foreground text-xs whitespace-nowrap shadow-lg cursor-default select-none
+                absolute flex flex-col gap-0.25 px-2 py-1 bg-depth-1 border-2 rounded-md text-foreground text-xs whitespace-nowrap shadow cursor-default select-none
                 ${isSelected ? 'border-bg-accent' : 'border-foreground'}
             `}
             style={{

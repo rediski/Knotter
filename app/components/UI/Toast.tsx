@@ -58,7 +58,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                         <div
                             key={toast.id}
                             className={`
-                                flex items-center gap-3 px-4 py-3 bg-depth-2 rounded-md shadow-lg backdrop-blur-sm min-w-xs max-w-sm animate-in slide-in-from-right-10 
+                                flex items-center gap-3 px-4 py-3 bg-depth-2 rounded-md shadow backdrop-blur-sm min-w-xs max-w-sm animate-in slide-in-from-right-10 
                                 ${className}
                             `}
                             onClick={() => removeToast(toast.id)}

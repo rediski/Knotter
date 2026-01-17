@@ -67,7 +67,7 @@ export const ContextMenuItem = memo(function ContextMenuItem({
             </button>
 
             {submenu && !disabled && (
-                <div className="absolute top-0 left-full min-w-40 w-full bg-depth-2 border border-depth-6 rounded shadow-md py-1 text-sm z-50 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-opacity">
+                <div className="absolute top-0 left-full min-w-40 w-full bg-depth-2 border border-depth-6 rounded shadow py-1 text-sm z-50 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-opacity">
                     {submenu}
                 </div>
             )}

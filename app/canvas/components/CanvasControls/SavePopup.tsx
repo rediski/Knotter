@@ -16,7 +16,7 @@ export const SavePopup = memo(function SavePopup({ onSave, onDiscard, onCancel }
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-            <div ref={popupRef} className="flex items-start gap-4 bg-depth-1 p-4 rounded-md shadow-md max-w-md w-full">
+            <div ref={popupRef} className="flex items-start gap-4 bg-depth-1 p-4 rounded-md shadow max-w-md w-full">
                 <CircleHelp size={32} className="text-text-accent" />
 
                 <div className="flex flex-col gap-1 w-full">

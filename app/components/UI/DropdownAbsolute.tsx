@@ -74,7 +74,7 @@ export const DropdownAbsolute = memo(function DropdownAbsolute({
             {isOpen && (
                 <div
                     className={`
-                        absolute top-full right-0 flex flex-col gap-1 w-[200px] text-sm shadow-md rounded-md mt-1 p-1 z-50
+                        absolute top-full right-0 flex flex-col gap-1 w-[200px] text-sm shadow rounded-md mt-1 p-1 z-50
                         ${light ? 'bg-border' : 'bg-depth-2'}
                     `}
                     onClick={handleContentClick}
