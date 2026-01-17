@@ -89,8 +89,8 @@ export default function CanvasPage() {
                                         <button
                                             key={option.label}
                                             className={`
-                                                flex items-center gap-2 px-3 py-1  border border-depth-3 rounded-md w-full cursor-pointer
-                                                ${editorMode === option.label ? 'bg-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 text-foreground'}
+                                                flex items-center gap-2 px-3 py-1 border rounded-md w-full cursor-pointer
+                                                ${editorMode === option.label ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
                                                 `}
                                             onClick={() => setEditorMode(option.label)}
                                         >
