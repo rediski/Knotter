@@ -5,7 +5,7 @@ export default function Footer() {
         <footer className="w-full p-4 flex items-center justify-center gap-1">
             <span>Created by</span>
 
-            <Link href="https://github.com/Attato" target="_blank" className="text-text-accent">
+            <Link href="https://github.com/rediski" target="_blank" className="text-text-accent">
                 Denis Dolgopolskiy
             </Link>
         </footer>

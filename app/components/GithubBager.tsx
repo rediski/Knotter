@@ -9,7 +9,7 @@ import { Star } from 'lucide-react';
 export default function GithubBager() {
     const [stars, setStars] = useState(null);
 
-    const username = 'Attato';
+    const username = 'rediski';
     const repo = 'Knotter';
 
     const FETCH_INTERVAL = 300000;
@@ -30,7 +30,7 @@ export default function GithubBager() {
     }, [username, repo]);
 
     return (
-        <Link href="https://github.com/Attato/Knotter" target="_blank" className="flex items-center">
+        <Link href={`https://github.com/${username}/${repo}`} target="_blank" className="flex items-center">
             <div className="w-9 h-[34px] flex items-center justify-center bg-depth-2 border border-depth-3 rounded-l-md">
                 <svg
                     height="20"
