@@ -26,7 +26,7 @@ export const CanvasControlButtons = memo(function CanvasControlButtons({ control
                             onClick();
                         }}
                         className={`
-                            p-2 rounded-md w-fit cursor-pointer disabled:bg-depth-2 disabled:text-gray disabled:cursor-not-allowed
+                            p-2 rounded-md w-fit shadow cursor-pointer disabled:bg-depth-2 disabled:text-gray disabled:cursor-not-allowed
                             ${active ? 'bg-bg-accent text-white' : 'bg-depth-2 hover:bg-border'}
                         `}
                         disabled={disabled}
