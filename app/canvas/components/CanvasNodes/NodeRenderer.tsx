@@ -16,7 +16,7 @@ export function NodeRenderer({ node, isSelected }: NodeRendererProps) {
     return (
         <div className="relative w-full h-full flex items-center justify-center">
             <Icon
-                className={`w-max fill-background hover:cursor-move active:cursor-grabbing 
+                className={`w-max fill-depth-1 hover:cursor-move active:cursor-grabbing 
                     ${isPoint ? 'stroke-[2px]' : 'stroke-[1.5px]'} 
                     ${isSelected ? 'text-bg-accent' : 'text-foreground'}
                 `}
