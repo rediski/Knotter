@@ -25,7 +25,7 @@ export const CanvasControlsMenu = memo(function CanvasControlsMenu() {
             <button
                 onClick={toggleMenu}
                 className={`
-                    p-2 rounded-md w-fit cursor-pointer 
+                    p-2 rounded-md w-fit shadow cursor-pointer 
                     ${open ? 'bg-bg-accent text-white' : 'bg-depth-2 hover:bg-border'}
                 `}
             >
