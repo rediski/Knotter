@@ -95,7 +95,14 @@ export default function CanvasPage() {
                                             onClick={() => setEditorMode(option.label)}
                                         >
                                             <option.icon size={16} className="min-w-4" />
-                                            <div className="border-l h-5 border-depth-4" />
+
+                                            <div
+                                                className={`
+                                                    border-l h-5 
+                                                    ${editorMode === option.label ? 'border-bg-accent/10' : 'border-depth-4'}
+                                                `}
+                                            />
+
                                             {option.label}
                                         </button>
                                     );
