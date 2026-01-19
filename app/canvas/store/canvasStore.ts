@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import type { EditorMode } from '@/canvas/page';
 import type { CanvasItem, Position, TooltipMode } from '@/canvas/canvas.types';
 import type { SidebarPanel } from '@/canvas/components/CanvasSidebar/_sidebarPanel.types';
 import type { Parameter } from '@/canvas/utils/parameters/parameter.types';
@@ -44,9 +43,6 @@ export interface CanvasState {
 
     // ---
 
-    editorMode: EditorMode;
-    setEditorMode: (value: EditorMode) => void;
-
     tooltipMode: TooltipMode;
     setTooltipMode: (tooltipMode: TooltipMode) => void;
 
@@ -58,6 +54,13 @@ export interface CanvasState {
 
     showAxes: boolean;
     toggleShowAxes: () => void;
+
+    // ---
+
+    openedNodeIds: string[];
+    setOpenedNodeIds: (ids: string[]) => void;
+    activeNodeId: string | null;
+    setActiveNodeId: (nodeId: string | null) => void;
 
     // ---
 
@@ -119,9 +122,6 @@ export const useCanvasStore = create<CanvasState>()(
 
             // ---
 
-            editorMode: 'Холст',
-            setEditorMode: (editorMode) => set({ editorMode }),
-
             tooltipMode: 'always',
             setTooltipMode: (tooltipMode) => set({ tooltipMode }),
 
@@ -133,6 +133,13 @@ export const useCanvasStore = create<CanvasState>()(
 
             showAxes: false,
             toggleShowAxes: () => set((s) => ({ showAxes: !s.showAxes })),
+
+            // ---
+            openedNodeIds: [],
+            setOpenedNodeIds: (openedNodeIds) => set({ openedNodeIds }),
+
+            activeNodeId: null,
+            setActiveNodeId: (activeNodeId) => set({ activeNodeId }),
 
             // ---
 
@@ -163,11 +170,13 @@ export const useCanvasStore = create<CanvasState>()(
                 selectedItemIds: state.selectedItemIds,
                 selectedItem: state.selectedItem,
 
-                editorMode: state.editorMode,
                 tooltipMode: state.tooltipMode,
                 isMagnet: state.isMagnet,
                 showGrid: state.showGrid,
                 showAxes: state.showAxes,
+
+                openedNodeIds: state.openedNodeIds,
+                activeNodeId: state.activeNodeId,
 
                 sidebarWidth: state.sidebarWidth,
                 sidebarPanels: state.sidebarPanels,
