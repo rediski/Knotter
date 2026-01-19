@@ -103,14 +103,16 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
                 `}
             >
                 <div className="flex-1">
-                    <Input
-                        value={filterText}
-                        onChange={handleFilterChange}
-                        placeholder="Фильтр..."
-                        icon={Search}
-                        iconSize={14}
-                        className="bg-depth-2"
-                    />
+                    {PanelComponent && (
+                        <Input
+                            value={filterText}
+                            onChange={handleFilterChange}
+                            placeholder="Фильтр..."
+                            icon={Search}
+                            iconSize={14}
+                            className="bg-depth-2"
+                        />
+                    )}
                 </div>
 
                 <DropdownAbsolute title={currentPanelTitle} icon={currentPanelIcon}>
