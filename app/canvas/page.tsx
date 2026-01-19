@@ -21,7 +21,13 @@ export interface EditorModeOption {
 }
 
 export default function CanvasPage() {
-    const { setSelectedItemIds, openedNodeIds, setOpenedNodeIds, activeNodeId, setActiveNodeId, items } = useCanvasStore();
+    const items = useCanvasStore((state) => state.items);
+    const openedNodeIds = useCanvasStore((state) => state.openedNodeIds);
+    const activeNodeId = useCanvasStore((state) => state.activeNodeId);
+
+    const setSelectedItemIds = useCanvasStore((state) => state.setSelectedItemIds);
+    const setOpenedNodeIds = useCanvasStore((state) => state.setOpenedNodeIds);
+    const setActiveNodeId = useCanvasStore((state) => state.setActiveNodeId);
 
     const isMobile = useMobileDetection();
 
