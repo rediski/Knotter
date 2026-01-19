@@ -2,37 +2,62 @@
 
 import Link from 'next/link';
 
+import type { CanvasItem } from '@/canvas/canvas.types';
+
 import { ToastProvider } from '@/components/UI/Toast';
-
-import Canvas from '@/canvas/components/Canvas/Canvas';
-
 import { CanvasSidebar } from '@/canvas/components/CanvasSidebar/CanvasSidebar';
+
+import Canvas from '@/canvas/components/_Canvas/Canvas';
+import Node from '@/canvas/components/_Node/Node';
+
+import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { useMobileDetection } from '@/canvas/hooks/useMobileDetection';
 
 import { LoaderCircle, Frown, LandPlot, Box, X, type LucideIcon } from 'lucide-react';
-import { useCanvasStore } from './store/canvasStore';
-
-export type EditorMode = 'Холст' | 'Узел';
 
 export interface EditorModeOption {
-    label: EditorMode;
     icon: LucideIcon;
 }
 
-const editorModeOptions: EditorModeOption[] = [
-    {
-        label: 'Холст',
-        icon: LandPlot,
-    },
-    { label: 'Узел', icon: Box },
-];
-
 export default function CanvasPage() {
-    const editorMode = useCanvasStore((state) => state.editorMode);
-    const setEditorMode = useCanvasStore((state) => state.setEditorMode);
+    const { setSelectedItemIds, openedNodeIds, setOpenedNodeIds, activeNodeId, setActiveNodeId, items } = useCanvasStore();
 
     const isMobile = useMobileDetection();
+
+    const closeNodeTab = (nodeId: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+
+        const newOpenedNodeIds = openedNodeIds.filter((id) => id !== nodeId);
+        setOpenedNodeIds(newOpenedNodeIds);
+
+        if (activeNodeId === nodeId) {
+            if (newOpenedNodeIds.length > 0) {
+                const nextNodeId = newOpenedNodeIds[newOpenedNodeIds.length - 1];
+                setActiveNodeId(nextNodeId);
+                setSelectedItemIds([nextNodeId]);
+            } else {
+                setActiveNodeId(null);
+                setSelectedItemIds([]);
+            }
+        }
+    };
+
+    const switchToNodeTab = (nodeId: string) => {
+        setActiveNodeId(nodeId);
+        setSelectedItemIds([nodeId]);
+    };
+
+    const switchToCanvas = () => {
+        setActiveNodeId(null);
+        setSelectedItemIds([]);
+    };
+
+    const getOpenedNodesData = () => {
+        return openedNodeIds
+            .map((nodeId) => items.find((item) => item.id === nodeId && item.kind === 'node'))
+            .filter(Boolean) as CanvasItem[];
+    };
 
     if (isMobile === null) {
         return (
@@ -77,6 +102,9 @@ export default function CanvasPage() {
         );
     }
 
+    const openedNodesData = getOpenedNodesData();
+    const isCanvasMode = activeNodeId === null;
+
     return (
         <ToastProvider>
             <div className="flex flex-col h-screen w-screen bg-background">
@@ -84,32 +112,56 @@ export default function CanvasPage() {
                     <div className="flex-1 min-w-0 relative">
                         <div className="flex flex-col gap-1 h-full">
                             <div className="flex items-center gap-1 flex-shrink-0">
-                                {editorModeOptions.map((option) => {
-                                    return (
-                                        <button
-                                            key={option.label}
-                                            className={`
-                                                flex items-center gap-2 px-3 py-1 border rounded-md w-full cursor-pointer
-                                                ${editorMode === option.label ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
-                                                `}
-                                            onClick={() => setEditorMode(option.label)}
-                                        >
-                                            <option.icon size={16} className="min-w-4" />
+                                <div
+                                    className={`
+                                        flex items-center gap-2 w-full px-3 py-1 border rounded-md cursor-pointer
+                                        ${isCanvasMode ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
+                                    `}
+                                    onClick={switchToCanvas}
+                                >
+                                    <LandPlot size={16} className="min-w-4" />
+                                    <div
+                                        className={`
+                                            border-l h-5
+                                            ${isCanvasMode ? 'border-bg-accent/10' : 'border-depth-4'}
+                                        `}
+                                    />
+                                    Холст
+                                </div>
+
+                                {openedNodesData.map((node) => (
+                                    <div
+                                        key={node.id}
+                                        className={`
+                                            flex items-center justify-between w-full px-3 py-1 border rounded-md cursor-pointer group
+                                            ${activeNodeId === node.id ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
+                                        `}
+                                        onClick={() => switchToNodeTab(node.id)}
+                                    >
+                                        <div className="flex items-center">
+                                            <Box size={16} className="min-w-4 flex-shrink-0" />
 
                                             <div
-                                                className={`
-                                                    border-l h-5 
-                                                    ${editorMode === option.label ? 'border-bg-accent/10' : 'border-depth-4'}
-                                                `}
+                                                className={`border-l h-5 mx-2 ${activeNodeId === node.id ? 'border-bg-accent/10' : 'border-depth-4'}`}
                                             />
 
-                                            {option.label}
+                                            <span className="truncate max-w-[120px]">{node.name}</span>
+                                        </div>
+
+                                        <button
+                                            className={`
+                                                opacity-0 group-hover:opacity-100 rounded p-0.5 transition-opacity cursor-pointer
+                                                ${activeNodeId === node.id ? 'hover:bg-bg-accent/10' : 'hover:bg-depth-3'}
+                                            `}
+                                            onClick={(e) => closeNodeTab(node.id, e)}
+                                        >
+                                            <X size={16} />
                                         </button>
-                                    );
-                                })}
+                                    </div>
+                                ))}
                             </div>
 
-                            {editorMode === 'Холст' && <Canvas />}
+                            {isCanvasMode ? <Canvas /> : <Node />}
                         </div>
                     </div>
 
