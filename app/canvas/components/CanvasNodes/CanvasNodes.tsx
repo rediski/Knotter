@@ -23,6 +23,11 @@ export function CanvasNodes() {
     const items = useCanvasStore((state) => state.items);
     const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
     const hoveredNodeId = useCanvasStore((state) => state.hoveredNodeId);
+    const setSelectedItemIds = useCanvasStore((state) => state.setSelectedItemIds);
+
+    const setOpenedNodeIds = useCanvasStore((state) => state.setOpenedNodeIds);
+    const setActiveNodeId = useCanvasStore((state) => state.setActiveNodeId);
+    const openedNodeIds = useCanvasStore((state) => state.openedNodeIds);
 
     const nodes = getNodes(items);
 
@@ -43,6 +48,15 @@ export function CanvasNodes() {
 
         return () => resizeObserver.disconnect();
     }, []);
+
+    const handleNodeDoubleClick = (nodeId: string) => {
+        if (!openedNodeIds.includes(nodeId)) {
+            setOpenedNodeIds([...openedNodeIds, nodeId]);
+        }
+
+        setActiveNodeId(nodeId);
+        setSelectedItemIds([nodeId]);
+    };
 
     return (
         <div ref={containerRef} className="absolute inset-0">
@@ -66,6 +80,7 @@ export function CanvasNodes() {
                             transform: `translate(-50%, -50%) scale(${zoomLevel})`,
                             transformOrigin: 'center',
                         }}
+                        onDoubleClick={() => handleNodeDoubleClick(node.id)}
                     >
                         <NodeRenderer node={node} isSelected={isSelected} />
                     </div>
