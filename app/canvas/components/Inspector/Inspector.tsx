@@ -15,7 +15,6 @@ import { Dropdown } from '@/components/UI/Dropdown';
 
 import { ShapeButtons } from '@/canvas/components/Inspector/ShapeButtons';
 import { PositionInputs } from '@/canvas/components/Inspector/PositionInputs';
-import { NodeParameters } from '@/canvas/components/CanvasNodes/NodeParameters';
 
 import { useDropdownStore } from '@/canvas/store/dropdownStore';
 
@@ -28,7 +27,6 @@ const FIELD_TITLES = {
     DESCRIPTION: 'Описание',
     SHAPE: 'Форма',
     TRANSFORM: 'Трансформация',
-    PARAMETERS: 'Параметры',
 } as const;
 
 export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
@@ -66,9 +64,8 @@ export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
     const showDescription = shouldShowField(FIELD_TITLES.DESCRIPTION);
     const showShape = shouldShowField(FIELD_TITLES.SHAPE);
     const showPosition = shouldShowField(FIELD_TITLES.TRANSFORM);
-    const showParameters = shouldShowField(FIELD_TITLES.PARAMETERS);
 
-    const hasVisibleFields = showName || showDescription || showShape || showPosition || showParameters;
+    const hasVisibleFields = showName || showDescription || showShape || showPosition;
 
     if (filterText && !hasVisibleFields) {
         return (
@@ -120,16 +117,6 @@ export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
                             onToggle={() => toggleDropdown(2)}
                         >
                             <PositionInputs positionX={positionX} positionY={positionY} onMove={changeItemsPosition} />
-                        </Dropdown>
-                    )}
-
-                    {showParameters && (
-                        <Dropdown
-                            title={FIELD_TITLES.PARAMETERS}
-                            isOpen={isDropdownOpen(3)}
-                            onToggle={() => toggleDropdown(3)}
-                        >
-                            <NodeParameters node={selectedItem} />
                         </Dropdown>
                     )}
                 </>
