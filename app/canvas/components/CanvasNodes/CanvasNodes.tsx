@@ -25,9 +25,10 @@ export function CanvasNodes() {
     const hoveredNodeId = useCanvasStore((state) => state.hoveredNodeId);
     const setSelectedItemIds = useCanvasStore((state) => state.setSelectedItemIds);
 
-    const setOpenedNodeIds = useCanvasStore((state) => state.setOpenedNodeIds);
-    const setActiveNodeId = useCanvasStore((state) => state.setActiveNodeId);
-    const openedNodeIds = useCanvasStore((state) => state.openedNodeIds);
+    const setOpenedNodeId = useCanvasStore((state) => state.setOpenedNodeId);
+
+    const openedNodesIds = useCanvasStore((state) => state.openedNodesIds);
+    const setOpenedNodesIds = useCanvasStore((state) => state.setOpenedNodesIds);
 
     const nodes = getNodes(items);
 
@@ -50,11 +51,11 @@ export function CanvasNodes() {
     }, []);
 
     const handleNodeDoubleClick = (nodeId: string) => {
-        if (!openedNodeIds.includes(nodeId)) {
-            setOpenedNodeIds([...openedNodeIds, nodeId]);
+        if (!openedNodesIds.includes(nodeId)) {
+            setOpenedNodesIds([...openedNodesIds, nodeId]);
         }
 
-        setActiveNodeId(nodeId);
+        setOpenedNodeId(nodeId);
         setSelectedItemIds([nodeId]);
     };
 
