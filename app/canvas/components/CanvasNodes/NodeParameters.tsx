@@ -72,8 +72,9 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
 
                             return (
                                 <div key={parameter.id}>
+                                    <p className="text-sm">{parameter.name}</p>
+
                                     <Input
-                                        name={parameter.name}
                                         min={numberValue.min}
                                         max={numberValue.max}
                                         value={numberValue.currentValue.toString()}
