@@ -57,10 +57,11 @@ export interface CanvasState {
 
     // ---
 
-    openedNodeIds: string[];
-    setOpenedNodeIds: (ids: string[]) => void;
-    activeNodeId: string | null;
-    setActiveNodeId: (nodeId: string | null) => void;
+    openedNodeId: string | null;
+    setOpenedNodeId: (nodeId: string | null) => void;
+
+    openedNodesIds: string[];
+    setOpenedNodesIds: (nodeIds: string[]) => void;
 
     // ---
 
@@ -135,11 +136,11 @@ export const useCanvasStore = create<CanvasState>()(
             toggleShowAxes: () => set((s) => ({ showAxes: !s.showAxes })),
 
             // ---
-            openedNodeIds: [],
-            setOpenedNodeIds: (openedNodeIds) => set({ openedNodeIds }),
+            openedNodeId: null,
+            setOpenedNodeId: (openedNodeId) => set({ openedNodeId }),
 
-            activeNodeId: null,
-            setActiveNodeId: (activeNodeId) => set({ activeNodeId }),
+            openedNodesIds: [],
+            setOpenedNodesIds: (openedNodesIds) => set({ openedNodesIds }),
 
             // ---
 
@@ -175,8 +176,8 @@ export const useCanvasStore = create<CanvasState>()(
                 showGrid: state.showGrid,
                 showAxes: state.showAxes,
 
-                openedNodeIds: state.openedNodeIds,
-                activeNodeId: state.activeNodeId,
+                openedNodeId: state.openedNodeId,
+                openedNodeIds: state.openedNodesIds,
 
                 sidebarWidth: state.sidebarWidth,
                 sidebarPanels: state.sidebarPanels,

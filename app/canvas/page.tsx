@@ -22,45 +22,45 @@ export interface EditorModeOption {
 
 export default function CanvasPage() {
     const items = useCanvasStore((state) => state.items);
-    const openedNodeIds = useCanvasStore((state) => state.openedNodeIds);
-    const activeNodeId = useCanvasStore((state) => state.activeNodeId);
+    const openedNodeId = useCanvasStore((state) => state.openedNodeId);
+    const openedNodesIds = useCanvasStore((state) => state.openedNodesIds);
 
     const setSelectedItemIds = useCanvasStore((state) => state.setSelectedItemIds);
-    const setOpenedNodeIds = useCanvasStore((state) => state.setOpenedNodeIds);
-    const setActiveNodeId = useCanvasStore((state) => state.setActiveNodeId);
+    const setOpenedNodeId = useCanvasStore((state) => state.setOpenedNodeId);
+    const setOpenedNodesIds = useCanvasStore((state) => state.setOpenedNodesIds);
 
     const isMobile = useMobileDetection();
 
     const closeNodeTab = (nodeId: string, e: React.MouseEvent) => {
         e.stopPropagation();
 
-        const newOpenedNodeIds = openedNodeIds.filter((id) => id !== nodeId);
-        setOpenedNodeIds(newOpenedNodeIds);
+        const newOpenedNodeIds = openedNodesIds.filter((id) => id !== nodeId);
+        setOpenedNodesIds(newOpenedNodeIds);
 
-        if (activeNodeId === nodeId) {
+        if (openedNodeId === nodeId) {
             if (newOpenedNodeIds.length > 0) {
                 const nextNodeId = newOpenedNodeIds[newOpenedNodeIds.length - 1];
-                setActiveNodeId(nextNodeId);
+                setOpenedNodeId(nextNodeId);
                 setSelectedItemIds([nextNodeId]);
             } else {
-                setActiveNodeId(null);
+                setOpenedNodeId(null);
                 setSelectedItemIds([]);
             }
         }
     };
 
     const switchToNodeTab = (nodeId: string) => {
-        setActiveNodeId(nodeId);
+        setOpenedNodeId(nodeId);
         setSelectedItemIds([nodeId]);
     };
 
     const switchToCanvas = () => {
-        setActiveNodeId(null);
+        setOpenedNodeId(null);
         setSelectedItemIds([]);
     };
 
     const getOpenedNodesData = () => {
-        return openedNodeIds
+        return openedNodesIds
             .map((nodeId) => items.find((item) => item.id === nodeId && item.kind === 'node'))
             .filter(Boolean) as CanvasItem[];
     };
@@ -109,7 +109,7 @@ export default function CanvasPage() {
     }
 
     const openedNodesData = getOpenedNodesData();
-    const isCanvasMode = activeNodeId === null;
+    const isCanvasMode = openedNodeId === null;
 
     return (
         <ToastProvider>
@@ -120,7 +120,7 @@ export default function CanvasPage() {
                             <div className="flex items-center gap-1 flex-shrink-0">
                                 <div
                                     className={`
-                                        flex items-center gap-2 w-full px-3 py-1 border rounded-md cursor-pointer
+                                        flex items-center gap-2 w-full px-3 h-8 border rounded-md text-sm cursor-pointer
                                         ${isCanvasMode ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
                                     `}
                                     onClick={switchToCanvas}
@@ -139,8 +139,8 @@ export default function CanvasPage() {
                                     <div
                                         key={node.id}
                                         className={`
-                                            flex items-center justify-between w-full px-3 py-1 border rounded-md cursor-pointer group
-                                            ${activeNodeId === node.id ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
+                                            flex items-center justify-between w-full px-3 h-8 border rounded-md cursor-pointer group
+                                            ${openedNodeId === node.id ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
                                         `}
                                         onClick={() => switchToNodeTab(node.id)}
                                     >
@@ -148,16 +148,16 @@ export default function CanvasPage() {
                                             <Box size={16} className="min-w-4 flex-shrink-0" />
 
                                             <div
-                                                className={`border-l h-5 mx-2 ${activeNodeId === node.id ? 'border-bg-accent/10' : 'border-depth-4'}`}
+                                                className={`border-l h-5 mx-2 ${openedNodeId === node.id ? 'border-bg-accent/10' : 'border-depth-4'}`}
                                             />
 
-                                            <span className="truncate max-w-[120px]">{node.name}</span>
+                                            <span className="truncate text-sm">{node.name}</span>
                                         </div>
 
                                         <button
                                             className={`
                                                 opacity-0 group-hover:opacity-100 rounded p-0.5 transition-opacity cursor-pointer
-                                                ${activeNodeId === node.id ? 'hover:bg-bg-accent/10' : 'hover:bg-depth-3'}
+                                                ${openedNodeId === node.id ? 'hover:bg-bg-accent/10' : 'hover:bg-depth-3'}
                                             `}
                                             onClick={(e) => closeNodeTab(node.id, e)}
                                         >
