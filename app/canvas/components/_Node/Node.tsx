@@ -14,13 +14,13 @@ export default function Node() {
     return (
         <div className="flex flex-col gap-1 w-full h-full">
             <div className="flex gap-1">
-                <div className="flex gap-4 items-start bg-depth-1 border border-depth-3 w-full p-3 rounded-md">
+                <div className="flex gap-4 items-start bg-depth-1 border border-depth-3 min-w-sm w-full flex-1/3 p-3 rounded-md">
                     <currentShape.icon className="min-w-16 h-16" />
 
                     <div className="flex flex-col gap-1">
                         <h2 className="text-xl">{openedNode.name !== '' ? openedNode.name : 'Название'}</h2>
 
-                        <p className="text-foreground/70 leading-5.5">
+                        <p className="text-foreground/70 whitespace-pre-wrap break-all hyphens-auto">
                             {openedNode.description !== '' ? openedNode.description : 'Описание'}
                         </p>
                     </div>
