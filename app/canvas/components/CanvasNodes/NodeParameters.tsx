@@ -65,14 +65,14 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
     return (
         <div className="flex flex-col w-full gap-1">
             {nodeParameters.length > 0 && (
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-2">
                     {nodeParameters.map((parameter: Parameter) => {
                         if (parameter.type === 'number') {
                             const numberValue = parameter.value as NumberConfig;
 
                             return (
-                                <div key={parameter.id}>
-                                    <p className="text-sm">{parameter.name}</p>
+                                <div key={parameter.id} className="flex flex-col gap-2">
+                                    <p className="text-sm truncate">{parameter.name}</p>
 
                                     <Input
                                         min={numberValue.min}
@@ -102,7 +102,9 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
 
                         if (parameter.type === 'string') {
                             return (
-                                <div key={parameter.id} className="flex items-center gap-2">
+                                <div key={parameter.id} className="flex flex-col gap-2">
+                                    <p className="text-sm truncate">{parameter.name}</p>
+
                                     <Input
                                         value={parameter.value as string}
                                         onChange={(newValue) => {
@@ -119,7 +121,12 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
 
                         if (parameter.type === 'boolean') {
                             return (
-                                <div key={parameter.id} className="flex items-center gap-2">
+                                <label
+                                    key={parameter.id}
+                                    className="flex items-center w-fit gap-2 select-none cursor-pointer truncate"
+                                >
+                                    {parameter.name}
+
                                     <Checkbox
                                         checked={parameter.value as boolean}
                                         onChange={(checked) => {
@@ -133,8 +140,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                                                 : 'hover:bg-depth-3 active:bg-depth-4'
                                         }`}
                                     />
-                                    <span className="w-full truncate">{parameter.name}</span>
-                                </div>
+                                </label>
                             );
                         }
 
@@ -142,7 +148,9 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                             const enumValue = parameter.value as EnumConfig;
 
                             return (
-                                <div key={parameter.id}>
+                                <div key={parameter.id} className="flex flex-col gap-2">
+                                    <p className="text-sm truncate">{parameter.name}:</p>
+
                                     <Select
                                         value={enumValue.currentValue}
                                         options={enumValue.options}
