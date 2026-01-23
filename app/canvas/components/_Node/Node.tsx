@@ -18,7 +18,7 @@ export default function Node() {
                     <currentShape.icon className="min-w-16 h-16" />
 
                     <div className="flex flex-col gap-1">
-                        <h2 className="text-xl">{openedNode.name !== '' ? openedNode.name : 'Название'}</h2>
+                        <h2 className="text-lg">{openedNode.name !== '' ? openedNode.name : 'Название'}</h2>
 
                         <p className="text-foreground/70 whitespace-pre-wrap break-all hyphens-auto">
                             {openedNode.description !== '' ? openedNode.description : 'Описание'}
@@ -26,18 +26,18 @@ export default function Node() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 bg-depth-1 w-full border border-depth-3 rounded-md overflow-hidden">
+                <div className="grid grid-cols-2 bg-depth-1 w-full border border-depth-3 rounded-md overflow-hidden text-sm">
                     <div className="font-medium truncate p-3 border-r border-b border-depth-3">Трансформация</div>
 
                     <div className="flex flex-col min-w-0 border-b border-depth-3">
                         <div className="flex items-center justify-between border-b border-depth-3 p-3">
                             <p className="truncate">Положение X</p>
-                            <p className="text-text-accent truncate text-sm">{openedNode.position.x}</p>
+                            <p className="text-text-accent truncate">{openedNode.position.x}</p>
                         </div>
 
                         <div className="flex items-center justify-between p-3">
                             <p className="truncate">Положение Y</p>
-                            <p className="text-text-accent truncate text-sm">{openedNode.position.y}</p>
+                            <p className="text-text-accent truncate">{openedNode.position.y}</p>
                         </div>
                     </div>
 
@@ -55,7 +55,7 @@ export default function Node() {
                 </div>
             </div>
 
-            <div className="bg-depth-1 border border-depth-3 rounded-md p-2">
+            <div className="bg-depth-1 border border-depth-3 rounded-md p-3">
                 <NodeParameters node={openedNode} />
             </div>
         </div>
