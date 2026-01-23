@@ -60,9 +60,9 @@ export const OptionPicker = memo(function OptionPicker({
                     ${isOpen ? 'bg-depth-3 rounded-t-md' : 'bg-depth-2 hover:bg-depth-3 rounded-md'}
                 `}
             >
-                <ChevronDown size={16} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={16} className={`transition-transform min-w-4 ${isOpen ? 'rotate-180' : ''}`} />
 
-                <span>{placeholder}</span>
+                <span className="select-none truncate">{placeholder}</span>
             </button>
 
             {isOpen && (

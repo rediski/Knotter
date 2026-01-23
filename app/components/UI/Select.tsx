@@ -22,11 +22,17 @@ export const Select = memo(function Select({ value, options, onChange, label }: 
                 type="button"
                 onClick={() => setIsOpen((v) => !v)}
                 className={`
-                    flex items-center gap-2 h-8 px-3 w-full cursor-pointer
+                    flex items-center gap-2 h-8 px-3 w-full text-sm cursor-pointer
                     ${isOpen ? 'rounded-t-md bg-depth-3' : 'rounded-md bg-depth-2 hover:bg-depth-3'}
                 `}
             >
-                <ChevronDown size={14} className={`${isOpen && 'rotate-180'} transition-transform`} />
+                <ChevronDown
+                    size={16}
+                    className={`
+                        transition-transform min-w-4 
+                        ${isOpen && 'rotate-180'} 
+                    `}
+                />
                 <span className="truncate">{selected ?? label}</span>
             </button>
 
