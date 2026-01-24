@@ -2,29 +2,35 @@
 
 import { memo } from 'react';
 
-import type { Parameter } from '@/canvas/utils/parameters/parameter.types';
+import type { Parameter } from '@/canvas/components/Parameters/core/parameter.types';
 
 import { EditableName } from '@/components/UI/EditableName';
 import { Checkbox } from '@/components/UI/Checkbox';
-
+import { useParameters } from '@/canvas/components/Parameters/core/useParameters';
 import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
-import { isBooleanValue } from '@/canvas/utils/parameters/parameter.type-guards';
+import { isBooleanValue } from '@/canvas/components/Parameters/core/parameter.type-guards';
 
 import { X } from 'lucide-react';
 
 interface BooleanParameterProps {
     parameter: Parameter;
-    handleCheckboxChange: (checked: boolean) => void;
     handleUpdateParameterName: (newName: string) => void;
     removeParameter: (parameterId: string) => void;
 }
 
 export const BooleanParameter = memo(function BooleanParameter({
     parameter,
-    handleCheckboxChange,
     handleUpdateParameterName,
     removeParameter,
 }: BooleanParameterProps) {
+    const { updateParameter } = useParameters();
+
+    const handleCheckboxChange = (checked: boolean) => {
+        updateParameter(parameter.id, {
+            value: checked,
+        });
+    };
+
     const Icon = getDynamicIcon(parameter.type);
 
     if (!parameter) return;
