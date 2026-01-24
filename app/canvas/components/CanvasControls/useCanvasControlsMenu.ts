@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
 
 import { useClickOutside } from '@/canvas/hooks/useClickOutside';
-import { useCanvasFileActions } from '@/canvas/hooks/CanvasControls/useCanvasFileActions';
+import { useCanvasFileActions } from '@/canvas/components/CanvasControls/useCanvasFileActions';
 
 export function useCanvasControlsMenu() {
     const [open, setOpen] = useState(false);

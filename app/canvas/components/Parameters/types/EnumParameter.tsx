@@ -8,26 +8,29 @@ import { EditableName } from '@/components/UI/EditableName';
 import { X } from 'lucide-react';
 
 import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
-import { Parameter } from '@/canvas/utils/parameters/parameter.types';
-import { isEnumValue } from '@/canvas/utils/parameters/parameter.type-guards';
+import { Parameter } from '@/canvas/components/Parameters/core/parameter.types';
+import { isEnumValue } from '@/canvas/components/Parameters/core/parameter.type-guards';
+import { useEnumParameter } from '@/canvas/components/Parameters/types/useEnumParameter';
+import { useParameters } from '@/canvas/components/Parameters/core/useParameters';
 
 interface EnumParameterProps {
     parameter: Parameter;
-    handleAddEnumOption: () => void;
-    handleRemoveEnumOption: (index: number) => void;
-    handleUpdateEnumOption: (index: number, newValue: string) => void;
     handleUpdateParameterName: (newName: string) => void;
     removeParameter: (parameterId: string) => void;
 }
 
 export const EnumParameter = memo(function EnumParameter({
     parameter,
-    handleAddEnumOption,
-    handleRemoveEnumOption,
-    handleUpdateEnumOption,
     handleUpdateParameterName,
     removeParameter,
 }: EnumParameterProps) {
+    const { updateParameter } = useParameters();
+
+    const { handleAddEnumOption, handleRemoveEnumOption, handleUpdateEnumOption } = useEnumParameter({
+        parameter,
+        updateParameter,
+    });
+
     const EnumIcon = getDynamicIcon('enum');
     const StringIcon = getDynamicIcon('string');
 
@@ -40,11 +43,7 @@ export const EnumParameter = memo(function EnumParameter({
             <div className="flex items-center gap-1 h-8">
                 <EnumIcon size={16} className="min-w-4" />
 
-                <EditableName
-                    name={parameter.name}
-                    onChange={handleUpdateParameterName} // Исправлено
-                    className="w-full"
-                />
+                <EditableName name={parameter.name} onChange={handleUpdateParameterName} className="w-full" />
 
                 <button onClick={() => removeParameter(parameter.id)} className="ml-auto text-gray cursor-pointer">
                     <X size={16} />

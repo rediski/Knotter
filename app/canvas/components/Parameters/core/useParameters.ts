@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import type { Parameter, ParameterType } from '@/canvas/utils/parameters/parameter.types';
+import type { Parameter, ParameterType } from '@/canvas/components/Parameters/core/parameter.types';
 import type { Node } from '@/canvas/canvas.types';
 
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
-import { createInitialParameterValue } from '@/canvas/utils/parameters/parameter.utils';
+import { createInitialParameterValue } from '@/canvas/components/Parameters/core/createInitialParameterValue';
 
 import { v4 as uuid } from 'uuid';
 
@@ -26,7 +26,7 @@ export const useParameters = () => {
             name: name,
             type,
             value: createInitialParameterValue(type),
-        };
+        } as Parameter;
 
         setParameters([...parameters, newParameter]);
         setParameterName('');
@@ -40,7 +40,9 @@ export const useParameters = () => {
 
     const updateParameter = (parameterId: string, updates: Partial<Parameter>) => {
         setParameters(
-            parameters.map((parameter) => (parameter.id === parameterId ? { ...parameter, ...updates } : parameter)),
+            parameters.map((parameter) =>
+                parameter.id === parameterId ? ({ ...parameter, ...updates } as Parameter) : parameter,
+            ),
         );
     };
 
