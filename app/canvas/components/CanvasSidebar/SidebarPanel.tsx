@@ -10,7 +10,7 @@ import { Input } from '@/components/UI/Input';
 import { panelDefinitions } from '@/canvas/components/CanvasSidebar/_panelDefinitions';
 import { PanelContextMenu } from '@/canvas/components/CanvasSidebar/PanelContextMenu';
 
-import { useSidebarPanels } from '@/canvas/hooks/useSideBarPanels';
+import { useSidebarPanels } from '@/canvas/components/CanvasSidebar/useSideBarPanels';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { Search } from 'lucide-react';
@@ -98,7 +98,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
 
             <div
                 className={`
-                    flex justify-between items-center gap-1 p-1 
+                    flex justify-between items-center gap-1 p-1 pb-0
                     ${panelIndex > 0 && 'border-t border-depth-3'}
                 `}
             >

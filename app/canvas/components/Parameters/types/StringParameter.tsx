@@ -2,13 +2,13 @@
 
 import { memo } from 'react';
 
-import type { Parameter } from '@/canvas/utils/parameters/parameter.types';
+import type { Parameter } from '@/canvas/components/Parameters/core/parameter.types';
 
 import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
 
 import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
-import { isStringValue } from '@/canvas/utils/parameters/parameter.type-guards';
+import { isStringValue } from '@/canvas/components/Parameters/core/parameter.type-guards';
 
 import { X } from 'lucide-react';
 
