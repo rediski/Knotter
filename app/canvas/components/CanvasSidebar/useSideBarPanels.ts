@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
-import { useCanvasStore } from '../store/canvasStore';
-import { SidebarPanel } from '../components/CanvasSidebar/_sidebarPanel.types';
+import { useCanvasStore } from '../../store/canvasStore';
+import { SidebarPanel } from './_sidebarPanel.types';
 
 export const useSidebarPanels = () => {
     const sidebarPanels = useCanvasStore((state) => state.sidebarPanels);

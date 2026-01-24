@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 import type { CanvasItem, Position, TooltipMode } from '@/canvas/canvas.types';
 import type { SidebarPanel } from '@/canvas/components/CanvasSidebar/_sidebarPanel.types';
-import type { Parameter } from '@/canvas/utils/parameters/parameter.types';
+import type { Parameter } from '@/canvas/components/Parameters/core/parameter.types';
 
 import { INITIAL_ZOOM } from '@/canvas/canvas.constants';
 

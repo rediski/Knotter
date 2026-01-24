@@ -1,5 +1,5 @@
 import { type NodeShapeType } from '@/canvas/utils/nodes/getShape';
-import { Parameter } from '@/canvas/utils/parameters/parameter.types';
+import { Parameter } from '@/canvas/components/Parameters/core/parameter.types';
 
 export type Position = { x: number; y: number };
 

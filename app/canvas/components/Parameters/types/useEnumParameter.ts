@@ -1,5 +1,5 @@
-import { Parameter, EnumConfig } from '@/canvas/utils/parameters/parameter.types';
-import { isEnumValue } from '@/canvas/utils/parameters/parameter.type-guards';
+import { Parameter, ParameterTypeMap } from '@/canvas/components/Parameters/core/parameter.types';
+import { isEnumValue } from '@/canvas/components/Parameters/core/parameter.type-guards';
 
 interface useEnumParameterProps {
     parameter: Parameter | undefined;
@@ -11,7 +11,7 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
         if (!parameter) return;
         if (!isEnumValue(parameter)) return;
 
-        const thisParameterData = parameter.value as EnumConfig;
+        const thisParameterData = parameter.value as ParameterTypeMap['enum'];
         const ordinalNumber = thisParameterData.options.length + 1;
 
         let newValue = `Опция ${ordinalNumber}`;
@@ -35,7 +35,7 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
         if (!parameter) return;
         if (!isEnumValue(parameter)) return;
 
-        const thisParameterData = parameter.value as EnumConfig;
+        const thisParameterData = parameter.value as ParameterTypeMap['enum'];
         const updatedOptions = thisParameterData.options.filter((_, i) => i !== index);
 
         updateParameter(parameter.id, {
@@ -51,7 +51,7 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
         if (!parameter) return;
         if (!isEnumValue(parameter)) return;
 
-        const thisParameterData = parameter.value as EnumConfig;
+        const thisParameterData = parameter.value as ParameterTypeMap['enum'];
 
         if (thisParameterData.options.some((option, i) => i !== index && option === newValue)) {
             return;
