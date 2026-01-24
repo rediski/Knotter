@@ -2,35 +2,35 @@
 
 import { memo } from 'react';
 
-import type { Parameter } from '@/canvas/utils/parameters/parameter.types';
+import type { Parameter } from '@/canvas/components/Parameters/core/parameter.types';
 
 import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
 
 import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
-import { isNumberValue } from '@/canvas/utils/parameters/parameter.type-guards';
+import { isNumberValue } from '@/canvas/components/Parameters/core/parameter.type-guards';
+
+import { useParameters } from '@/canvas/components/Parameters/core/useParameters';
+import { useNumberParameter } from '@/canvas/components/Parameters/types/useNumberParameter';
 
 import { X } from 'lucide-react';
 
 interface NumberParameterProps {
     parameter: Parameter;
     handleUpdateParameterName: (newName: string) => void;
-    handleUpdateCurrentValue: (value: string) => void;
-    handleUpdateMinValue: (value: string) => void;
-    handleUpdateMaxValue: (value: string) => void;
-    handleUpdateStepValue: (value: string) => void;
     removeParameter: (parameterId: string) => void;
 }
 
 export const NumberParameter = memo(function NumberParameter({
     parameter,
     handleUpdateParameterName,
-    handleUpdateCurrentValue,
-    handleUpdateMinValue,
-    handleUpdateMaxValue,
-    handleUpdateStepValue,
     removeParameter,
 }: NumberParameterProps) {
+    const { updateParameter } = useParameters();
+
+    const { handleUpdateCurrentValue, handleUpdateMinValue, handleUpdateMaxValue, handleUpdateStepValue } =
+        useNumberParameter({ parameter, updateParameter });
+
     const Icon = getDynamicIcon(parameter.type);
 
     if (!parameter) return;
@@ -90,8 +90,8 @@ export const NumberParameter = memo(function NumberParameter({
                             value={parameter.value.step.toString()}
                             onChange={handleUpdateStepValue}
                             className="bg-depth-3 border border-depth-4"
-                            type="number"
                             placeholder="1"
+                            type="number"
                         />
                     </div>
                 </div>
