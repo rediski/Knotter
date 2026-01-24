@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import { useInspector } from '@/canvas/hooks/Inspector/useInspector';
+import { useInspector } from '@/canvas/components/Inspector/useInspector';
 
 import { EmptyState } from '@/components/UI/EmptyState';
 import { Input } from '@/components/UI/Input';
@@ -76,7 +76,7 @@ export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
     }
 
     return (
-        <div className="flex flex-col overflow-y-auto p-1 pt-0 gap-1">
+        <div className="flex flex-col overflow-y-auto p-1 gap-1">
             {showName && (
                 <div className="flex flex-col gap-1">
                     <Input

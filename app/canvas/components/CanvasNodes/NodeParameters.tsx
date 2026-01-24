@@ -3,11 +3,11 @@
 import { memo } from 'react';
 
 import type { Node } from '@/canvas/canvas.types';
-import type { EnumConfig, NumberConfig, Parameter } from '@/canvas/utils/parameters/parameter.types';
+import type { Parameter, ParameterTypeMap } from '@/canvas/components/Parameters/core/parameter.types';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { useParameters } from '@/canvas/hooks/Parameters/_core/useParameters';
+import { useParameters } from '@/canvas/components/Parameters/core/useParameters';
 
 import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
 
@@ -68,7 +68,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                 <div className="flex flex-col gap-2">
                     {nodeParameters.map((parameter: Parameter) => {
                         if (parameter.type === 'number') {
-                            const numberValue = parameter.value as NumberConfig;
+                            const numberValue = parameter.value as ParameterTypeMap['number'];
 
                             return (
                                 <div key={parameter.id} className="flex flex-col gap-2">
@@ -145,7 +145,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                         }
 
                         if (parameter.type === 'enum') {
-                            const enumValue = parameter.value as EnumConfig;
+                            const enumValue = parameter.value as ParameterTypeMap['enum'];
 
                             return (
                                 <div key={parameter.id} className="flex flex-col gap-2">

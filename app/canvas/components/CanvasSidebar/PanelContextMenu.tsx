@@ -8,7 +8,7 @@ import type { SidebarPanel } from '@/canvas/components/CanvasSidebar/_sidebarPan
 import { ContextMenu } from '@/components/UI/ContextMenu';
 import { ContextMenuItem } from '@/components/UI/ContextMenuItem';
 
-import { useSidebarPanels } from '@/canvas/hooks/useSideBarPanels';
+import { useSidebarPanels } from '@/canvas/components/CanvasSidebar/useSideBarPanels';
 import { useClickOutside } from '@/canvas/hooks/useClickOutside';
 
 import { Plus, Minus, ArrowUp, ArrowDown } from 'lucide-react';

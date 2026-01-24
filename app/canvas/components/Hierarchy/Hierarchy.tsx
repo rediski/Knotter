@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { EmptyState } from '@/components/UI/EmptyState';
 import { HierarchyItem } from '@/canvas/components/Hierarchy/HierarchyItem';
 
-import { useHierarchy } from '@/canvas/hooks/Hierarchy/useHierarchy';
+import { useHierarchy } from '@/canvas/components/Hierarchy/useHierarchy';
 
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -35,7 +35,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: HierarchyProps) {
 
     return (
         <div className="flex flex-col flex-1 h-full">
-            <hr className="border-b-0 border-depth-3" />
+            <hr className="border-b-0 border-depth-3 mt-1" />
 
             <div className="flex flex-col flex-1 overflow-y-auto gap-2" onClick={handleDeselectOnEmptyClick}>
                 <DndContext

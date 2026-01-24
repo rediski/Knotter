@@ -5,7 +5,7 @@ import { memo, useRef } from 'react';
 import { SidebarPanels } from '@/canvas/components/CanvasSidebar/SidebarPanels';
 import { SidebarContextMenu } from '@/canvas/components/CanvasSidebar/SidebarContextMenu';
 import { useContextMenu } from '@/canvas/hooks/useContextMenu';
-import useSidebarResize from '@/canvas/hooks/useSidebarResize';
+import useSidebarResize from '@/canvas/components/CanvasSidebar/useSidebarResize';
 import { useClickOutside } from '@/canvas/hooks/useClickOutside';
 
 export const CanvasSidebar = memo(function Sidebar() {
@@ -17,7 +17,7 @@ export const CanvasSidebar = memo(function Sidebar() {
     useClickOutside(sidebarRef, () => menu.closeMenu());
 
     return (
-        <div className="flex h-full items-stretch z-50 bg-background">
+        <div className="flex h-full items-stretch z-50 bg-background select-none">
             <div
                 onMouseDown={startSidebarResize}
                 className={`
