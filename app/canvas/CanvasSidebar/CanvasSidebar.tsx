@@ -2,13 +2,18 @@
 
 import { memo, useRef } from 'react';
 
-import { SidebarPanels } from '@/canvas/CanvasSidebar/SidebarPanels';
+import { useCanvasStore } from '@/canvas/store/canvasStore';
+
 import { SidebarContextMenu } from '@/canvas/CanvasSidebar/SidebarContextMenu';
 import { useSidebarResize } from '@/canvas/CanvasSidebar/useSidebarResize';
 import { useContextMenu } from '@/hooks/useContextMenu';
 import { useClickOutside } from '@/hooks/useClickOutside';
+import { SidebarPanel } from '@/canvas/CanvasSidebar/SidebarPanel';
+import { EmptyState } from '@/components/UI/EmptyState';
 
 export const CanvasSidebar = memo(function Sidebar() {
+    const panels = useCanvasStore((state) => state.sidebarPanels);
+
     const menu = useContextMenu();
 
     const sidebarRef = useRef<HTMLDivElement | null>(null);
@@ -40,7 +45,20 @@ export const CanvasSidebar = memo(function Sidebar() {
                 onContextMenu={menu.handleContextMenu}
                 onClick={() => menu.closeMenu()}
             >
-                <SidebarPanels />
+                <div className={`flex flex-col h-full`}>
+                    {panels.length > 0 ? (
+                        panels.map((panel) => {
+                            return (
+                                <div key={panel.id} className="relative flex-1 min-h-0">
+                                    <SidebarPanel panel={panel} />
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <EmptyState message="Нажмите ПКМ по этой области, чтобы добавить панель" />
+                    )}
+                </div>
+
                 <SidebarContextMenu menu={menu} />
             </div>
         </div>
