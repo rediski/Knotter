@@ -1,6 +1,6 @@
 import { RefObject } from 'react';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { Position } from '@/canvas/canvas.types';
+import { Position } from '@/canvas/_core/_/canvas.types';
 
 interface getPanEventHandlerProps {
     isPanningRef: RefObject<boolean>;

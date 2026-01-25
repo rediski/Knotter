@@ -1,4 +1,4 @@
-import type { Edge, Node } from '@/canvas/canvas.types';
+import type { Edge, Node } from '@/canvas/_core/_/canvas.types';
 import { v4 as uuidv4 } from 'uuid';
 
 export function createEdge(edges: Edge[], fromNode: Node, toNode: Node): Edge {

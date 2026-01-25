@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { Position } from '@/canvas/canvas.types';
+import { Position } from '@/canvas/_core/_/canvas.types';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 

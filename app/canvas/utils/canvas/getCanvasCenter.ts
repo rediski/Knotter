@@ -1,4 +1,4 @@
-import { Position } from '@/canvas/canvas.types';
+import { Position } from '@/canvas/_core/_/canvas.types';
 
 export interface CanvasCenterOptions {
     offset: { x: number; y: number };

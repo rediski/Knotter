@@ -1,4 +1,4 @@
-import { CanvasItem, Node } from '@/canvas/canvas.types';
+import { CanvasItem, Node } from '@/canvas/_core/_/canvas.types';
 
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 

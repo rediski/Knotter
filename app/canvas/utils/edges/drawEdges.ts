@@ -1,4 +1,4 @@
-import { Node, Edge } from '@/canvas/canvas.types';
+import { Node, Edge } from '@/canvas/_core/_/canvas.types';
 
 export function drawEdges(ctx: CanvasRenderingContext2D, nodes: Node[], selectedItemIds: string[] = [], edges: Edge[]) {
     ctx.lineWidth = 2;

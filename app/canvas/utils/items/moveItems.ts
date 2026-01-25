@@ -1,8 +1,8 @@
-import type { Position, CanvasItem } from '@/canvas/canvas.types';
+import type { Position, CanvasItem } from '@/canvas/_core/_/canvas.types';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { NODE_MOVE_MIN_STEP, NODE_MOVE_MAX_STEP } from '@/canvas/canvas.constants';
+import { NODE_MOVE_MIN_STEP, NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 
 export function moveItems(dragDelta: Position, initialPositions: Map<string, Position>): CanvasItem[] {
     const selectedItemIds = useCanvasStore.getState().selectedItemIds;

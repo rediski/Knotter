@@ -1,4 +1,4 @@
-import { CanvasItem } from '@/canvas/canvas.types';
+import { CanvasItem } from '@/canvas/_core/_/canvas.types';
 
 export interface SelectCanvasItemEvent {
     ctrlKey: boolean;

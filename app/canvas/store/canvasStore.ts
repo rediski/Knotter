@@ -1,11 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import type { CanvasItem, Position, TooltipMode } from '@/canvas/canvas.types';
-import type { SidebarPanel } from '@/canvas/components/CanvasSidebar/_sidebarPanel.types';
-import type { Parameter } from '@/canvas/components/Parameters/core/parameter.types';
-
-import { INITIAL_ZOOM } from '@/canvas/canvas.constants';
+import type { CanvasItem, Position, TooltipMode } from '@/canvas/_core/_/canvas.types';
+import type { Parameter } from '@/canvas/_core/_/parameter.types';
+import type { SidebarPanel } from '@/canvas/_core/_/sidebarPanel.types';
+import { INITIAL_ZOOM } from '@/canvas/_core/_/canvas.constants';
 
 export interface CanvasState {
     offset: Position;

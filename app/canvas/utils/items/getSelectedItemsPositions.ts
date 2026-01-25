@@ -1,4 +1,4 @@
-import { CanvasItem, Position } from '@/canvas/canvas.types';
+import { CanvasItem, Position } from '@/canvas/_core/_/canvas.types';
 
 export function getSelectedItemsPositions(items: CanvasItem[], selectedIds: string[]): Map<string, Position> {
     const positions = new Map<string, Position>();

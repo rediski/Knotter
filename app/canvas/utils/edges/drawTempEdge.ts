@@ -1,4 +1,4 @@
-import { Node, Position } from '@/canvas/canvas.types';
+import { Node, Position } from '@/canvas/_core/_/canvas.types';
 
 function getTempEdgeColor(): string {
     const styles = getComputedStyle(document.documentElement);
