@@ -25,8 +25,7 @@ export default function Home() {
                 </div>
 
                 <div className="max-w-2xl text-center text-lg gap-1">
-                    Knotter - это нодовый редактор для работы с данными, распространяемый под лицензией GPL-3.0. Построен
-                    на&nbsp;
+                    Редактор графов, сфокусированный на разработке деревьев талантов для RPG-систем. Построен на&nbsp;
                     <strong>React</strong>, <strong>TypeScript</strong> и <strong>Tailwind CSS</strong>.
                 </div>
 
