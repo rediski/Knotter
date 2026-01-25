@@ -94,7 +94,13 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
 
             const clickedItemId = clickedNodeId || clickedTextId;
 
-            if (!clickedItemId) return;
+            if (!clickedItemId) {
+                if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
+                    setSelectedItemIds([]);
+                }
+
+                return;
+            }
 
             setPendingClickItemId(clickedItemId);
             setDragStartMouse(mousePos);
