@@ -117,7 +117,7 @@ export default function CanvasPage() {
                 <div className="flex flex-1 min-h-0 overflow-hidden m-1">
                     <div className="flex-1 min-w-0 relative">
                         <div className="flex flex-col gap-1 h-full">
-                            <div className="flex items-center gap-1 flex-shrink-0">
+                            <div className="flex items-center gap-1 shrink-0">
                                 <div
                                     className={`
                                         flex items-center gap-2 w-full px-3 h-8 border rounded-md text-sm cursor-pointer
@@ -145,7 +145,7 @@ export default function CanvasPage() {
                                         onClick={() => switchToNodeTab(node.id)}
                                     >
                                         <div className="flex items-center">
-                                            <Box size={16} className="min-w-4 flex-shrink-0" />
+                                            <Box size={16} className="min-w-4 shrink-0" />
 
                                             <div
                                                 className={`border-l h-5 mx-2 ${openedNodeId === node.id ? 'border-bg-accent/10' : 'border-depth-4'}`}

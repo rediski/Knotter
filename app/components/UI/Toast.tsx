@@ -63,7 +63,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                             `}
                             onClick={() => removeToast(toast.id)}
                         >
-                            <Icon size={20} className="flex-shrink-0" />
+                            <Icon size={20} className="shrink-0" />
 
                             <div className="text-sm font-medium">{toast.message}</div>
                         </div>
