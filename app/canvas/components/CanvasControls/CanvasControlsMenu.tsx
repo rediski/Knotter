@@ -5,13 +5,7 @@ import { useCanvasControlsMenu } from '@/canvas/components/CanvasControls/useCan
 import { Menu } from 'lucide-react';
 
 export const CanvasControlsMenu = memo(function CanvasControlsMenu() {
-    const {
-        open,
-
-        menuRef,
-
-        toggleMenu,
-    } = useCanvasControlsMenu();
+    const { open, menuRef, toggleMenu } = useCanvasControlsMenu();
 
     return (
         <div className="flex flex-col gap-2 max-w-60 w-full" ref={menuRef}>
