@@ -1,8 +1,5 @@
 import { memo } from 'react';
-
 import { MenuContent } from '@/canvas/components/CanvasControls/CanvasControlsMenuContent';
-import { SavePopup } from '@/canvas/components/CanvasControls/SavePopup';
-
 import { useCanvasControlsMenu } from '@/canvas/components/CanvasControls/useCanvasControlsMenu';
 
 import { Menu } from 'lucide-react';
@@ -10,13 +7,9 @@ import { Menu } from 'lucide-react';
 export const CanvasControlsMenu = memo(function CanvasControlsMenu() {
     const {
         open,
-        showSavePopup,
+
         menuRef,
-        onOpenProject,
-        onSaveAs,
-        handleSaveAndProceed,
-        handleDiscardAndProceed,
-        handleCancel,
+
         toggleMenu,
     } = useCanvasControlsMenu();
 
@@ -31,12 +24,7 @@ export const CanvasControlsMenu = memo(function CanvasControlsMenu() {
             >
                 <Menu size={16} />
             </button>
-
-            {open && <MenuContent onOpenProject={onOpenProject} onSaveAs={onSaveAs} />}
-
-            {showSavePopup && (
-                <SavePopup onSave={handleSaveAndProceed} onDiscard={handleDiscardAndProceed} onCancel={handleCancel} />
-            )}
+            {open && <MenuContent />}
         </div>
     );
 });
