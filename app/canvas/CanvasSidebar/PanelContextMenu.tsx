@@ -8,6 +8,7 @@ import type { SidebarPanel } from '@/canvas/_core/_/sidebarPanel.types';
 import { ContextMenu } from '@/components/UI/ContextMenu';
 import { ContextMenuItem } from '@/components/UI/ContextMenuItem';
 
+import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { useSidebarPanels } from '@/canvas/CanvasSidebar/useSideBarPanels';
 import { useClickOutside } from '@/hooks/useClickOutside';
 
@@ -22,12 +23,15 @@ interface PanelContextMenuProps {
 }
 
 export function PanelContextMenu({ panel, panelRef, closeMenu, isMenuOpenLocally, position }: PanelContextMenuProps) {
-    const { removePanel, movePanel, addPanel, sidebarPanels: allPanels } = useSidebarPanels();
+    const sidebarPanels = useCanvasStore((state) => state.sidebarPanels);
+
+    const { addPanel, removePanel, movePanel } = useSidebarPanels();
+
     const menuRef = useRef<HTMLDivElement>(null);
 
-    const panelIndex = allPanels.findIndex((p) => p.id === panel.id);
+    const panelIndex = sidebarPanels.findIndex((p) => p.id === panel.id);
     const canMoveUp = panelIndex > 0;
-    const canMoveDown = panelIndex < allPanels.length - 1;
+    const canMoveDown = panelIndex < sidebarPanels.length - 1;
 
     useClickOutside(panelRef, closeMenu);
 

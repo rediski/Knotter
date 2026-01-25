@@ -30,7 +30,6 @@ export const useSidebarPanels = () => {
     };
 
     return {
-        sidebarPanels,
         addPanel,
         removePanel,
         setPanelType,

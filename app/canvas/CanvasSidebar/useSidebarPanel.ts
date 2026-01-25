@@ -17,8 +17,9 @@ export function useSidebarPanel(panel: SidebarPanel) {
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
     const [isMenuOpenLocally, setIsMenuOpenLocally] = useState(false);
 
-    const { setPanelType, sidebarPanels } = useSidebarPanels();
+    const { setPanelType } = useSidebarPanels();
 
+    const sidebarPanels = useCanvasStore((state) => state.sidebarPanels);
     const filterText = useCanvasStore((state) => state.filterText[panel.id] || '');
     const setFilterText = useCanvasStore((state) => state.setFilterText);
 
