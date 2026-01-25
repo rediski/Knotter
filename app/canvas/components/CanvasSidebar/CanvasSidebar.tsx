@@ -21,7 +21,7 @@ export const CanvasSidebar = memo(function Sidebar() {
             <div
                 onMouseDown={startSidebarResize}
                 className={`
-                    w-2 cursor-ew-resize flex items-center justify-center gap-0.25 flex-shrink-0 hover:bg-bg-accent/15 active:bg-bg-accent/30 group backdrop-blur-sm self-stretch
+                    w-2 cursor-ew-resize flex items-center justify-center gap-px shrink-0 hover:bg-bg-accent/15 active:bg-bg-accent/30 group backdrop-blur-sm self-stretch
                     ${isResizingSidebar ? 'bg-bg-accent/30' : 'bg-background'}
                 `}
             >
@@ -35,7 +35,7 @@ export const CanvasSidebar = memo(function Sidebar() {
 
             <div
                 ref={sidebarRef}
-                className="flex flex-col flex-shrink-0 overflow-hidden bg-depth-1 border border-depth-3 rounded-md"
+                className="flex flex-col shrink-0 overflow-hidden bg-depth-1 border border-depth-3 rounded-md"
                 style={{ width: `${width}px` }}
                 onContextMenu={menu.handleContextMenu}
                 onClick={() => menu.closeMenu()}
