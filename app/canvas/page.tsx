@@ -119,7 +119,7 @@ export default function CanvasPage() {
                             <div className="flex items-center gap-1 shrink-0">
                                 <div
                                     className={`
-                                        flex items-center gap-2 w-full px-3 h-8 border rounded-md text-sm cursor-pointer
+                                        flex items-center gap-2 w-full px-3 h-8 border rounded-md text-sm cursor-pointer select-none
                                         ${isCanvasMode ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
                                     `}
                                     onClick={switchToCanvas}
@@ -138,7 +138,7 @@ export default function CanvasPage() {
                                     <div
                                         key={node.id}
                                         className={`
-                                            flex items-center justify-between w-full px-3 h-8 border rounded-md cursor-pointer group
+                                            flex items-center justify-between w-full px-3 h-8 border rounded-md cursor-pointer group select-none
                                             ${openedNodeId === node.id ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
                                         `}
                                         onClick={() => switchToNodeTab(node.id)}
