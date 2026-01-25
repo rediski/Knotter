@@ -7,7 +7,7 @@ export const useSidebarPanels = () => {
     const setSidebarPanels = useCanvasStore((state) => state.setSidebarPanels);
 
     const addPanel = () => {
-        const newPanel: SidebarPanel = { id: uuid(), type: null, height: 100 };
+        const newPanel: SidebarPanel = { id: uuid(), type: null };
         setSidebarPanels([...sidebarPanels, newPanel]);
     };
 
