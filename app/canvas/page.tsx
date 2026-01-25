@@ -2,17 +2,16 @@
 
 import Link from 'next/link';
 
-import type { CanvasItem } from '@/canvas/canvas.types';
+import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 
 import { ToastProvider } from '@/components/UI/Toast';
-import { CanvasSidebar } from '@/canvas/components/CanvasSidebar/CanvasSidebar';
+import { CanvasSidebar } from '@/canvas/CanvasSidebar/CanvasSidebar';
 
-import Canvas from '@/canvas/components/_Canvas/Canvas';
-import Node from '@/canvas/components/_Node/Node';
+import Canvas from '@/canvas/_core/Canvas/Canvas';
+import NodeContent from '@/canvas/_core/Node/NodeContent';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-
-import { useMobileDetection } from '@/canvas/hooks/useMobileDetection';
+import { useMobileDetection } from '@/hooks/useMobileDetection';
 
 import { LoaderCircle, Frown, LandPlot, Box, X, type LucideIcon } from 'lucide-react';
 
@@ -167,7 +166,7 @@ export default function CanvasPage() {
                                 ))}
                             </div>
 
-                            {isCanvasMode ? <Canvas /> : <Node />}
+                            {isCanvasMode ? <Canvas /> : <NodeContent />}
                         </div>
                     </div>
 

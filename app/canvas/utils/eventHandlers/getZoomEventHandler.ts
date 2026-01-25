@@ -1,5 +1,5 @@
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { MIN_ZOOM, MAX_ZOOM } from '@/canvas/canvas.constants';
+import { MIN_ZOOM, MAX_ZOOM } from '@/canvas/_core/_/canvas.constants';
 
 export function getZoomEventHandler(canvas: HTMLCanvasElement) {
     return (e: WheelEvent) => {

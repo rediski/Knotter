@@ -1,5 +1,5 @@
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { Position } from '@/canvas/canvas.types';
+import { Position } from '@/canvas/_core/_/canvas.types';
 
 export function getMousePosition(e: MouseEvent, canvas: HTMLCanvasElement): Position {
     const { offset, zoomLevel, invertY } = useCanvasStore.getState();

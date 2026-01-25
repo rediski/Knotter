@@ -1,4 +1,4 @@
-import { CanvasItem } from '@/canvas/canvas.types';
+import { CanvasItem } from '@/canvas/_core/_/canvas.types';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getEdges } from '@/canvas/utils/edges/getEdges';
 import { getTexts } from '@/canvas/utils/texts/getTexts';

@@ -1,4 +1,4 @@
-import type { CanvasItem } from '@/canvas/canvas.types';
+import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 import type { CreateItemParams } from '@/canvas/utils/items/createItem.types';
 
 import { createNode } from '@/canvas/utils/nodes/createNode';
@@ -7,7 +7,7 @@ import { createText } from '@/canvas/utils/texts/createText';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { MAX_CANVAS_ITEMS } from '@/canvas/canvas.constants';
+import { MAX_CANVAS_ITEMS } from '@/canvas/_core/_/canvas.constants';
 
 export function createItem(params: CreateItemParams): CanvasItem | null {
     const { items } = useCanvasStore.getState();

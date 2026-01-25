@@ -1,0 +1,181 @@
+'use client';
+
+import { memo } from 'react';
+
+import type { Node } from '@/canvas/_core/_/canvas.types';
+import type { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter.types';
+
+import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useParameters } from '@/canvas/CanvasSidebar/Parameters/core/useParameters';
+
+import { OptionPicker } from '@/components/UI/OptionPicker';
+import { Input } from '@/components/UI/Input';
+import { Checkbox } from '@/components/UI/Checkbox';
+import { Select } from '@/components/UI/Select';
+
+import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
+
+interface NodeParametersProps {
+    node: Node;
+}
+
+export const NodeParameters = memo(function NodeParameters({ node }: NodeParametersProps) {
+    const items = useCanvasStore((state) => state.items);
+    const setItems = useCanvasStore((state) => state.setItems);
+
+    const { parameters, addParameterToNode } = useParameters();
+
+    const storeNode = items.find((item) => item.kind === 'node' && item.id === node.id) as Node | undefined;
+
+    const nodeParameters = storeNode?.nodeParameters ?? [];
+
+    const filteredParameters = parameters.filter(
+        (template) => !nodeParameters.some((nodeParam) => nodeParam.id === template.id),
+    );
+
+    const options = filteredParameters.map((param) => ({
+        value: param.id,
+        label: param.name,
+        icon: getDynamicIcon(param.type),
+    }));
+
+    const updateNodeParameter = (nodeId: string, parameterId: string, updates: Partial<Parameter>) => {
+        const nodeIndex = items.findIndex((item) => item.kind === 'node' && item.id === nodeId);
+        if (nodeIndex === -1) return;
+
+        const currentNode = items[nodeIndex] as Node;
+
+        const updatedNodeParameters = currentNode.nodeParameters.map((param) =>
+            param.id === parameterId ? { ...param, ...updates } : param,
+        );
+
+        const updatedNode: Node = {
+            ...currentNode,
+            nodeParameters: updatedNodeParameters,
+        };
+
+        const updatedItems = [...items];
+        updatedItems[nodeIndex] = updatedNode;
+
+        setItems(updatedItems);
+    };
+
+    return (
+        <div className="flex flex-col w-full gap-1">
+            {nodeParameters.length > 0 && (
+                <div className="flex flex-col gap-2">
+                    {nodeParameters.map((parameter: Parameter) => {
+                        if (parameter.type === 'number') {
+                            const numberValue = parameter.value as ParameterTypeMap['number'];
+
+                            return (
+                                <div key={parameter.id} className="flex flex-col gap-2">
+                                    <p className="text-sm truncate">{parameter.name}</p>
+
+                                    <Input
+                                        min={numberValue.min}
+                                        max={numberValue.max}
+                                        value={numberValue.currentValue.toString()}
+                                        step={numberValue.step}
+                                        type="number"
+                                        className="bg-depth-2 hover:bg-depth-3 active:bg-depth-4"
+                                        onChange={(newValue) => {
+                                            const numValue = parseFloat(newValue);
+                                            if (!isNaN(numValue)) {
+                                                updateNodeParameter(node.id, parameter.id, {
+                                                    value: {
+                                                        ...numberValue,
+                                                        currentValue: Math.min(
+                                                            Math.max(numValue, numberValue.min),
+                                                            numberValue.max,
+                                                        ),
+                                                    },
+                                                });
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            );
+                        }
+
+                        if (parameter.type === 'string') {
+                            return (
+                                <div key={parameter.id} className="flex flex-col gap-2">
+                                    <p className="text-sm truncate">{parameter.name}</p>
+
+                                    <Input
+                                        value={parameter.value as string}
+                                        onChange={(newValue) => {
+                                            updateNodeParameter(node.id, parameter.id, {
+                                                value: newValue,
+                                            });
+                                        }}
+                                        placeholder={parameter.name}
+                                        className="bg-depth-2 hover:bg-depth-3"
+                                    />
+                                </div>
+                            );
+                        }
+
+                        if (parameter.type === 'boolean') {
+                            return (
+                                <label
+                                    key={parameter.id}
+                                    className="flex items-center w-fit gap-2 select-none cursor-pointer truncate"
+                                >
+                                    {parameter.name}
+
+                                    <Checkbox
+                                        checked={parameter.value as boolean}
+                                        onChange={(checked) => {
+                                            updateNodeParameter(node.id, parameter.id, {
+                                                value: checked,
+                                            });
+                                        }}
+                                        className={`bg-depth-2 ${
+                                            parameter.value === true
+                                                ? 'hover:bg-bg-accent'
+                                                : 'hover:bg-depth-3 active:bg-depth-4'
+                                        }`}
+                                    />
+                                </label>
+                            );
+                        }
+
+                        if (parameter.type === 'enum') {
+                            const enumValue = parameter.value as ParameterTypeMap['enum'];
+
+                            return (
+                                <div key={parameter.id} className="flex flex-col gap-2">
+                                    <p className="text-sm truncate">{parameter.name}:</p>
+
+                                    <Select
+                                        value={enumValue.currentValue}
+                                        options={enumValue.options}
+                                        onChange={(newValue) => {
+                                            updateNodeParameter(node.id, parameter.id, {
+                                                value: {
+                                                    ...enumValue,
+                                                    currentValue: newValue,
+                                                },
+                                            });
+                                        }}
+                                        label={parameter.name}
+                                    />
+                                </div>
+                            );
+                        }
+
+                        return null;
+                    })}
+                </div>
+            )}
+
+            <OptionPicker
+                options={options}
+                onSelect={(parameterId) => addParameterToNode(node.id, parameterId)}
+                placeholder="Добавить параметр"
+            />
+        </div>
+    );
+});

@@ -1,4 +1,4 @@
-import type { Node, Position } from '@/canvas/canvas.types';
+import type { Node, Position } from '@/canvas/_core/_/canvas.types';
 import { v4 as uuidv4 } from 'uuid';
 
 export function createNode(nodes: Node[], position: Position): Node {

@@ -1,4 +1,4 @@
-import { Position, Edge, Node } from '@/canvas/canvas.types';
+import { Position, Edge, Node } from '@/canvas/_core/_/canvas.types';
 
 const EDGE_HIT_RADIUS = 5;
 

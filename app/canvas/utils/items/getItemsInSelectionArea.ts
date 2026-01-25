@@ -1,4 +1,4 @@
-import { CanvasItem, Position } from '@/canvas/canvas.types';
+import { CanvasItem, Position } from '@/canvas/_core/_/canvas.types';
 
 export function getItemsInSelectionArea(items: CanvasItem[], selectionStart: Position, selectionEnd: Position): string[] {
     const left = Math.min(selectionStart.x, selectionEnd.x);

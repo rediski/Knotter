@@ -1,8 +1,8 @@
 'use client';
 
 import { memo, useState, useRef, useEffect } from 'react';
+import { Input } from '@/components/UI/Input';
 import { Search, ChevronDown } from 'lucide-react';
-import { Input } from './Input';
 
 interface OptionPickerOption {
     value: string;

@@ -1,4 +1,4 @@
-import { Position } from '@/canvas/canvas.types';
+import { Position } from '@/canvas/_core/_/canvas.types';
 
 export function drawSelectionBox(ctx: CanvasRenderingContext2D, start: Position, end: Position) {
     const x = Math.min(start.x, end.x);

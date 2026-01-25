@@ -1,4 +1,4 @@
-import type { CanvasState, Node, Position } from '@/canvas/canvas.types';
+import type { CanvasState, Node, Position } from '@/canvas/_core/_/canvas.types';
 
 export type CreateItemParams =
     | {

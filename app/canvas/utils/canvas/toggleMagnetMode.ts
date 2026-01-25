@@ -1,4 +1,4 @@
-import { NODE_MOVE_MAX_STEP } from '@/canvas/canvas.constants';
+import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 export function toggleMagnetMode() {

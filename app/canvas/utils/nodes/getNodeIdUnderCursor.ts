@@ -1,4 +1,4 @@
-import type { Position } from '@/canvas/canvas.types';
+import type { Position } from '@/canvas/_core/_/canvas.types';
 
 export function getNodeIdUnderCursor(pos: Position): string | null {
     const el = document.elementFromPoint(pos.x, pos.y);

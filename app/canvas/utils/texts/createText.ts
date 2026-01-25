@@ -1,4 +1,4 @@
-import { TextElement, Position } from '@/canvas/canvas.types';
+import { TextElement, Position } from '@/canvas/_core/_/canvas.types';
 import { v4 as uuidv4 } from 'uuid';
 
 export function createText(texts: TextElement[], content: string, position: Position): TextElement {
