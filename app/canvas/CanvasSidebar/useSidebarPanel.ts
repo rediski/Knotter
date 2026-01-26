@@ -5,7 +5,7 @@ import { useState, useRef, useCallback, useMemo } from 'react';
 import type { SidebarPanel, PanelType } from '@/canvas/_core/_/sidebarPanel.types';
 
 import { panelDefinitions } from '@/canvas/CanvasSidebar/sidebarPanelDefinitions';
-import { useSidebarPanels } from '@/canvas/CanvasSidebar/useSideBarPanels';
+import { useSidebarPanels } from '@/canvas/CanvasSidebar/useSidebarPanels';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 let activeMenuId: string | null = null;
