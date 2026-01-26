@@ -9,7 +9,7 @@ import { ContextMenu } from '@/components/UI/ContextMenu';
 import { ContextMenuItem } from '@/components/UI/ContextMenuItem';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { useSidebarPanels } from '@/canvas/CanvasSidebar/useSideBarPanels';
+import { useSidebarPanels } from '@/canvas/CanvasSidebar/useSidebarPanels';
 import { useClickOutside } from '@/hooks/useClickOutside';
 
 import { Plus, Minus, ArrowUp, ArrowDown } from 'lucide-react';
