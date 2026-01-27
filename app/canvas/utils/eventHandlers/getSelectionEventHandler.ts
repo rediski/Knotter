@@ -1,47 +1,66 @@
 import { RefObject } from 'react';
-import { Position } from '@/canvas/_core/_/canvas.types';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import type { Position } from '@/canvas/_core/_/canvas.types';
 
-import { findCanvasUnderCursor } from '@/canvas/utils/canvas/findCanvasUnderCursor';
+import { getMousePosition } from '@/canvas/utils/canvas/getMousePosition';
+import { getNodeIdUnderCursor } from '@/canvas/utils/nodes/getNodeIdUnderCursor';
+import { getTextIdUnderCursor } from '@/canvas/utils/texts/getTextIdUnderCursor';
 
 export function getSelectionEventHandler(
     canvasRef: RefObject<HTMLCanvasElement | null>,
-    selectionStart: Position | null,
+    selectionStartRef: RefObject<Position | null>,
     setSelectionStart: (value: Position | null) => void,
     setSelectionEnd: (value: Position | null) => void,
-    selectItemsInArea?: (start: Position, end: Position) => void,
+    selectItemsInArea: (start: Position, end: Position) => void,
 ) {
-    const handleMouseDown = (e: MouseEvent) => {
-        if (e.button !== 0) return;
+    return {
+        handleMouseDown(e: MouseEvent) {
+            if (e.button !== 0) return;
 
-        if (!findCanvasUnderCursor(e, canvasRef.current)) return;
+            const canvas = canvasRef.current;
+            if (!canvas) return;
 
-        const mousePos = useCanvasStore.getState().mousePosition;
+            if (getNodeIdUnderCursor(e) !== null) return;
+            if (getTextIdUnderCursor(e) !== null) return;
 
-        setSelectionStart(mousePos);
-        setSelectionEnd(mousePos);
+            const pos = getMousePosition(e, canvas);
+
+            selectionStartRef.current = pos;
+
+            setSelectionStart(pos);
+            setSelectionEnd(pos);
+        },
+
+        handleMouseMove(e: MouseEvent) {
+            const isLeftButtonPressed = (e.buttons & 1) === 1;
+
+            if (!selectionStartRef.current || !isLeftButtonPressed) return;
+
+            const canvas = canvasRef.current;
+            if (!canvas) return;
+
+            const pos = getMousePosition(e, canvas);
+
+            setSelectionEnd(pos);
+            selectItemsInArea(selectionStartRef.current, pos);
+        },
+
+        handleMouseUp(e: MouseEvent) {
+            const isNotLeftClick = e.button !== 0;
+
+            if (!selectionStartRef.current || isNotLeftClick) return;
+
+            const canvas = canvasRef.current;
+            if (!canvas) return;
+
+            const pos = getMousePosition(e, canvas);
+
+            selectItemsInArea(selectionStartRef.current, pos);
+
+            selectionStartRef.current = null;
+
+            setSelectionStart(null);
+            setSelectionEnd(null);
+        },
     };
-
-    const handleMouseMove = (e: MouseEvent) => {
-        if (!selectionStart || (e.buttons & 1) !== 1) return;
-
-        const mousePos = useCanvasStore.getState().mousePosition;
-        setSelectionEnd(mousePos);
-
-        selectItemsInArea?.(selectionStart, mousePos);
-    };
-
-    const handleMouseUp = (e: MouseEvent) => {
-        if (!selectionStart || e.button !== 0) return;
-
-        const mousePos = useCanvasStore.getState().mousePosition;
-
-        selectItemsInArea?.(selectionStart, mousePos);
-
-        setSelectionStart(null);
-        setSelectionEnd(null);
-    };
-
-    return { handleMouseDown, handleMouseMove, handleMouseUp };
 }
