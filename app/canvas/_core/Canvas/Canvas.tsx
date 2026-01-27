@@ -5,6 +5,7 @@ import { useRef } from 'react';
 import { Node } from '@/canvas/_core/Node/Node';
 import { Text } from '@/canvas/_core/Text/Text';
 
+import { SelectionBox } from '@/canvas/CanvasSelectionBox/SelectionBox';
 import { CanvasContextMenu } from '@/canvas/CanvasContextMenu/CanvasContextMenu';
 import { CanvasControls } from '@/canvas/CanvasControls/CanvasControls';
 
@@ -22,14 +23,12 @@ export default function Canvas() {
     useCanvasInteraction({
         containerRef,
         canvasRef,
-        selectionStart,
         setSelectionStart,
         setSelectionEnd,
         selectItemsInArea,
     });
 
-    useCanvasRenderer({ canvasRef, selectionStart, selectionEnd });
-
+    useCanvasRenderer({ canvasRef });
     const { isOpen, position, handleContextMenu, closeMenu } = useContextMenu();
 
     return (
@@ -41,6 +40,8 @@ export default function Canvas() {
                 ref={canvasRef}
                 className="absolute top-0 left-0 w-full h-full bg-depth-1 rounded-md border border-depth-3"
             />
+
+            <SelectionBox start={selectionStart} end={selectionEnd} />
 
             <div className="absolute inset-0 overflow-hidden">
                 <Node />
