@@ -7,7 +7,7 @@ import type { Node, Edge, Position } from '@/canvas/_core/_/canvas.types';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { drawEdges } from '@/canvas/utils/edges/drawEdges';
-import { drawSelectionBox } from '@/canvas/utils/canvas/drawSelectionBox';
+
 import { drawTempEdge } from '@/canvas/utils/edges/drawTempEdge';
 import { drawGrid } from '@/canvas/utils/canvas/drawGrid';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
@@ -15,11 +15,9 @@ import { getEdges } from '@/canvas/utils/edges/getEdges';
 
 interface useCanvasRendererProps {
     canvasRef: RefObject<HTMLCanvasElement | null>;
-    selectionStart: Position | null;
-    selectionEnd: Position | null;
 }
 
-export function useCanvasRenderer({ canvasRef, selectionStart, selectionEnd }: useCanvasRendererProps) {
+export function useCanvasRenderer({ canvasRef }: useCanvasRendererProps) {
     const items = useCanvasStore((s) => s.items);
     const selectedItemIds = useCanvasStore((s) => s.selectedItemIds);
     const offset = useCanvasStore((state) => state.offset);
@@ -68,10 +66,6 @@ export function useCanvasRenderer({ canvasRef, selectionStart, selectionEnd }: u
 
             drawEdges(ctx, nodes, selectedItemIds, edges);
 
-            if (selectionStart && selectionEnd) {
-                drawSelectionBox(ctx, selectionStart, selectionEnd);
-            }
-
             drawTempEdge(ctx, nodes, tempEdge);
         };
 
@@ -100,8 +94,6 @@ export function useCanvasRenderer({ canvasRef, selectionStart, selectionEnd }: u
         canvasRef,
         items,
         selectedItemIds,
-        selectionStart,
-        selectionEnd,
         tempEdge,
         showGrid,
         showAxes,
