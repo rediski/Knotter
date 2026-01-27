@@ -15,7 +15,6 @@ import { getZoomEventHandler } from '@/canvas/utils/eventHandlers/getZoomEventHa
 interface useCanvasInteractionProps {
     containerRef: RefObject<HTMLDivElement | null>;
     canvasRef: RefObject<HTMLCanvasElement | null>;
-    selectionStart: Position | null;
     setSelectionStart: (value: Position | null) => void;
     setSelectionEnd: (value: Position | null) => void;
     selectItemsInArea: (start: Position, end: Position) => void;
@@ -24,7 +23,6 @@ interface useCanvasInteractionProps {
 export function useCanvasInteraction({
     containerRef,
     canvasRef,
-    selectionStart,
     setSelectionStart,
     setSelectionEnd,
     selectItemsInArea,
@@ -34,13 +32,9 @@ export function useCanvasInteraction({
 
     const isPanningRef = useRef(false);
     const lastMouseRef = useRef<{ x: number; y: number } | null>(null);
+    const selectionStartRef = useRef<Position | null>(null);
 
     const { onMouseDown, onMouseMove, onMouseUp } = useCanvasMouseEvents(canvasRef, isPanningRef);
-
-    const panHandlers = useRef<ReturnType<typeof getPanEventHandler> | null>(null);
-    const selectHandlers = useRef<ReturnType<typeof getSelectionEventHandler> | null>(null);
-    const handleScroll = useRef(getScrollEventHandler());
-    const handleZoom = useRef<((e: WheelEvent) => void) | null>(null);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -48,51 +42,51 @@ export function useCanvasInteraction({
 
         if (!container || !canvas) return;
 
-        panHandlers.current = getPanEventHandler({ isPanningRef, lastMouseRef });
+        const pan = getPanEventHandler({ isPanningRef, lastMouseRef });
+        const scroll = getScrollEventHandler();
+        const zoom = getZoomEventHandler(canvas);
 
-        selectHandlers.current = getSelectionEventHandler(
+        const select = getSelectionEventHandler(
             canvasRef,
-            selectionStart,
+            selectionStartRef,
             setSelectionStart,
             setSelectionEnd,
             selectItemsInArea,
         );
 
-        handleZoom.current = getZoomEventHandler(canvas);
-
-        const handleMouseDown: (e: MouseEvent) => void = (e) => {
-            panHandlers.current?.handleMouseDown(e);
+        const handleMouseDown = (e: MouseEvent) => {
+            select.handleMouseDown(e);
+            pan.handleMouseDown(e);
             onMouseDown(e);
-            selectHandlers.current?.handleMouseDown(e);
         };
 
-        const handleMouseMove: (e: MouseEvent) => void = (e) => {
-            panHandlers.current?.handleMouseMove(e);
+        const handleMouseMove = (e: MouseEvent) => {
+            select.handleMouseMove(e);
+            pan.handleMouseMove(e);
             onMouseMove(e);
-            selectHandlers.current?.handleMouseMove(e);
         };
 
-        const handleMouseUp: (e: MouseEvent) => void = (e) => {
-            panHandlers.current?.handleMouseUp();
+        const handleMouseUp = (e: MouseEvent) => {
+            select.handleMouseUp(e);
+            pan.handleMouseUp();
             onMouseUp(e);
-            selectHandlers.current?.handleMouseUp(e);
         };
 
         const handleWheel = (e: WheelEvent) => {
             if (e.ctrlKey) {
                 e.preventDefault();
-                handleZoom.current?.(e);
+                zoom(e);
                 return;
             }
 
-            const isTouchpadPan = panHandlers.current?.handleWheelForTouchpad(e);
+            const isTouchpadPan = pan.handleWheelForTouchpad(e);
 
             if (isTouchpadPan) {
                 e.preventDefault();
             }
 
             if (!isTouchpadPan) {
-                handleScroll.current?.(e);
+                scroll(e);
             }
         };
 
@@ -109,15 +103,5 @@ export function useCanvasInteraction({
 
             window.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [
-        containerRef,
-        canvasRef,
-        selectionStart,
-        setSelectionStart,
-        setSelectionEnd,
-        selectItemsInArea,
-        onMouseDown,
-        onMouseMove,
-        onMouseUp,
-    ]);
+    }, [containerRef, canvasRef, onMouseDown, onMouseMove, onMouseUp]);
 }
