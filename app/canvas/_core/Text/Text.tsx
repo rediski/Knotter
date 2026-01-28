@@ -202,7 +202,7 @@ export function Text() {
                             suppressContentEditableWarning
                             onBlur={exitEditMode}
                             className={`border cursor-move
-                                ${isSelected ? 'border-bg-accent' : 'border-transparent'}
+                                ${isSelected ? 'border-bg-accent' : text.content.length <= 1 ? 'border-2 border-dashed border-bg-accent' : 'border-transparent'}
                                 ${isEditing ? 'border-bg-accent outline-1 outline-bg-accent cursor-text' : ''}
                             `}
                             style={{
