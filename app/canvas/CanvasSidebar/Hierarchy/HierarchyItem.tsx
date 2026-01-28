@@ -7,6 +7,7 @@ import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 import { EditableName } from '@/components/UI/EditableName';
 import { useHierarchyItem } from '@/canvas/CanvasSidebar/Hierarchy/useHierarchyItem';
 import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
+import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 interface HierarchyItemProps {
     canvasItem: CanvasItem;
@@ -18,8 +19,30 @@ export const HierarchyItem = memo(function HierarchyItem({ canvasItem }: Hierarc
 
     const Icon = getDynamicIcon(canvasItem.kind);
 
+    const openedNodesIds = useCanvasStore((state) => state.openedNodesIds);
+    const setOpenedNodesIds = useCanvasStore((state) => state.setOpenedNodesIds);
+    const setOpenedNodeId = useCanvasStore((state) => state.setOpenedNodeId);
+    const setSelectedItemIds = useCanvasStore((state) => state.setSelectedItemIds);
+
+    const handleNodeDoubleClick = (nodeId: string) => {
+        if (canvasItem.kind !== 'node') return;
+
+        if (!openedNodesIds.includes(nodeId)) {
+            setOpenedNodesIds([...openedNodesIds, nodeId]);
+        }
+
+        setOpenedNodeId(nodeId);
+        setSelectedItemIds([nodeId]);
+    };
+
     return (
-        <li ref={dropRef} className="relative select-none" onClick={handleSelect} onKeyDown={handleKeyDown}>
+        <li
+            ref={dropRef}
+            className="relative select-none"
+            onClick={handleSelect}
+            onKeyDown={handleKeyDown}
+            onDoubleClick={() => handleNodeDoubleClick(canvasItem.id)}
+        >
             {isDragOver && (
                 <div
                     className={`absolute left-0 right-0 h-0.5 bg-bg-accent ${dragPosition === 'top' ? 'top-0' : 'bottom-0'}`}
