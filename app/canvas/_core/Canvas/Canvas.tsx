@@ -29,6 +29,7 @@ export default function Canvas() {
     });
 
     useCanvasRenderer({ canvasRef });
+
     const { isOpen, position, handleContextMenu, closeMenu } = useContextMenu();
 
     return (
