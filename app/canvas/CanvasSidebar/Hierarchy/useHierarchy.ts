@@ -8,7 +8,8 @@ export function useHierarchy(filterText: string) {
     const setSelectedIds = useCanvasStore((state) => state.setSelectedItemIds);
 
     const filteredItems = useMemo(() => {
-        const lower = filterText.toLowerCase();
+        const lower = filterText?.toLowerCase() || '';
+
         return items.filter((item) => item.name.toLowerCase().includes(lower));
     }, [items, filterText]);
 
