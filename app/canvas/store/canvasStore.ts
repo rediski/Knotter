@@ -6,6 +6,8 @@ import type { Parameter } from '@/canvas/_core/_/parameter.types';
 import type { SidebarPanel } from '@/canvas/_core/_/sidebarPanel.types';
 import { INITIAL_ZOOM } from '@/canvas/_core/_/canvas.constants';
 
+import { v4 as uuid } from 'uuid';
+
 export interface CanvasState {
     offset: Position;
     setOffset: (offset: Position) => void;
@@ -146,7 +148,10 @@ export const useCanvasStore = create<CanvasState>()(
             sidebarWidth: 380,
             setSidebarWidth: (sidebarWidth) => set({ sidebarWidth }),
 
-            sidebarPanels: [],
+            sidebarPanels: [
+                { id: uuid(), type: 'hierarchy' },
+                { id: uuid(), type: 'inspector' },
+            ],
             setSidebarPanels: (sidebarPanels) => set({ sidebarPanels }),
 
             filterText: {},
