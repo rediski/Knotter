@@ -69,7 +69,10 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
                         <button
                             key={option.value}
                             onClick={() => handleSelect(option.value as any)}
-                            className="flex items-center gap-2 px-3 h-8 bg-depth-3 hover:bg-depth-4 text-left text-sm rounded-md cursor-pointer w-full"
+                            className={`
+                                flex items-center gap-2 px-3 h-8 text-left text-sm rounded-md cursor-pointer w-full 
+                                ${option.label === currentPanelTitle ? 'bg-bg-accent/15 text-text-accent' : 'bg-depth-3 hover:bg-depth-4'}
+                            `}
                         >
                             {option.icon && <option.icon size={16} />}
                             {option.label}
