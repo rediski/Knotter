@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 import { Node } from '@/canvas/_core/Node/Node';
 import { Text } from '@/canvas/_core/Text/Text';
@@ -19,6 +19,14 @@ export default function Canvas() {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     const { selectionStart, selectionEnd, setSelectionStart, setSelectionEnd, selectItemsInArea } = useCanvasSelection();
+
+    const [containerHeight, setContainerHeight] = useState(0);
+
+    useEffect(() => {
+        if (containerRef.current) {
+            setContainerHeight(containerRef.current.clientHeight);
+        }
+    }, [containerRef.current]);
 
     useCanvasInteraction({
         containerRef,
@@ -42,7 +50,7 @@ export default function Canvas() {
                 className="absolute top-0 left-0 w-full h-full bg-depth-1 rounded-md border border-depth-3"
             />
 
-            <SelectionBox start={selectionStart} end={selectionEnd} />
+            <SelectionBox start={selectionStart} end={selectionEnd} containerHeight={containerHeight} />
 
             <div className="absolute inset-0 overflow-hidden">
                 <Node />
