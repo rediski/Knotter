@@ -94,7 +94,7 @@ export const CanvasControls = memo(function CanvasControls() {
                     onClick={toggleMenu}
                     className={`
                         p-2 rounded-md w-fit shadow cursor-pointer 
-                        ${open ? 'bg-bg-accent text-white' : 'bg-depth-2 hover:bg-border'}
+                        ${open ? 'bg-bg-accent text-white' : 'bg-depth-2 hover:bg-depth-3'}
                     `}
                 >
                     <Menu size={16} />
@@ -139,7 +139,7 @@ export const CanvasControls = memo(function CanvasControls() {
                             }}
                             className={`
                                 p-2 rounded-md w-fit shadow cursor-pointer
-                                ${active ? 'bg-bg-accent text-white' : 'bg-depth-2 hover:bg-border'}
+                                ${active ? 'bg-bg-accent text-white' : 'bg-depth-2 hover:bg-depth-3'}
                             `}
                         >
                             <Icon size={16} />

@@ -30,13 +30,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
     } = useSidebarPanel(panel);
 
     return (
-        <div
-            ref={panelRef}
-            className="flex flex-col h-full"
-            onContextMenu={openMenu}
-            onClick={closeMenu}
-            style={{ position: 'relative', width: '100%', height: '100%' }}
-        >
+        <div ref={panelRef} className="flex flex-col w-full h-full relative" onContextMenu={openMenu} onClick={closeMenu}>
             <PanelContextMenu
                 panel={panel}
                 panelRef={panelRef}

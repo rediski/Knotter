@@ -6,16 +6,10 @@ import { ChevronDown, LucideProps } from 'lucide-react';
 type DropdownProps = {
     title: string;
     children: React.ReactNode;
-    light?: boolean;
     icon?: React.ComponentType<LucideProps>;
 };
 
-export const DropdownAbsolute = memo(function DropdownAbsolute({
-    title,
-    children,
-    light = false,
-    icon: Icon,
-}: DropdownProps) {
+export const DropdownAbsolute = memo(function DropdownAbsolute({ title, children, icon: Icon }: DropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -51,10 +45,7 @@ export const DropdownAbsolute = memo(function DropdownAbsolute({
         <div ref={dropdownRef} className="relative w-fit">
             <button
                 onClick={toggle}
-                className={`
-                    flex justify-between items-center gap-1 px-3 py-1 h-8 w-full text-sm rounded-md cursor-pointer 
-                    ${light ? 'bg-depth-3 hover:bg-depth-4' : 'bg-depth-2 hover:bg-border'}
-                `}
+                className="flex justify-between items-center gap-1 px-3 py-1 h-8 w-full bg-depth-2 hover:bg-depth-3 text-sm rounded-md cursor-pointer"
             >
                 <div className="flex items-center gap-2">
                     {Icon && <Icon size={16} />}
@@ -73,10 +64,7 @@ export const DropdownAbsolute = memo(function DropdownAbsolute({
 
             {isOpen && (
                 <div
-                    className={`
-                        absolute top-full right-0 flex flex-col gap-1 w-50 text-sm shadow rounded-md mt-1 p-1 z-50
-                        ${light ? 'bg-border' : 'bg-depth-2'}
-                    `}
+                    className="absolute top-full right-0 flex flex-col gap-1 w-50 bg-depth-2 text-sm shadow rounded-md mt-1 p-1 z-50 "
                     onClick={handleContentClick}
                 >
                     {children}

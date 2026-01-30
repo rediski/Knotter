@@ -25,7 +25,7 @@ export const ShapeButtons = memo(function ShapeButtons({ shapeType, onTypeChange
                             ${
                                 isActive
                                     ? 'text-text-accent bg-bg-accent/10 hover:bg-bg-accent/10 focus-visible:bg-bg-accent/15'
-                                    : 'hover:bg-depth-3 focus-visible:bg-border'
+                                    : 'hover:bg-depth-3 focus-visible:bg-depth-3'
                             }
                         `}
                     >

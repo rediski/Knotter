@@ -36,7 +36,7 @@ export const Dropdown = memo(function Dropdown({
                 disabled={disabled}
                 className={`        
                     flex justify-start gap-2 items-center px-3 py-2 w-full text-sm 
-                    ${disabled ? 'cursor-not-allowed text-gray' : 'cursor-pointer hover:bg-border'} 
+                    ${disabled ? 'cursor-not-allowed text-gray' : 'cursor-pointer hover:bg-depth-3'} 
                     ${isOpen ? 'rounded-t-md' : 'rounded-md'}
                 `}
             >
