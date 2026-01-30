@@ -27,9 +27,8 @@ export function ThemeToggle({ label, className }: ThemeToggleProps) {
             onClick={() => setTheme(isDark ? 'light' : 'dark')}
             className={`
                 p-2 rounded-md bg-depth-2 hover:bg-depth-3 cursor-pointer flex items-center 
-                 ${className ?? ''}
+                ${className ?? ''}
             `}
-            aria-label="Toggle theme"
         >
             {label && <span className="mr-2">{label}</span>}
 
