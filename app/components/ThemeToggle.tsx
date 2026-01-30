@@ -2,33 +2,29 @@
 
 import { useTheme } from 'next-themes';
 import { Sun, Moon } from 'lucide-react';
-import { useState, useEffect, memo } from 'react';
 
 interface ThemeToggleProps {
     label?: string;
     className?: string;
 }
 
-export const ThemeToggle = memo(function ThemeToggle({ label, className }: ThemeToggleProps) {
-    const { resolvedTheme, setTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
+export function ThemeToggle({ label, className }: ThemeToggleProps) {
+    const { theme, setTheme } = useTheme();
 
-    useEffect(() => setMounted(true), []);
-
-    if (!mounted || !resolvedTheme) return null;
+    const isDark = theme === 'dark';
 
     return (
         <button
-            onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+            onClick={() => setTheme(isDark ? 'light' : 'dark')}
             className={`
                 p-2 rounded-md bg-depth-2 hover:bg-depth-3 cursor-pointer flex items-center 
-                ${className}
+                 ${className ?? ''}
             `}
             aria-label="Toggle theme"
         >
             {label && <span className="mr-2">{label}</span>}
 
-            {resolvedTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            {isDark ? <Sun size={16} /> : <Moon size={16} />}
         </button>
     );
-});
+}
