@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { Sun, Moon } from 'lucide-react';
 
@@ -10,6 +11,14 @@ interface ThemeToggleProps {
 
 export function ThemeToggle({ label, className }: ThemeToggleProps) {
     const { theme, setTheme } = useTheme();
+
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) return null;
 
     const isDark = theme === 'dark';
 
