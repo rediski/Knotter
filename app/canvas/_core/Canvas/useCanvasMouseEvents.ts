@@ -7,7 +7,7 @@ import type { Position } from '@/canvas/_core/_/canvas.types';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { useMousePosition } from '@/canvas/_core/Canvas/useMousePosition';
 
-import { selectCanvasItem } from '@/canvas/utils/items/selectItem';
+import { selectItems } from '@/canvas/utils/items/selectItems';
 import { createItem } from '@/canvas/utils/items/createItem';
 import { moveItems } from '@/canvas/utils/items/moveItems';
 import { findCanvasUnderCursor } from '@/canvas/utils/canvas/findCanvasUnderCursor';
@@ -178,9 +178,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             trackMousePosition(mousePos, setMousePosition);
 
             if (!isDraggingNodes && pendingClickItemId) {
-                const newSelectedIds = selectCanvasItem({
-                    items,
-                    selectedIds: selectedItemIds,
+                const newSelectedIds = selectItems({
                     itemId: pendingClickItemId,
                     event: e,
                 });

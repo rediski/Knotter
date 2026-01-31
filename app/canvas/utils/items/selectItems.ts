@@ -1,4 +1,4 @@
-import { CanvasItem } from '@/canvas/_core/_/canvas.types';
+import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 export interface SelectCanvasItemEvent {
     ctrlKey: boolean;
@@ -6,42 +6,43 @@ export interface SelectCanvasItemEvent {
     shiftKey: boolean;
 }
 
-export interface SelectCanvasItemParams<T extends CanvasItem> {
-    items?: readonly T[];
-    selectedIds?: readonly string[];
+export interface SelectCanvasItemParams {
     itemId: string;
     event: SelectCanvasItemEvent;
 }
 
-export function selectCanvasItem<T extends CanvasItem>(params: SelectCanvasItemParams<T>): string[] {
-    const { items = [], selectedIds = [], itemId, event: e } = params;
+export function selectItems(params: SelectCanvasItemParams): string[] {
+    const { itemId, event: e } = params;
+
+    const items = useCanvasStore.getState().items;
+    const selectedItemIds = useCanvasStore.getState().selectedItemIds;
 
     const item = items.find((i) => i.id === itemId);
 
-    if (!item) return [...selectedIds];
+    if (!item) return [...selectedItemIds];
 
     const idToIndex = new Map(items.map((i, index) => [i.id, index]));
 
-    if (e.shiftKey && selectedIds.length > 0) {
-        const lastSelectedId = selectedIds[selectedIds.length - 1];
+    if (e.shiftKey && selectedItemIds.length > 0) {
+        const lastSelectedId = selectedItemIds[selectedItemIds.length - 1];
         const start = idToIndex.get(lastSelectedId);
         const end = idToIndex.get(itemId);
 
         if (start !== undefined && end !== undefined) {
             const [from, to] = start < end ? [start, end] : [end, start];
 
-            const newSelection = new Set(selectedIds);
+            const newSelection = new Set(selectedItemIds);
 
             items.slice(from, to + 1).forEach((i) => newSelection.add(i.id));
 
             return Array.from(newSelection);
         }
 
-        return [...selectedIds];
+        return [...selectedItemIds];
     }
 
     if (e.ctrlKey || e.metaKey) {
-        const newSelection = new Set(selectedIds);
+        const newSelection = new Set(selectedItemIds);
 
         if (newSelection.has(itemId)) {
             newSelection.delete(itemId);

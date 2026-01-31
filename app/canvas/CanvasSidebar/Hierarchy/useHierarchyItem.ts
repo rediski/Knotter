@@ -5,7 +5,7 @@ import { useCallback, useRef, useState, useEffect } from 'react';
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { selectCanvasItem } from '@/canvas/utils/items/selectItem';
+import { selectItems } from '@/canvas/utils/items/selectItems';
 
 type DragPosition = 'top' | 'bottom' | null;
 
@@ -25,13 +25,10 @@ export function useHierarchyItem(item: CanvasItem) {
     const handleSelect = useCallback(
         (e: React.MouseEvent<HTMLLIElement>) => {
             e.stopPropagation();
-            const items = useCanvasStore.getState().items;
 
-            const newSelectedIds = selectCanvasItem({
-                items,
-                selectedIds,
+            const newSelectedIds = selectItems({
                 itemId: item.id,
-                event: { ctrlKey: e.ctrlKey, metaKey: e.metaKey, shiftKey: e.shiftKey },
+                event: e,
             });
 
             setSelectedIds(newSelectedIds);
