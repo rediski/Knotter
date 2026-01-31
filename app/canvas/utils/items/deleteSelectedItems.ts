@@ -1,9 +1,11 @@
-import { CanvasItem } from '@/canvas/_core/_/canvas.types';
+import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getEdges } from '@/canvas/utils/edges/getEdges';
 import { getTexts } from '@/canvas/utils/texts/getTexts';
 
-export function deleteItems(items: CanvasItem[], selectedIds: string[]): CanvasItem[] {
+export function deleteSelectedItems(selectedIds: string[]) {
+    const { items, setItems } = useCanvasStore.getState();
+
     const nodes = getNodes(items);
     const edges = getEdges(items);
     const texts = getTexts(items);
@@ -12,7 +14,7 @@ export function deleteItems(items: CanvasItem[], selectedIds: string[]): CanvasI
     const toDeleteEdges = new Set(edges.filter((e) => selectedIds.includes(e.id)).map((e) => e.id));
     const toDeleteTexts = new Set(texts.filter((t) => selectedIds.includes(t.id)).map((t) => t.id));
 
-    return items.filter((item) => {
+    const newItems = items.filter((item) => {
         if (item.kind === 'node') {
             return !toDeleteNodes.has(item.id);
         }
@@ -27,4 +29,6 @@ export function deleteItems(items: CanvasItem[], selectedIds: string[]): CanvasI
 
         return true;
     });
+
+    setItems(newItems);
 }
