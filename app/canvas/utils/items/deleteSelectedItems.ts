@@ -1,18 +1,21 @@
 import { useCanvasStore } from '@/canvas/store/canvasStore';
+
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getEdges } from '@/canvas/utils/edges/getEdges';
 import { getTexts } from '@/canvas/utils/texts/getTexts';
 
-export function deleteSelectedItems(selectedIds: string[]) {
-    const { items, setItems } = useCanvasStore.getState();
+export function deleteSelectedItems() {
+    const items = useCanvasStore.getState().items;
+    const setItems = useCanvasStore.getState().setItems;
+    const selectedItemIds = useCanvasStore.getState().selectedItemIds;
 
     const nodes = getNodes(items);
     const edges = getEdges(items);
     const texts = getTexts(items);
 
-    const toDeleteNodes = new Set(nodes.filter((n) => selectedIds.includes(n.id)).map((n) => n.id));
-    const toDeleteEdges = new Set(edges.filter((e) => selectedIds.includes(e.id)).map((e) => e.id));
-    const toDeleteTexts = new Set(texts.filter((t) => selectedIds.includes(t.id)).map((t) => t.id));
+    const toDeleteNodes = new Set(nodes.filter((node) => selectedItemIds.includes(node.id)).map((node) => node.id));
+    const toDeleteEdges = new Set(edges.filter((edge) => selectedItemIds.includes(edge.id)).map((edge) => edge.id));
+    const toDeleteTexts = new Set(texts.filter((text) => selectedItemIds.includes(text.id)).map((text) => text.id));
 
     const newItems = items.filter((item) => {
         if (item.kind === 'node') {
