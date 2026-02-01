@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useRef } from 'react';
+import React, { memo, useRef } from 'react';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
@@ -49,9 +49,9 @@ export const CanvasSidebar = memo(function Sidebar() {
                     {panels.length > 0 ? (
                         panels.map((panel) => {
                             return (
-                                <div key={panel.id} className="relative flex-1 min-h-0">
+                                <React.Fragment key={panel.id}>
                                     <SidebarPanel panel={panel} />
-                                </div>
+                                </React.Fragment>
                             );
                         })
                     ) : (
