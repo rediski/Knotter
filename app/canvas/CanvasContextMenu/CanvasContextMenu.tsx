@@ -5,12 +5,19 @@ import { ContextMenu } from '@/components/UI/ContextMenu';
 import { ContextMenuItem } from '@/components/UI/ContextMenuItem';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
-import { useCanvasHandlers } from '@/canvas/_core/Canvas/useCanvasHandlers';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { getNodes } from '@/canvas/utils/nodes/getNodes';
-import { getEdges } from '@/canvas/utils/edges/getEdges';
+import { selectAll } from '@/canvas/utils/items/selectAll';
+import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
+
 import { getShape, getAllShapes } from '@/canvas/utils/nodes/getShape';
+import { getNodes } from '@/canvas/utils/nodes/getNodes';
+import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
+import { selectAllNodes } from '@/canvas/utils/nodes/selectAllNodes';
+import { createNode } from '@/canvas/utils/nodes/createNode';
+
+import { createEdge } from '@/canvas/utils/edges/createEdge';
+import { createText } from '@/canvas/utils/texts/createText';
 
 type CanvasContextMenuProps = {
     isOpen: boolean;
@@ -26,8 +33,6 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
     const offset = useCanvasStore((state) => state.offset);
 
     const nodes = getNodes(items);
-    const edges = getEdges(items);
-    const handlers = useCanvasHandlers();
 
     useClickOutside(menuRef, closeMenu);
 
@@ -46,7 +51,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                     <ContextMenuItem
                         key="select-all"
                         onClick={() => {
-                            handlers.selectAll();
+                            selectAll();
                             closeMenu();
                         }}
                         disabled={items.length === 0}
@@ -57,23 +62,12 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                     <ContextMenuItem
                         key="select-all-nodes"
                         onClick={() => {
-                            handlers.selectAllNodes();
+                            selectAllNodes();
                             closeMenu();
                         }}
                         disabled={nodes.length === 0}
                     >
                         Выбрать все узлы
-                    </ContextMenuItem>,
-                    <ContextMenuItem
-                        key="select-all-edges"
-                        onClick={() => {
-                            handlers.selectAllEdges();
-                            closeMenu();
-                        }}
-                        disabled={edges.length === 0}
-                        shortcut="Ctrl + E"
-                    >
-                        Выбрать все связи
                     </ContextMenuItem>,
                 ]}
             >
@@ -85,7 +79,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                     <ContextMenuItem
                         key="create-node"
                         onClick={() => {
-                            handlers.addNode();
+                            createNode();
                             closeMenu();
                         }}
                         shortcut="Shift + A"
@@ -95,7 +89,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                     <ContextMenuItem
                         key="create-edge"
                         onClick={() => {
-                            handlers.startEdge();
+                            createEdge();
                             closeMenu();
                         }}
                         disabled={selectedItemIds.length !== 1 || !nodes.some((n) => n.id === selectedItemIds[0])}
@@ -106,7 +100,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                     <ContextMenuItem
                         key="create-text"
                         onClick={() => {
-                            handlers.addText();
+                            createText();
                             closeMenu();
                         }}
                         shortcut="Shift + T"
@@ -126,7 +120,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                         <ContextMenuItem
                             key={`shape-${type}`}
                             onClick={() => {
-                                handlers.changeNodeShapeType(selectedItemIds, type);
+                                changeShapeType(type);
                                 closeMenu();
                             }}
                             icon={icon}
@@ -143,7 +137,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
 
             <ContextMenuItem
                 onClick={() => {
-                    handlers.delete();
+                    deleteSelectedItems();
                     closeMenu();
                 }}
                 disabled={selectedItemIds.length === 0}
