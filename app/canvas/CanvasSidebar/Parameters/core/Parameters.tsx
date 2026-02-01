@@ -64,8 +64,8 @@ export const Parameters = memo(function Parameters({ panelId }: ParametersProps)
     const showNoParametersState = parameters.length === 0;
 
     return (
-        <div className="flex flex-col h-full flex-1 overflow-auto">
-            <div className="flex gap-1 items-center m-1">
+        <div className="flex flex-col gap-1 overflow-y-auto m-1">
+            <div className="flex gap-1 items-center">
                 <Input
                     value={parameterName}
                     onChange={setParameterName}
@@ -104,10 +104,8 @@ export const Parameters = memo(function Parameters({ panelId }: ParametersProps)
                 </button>
             </div>
 
-            <hr className="border-b-0 border-depth-3" />
-
             {filteredParameters.length > 0 ? (
-                <div className="flex flex-col gap-1 m-1">
+                <div className="flex flex-col gap-1">
                     {filteredParameters.map((p) => {
                         const parameter = parameters.find((parameter) => parameter.id === p.id);
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import React, { memo } from 'react';
 
 import { EmptyState } from '@/components/UI/EmptyState';
 import { HierarchyItem } from '@/canvas/CanvasSidebar/Hierarchy/HierarchyItem';
@@ -18,24 +18,20 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: HierarchyProps) {
     const { filteredItems, handleDeselectOnEmptyClick } = useHierarchy(filterText);
 
     return (
-        <div className="flex flex-col flex-1 h-full">
-            <hr className="border-b-0 border-depth-3 mt-1" />
+        <ul className="flex flex-col gap-1 p-1 overflow-y-auto" onClick={handleDeselectOnEmptyClick}>
+            {filteredItems.length !== 0 && (
+                <React.Fragment>
+                    {filteredItems.map((item) => (
+                        <HierarchyItem key={item.id} canvasItem={item} />
+                    ))}
+                </React.Fragment>
+            )}
 
-            <div className="flex flex-col flex-1 overflow-y-auto gap-2" onClick={handleDeselectOnEmptyClick}>
-                {filteredItems.length !== 0 && (
-                    <ul className="flex flex-col gap-1 m-1">
-                        {filteredItems.map((item) => (
-                            <HierarchyItem key={item.id} canvasItem={item} />
-                        ))}
-                    </ul>
-                )}
+            {items.length === 0 && <EmptyState message="Создайте элемент, нажав ПКМ по холсту." />}
 
-                {items.length === 0 && <EmptyState message="Создайте элемент, нажав ПКМ по холсту." />}
-
-                {filteredItems.length === 0 && items.length !== 0 && (
-                    <EmptyState message={`Не найдено элементов по запросу "${filterText}"`} />
-                )}
-            </div>
-        </div>
+            {filteredItems.length === 0 && items.length !== 0 && (
+                <EmptyState message={`Не найдено элементов по запросу "${filterText}"`} />
+            )}
+        </ul>
     );
 });

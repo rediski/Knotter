@@ -30,7 +30,12 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
     } = useSidebarPanel(panel);
 
     return (
-        <div ref={panelRef} className="flex flex-col w-full h-full relative" onContextMenu={openMenu} onClick={closeMenu}>
+        <div
+            ref={panelRef}
+            className="flex flex-col w-full h-full overflow-y-auto relative"
+            onContextMenu={openMenu}
+            onClick={closeMenu}
+        >
             <PanelContextMenu
                 panel={panel}
                 panelRef={panelRef}
@@ -74,6 +79,8 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
                     ))}
                 </DropdownAbsolute>
             </div>
+
+            <hr className="border-b-0 border-depth-3 mt-1" />
 
             {content && PanelComponent ? (
                 <PanelComponent panelId={panel.id} />
