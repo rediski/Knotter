@@ -3,11 +3,12 @@
 import { memo } from 'react';
 
 import { getShape } from '@/canvas/utils/nodes/getShape';
-import { NodeShapeType, NODE_SHAPE_TYPES } from '@/canvas/utils/nodes/getShape';
+import { NODE_SHAPE_TYPES } from '@/canvas/utils/nodes/getShape';
+import type { ShapeType } from '@/canvas/_core/_/shapeType.type';
 
 interface ShapeButtonsProps {
-    shapeType: NodeShapeType | null;
-    onTypeChange: (type: NodeShapeType) => void;
+    shapeType: ShapeType | null;
+    onTypeChange: (type: ShapeType) => void;
 }
 
 export const ShapeButtons = memo(function ShapeButtons({ shapeType, onTypeChange }: ShapeButtonsProps) {

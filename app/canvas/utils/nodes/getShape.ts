@@ -1,3 +1,5 @@
+import type { ShapeType } from '@/canvas/_core/_/shapeType.type';
+
 import {
     Circle,
     Square,
@@ -14,21 +16,7 @@ import {
     type LucideIcon,
 } from 'lucide-react';
 
-export type NodeShapeType =
-    | 'triangle'
-    | 'circle'
-    | 'x'
-    | 'square'
-    | 'spade'
-    | 'heart'
-    | 'diamond'
-    | 'club'
-    | 'point'
-    | 'pentagon'
-    | 'hexagon'
-    | 'octagon';
-
-export const NODE_SHAPE_TYPES: NodeShapeType[] = [
+export const NODE_SHAPE_TYPES: ShapeType[] = [
     'triangle',
     'circle',
     'x',
@@ -43,7 +31,7 @@ export const NODE_SHAPE_TYPES: NodeShapeType[] = [
     'octagon',
 ];
 
-const SHAPES: Record<NodeShapeType, { label: string; icon: LucideIcon }> = {
+const SHAPES: Record<ShapeType, { label: string; icon: LucideIcon }> = {
     triangle: { label: 'Треугольник', icon: Triangle },
     circle: { label: 'Круг', icon: Circle },
     x: { label: 'Крест', icon: X },
@@ -60,14 +48,14 @@ const SHAPES: Record<NodeShapeType, { label: string; icon: LucideIcon }> = {
 
 const DEFAULT_SHAPE = SHAPES[NODE_SHAPE_TYPES[0]];
 
-export function getShape(type?: NodeShapeType | string) {
+export function getShape(type?: ShapeType | string) {
     if (!type || !(type in SHAPES)) {
         return DEFAULT_SHAPE;
     }
 
-    return SHAPES[type as NodeShapeType];
+    return SHAPES[type as ShapeType];
 }
 
-export function getAllShapes(): NodeShapeType[] {
-    return Object.keys(SHAPES) as NodeShapeType[];
+export function getAllShapes(): ShapeType[] {
+    return Object.keys(SHAPES) as ShapeType[];
 }
