@@ -2,7 +2,7 @@
 
 import { useEffect, RefObject } from 'react';
 
-import type { Node, Edge, Position } from '@/canvas/_core/_/canvas.types';
+import type { Node, Edge } from '@/canvas/_core/_/canvas.types';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
