@@ -3,19 +3,17 @@
 import { useCallback, RefObject, useState } from 'react';
 
 import type { Position } from '@/canvas/_core/_/canvas.types';
+import { MIN_DRAG_DISTANCE } from '@/canvas/_core/_/canvas.constants';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { useMousePosition } from '@/canvas/_core/Canvas/useMousePosition';
 
 import { selectItems } from '@/canvas/utils/items/selectItems';
-import { createItem } from '@/canvas/utils/items/createItem';
 import { moveItems } from '@/canvas/utils/items/moveItems';
 import { findCanvasUnderCursor } from '@/canvas/utils/canvas/findCanvasUnderCursor';
 import { getMousePosition } from '@/canvas/utils/canvas/getMousePosition';
 import { getSelectedItemsPositions } from '@/canvas/utils/items/getSelectedItemsPositions';
-import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getNodeIdUnderCursor } from '@/canvas/utils/nodes/getNodeIdUnderCursor';
-import { getEdges } from '@/canvas/utils/edges/getEdges';
 import { getTextById } from '@/canvas/utils/texts/getTextById';
 import { getTextIdUnderCursor } from '@/canvas/utils/texts/getTextIdUnderCursor';
 
@@ -101,6 +99,11 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             setPendingClickItemId(clickedItemId);
             setDragStartMouse(mousePos);
 
+            if (selectedItemIds.includes(clickedItemId)) {
+                const positions = getSelectedItemsPositions(items, selectedItemIds);
+                setInitialNodePositions(positions);
+            }
+
             if (!e.ctrlKey && !e.metaKey && !e.shiftKey) {
                 if (!selectedItemIds.includes(clickedItemId)) {
                     setSelectedItemIds([clickedItemId]);
@@ -130,24 +133,22 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
                 return;
             }
 
-            if (!isDraggingNodes && pendingClickItemId && dragStartMouse) {
-                setIsDraggingNodes(true);
-                setInitialNodePositions(getSelectedItemsPositions(items, selectedItemIds));
+            if (!isDraggingNodes && pendingClickItemId && dragStartMouse && initialNodePositions.size > 0) {
+                const distance = Math.sqrt(
+                    Math.pow(mousePos.x - dragStartMouse.x, 2) + Math.pow(mousePos.y - dragStartMouse.y, 2),
+                );
+
+                if (distance > MIN_DRAG_DISTANCE) {
+                    setIsDraggingNodes(true);
+                }
             }
 
-            if (isDraggingNodes && dragStartMouse) {
+            if (isDraggingNodes && dragStartMouse && initialNodePositions.size > 0) {
                 const dx = mousePos.x - dragStartMouse.x;
                 const dy = mousePos.y - dragStartMouse.y;
 
-                const updatedNodes = moveItems({ x: dx, y: dy }, initialNodePositions);
-
-                setItems(
-                    items.map((item) =>
-                        item.kind !== 'edge' && selectedItemIds.includes(item.id)
-                            ? (updatedNodes.find((n) => n.id === item.id) ?? item)
-                            : item,
-                    ),
-                );
+                const updatedItems = moveItems({ x: dx, y: dy }, initialNodePositions);
+                setItems(updatedItems);
             }
         },
         [
@@ -186,42 +187,10 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
                 setSelectedItemIds(newSelectedIds);
             }
 
-            if (tempEdge) {
-                const nodes = getNodes(items);
-                const edges = getEdges(items);
-
-                const targetNodeId = getNodeIdUnderCursor({
-                    x: e.clientX,
-                    y: e.clientY,
-                });
-
-                const targetNode = nodes.find((n) => n.id === targetNodeId) ?? null;
-
-                const edgeExists = targetNode
-                    ? edges.some((edge) => edge.from === tempEdge.from && edge.to === targetNode.id)
-                    : true;
-
-                if (targetNode && targetNode.id !== tempEdge.from && !edgeExists) {
-                    const fromNode = nodes.find((n) => n.id === tempEdge.from);
-
-                    if (fromNode) {
-                        const newEdge = createItem({
-                            type: 'edge',
-                            state: { nodes, edges },
-                            fromNode,
-                            toNode: targetNode,
-                        });
-
-                        if (newEdge) setItems([...items, newEdge]);
-                    }
-                }
-
-                setTempEdge(null);
-            }
-
             setIsDraggingNodes(false);
             setDragStartMouse(null);
             setPendingClickItemId(null);
+            setInitialNodePositions(new Map());
         },
         [
             canvasRef,
