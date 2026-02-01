@@ -8,7 +8,6 @@ import { EmptyState } from '@/components/UI/EmptyState';
 import { Input } from '@/components/UI/Input';
 import { Textarea } from '@/components/UI/Textarea';
 
-import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { useDropdownStore } from '@/canvas/store/dropdownStore';
 
@@ -16,6 +15,9 @@ import { Dropdown } from '@/components/UI/Dropdown';
 
 import { ShapeButtons } from '@/canvas/CanvasSidebar/Inspector/ShapeButtons';
 import { PositionInputs } from '@/canvas/CanvasSidebar/Inspector/PositionInputs';
+
+import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
+import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
 
 interface InspectorProps {
     panelId?: string;
@@ -38,7 +40,6 @@ export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
         сhangeItemName,
         changeItemDescription,
         changeItemsPosition,
-        changeNodeShapeType,
     } = useInspector();
 
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
@@ -75,7 +76,7 @@ export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
     }
 
     return (
-        <div className="flex flex-col overflow-y-auto p-1 gap-1">
+        <div className="flex flex-col overflow-y-auto m-1 gap-1">
             {showName && (
                 <div className="flex flex-col gap-1">
                     <Input
@@ -104,7 +105,7 @@ export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
                         <Dropdown title={FIELD_TITLES.SHAPE} isOpen={isDropdownOpen(1)} onToggle={() => toggleDropdown(1)}>
                             <ShapeButtons
                                 shapeType={shapeType}
-                                onTypeChange={(newShapeType) => changeNodeShapeType([selectedNode.id], newShapeType)}
+                                onTypeChange={(newShapeType) => changeShapeType(newShapeType)}
                             />
                         </Dropdown>
                     )}

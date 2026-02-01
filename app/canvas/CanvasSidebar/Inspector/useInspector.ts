@@ -5,7 +5,6 @@ import { useCallback, useMemo } from 'react';
 import type { Node, Position } from '@/canvas/_core/_/canvas.types';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { useCanvasHandlers } from '@/canvas/_core/Canvas/useCanvasHandlers';
 
 import { moveItems } from '@/canvas/utils/items/moveItems';
 
@@ -14,8 +13,6 @@ export function useInspector() {
     const setItems = useCanvasStore((state) => state.setItems);
     const selectedItem = useCanvasStore((state) => state.selectedItem);
     const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
-
-    const { changeNodeShapeType } = useCanvasHandlers();
 
     const selectedNode: Node | null = selectedItem?.kind === 'node' ? selectedItem : null;
 
@@ -103,6 +100,5 @@ export function useInspector() {
         сhangeItemName,
         changeItemDescription,
         changeItemsPosition,
-        changeNodeShapeType,
     };
 }
