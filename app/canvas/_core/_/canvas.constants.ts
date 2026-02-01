@@ -7,5 +7,6 @@ export const MAX_UNDO_STEPS = 50;
 export const NODE_SIZE = 40;
 export const NODE_MOVE_MIN_STEP = 1;
 export const NODE_MOVE_MAX_STEP = 50;
+export const MIN_DRAG_DISTANCE = 5;
 
 export const MAX_CANVAS_ITEMS = 250;
