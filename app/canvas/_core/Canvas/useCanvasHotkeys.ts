@@ -10,7 +10,7 @@ import { toggleTooltipMode } from '@/canvas/utils/canvas/toggleTooltipMode';
 import { toggleMagnetMode } from '@/canvas/utils/canvas/toggleMagnetMode';
 import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
 import { selectAll } from '@/canvas/utils/items/selectAll';
-import { copySelectedItems, pasteClipboardItems } from '@/canvas/utils/items/copyPasteItems';
+import { copySelectedItems, pasteClipboardItems } from '@/canvas/utils/clipboard/copyPasteItems';
 import { createNode } from '@/canvas/utils/nodes/createNode';
 import { createText } from '@/canvas/utils/texts/createText';
 import { createEdge } from '@/canvas/utils/edges/createEdge';
