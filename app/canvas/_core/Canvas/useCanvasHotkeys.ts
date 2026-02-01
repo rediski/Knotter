@@ -4,7 +4,7 @@ import { useEffect, RefObject } from 'react';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { undo, redo } from '@/canvas/utils/clipboard/undoRedo';
+import { undo, redo } from '@/canvas/utils/clipboard/historyManager';
 
 import { toggleTooltipMode } from '@/canvas/utils/canvas/toggleTooltipMode';
 import { toggleMagnetMode } from '@/canvas/utils/canvas/toggleMagnetMode';
