@@ -4,14 +4,25 @@ import { useEffect, RefObject } from 'react';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { useCanvasHistory } from '@/canvas/_core/Canvas/useCanvasHistory';
-import { useCanvasHandlers } from '@/canvas/_core/Canvas/useCanvasHandlers';
+import { undo, redo } from '@/canvas/utils/clipboard/undoRedo';
+
+import { toggleTooltipMode } from '@/canvas/utils/canvas/toggleTooltipMode';
+import { toggleMagnetMode } from '@/canvas/utils/canvas/toggleMagnetMode';
+import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
+import { selectAll } from '@/canvas/utils/items/selectAll';
+import { copySelectedItems, pasteClipboardItems } from '@/canvas/utils/items/copyPasteItems';
+import { createNode } from '@/canvas/utils/nodes/createNode';
+import { createText } from '@/canvas/utils/texts/createText';
+import { createEdge } from '@/canvas/utils/edges/createEdge';
 
 export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>) {
-    const { items, setItems, setTempEdge, selectedItemIds, setSelectedItemIds } = useCanvasStore();
-    const { undo, redo } = useCanvasHistory();
+    const { setSelectedItemIds } = useCanvasStore();
 
-    const handlers = useCanvasHandlers();
+    const toggleGrid = useCanvasStore((state) => state.toggleShowGrid);
+    const toggleAxes = useCanvasStore((state) => state.toggleShowAxes);
+
+    const items = useCanvasStore((state) => state.items);
+    const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -39,32 +50,32 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             }
 
             const toggleMap: Record<string, () => void> = {
-                t: handlers.toggleTooltipMode,
-                е: handlers.toggleTooltipMode,
-                m: handlers.toggleMagnetMode,
-                ь: handlers.toggleMagnetMode,
-                g: handlers.toggleGrid,
-                п: handlers.toggleGrid,
-                a: handlers.toggleAxes,
-                ф: handlers.toggleAxes,
+                t: () => toggleTooltipMode(),
+                е: () => toggleTooltipMode(),
+                m: () => toggleMagnetMode(),
+                ь: () => toggleMagnetMode(),
+                g: () => toggleGrid(),
+                п: () => toggleGrid(),
+                a: () => toggleAxes(),
+                ф: () => toggleAxes(),
             };
 
-            if (!isCtrl && !e.shiftKey && toggleMap[key]) return toggleMap[key]();
+            if (!isCtrl && !e.shiftKey && toggleMap[key]) {
+                return toggleMap[key]();
+            }
 
-            if (key === 'delete') return handlers.delete();
+            if (key === 'delete') return deleteSelectedItems();
 
             if (isCtrl) {
                 const ctrlMap: Record<string, () => void> = {
-                    a: handlers.selectAll,
-                    ф: handlers.selectAll,
-                    у: handlers.selectAllEdges,
-                    e: handlers.selectAllEdges,
-                    c: handlers.copy,
-                    с: handlers.copy,
-                    v: handlers.paste,
-                    м: handlers.paste,
-                    z: e.shiftKey ? redo : undo,
-                    я: e.shiftKey ? redo : undo,
+                    a: () => selectAll(),
+                    ф: () => selectAll(),
+                    c: () => copySelectedItems(items, selectedItemIds),
+                    с: () => copySelectedItems(items, selectedItemIds),
+                    v: () => pasteClipboardItems(),
+                    м: () => pasteClipboardItems(),
+                    z: () => (e.shiftKey ? redo() : undo()),
+                    я: () => (e.shiftKey ? redo() : undo()),
                 };
 
                 if (ctrlMap[key]) {
@@ -74,9 +85,9 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             }
 
             if (e.shiftKey) {
-                if (key === 'a' || key === 'ф') return handlers.addNode();
-                if (key === 'e' || key === 'у') return handlers.startEdge();
-                if (key === 't' || key === 'е') return handlers.addText();
+                if (key === 'a' || key === 'ф') return createNode();
+                if (key === 'e' || key === 'у') return createEdge();
+                if (key === 't' || key === 'е') return createText();
             }
         };
 
@@ -91,5 +102,5 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             window.removeEventListener('keydown', onKeyDown);
             window.removeEventListener('keyup', onKeyUp);
         };
-    }, [selectedItemIds, setSelectedItemIds, canvasRef, redo, undo, items, setItems, setTempEdge, handlers]);
+    }, [canvasRef, setSelectedItemIds]);
 }
