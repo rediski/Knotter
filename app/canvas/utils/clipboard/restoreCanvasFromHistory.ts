@@ -1,5 +1,5 @@
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
-import type { CanvasAction } from '../../_core/_/clipboard.types';
+import type { CanvasAction } from '@/canvas/_core/_/clipboard.types';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
