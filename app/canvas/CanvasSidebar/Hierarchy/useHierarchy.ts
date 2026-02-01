@@ -14,7 +14,7 @@ export function useHierarchy(filterText: string) {
     }, [items, filterText]);
 
     const handleDeselectOnEmptyClick = useCallback(
-        (e: React.MouseEvent<HTMLDivElement>) => {
+        (e: React.MouseEvent<HTMLUListElement>) => {
             if (e.target === e.currentTarget) {
                 setSelectedIds([]);
             }
