@@ -1,7 +1,21 @@
-import type { Node, Position } from '@/canvas/_core/_/canvas.types';
+import type { Node } from '@/canvas/_core/_/canvas.types';
 import { v4 as uuidv4 } from 'uuid';
 
-export function createNode(nodes: Node[], position: Position): Node {
+import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { getNodes } from '@/canvas/utils/nodes/getNodes';
+import { resolvePosition } from '@/canvas/utils/items/resolvePosition';
+import { canAddItem } from '@/canvas/utils/items/canAddItem';
+
+export function createNode(): Node | null {
+    if (!canAddItem()) return null;
+
+    const items = useCanvasStore.getState().items;
+    const setItems = useCanvasStore.getState().setItems;
+    const setSelectedItemIds = useCanvasStore.getState().setSelectedItemIds;
+
+    const nodes = getNodes(items);
+    const position = resolvePosition();
+
     const x = position.x ?? 0;
     const y = position.y ?? 0;
 
@@ -17,7 +31,7 @@ export function createNode(nodes: Node[], position: Position): Node {
         name = `${baseName} ${counter}`;
     }
 
-    return {
+    const node: Node = {
         id: uuidv4(),
         name,
         description: '',
@@ -26,4 +40,9 @@ export function createNode(nodes: Node[], position: Position): Node {
         kind: 'node',
         nodeParameters: [],
     };
+
+    setItems([...items, node]);
+    setSelectedItemIds([node.id]);
+
+    return node;
 }
