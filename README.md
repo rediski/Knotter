@@ -1,9 +1,9 @@
 # Knotter
 
-Open-source visual editor for designing complex systems in a clear, visual way. Built with React, TypeScript, and Tailwind CSS.
+Open-source graph editor focused on developing talent trees for RPG systems. Built with React, TypeScript, and Tailwind CSS.
 
 ## Tech Stack
-- **Next.js 15**
+- **Next.js 16**
 - **React 19**
 - **TypeScript 5**
 - **Tailwind CSS 4**
