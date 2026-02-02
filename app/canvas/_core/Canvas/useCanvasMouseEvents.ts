@@ -100,7 +100,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             setDragStartMouse(mousePos);
 
             if (selectedItemIds.includes(clickedItemId)) {
-                const positions = getSelectedItemsPositions(items, selectedItemIds);
+                const positions = getSelectedItemsPositions();
                 setInitialNodePositions(positions);
             }
 
