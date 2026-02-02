@@ -6,7 +6,7 @@ import type { PanelType } from '@/canvas/_core/_/sidebarPanel.types';
 
 import { Hierarchy } from '@/canvas/CanvasSidebar/Hierarchy/Hierarchy';
 import { Inspector } from '@/canvas/CanvasSidebar/Inspector/Inspector';
-import { Parameters } from '@/canvas/CanvasSidebar/Parameters/core/Parameters';
+import { Parameters } from '@/canvas/CanvasSidebar/Parameters/Parameters';
 
 import { ListTree, Settings, Braces, type LucideIcon } from 'lucide-react';
 
