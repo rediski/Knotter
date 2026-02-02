@@ -1,3 +1,3 @@
-import type { CanvasItem, TextElement } from '@/canvas/_core/_/canvas.types';
+import type { CanvasItem, Text } from '@/canvas/_core/_/canvas.types';
 
-export const getTexts = (items: CanvasItem[]): TextElement[] => items.filter((i): i is TextElement => i.kind === 'text');
+export const getTexts = (items: CanvasItem[]): Text[] => items.filter((i): i is Text => i.kind === 'text');

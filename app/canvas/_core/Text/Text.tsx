@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 
-import type { TextElement } from '@/canvas/_core/_/canvas.types';
+import type { Text } from '@/canvas/_core/_/canvas.types';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { getTexts } from '@/canvas/utils/texts/getTexts';
@@ -42,7 +42,7 @@ export function Text() {
     } | null>(null);
 
     const enterEditMode = useCallback(
-        (text: TextElement) => {
+        (text: Text) => {
             setEditingId(text.id);
 
             const updatedItems = items.map((item) =>
@@ -74,7 +74,7 @@ export function Text() {
     }, [editingId, items, setItems]);
 
     const beginTextResize = useCallback(
-        (text: TextElement, e: React.MouseEvent, direction: string) => {
+        (text: Text, e: React.MouseEvent, direction: string) => {
             e.stopPropagation();
             e.preventDefault();
 

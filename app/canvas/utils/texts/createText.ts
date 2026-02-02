@@ -1,4 +1,4 @@
-import { TextElement, Position } from '@/canvas/_core/_/canvas.types';
+import { Text, Position } from '@/canvas/_core/_/canvas.types';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
@@ -6,7 +6,7 @@ import { getTexts } from '@/canvas/utils/texts/getTexts';
 import { resolvePosition } from '@/canvas/utils/items/resolvePosition';
 import { canAddItem } from '@/canvas/utils/items/canAddItem';
 
-export function createText(content = ''): TextElement | null {
+export function createText(content = ''): Text | null {
     if (!canAddItem()) return null;
 
     const items = useCanvasStore.getState().items;
@@ -30,7 +30,7 @@ export function createText(content = ''): TextElement | null {
         name = `${baseName} ${counter}`;
     }
 
-    const text: TextElement = {
+    const text: Text = {
         id: uuidv4(),
         name,
         content: content || 'Текст',
