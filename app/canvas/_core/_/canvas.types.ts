@@ -5,10 +5,10 @@ export type Position = { x: number; y: number };
 
 export interface CanvasState {
     nodes: Node[];
-    texts: TextElement[];
+    texts: Text[];
 }
 
-export type CanvasItem = Node | Edge | TextElement;
+export type CanvasItem = Node | Text;
 
 export type TooltipMode = 'always' | 'hover' | 'never';
 
@@ -16,33 +16,25 @@ export interface Node {
     id: string;
     name: string;
     description: string;
+    kind: 'node';
     shapeType: ShapeType;
+    position: Position;
     width?: number;
     height?: number;
-    position: Position;
-    kind: 'node';
     nodeParameters: Parameter[];
+    edgeFrom: string[];
+    edgeTo: string[];
 }
 
-export interface Edge {
+export interface Text {
     id: string;
     name: string;
-    description: string;
-    from: string;
-    to: string;
-    position: Position;
-    kind: 'edge';
-}
-
-export interface TextElement {
-    id: string;
-    name: string;
+    kind: 'text';
     content: string;
+    position: Position;
     width: number;
     height: number;
-    position: Position;
     fontSize: number;
     textAlign: 'left' | 'center' | 'right';
     isEditing: boolean;
-    kind: 'text';
 }
