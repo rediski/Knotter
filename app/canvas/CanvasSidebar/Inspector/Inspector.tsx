@@ -16,7 +16,7 @@ import { Dropdown } from '@/components/UI/Dropdown';
 import { ShapeButtons } from '@/canvas/CanvasSidebar/Inspector/ShapeButtons';
 import { PositionInputs } from '@/canvas/CanvasSidebar/Inspector/PositionInputs';
 
-import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
+import { getIcon } from '@/canvas/utils/items/getIcon';
 import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
 
 interface InspectorProps {
@@ -53,7 +53,7 @@ export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
         return <EmptyState message="Выберите элемент для инспектора" />;
     }
 
-    const Icon = getDynamicIcon(selectedItem?.kind || 'bug');
+    const Icon = getIcon(selectedItem?.kind || 'bug');
 
     const shouldShowField = (fieldTitle: string) => {
         if (!filterText) return true;

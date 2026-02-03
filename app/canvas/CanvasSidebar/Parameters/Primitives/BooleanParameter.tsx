@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/UI/Checkbox';
 
 import { useParameters } from '@/canvas/CanvasSidebar/Parameters/useParameters';
 
-import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
+import { getIcon } from '@/canvas/utils/items/getIcon';
 
 import { X } from 'lucide-react';
 
@@ -33,7 +33,7 @@ export const BooleanParameter = memo(function BooleanParameter({
         });
     };
 
-    const Icon = getDynamicIcon(parameter.type);
+    const Icon = getIcon(parameter.type);
 
     if (!parameter) return;
     if (!isBooleanValue(parameter)) return;

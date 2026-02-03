@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { Parameter } from '@/canvas/_core/_/parameter.types';
 import { isStructureValue } from '@/canvas/_core/_/parameter.type-guards';
 
-import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
+import { getIcon } from '@/canvas/utils/items/getIcon';
 
 import { X } from 'lucide-react';
 
@@ -14,7 +14,7 @@ interface StructureParamterProps {
 }
 
 export const StructureParameter = memo(function StructureParameter({ parameter, removeParameter }: StructureParamterProps) {
-    const StructureIcon = getDynamicIcon('structure');
+    const StructureIcon = getIcon('structure');
 
     if (!isStructureValue(parameter)) return null;
 

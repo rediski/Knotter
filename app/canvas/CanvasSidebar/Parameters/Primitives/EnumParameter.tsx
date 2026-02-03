@@ -11,7 +11,7 @@ import { EditableName } from '@/components/UI/EditableName';
 import { useParameters } from '@/canvas/CanvasSidebar/Parameters/useParameters';
 import { useEnumParameter } from '@/canvas/CanvasSidebar/Parameters/Primitives/useEnumParameter';
 
-import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
+import { getIcon } from '@/canvas/utils/items/getIcon';
 
 import { X } from 'lucide-react';
 
@@ -33,8 +33,8 @@ export const EnumParameter = memo(function EnumParameter({
         updateParameter,
     });
 
-    const EnumIcon = getDynamicIcon('enum');
-    const StringIcon = getDynamicIcon('string');
+    const EnumIcon = getIcon('enum');
+    const StringIcon = getIcon('string');
 
     if (!isEnumValue(parameter)) return null;
 

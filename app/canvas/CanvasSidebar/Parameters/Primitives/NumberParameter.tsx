@@ -8,7 +8,7 @@ import { isNumberValue } from '@/canvas/_core/_/parameter.type-guards';
 import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
 
-import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
+import { getIcon } from '@/canvas/utils/items/getIcon';
 
 import { useParameters } from '@/canvas/CanvasSidebar/Parameters/useParameters';
 import { useNumberParameter } from '@/canvas/CanvasSidebar/Parameters/Primitives/useNumberParameter';
@@ -31,7 +31,7 @@ export const NumberParameter = memo(function NumberParameter({
     const { handleUpdateCurrentValue, handleUpdateMinValue, handleUpdateMaxValue, handleUpdateStepValue } =
         useNumberParameter({ parameter, updateParameter });
 
-    const Icon = getDynamicIcon(parameter.type);
+    const Icon = getIcon(parameter.type);
 
     if (!parameter) return;
     if (!isNumberValue(parameter)) return;

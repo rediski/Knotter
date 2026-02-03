@@ -13,7 +13,7 @@ import { Input } from '@/components/UI/Input';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Select } from '@/components/UI/Select';
 
-import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
+import { getIcon } from '@/canvas/utils/items/getIcon';
 
 interface NodeParametersProps {
     node: Node;
@@ -36,7 +36,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
     const options = filteredParameters.map((param) => ({
         value: param.id,
         label: param.name,
-        icon: getDynamicIcon(param.type),
+        icon: getIcon(param.type),
     }));
 
     const updateNodeParameter = (nodeId: string, parameterId: string, updates: Partial<Parameter>) => {

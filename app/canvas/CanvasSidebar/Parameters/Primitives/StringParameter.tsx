@@ -8,7 +8,7 @@ import { isStringValue } from '@/canvas/_core/_/parameter.type-guards';
 import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
 
-import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
+import { getIcon } from '@/canvas/utils/items/getIcon';
 
 import { X } from 'lucide-react';
 
@@ -25,7 +25,7 @@ export const StringParameter = memo(function StringParameter({
     handleUpdateParameterName,
     removeParameter,
 }: StringParameterProps) {
-    const Icon = getDynamicIcon(parameter.type);
+    const Icon = getIcon(parameter.type);
 
     if (!parameter) return;
     if (!isStringValue(parameter)) return;

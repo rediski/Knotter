@@ -10,7 +10,7 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { useParameters } from '@/canvas/CanvasSidebar/Parameters/useParameters';
 
 import { parameterTypes } from '@/canvas/_core/_/parameter.types';
-import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
+import { getIcon } from '@/canvas/utils/items/getIcon';
 
 import { NumberParameter } from '@/canvas/CanvasSidebar/Parameters/Primitives/NumberParameter';
 import { StringParameter } from '@/canvas/CanvasSidebar/Parameters/Primitives/StringParameter';
@@ -74,9 +74,9 @@ export const Parameters = memo(function Parameters({ panelId }: ParametersProps)
                     max={16}
                 />
 
-                <DropdownAbsolute title={currentType?.label} icon={getDynamicIcon(parameterType)}>
+                <DropdownAbsolute title={currentType?.label} icon={getIcon(parameterType)}>
                     {parameterTypes.map((parameter) => {
-                        const Icon = getDynamicIcon(parameter.type);
+                        const Icon = getIcon(parameter.type);
 
                         return (
                             <button

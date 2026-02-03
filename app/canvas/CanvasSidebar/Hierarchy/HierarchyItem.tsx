@@ -6,7 +6,7 @@ import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 
 import { EditableName } from '@/components/UI/EditableName';
 import { useHierarchyItem } from '@/canvas/CanvasSidebar/Hierarchy/useHierarchyItem';
-import { getDynamicIcon } from '@/canvas/utils/items/getDynamicIcon';
+import { getIcon } from '@/canvas/utils/items/getIcon';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 interface HierarchyItemProps {
@@ -17,7 +17,7 @@ export const HierarchyItem = memo(function HierarchyItem({ canvasItem }: Hierarc
     const { isSelected, handleSelect, handleKeyDown, handleNameChange, dragRef, dropRef, isDragOver, dragPosition } =
         useHierarchyItem(canvasItem);
 
-    const Icon = getDynamicIcon(canvasItem.kind);
+    const Icon = getIcon(canvasItem.kind);
 
     const openedTabIds = useCanvasStore((state) => state.openedTabIds);
     const setOpenedTabIds = useCanvasStore((state) => state.setOpenedTabIds);

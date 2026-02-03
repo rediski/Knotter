@@ -1,7 +1,7 @@
 import { LucideIcon } from 'lucide-react';
 import { Box, Link2, Hash, Type, Feather, FlagTriangleRight, List, Folder, Bug } from 'lucide-react';
 
-const dynamicIconMap: Record<string, LucideIcon> = {
+const iconMap: Record<string, LucideIcon> = {
     node: Box,
     edge: Link2,
 
@@ -15,6 +15,6 @@ const dynamicIconMap: Record<string, LucideIcon> = {
     bug: Bug,
 };
 
-export function getDynamicIcon(type: string): LucideIcon {
-    return dynamicIconMap[type] || dynamicIconMap.bug;
+export function getIcon(type: string): LucideIcon {
+    return iconMap[type] || iconMap.bug;
 }
