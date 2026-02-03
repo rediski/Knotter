@@ -21,45 +21,45 @@ export interface EditorModeOption {
 
 export default function CanvasPage() {
     const items = useCanvasStore((state) => state.items);
-    const openedNodeId = useCanvasStore((state) => state.openedNodeId);
-    const openedNodesIds = useCanvasStore((state) => state.openedNodesIds);
+    const selectedTabId = useCanvasStore((state) => state.selectedTabId);
+    const openedTabIds = useCanvasStore((state) => state.openedTabIds);
 
     const setSelectedItemIds = useCanvasStore((state) => state.setSelectedItemIds);
-    const setOpenedNodeId = useCanvasStore((state) => state.setOpenedNodeId);
-    const setOpenedNodesIds = useCanvasStore((state) => state.setOpenedNodesIds);
+    const setSelectedTabId = useCanvasStore((state) => state.setSelectedTabId);
+    const setOpenedTabIds = useCanvasStore((state) => state.setOpenedTabIds);
 
     const isMobile = useMobileDetection();
 
     const closeNodeTab = (nodeId: string, e: React.MouseEvent) => {
         e.stopPropagation();
 
-        const newOpenedNodeIds = openedNodesIds.filter((id) => id !== nodeId);
-        setOpenedNodesIds(newOpenedNodeIds);
+        const newOpenedNodeIds = openedTabIds.filter((id) => id !== nodeId);
+        setOpenedTabIds(newOpenedNodeIds);
 
-        if (openedNodeId === nodeId) {
+        if (selectedTabId === nodeId) {
             if (newOpenedNodeIds.length > 0) {
                 const nextNodeId = newOpenedNodeIds[newOpenedNodeIds.length - 1];
-                setOpenedNodeId(nextNodeId);
+                setSelectedTabId(nextNodeId);
                 setSelectedItemIds([nextNodeId]);
             } else {
-                setOpenedNodeId(null);
+                setSelectedTabId(null);
                 setSelectedItemIds([]);
             }
         }
     };
 
     const switchToNodeTab = (nodeId: string) => {
-        setOpenedNodeId(nodeId);
+        setSelectedTabId(nodeId);
         setSelectedItemIds([nodeId]);
     };
 
     const switchToCanvas = () => {
-        setOpenedNodeId(null);
+        setSelectedTabId(null);
         setSelectedItemIds([]);
     };
 
     const getOpenedNodesData = () => {
-        return openedNodesIds
+        return openedTabIds
             .map((nodeId) => items.find((item) => item.id === nodeId && item.kind === 'node'))
             .filter(Boolean) as CanvasItem[];
     };
@@ -108,7 +108,7 @@ export default function CanvasPage() {
     }
 
     const openedNodesData = getOpenedNodesData();
-    const isCanvasMode = openedNodeId === null;
+    const isCanvasMode = selectedTabId === null;
 
     return (
         <ToastProvider>
@@ -139,7 +139,7 @@ export default function CanvasPage() {
                                         key={node.id}
                                         className={`
                                             flex items-center justify-between w-full px-3 h-8 border rounded-md cursor-pointer group select-none
-                                            ${openedNodeId === node.id ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
+                                            ${selectedTabId === node.id ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
                                         `}
                                         onClick={() => switchToNodeTab(node.id)}
                                     >
@@ -147,7 +147,7 @@ export default function CanvasPage() {
                                             <Box size={16} className="min-w-4 shrink-0" />
 
                                             <div
-                                                className={`border-l h-5 mx-2 ${openedNodeId === node.id ? 'border-bg-accent/10' : 'border-depth-4'}`}
+                                                className={`border-l h-5 mx-2 ${selectedTabId === node.id ? 'border-bg-accent/10' : 'border-depth-4'}`}
                                             />
 
                                             <span className="truncate text-sm">{node.name}</span>
@@ -156,7 +156,7 @@ export default function CanvasPage() {
                                         <button
                                             className={`
                                                 opacity-0 group-hover:opacity-100 rounded p-0.5 transition-opacity cursor-pointer
-                                                ${openedNodeId === node.id ? 'hover:bg-bg-accent/10' : 'hover:bg-depth-3'}
+                                                ${selectedTabId === node.id ? 'hover:bg-bg-accent/10' : 'hover:bg-depth-3'}
                                             `}
                                             onClick={(e) => closeNodeTab(node.id, e)}
                                         >

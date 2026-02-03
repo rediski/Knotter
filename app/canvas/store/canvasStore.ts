@@ -58,16 +58,17 @@ export interface CanvasState {
 
     // ---
 
-    openedNodeId: string | null;
-    setOpenedNodeId: (nodeId: string | null) => void;
+    selectedTabId: string | null;
+    setSelectedTabId: (nodeId: string | null) => void;
 
-    openedNodesIds: string[];
-    setOpenedNodesIds: (nodeIds: string[]) => void;
+    openedTabIds: string[];
+    setOpenedTabIds: (nodeIds: string[]) => void;
 
     // ---
 
     sidebarPanels: SidebarPanel[];
     setSidebarPanels: (panels: SidebarPanel[]) => void;
+
     sidebarWidth: number;
     setSidebarWidth: (width: number) => void;
 
@@ -137,11 +138,11 @@ export const useCanvasStore = create<CanvasState>()(
             toggleShowAxes: () => set((s) => ({ showAxes: !s.showAxes })),
 
             // ---
-            openedNodeId: null,
-            setOpenedNodeId: (openedNodeId) => set({ openedNodeId }),
+            selectedTabId: null,
+            setSelectedTabId: (selectedTabId) => set({ selectedTabId }),
 
-            openedNodesIds: [],
-            setOpenedNodesIds: (openedNodesIds) => set({ openedNodesIds }),
+            openedTabIds: [],
+            setOpenedTabIds: (openedTabIds) => set({ openedTabIds }),
 
             // ---
 
@@ -180,8 +181,8 @@ export const useCanvasStore = create<CanvasState>()(
                 showGrid: state.showGrid,
                 showAxes: state.showAxes,
 
-                openedNodeId: state.openedNodeId,
-                openedNodeIds: state.openedNodesIds,
+                selectedTabId: state.selectedTabId,
+                openedTabIds: state.openedTabIds,
 
                 sidebarWidth: state.sidebarWidth,
                 sidebarPanels: state.sidebarPanels,

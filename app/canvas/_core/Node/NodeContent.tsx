@@ -6,8 +6,8 @@ import { getShape } from '@/canvas/utils/nodes/getShape';
 
 export default function NodeContent() {
     const items = useCanvasStore((state) => state.items);
-    const openedNodeId = useCanvasStore((state) => state.openedNodeId);
-    const openedNode = items.find((item) => item.id === openedNodeId && item.kind === 'node');
+    const selectedTabId = useCanvasStore((state) => state.selectedTabId);
+    const openedNode = items.find((item) => item.id === selectedTabId && item.kind === 'node');
 
     if (openedNode?.kind !== 'node') return;
 

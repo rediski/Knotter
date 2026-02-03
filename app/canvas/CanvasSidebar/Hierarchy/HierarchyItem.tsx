@@ -19,19 +19,19 @@ export const HierarchyItem = memo(function HierarchyItem({ canvasItem }: Hierarc
 
     const Icon = getDynamicIcon(canvasItem.kind);
 
-    const openedNodesIds = useCanvasStore((state) => state.openedNodesIds);
-    const setOpenedNodesIds = useCanvasStore((state) => state.setOpenedNodesIds);
-    const setOpenedNodeId = useCanvasStore((state) => state.setOpenedNodeId);
+    const openedTabIds = useCanvasStore((state) => state.openedTabIds);
+    const setOpenedTabIds = useCanvasStore((state) => state.setOpenedTabIds);
+    const setSelectedTabId = useCanvasStore((state) => state.setSelectedTabId);
     const setSelectedItemIds = useCanvasStore((state) => state.setSelectedItemIds);
 
     const handleNodeDoubleClick = (nodeId: string) => {
         if (canvasItem.kind !== 'node') return;
 
-        if (!openedNodesIds.includes(nodeId)) {
-            setOpenedNodesIds([...openedNodesIds, nodeId]);
+        if (!openedTabIds.includes(nodeId)) {
+            setOpenedTabIds([...openedTabIds, nodeId]);
         }
 
-        setOpenedNodeId(nodeId);
+        setSelectedTabId(nodeId);
         setSelectedItemIds([nodeId]);
     };
 
