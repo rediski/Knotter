@@ -14,9 +14,6 @@ export function drawGrid(
 
     const baseGridSize = NODE_MOVE_MAX_STEP;
 
-    const lineWidth = 1 / zoomLevel;
-    ctx.lineWidth = lineWidth;
-
     const worldLeft = -offset.x / zoomLevel;
     const worldTop = -offset.y / zoomLevel;
     const worldRight = worldLeft + canvasWidth / zoomLevel;
@@ -29,6 +26,8 @@ export function drawGrid(
     const gridColor3 = styles.getPropertyValue('--grid-color-3').trim();
     const axisXColor = styles.getPropertyValue('--red').trim();
     const axisYColor = styles.getPropertyValue('--green').trim();
+
+    ctx.lineWidth = 1 / zoomLevel;
 
     if (showGrid) {
         const levels = [
