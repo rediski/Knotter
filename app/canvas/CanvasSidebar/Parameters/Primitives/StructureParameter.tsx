@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { Parameter } from '@/canvas/_core/_/parameter.types';
 import { isStructureValue } from '@/canvas/_core/_/parameter.type-guards';
 
-import { getIcon } from '@/canvas/utils/items/getIcon';
+import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
 import { X } from 'lucide-react';
 

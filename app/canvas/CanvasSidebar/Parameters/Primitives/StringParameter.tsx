@@ -8,7 +8,7 @@ import { isStringValue } from '@/canvas/_core/_/parameter.type-guards';
 import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
 
-import { getIcon } from '@/canvas/utils/items/getIcon';
+import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
 import { X } from 'lucide-react';
 

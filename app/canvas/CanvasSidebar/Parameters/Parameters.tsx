@@ -10,7 +10,7 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { useParameters } from '@/canvas/CanvasSidebar/Parameters/useParameters';
 
 import { parameterTypes } from '@/canvas/_core/_/parameter.types';
-import { getIcon } from '@/canvas/utils/items/getIcon';
+import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
 import { NumberParameter } from '@/canvas/CanvasSidebar/Parameters/Primitives/NumberParameter';
 import { StringParameter } from '@/canvas/CanvasSidebar/Parameters/Primitives/StringParameter';

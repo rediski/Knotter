@@ -10,7 +10,7 @@ import { Checkbox } from '@/components/UI/Checkbox';
 
 import { useParameters } from '@/canvas/CanvasSidebar/Parameters/useParameters';
 
-import { getIcon } from '@/canvas/utils/items/getIcon';
+import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
 import { X } from 'lucide-react';
 

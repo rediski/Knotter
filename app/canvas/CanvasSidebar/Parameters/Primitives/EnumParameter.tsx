@@ -11,7 +11,7 @@ import { EditableName } from '@/components/UI/EditableName';
 import { useParameters } from '@/canvas/CanvasSidebar/Parameters/useParameters';
 import { useEnumParameter } from '@/canvas/CanvasSidebar/Parameters/Primitives/useEnumParameter';
 
-import { getIcon } from '@/canvas/utils/items/getIcon';
+import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
 import { X } from 'lucide-react';
 

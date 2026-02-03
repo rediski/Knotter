@@ -16,7 +16,7 @@ import { Dropdown } from '@/components/UI/Dropdown';
 import { ShapeButtons } from '@/canvas/CanvasSidebar/Inspector/ShapeButtons';
 import { PositionInputs } from '@/canvas/CanvasSidebar/Inspector/PositionInputs';
 
-import { getIcon } from '@/canvas/utils/items/getIcon';
+import { getIcon } from '@/canvas/utils/nodes/getIcon';
 import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
 
 interface InspectorProps {

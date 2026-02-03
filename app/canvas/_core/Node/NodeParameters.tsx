@@ -13,7 +13,7 @@ import { Input } from '@/components/UI/Input';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Select } from '@/components/UI/Select';
 
-import { getIcon } from '@/canvas/utils/items/getIcon';
+import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
 interface NodeParametersProps {
     node: Node;
