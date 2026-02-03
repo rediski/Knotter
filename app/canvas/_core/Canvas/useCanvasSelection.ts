@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 
 import type { Position } from '@/canvas/_core/_/canvas.types';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { getItemsInSelectionArea } from '@/canvas/utils/items/getItemsInSelectionArea';
+import { getItemsInSelectionBox } from '@/canvas/utils/items/getItemsInSelectionBox';
 
 export function useCanvasSelection() {
     const { setSelectedItemIds } = useCanvasStore();
@@ -16,9 +16,7 @@ export function useCanvasSelection() {
         (start: Position, end: Position) => {
             const items = useCanvasStore.getState().items;
 
-            const selectableItems = items.filter((item) => item.kind !== 'edge');
-
-            const selected = getItemsInSelectionArea(selectableItems, start, end);
+            const selected = getItemsInSelectionBox(items, start, end);
             setSelectedItemIds(selected);
         },
         [setSelectedItemIds],
