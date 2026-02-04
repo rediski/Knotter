@@ -22,8 +22,8 @@ export interface Node {
     width?: number;
     height?: number;
     nodeParameters: Parameter[];
-    edgeFrom: string[];
-    edgeTo: string[];
+    edgeFrom?: string[];
+    edgeTo?: string[];
 }
 
 export interface Text {
