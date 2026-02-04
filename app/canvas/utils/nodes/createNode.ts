@@ -35,9 +35,9 @@ export function createNode(): Node | null {
         id: uuidv4(),
         name,
         description: '',
+        kind: 'node',
         shapeType: 'point',
         position: { x, y },
-        kind: 'node',
         nodeParameters: [],
     };
 
