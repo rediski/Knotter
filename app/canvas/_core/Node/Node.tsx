@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef } from 'react';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { NodeRenderer } from '@/canvas/_core/Node/NodeRenderer';
@@ -9,16 +9,19 @@ import { NodeTooltip } from '@/canvas/_core/Node/NodeTooltip';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 
 import { NODE_SIZE } from '@/canvas/_core/_/canvas.constants';
+import { EdgeRenderer } from './EdgeRenderer';
+import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
 
-export function Node() {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [containerHeight, setContainerHeight] = useState(0);
+type NodeProps = {
+    containerRef: React.RefObject<HTMLDivElement | null>;
+};
+
+export const Node: React.FC<NodeProps> = ({ containerRef }) => {
+    const nodeRef = useRef<HTMLDivElement>(null);
 
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
-    const offset = useCanvasStore((state) => state.offset);
 
     const tooltipMode = useCanvasStore((state) => state.tooltipMode);
-    const invertY = useCanvasStore((state) => state.invertY);
 
     const items = useCanvasStore((state) => state.items);
     const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
@@ -32,24 +35,6 @@ export function Node() {
 
     const nodes = getNodes(items);
 
-    useEffect(() => {
-        const updateHeight = () => {
-            if (containerRef.current) {
-                const height = containerRef.current.getBoundingClientRect().height;
-                setContainerHeight(height);
-            }
-        };
-
-        updateHeight();
-        const resizeObserver = new ResizeObserver(updateHeight);
-
-        if (containerRef.current) {
-            resizeObserver.observe(containerRef.current);
-        }
-
-        return () => resizeObserver.disconnect();
-    }, []);
-
     const handleNodeDoubleClick = (nodeId: string) => {
         if (!openedTabIds.includes(nodeId)) {
             setOpenedTabIds([...openedTabIds, nodeId]);
@@ -60,15 +45,12 @@ export function Node() {
     };
 
     return (
-        <div ref={containerRef} className="absolute inset-0">
+        <div ref={nodeRef} className="absolute inset-0">
+            <EdgeRenderer containerRef={containerRef} />
+
             {nodes.map((node) => {
                 const isSelected = selectedItemIds.includes(node.id);
-
-                const baseX = node.position.x * zoomLevel + offset.x;
-                const baseY = node.position.y * zoomLevel + offset.y;
-
-                const screenX = baseX;
-                const screenY = invertY && containerHeight > 0 ? -baseY + containerHeight : baseY;
+                const { x: screenX, y: screenY } = getScreenCoords(node.position.x, node.position.y, containerRef);
 
                 return (
                     <div
@@ -98,12 +80,7 @@ export function Node() {
 
                 if (!shouldShowTooltip) return null;
 
-                const baseX = node.position.x * zoomLevel + offset.x;
-                const baseY = node.position.y * zoomLevel + offset.y;
-
-                const screenX = baseX;
-                const screenY = invertY && containerHeight > 0 ? -baseY + containerHeight : baseY;
-
+                const { x: screenX, y: screenY } = getScreenCoords(node.position.x, node.position.y, containerRef);
                 const tooltipYOffset = (NODE_SIZE / 2) * zoomLevel + 8 * zoomLevel;
                 const tooltipY = screenY - tooltipYOffset;
 
@@ -119,4 +96,4 @@ export function Node() {
             })}
         </div>
     );
-}
+};
