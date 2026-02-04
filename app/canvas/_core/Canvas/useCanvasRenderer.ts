@@ -2,32 +2,20 @@
 
 import { useEffect, RefObject } from 'react';
 
-import type { Node, Edge } from '@/canvas/_core/_/canvas.types';
-
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { drawEdges } from '@/canvas/utils/edges/drawEdges';
-
-import { drawTempEdge } from '@/canvas/utils/edges/drawTempEdge';
 import { drawGrid } from '@/canvas/utils/canvas/drawGrid';
-import { getNodes } from '@/canvas/utils/nodes/getNodes';
-import { getEdges } from '@/canvas/utils/edges/getEdges';
 
 interface useCanvasRendererProps {
     canvasRef: RefObject<HTMLCanvasElement | null>;
 }
 
 export function useCanvasRenderer({ canvasRef }: useCanvasRendererProps) {
-    const items = useCanvasStore((s) => s.items);
-    const selectedItemIds = useCanvasStore((s) => s.selectedItemIds);
     const offset = useCanvasStore((state) => state.offset);
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
     const invertY = useCanvasStore((state) => state.invertY);
-    const showGrid = useCanvasStore((s) => s.showGrid);
-    const showAxes = useCanvasStore((s) => s.showAxes);
-    const tempEdge = useCanvasStore((s) => s.tempEdge);
-    const hoveredNodeId = useCanvasStore((s) => s.hoveredNodeId);
-    const tooltipMode = useCanvasStore((s) => s.tooltipMode);
+    const showGrid = useCanvasStore((state) => state.showGrid);
+    const showAxes = useCanvasStore((state) => state.showAxes);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -60,13 +48,6 @@ export function useCanvasRenderer({ canvasRef }: useCanvasRendererProps) {
             ctx.setTransform(zoomLevel * dpr, 0, 0, scaleY, offset.x * dpr, translateY);
 
             drawGrid(ctx, canvas.width / dpr, canvas.height / dpr, showGrid, showAxes);
-
-            const nodes: Node[] = getNodes(items);
-            const edges: Edge[] = getEdges(items);
-
-            drawEdges(ctx, nodes, selectedItemIds, edges);
-
-            drawTempEdge(ctx, nodes, tempEdge);
         };
 
         const scheduleRender = () => {
@@ -90,17 +71,5 @@ export function useCanvasRenderer({ canvasRef }: useCanvasRendererProps) {
             resizeObserver.disconnect();
             themeObserver.disconnect();
         };
-    }, [
-        canvasRef,
-        items,
-        selectedItemIds,
-        tempEdge,
-        showGrid,
-        showAxes,
-        zoomLevel,
-        offset,
-        invertY,
-        hoveredNodeId,
-        tooltipMode,
-    ]);
+    }, [canvasRef, zoomLevel, offset, invertY, showGrid, showAxes]);
 }
