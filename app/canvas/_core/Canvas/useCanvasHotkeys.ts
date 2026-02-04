@@ -13,7 +13,7 @@ import { selectAll } from '@/canvas/utils/items/selectAll';
 import { copySelectedItems, pasteClipboardItems } from '@/canvas/utils/clipboard/copyPasteItems';
 import { createNode } from '@/canvas/utils/nodes/createNode';
 import { createText } from '@/canvas/utils/texts/createText';
-import { createEdge } from '@/canvas/utils/edges/createEdge';
+import { initEdge } from '@/canvas/utils/edges/initEdge';
 
 export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>) {
     const { setSelectedItemIds } = useCanvasStore();
@@ -86,8 +86,8 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
 
             if (e.shiftKey) {
                 if (key === 'a' || key === 'ф') return createNode();
-                if (key === 'e' || key === 'у') return createEdge();
                 if (key === 't' || key === 'е') return createText();
+                if (key === 'e' || key === 'у') return initEdge();
             }
         };
 
