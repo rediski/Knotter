@@ -16,7 +16,6 @@ import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
 import { selectAllNodes } from '@/canvas/utils/nodes/selectAllNodes';
 import { createNode } from '@/canvas/utils/nodes/createNode';
 
-import { createEdge } from '@/canvas/utils/edges/createEdge';
 import { createText } from '@/canvas/utils/texts/createText';
 
 type CanvasContextMenuProps = {
@@ -86,17 +85,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                     >
                         Создать узел
                     </ContextMenuItem>,
-                    <ContextMenuItem
-                        key="create-edge"
-                        onClick={() => {
-                            createEdge();
-                            closeMenu();
-                        }}
-                        disabled={selectedItemIds.length !== 1 || !nodes.some((n) => n.id === selectedItemIds[0])}
-                        shortcut="Shift + E"
-                    >
-                        Создать связь
-                    </ContextMenuItem>,
+
                     <ContextMenuItem
                         key="create-text"
                         onClick={() => {
