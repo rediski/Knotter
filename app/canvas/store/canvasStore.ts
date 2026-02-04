@@ -26,8 +26,8 @@ export interface CanvasState {
     hoveredNodeId: string | null;
     setHoveredNodeId: (id: string | null) => void;
 
-    tempEdge: { from: string; toPos: Position } | null;
-    setTempEdge: (edge: { from: string; toPos: Position } | null) => void;
+    tempEdge: string | null;
+    setTempEdge: (id: string | null) => void;
 
     // ---
 
