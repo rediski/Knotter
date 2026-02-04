@@ -7,6 +7,7 @@ export function createEdge(clickedNodeId: string) {
     const items = useCanvasStore.getState().items;
     const setItems = useCanvasStore.getState().setItems;
     const tempEdge = useCanvasStore.getState().tempEdge;
+    const setTempEdge = useCanvasStore.getState().setTempEdge;
 
     if (!tempEdge || !clickedNodeId || tempEdge === clickedNodeId) return;
 
@@ -29,4 +30,6 @@ export function createEdge(clickedNodeId: string) {
             return node;
         }),
     );
+
+    setTempEdge(null);
 }
