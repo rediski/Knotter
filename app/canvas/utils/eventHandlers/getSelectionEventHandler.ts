@@ -11,7 +11,7 @@ export function getSelectionEventHandler(
     selectionStartRef: RefObject<Position | null>,
     setSelectionStart: (value: Position | null) => void,
     setSelectionEnd: (value: Position | null) => void,
-    selectItemsInArea: (start: Position, end: Position) => void,
+    selectItemsInBox: (start: Position, end: Position) => void,
 ) {
     return {
         handleMouseDown(e: MouseEvent) {
@@ -42,7 +42,7 @@ export function getSelectionEventHandler(
             const pos = getMousePosition(e, canvas);
 
             setSelectionEnd(pos);
-            selectItemsInArea(selectionStartRef.current, pos);
+            selectItemsInBox(selectionStartRef.current, pos);
         },
 
         handleMouseUp(e: MouseEvent) {
@@ -55,7 +55,7 @@ export function getSelectionEventHandler(
 
             const pos = getMousePosition(e, canvas);
 
-            selectItemsInArea(selectionStartRef.current, pos);
+            selectItemsInBox(selectionStartRef.current, pos);
 
             selectionStartRef.current = null;
 
