@@ -18,14 +18,16 @@ export default function Canvas() {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-    const { selectionStart, selectionEnd, setSelectionStart, setSelectionEnd, selectItemsInArea } = useCanvasSelection();
+    const { selectionStartRef, selectionEndRef, setSelectionStart, setSelectionEnd, selectItemsInBox } =
+        useCanvasSelection();
 
     useCanvasInteraction({
         containerRef,
         canvasRef,
+        selectionStartRef,
         setSelectionStart,
         setSelectionEnd,
-        selectItemsInArea,
+        selectItemsInBox,
     });
 
     useCanvasRenderer({ canvasRef });
@@ -42,7 +44,11 @@ export default function Canvas() {
                 className="absolute top-0 left-0 w-full h-full bg-depth-1 rounded-md border border-depth-3"
             />
 
-            <SelectionBox start={selectionStart} end={selectionEnd} containerRef={containerRef} />
+            <SelectionBox
+                selectionStartRef={selectionStartRef}
+                selectionEndRef={selectionEndRef}
+                containerRef={containerRef}
+            />
 
             <div className="absolute inset-0 overflow-hidden">
                 <Node containerRef={containerRef} />

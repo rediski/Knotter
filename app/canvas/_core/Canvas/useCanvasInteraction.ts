@@ -15,24 +15,26 @@ import { getZoomEventHandler } from '@/canvas/utils/eventHandlers/getZoomEventHa
 interface useCanvasInteractionProps {
     containerRef: RefObject<HTMLDivElement | null>;
     canvasRef: RefObject<HTMLCanvasElement | null>;
+    selectionStartRef: RefObject<Position | null>;
+
     setSelectionStart: (value: Position | null) => void;
     setSelectionEnd: (value: Position | null) => void;
-    selectItemsInArea: (start: Position, end: Position) => void;
+    selectItemsInBox: (start: Position, end: Position) => void;
 }
 
 export function useCanvasInteraction({
     containerRef,
     canvasRef,
+    selectionStartRef,
     setSelectionStart,
     setSelectionEnd,
-    selectItemsInArea,
+    selectItemsInBox,
 }: useCanvasInteractionProps) {
     useInitialCanvasOffset(canvasRef);
     useCanvasHotkeys(canvasRef);
 
     const isPanningRef = useRef(false);
     const lastMouseRef = useRef<{ x: number; y: number } | null>(null);
-    const selectionStartRef = useRef<Position | null>(null);
 
     const { onMouseDown, onMouseMove, onMouseUp } = useCanvasMouseEvents(canvasRef, isPanningRef);
 
@@ -51,7 +53,7 @@ export function useCanvasInteraction({
             selectionStartRef,
             setSelectionStart,
             setSelectionEnd,
-            selectItemsInArea,
+            selectItemsInBox,
         );
 
         const handleMouseDown = (e: MouseEvent) => {
