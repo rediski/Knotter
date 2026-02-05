@@ -52,7 +52,7 @@ export default function Canvas() {
 
             <div className="absolute inset-0 overflow-hidden">
                 <Node containerRef={containerRef} />
-                <Text />
+                <Text containerRef={containerRef} />
             </div>
         </div>
     );
