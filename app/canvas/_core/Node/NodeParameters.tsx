@@ -63,7 +63,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
     return (
         <div className="flex flex-col w-full gap-1">
             {nodeParameters.length > 0 && (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 bg-depth-1 border border-depth-3 rounded-md p-3">
                     {nodeParameters.map((parameter: Parameter) => {
                         if (parameter.type === 'number') {
                             const numberValue = parameter.value as ParameterTypeMap['number'];
