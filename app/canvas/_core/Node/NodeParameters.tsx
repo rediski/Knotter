@@ -63,13 +63,13 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
     return (
         <div className="flex flex-col w-full gap-1">
             {nodeParameters.length > 0 && (
-                <div className="flex flex-col gap-2 bg-depth-1 border border-depth-3 rounded-md p-3">
+                <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-3">
                     {nodeParameters.map((parameter: Parameter) => {
                         if (parameter.type === 'number') {
                             const numberValue = parameter.value as ParameterTypeMap['number'];
 
                             return (
-                                <div key={parameter.id} className="flex flex-col gap-2">
+                                <div key={parameter.id} className="flex flex-col gap-1">
                                     <p className="text-sm truncate">{parameter.name}</p>
 
                                     <Input
@@ -78,7 +78,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                                         value={numberValue.currentValue.toString()}
                                         step={numberValue.step}
                                         type="number"
-                                        className="bg-depth-2 hover:bg-depth-3 active:bg-depth-4"
+                                        className="bg-depth-2 border border-depth-3 hover:bg-depth-3 active:bg-depth-4"
                                         onChange={(newValue) => {
                                             const numValue = parseFloat(newValue);
                                             if (!isNaN(numValue)) {
@@ -100,7 +100,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
 
                         if (parameter.type === 'string') {
                             return (
-                                <div key={parameter.id} className="flex flex-col gap-2">
+                                <div key={parameter.id} className="flex flex-col gap-1">
                                     <p className="text-sm truncate">{parameter.name}</p>
 
                                     <Input
@@ -111,7 +111,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                                             });
                                         }}
                                         placeholder={parameter.name}
-                                        className="bg-depth-2 hover:bg-depth-3"
+                                        className="bg-depth-2 hover:bg-depth-3 border border-depth-3"
                                     />
                                 </div>
                             );
@@ -121,7 +121,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                             return (
                                 <label
                                     key={parameter.id}
-                                    className="flex items-center w-fit gap-2 select-none cursor-pointer truncate"
+                                    className="flex items-center w-full gap-1 select-none cursor-pointer truncate"
                                 >
                                     {parameter.name}
 
@@ -146,7 +146,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: NodeParamet
                             const enumValue = parameter.value as ParameterTypeMap['enum'];
 
                             return (
-                                <div key={parameter.id} className="flex flex-col gap-2">
+                                <div key={parameter.id} className="flex flex-col gap-1">
                                     <p className="text-sm truncate">{parameter.name}:</p>
 
                                     <Select
