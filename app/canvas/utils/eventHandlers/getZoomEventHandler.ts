@@ -1,19 +1,27 @@
+import { RefObject } from 'react';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { MIN_ZOOM, MAX_ZOOM } from '@/canvas/_core/_/canvas.constants';
 
-export function getZoomEventHandler(canvas: HTMLCanvasElement) {
+const ZOOM_FACTOR = 1.1;
+
+export function getZoomEventHandler(canvasRef: RefObject<HTMLCanvasElement | null>) {
     return (e: WheelEvent) => {
         if (!e.ctrlKey) return;
-        e.preventDefault();
+
+        const canvas = canvasRef.current;
+        if (!canvas) return;
 
         const rect = canvas.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
 
-        const { offset, setOffset, zoomLevel, setZoomLevel, invertY } = useCanvasStore.getState();
+        const offset = useCanvasStore.getState().offset;
+        const setOffset = useCanvasStore.getState().setOffset;
+        const zoomLevel = useCanvasStore.getState().zoomLevel;
+        const setZoomLevel = useCanvasStore.getState().setZoomLevel;
+        const invertY = useCanvasStore.getState().invertY;
 
-        const zoomFactor = 1.1;
-        const scale = e.deltaY < 0 ? zoomFactor : 1 / zoomFactor;
+        const scale = e.deltaY < 0 ? ZOOM_FACTOR : 1 / ZOOM_FACTOR;
         const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoomLevel * scale));
 
         const cursorY = invertY ? canvas.height - mouseY : mouseY;
