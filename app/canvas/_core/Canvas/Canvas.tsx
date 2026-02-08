@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 
 import { Node } from '@/canvas/_core/Node/Node';
 import { Text } from '@/canvas/_core/Text/Text';
@@ -11,23 +11,16 @@ import { CanvasControls } from '@/canvas/CanvasControls/CanvasControls';
 
 import { useCanvasInteraction } from '@/canvas/_core/Canvas/useCanvasInteraction';
 import { useCanvasRenderer } from '@/canvas/_core/Canvas/useCanvasRenderer';
-import { useCanvasSelection } from '@/canvas/_core/Canvas/useCanvasSelection';
+
 import { useContextMenu } from '@/hooks/useContextMenu';
 
 export default function Canvas() {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-    const { selectionStartRef, selectionEndRef, setSelectionStart, setSelectionEnd, selectItemsInBox } =
-        useCanvasSelection();
-
     useCanvasInteraction({
         containerRef,
         canvasRef,
-        selectionStartRef,
-        setSelectionStart,
-        setSelectionEnd,
-        selectItemsInBox,
     });
 
     useCanvasRenderer({ canvasRef });
@@ -36,7 +29,7 @@ export default function Canvas() {
 
     return (
         <div ref={containerRef} className="h-full w-full relative rounded-md bg-depth-1" onContextMenu={handleContextMenu}>
-            <CanvasControls />
+            <CanvasControls canvasRef={canvasRef} />
             <CanvasContextMenu isOpen={isOpen} position={position} closeMenu={closeMenu} />
 
             <canvas
@@ -44,11 +37,7 @@ export default function Canvas() {
                 className="absolute top-0 left-0 w-full h-full bg-depth-1 rounded-md border border-depth-3"
             />
 
-            <SelectionBox
-                selectionStartRef={selectionStartRef}
-                selectionEndRef={selectionEndRef}
-                containerRef={containerRef}
-            />
+            <SelectionBox containerRef={containerRef} />
 
             <div className="absolute inset-0 overflow-hidden">
                 <Node containerRef={containerRef} />
