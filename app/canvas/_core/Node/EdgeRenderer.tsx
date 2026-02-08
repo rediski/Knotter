@@ -1,6 +1,7 @@
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
+import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
 
 type EdgeRendererProps = {
     containerRef: React.RefObject<HTMLDivElement | null>;
@@ -12,7 +13,8 @@ export const EdgeRenderer: React.FC<EdgeRendererProps> = ({ containerRef }) => {
     const tempEdge = useCanvasStore((state) => state.tempEdge);
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
     const offset = useCanvasStore((state) => state.offset);
-    const mousePosition = useCanvasStore((state) => state.mousePosition);
+
+    const mousePosition = useCanvasRefsStore((state) => state.mousePosition);
 
     const nodes = getNodes(items);
 
@@ -53,10 +55,10 @@ export const EdgeRenderer: React.FC<EdgeRendererProps> = ({ containerRef }) => {
                     const containerHeight = containerRef.current?.offsetHeight ?? 0;
 
                     const toCoords = {
-                        x: mousePosition.x * zoomLevel + offset.x,
+                        x: mousePosition.current.x * zoomLevel + offset.x,
                         y: invertY
-                            ? -mousePosition.y * zoomLevel + containerHeight + offset.y
-                            : mousePosition.y * zoomLevel + offset.y,
+                            ? -mousePosition.current.y * zoomLevel + containerHeight + offset.y
+                            : mousePosition.current.y * zoomLevel + offset.y,
                     };
 
                     return (

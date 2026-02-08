@@ -15,9 +15,6 @@ export interface CanvasState {
     zoomLevel: number;
     setZoomLevel: (zoom: number) => void;
 
-    mousePosition: Position;
-    setMousePosition: (pos: Position) => void;
-
     invertY: boolean;
     setInvertY: (value: boolean) => void;
 
@@ -41,6 +38,12 @@ export interface CanvasState {
     setSelectedItemIds: (ids: string[]) => void;
 
     selectedItem: CanvasItem | null;
+
+    selectionStart: Position | null;
+    setSelectionStart: (pos: Position | null) => void;
+
+    selectionEnd: Position | null;
+    setSelectionEnd: (pos: Position | null) => void;
 
     // ---
 
@@ -85,9 +88,6 @@ export const useCanvasStore = create<CanvasState>()(
             zoomLevel: INITIAL_ZOOM,
             setZoomLevel: (zoom) => set({ zoomLevel: zoom }),
 
-            mousePosition: { x: 0, y: 0 },
-            setMousePosition: (mousePosition) => set({ mousePosition }),
-
             invertY: true,
             setInvertY: (value) => set({ invertY: value }),
 
@@ -122,6 +122,12 @@ export const useCanvasStore = create<CanvasState>()(
                 }),
 
             selectedItem: null,
+
+            selectionStart: null,
+            setSelectionStart: (pos) => set({ selectionStart: pos }),
+
+            selectionEnd: null,
+            setSelectionEnd: (pos) => set({ selectionEnd: pos }),
 
             // ---
 

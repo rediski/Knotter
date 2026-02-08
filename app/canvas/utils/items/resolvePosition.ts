@@ -2,10 +2,15 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 import type { Position } from '@/canvas/_core/_/canvas.types';
 
 import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
+import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
 
 export function resolvePosition(): Position {
-    const mousePosition = useCanvasStore.getState().mousePosition;
+    const mousePosition = useCanvasRefsStore.getState().mousePosition.current;
     const isMagnet = useCanvasStore.getState().isMagnet;
+
+    if (!mousePosition) {
+        return { x: 0, y: 0 };
+    }
 
     return isMagnet
         ? {
