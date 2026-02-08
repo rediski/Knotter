@@ -13,7 +13,7 @@ export function useHierarchy(filterText: string) {
         return items.filter((item) => item.name.toLowerCase().includes(lower));
     }, [items, filterText]);
 
-    const handleDeselectOnEmptyClick = useCallback(
+    const deselect = useCallback(
         (e: React.MouseEvent<HTMLUListElement>) => {
             if (e.target === e.currentTarget) {
                 setSelectedIds([]);
@@ -24,6 +24,6 @@ export function useHierarchy(filterText: string) {
 
     return {
         filteredItems,
-        handleDeselectOnEmptyClick,
+        deselect,
     };
 }

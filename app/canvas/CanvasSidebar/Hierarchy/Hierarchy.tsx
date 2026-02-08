@@ -15,10 +15,10 @@ interface HierarchyProps {
 export const Hierarchy = memo(function Hierarchy({ panelId }: HierarchyProps) {
     const items = useCanvasStore((state) => state.items);
     const filterText = useCanvasStore((state) => (panelId ? state.filterText[panelId] : ''));
-    const { filteredItems, handleDeselectOnEmptyClick } = useHierarchy(filterText);
+    const { filteredItems, deselect } = useHierarchy(filterText);
 
     return (
-        <ul className="flex flex-col gap-1 p-1 overflow-y-auto" onClick={handleDeselectOnEmptyClick}>
+        <ul className="flex flex-col gap-1 p-1 overflow-y-auto h-full" onClick={deselect}>
             {filteredItems.length !== 0 && (
                 <React.Fragment>
                     {filteredItems.map((item) => (
