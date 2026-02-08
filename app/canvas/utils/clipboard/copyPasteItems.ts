@@ -18,7 +18,6 @@ export function pasteClipboardItems(insertionGap = NODE_MOVE_MAX_STEP) {
     const copiedItems = getClipboard();
     if (!copiedItems.length) return;
 
-    console.log(copiedItems);
     const { setSelectedItemIds } = useCanvasStore.getState();
     const newItems: CanvasItem[] = [];
 
