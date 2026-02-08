@@ -1,26 +1,23 @@
-import { RefObject } from 'react';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { Position } from '@/canvas/_core/_/canvas.types';
+import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
 
-interface getPanEventHandlerProps {
-    isPanningRef: RefObject<boolean>;
-    lastMouseRef: RefObject<Position | null>;
-}
+export function getPanEventHandler() {
+    const isPanning = useCanvasRefsStore.getState().isPanning;
+    const lastMouseRef = useCanvasRefsStore.getState().lastMouseRef;
 
-export function getPanEventHandler({ isPanningRef, lastMouseRef }: getPanEventHandlerProps) {
     const handleMouseDown = (e: MouseEvent) => {
         if (e.button !== 1) return;
 
         e.preventDefault();
 
-        isPanningRef.current = true;
+        isPanning.current = true;
         lastMouseRef.current = { x: e.clientX, y: e.clientY };
 
         document.body.style.cursor = 'grabbing';
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-        if (!isPanningRef.current || !lastMouseRef.current) return;
+        if (!isPanning.current || !lastMouseRef.current) return;
 
         const dx = e.clientX - lastMouseRef.current.x;
         const dy = e.clientY - lastMouseRef.current.y;
@@ -40,7 +37,7 @@ export function getPanEventHandler({ isPanningRef, lastMouseRef }: getPanEventHa
     };
 
     const handleMouseUp = () => {
-        isPanningRef.current = false;
+        isPanning.current = false;
         lastMouseRef.current = null;
         document.body.style.cursor = '';
     };
