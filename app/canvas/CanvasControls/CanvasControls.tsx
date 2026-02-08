@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState, useEffect, useMemo, useCallback } from 'react';
+import { memo, useState, useEffect, useMemo, useCallback, RefObject } from 'react';
 import Link from 'next/link';
 
 import { Tooltip } from '@/components/UI/Tooltip';
@@ -10,12 +10,21 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { toggleMagnetMode } from '@/canvas/utils/canvas/toggleMagnetMode';
 import { toggleTooltipMode } from '@/canvas/utils/canvas/toggleTooltipMode';
+import { getCanvasCenter } from '@/canvas/utils/canvas/getCanvasCenter';
 
 import { useCanvasControlsMenu } from '@/canvas/CanvasControls/useCanvasControlsMenu';
 
-import { FlipVertical2, Home, Menu, Magnet, Grid2x2, Move3d, Eye, EyeOff, EyeClosed } from 'lucide-react';
+import { FlipVertical2, Home, Menu, Magnet, Grid2x2, Move3d, Eye, EyeOff, EyeClosed, RotateCcw } from 'lucide-react';
 
-export const CanvasControls = memo(function CanvasControls() {
+type CanvasControlsProps = {
+    canvasRef: RefObject<HTMLCanvasElement | null>;
+};
+
+export const CanvasControls = memo(function CanvasControls({ canvasRef }: CanvasControlsProps) {
+    if (!canvasRef) return null;
+
+    const offset = useCanvasStore((state) => state.offset);
+    const setOffset = useCanvasStore((state) => state.setOffset);
     const isMagnet = useCanvasStore((state) => state.isMagnet);
     const showGrid = useCanvasStore((state) => state.showGrid);
     const showAxes = useCanvasStore((state) => state.showAxes);
@@ -25,6 +34,7 @@ export const CanvasControls = memo(function CanvasControls() {
     const toggleShowGrid = useCanvasStore((state) => state.toggleShowGrid);
     const toggleShowAxes = useCanvasStore((state) => state.toggleShowAxes);
 
+    const center = getCanvasCenter(canvasRef);
     const { open, menuRef, toggleMenu } = useCanvasControlsMenu();
 
     const [mounted, setMounted] = useState(false);
@@ -88,65 +98,91 @@ export const CanvasControls = memo(function CanvasControls() {
     if (!mounted) return null;
 
     return (
-        <div className="flex justify-between items-start gap-12 absolute top-4 left-0 right-0 px-4 z-10 text-sm">
-            <div className="flex flex-col gap-2 max-w-60 w-full" ref={menuRef}>
-                <button
-                    onClick={toggleMenu}
-                    className={`
+        <>
+            <div className="flex justify-between items-start gap-12 absolute top-4 left-0 right-0 px-4 z-10 text-sm">
+                <div className="flex flex-col gap-2 max-w-60 w-full" ref={menuRef}>
+                    <button
+                        onClick={toggleMenu}
+                        className={`
                         p-2 rounded-md w-fit shadow cursor-pointer 
                         ${open ? 'bg-bg-accent text-white' : 'bg-depth-2 hover:bg-depth-3'}
                     `}
-                >
-                    <Menu size={16} />
-                </button>
+                    >
+                        <Menu size={16} />
+                    </button>
 
-                {open && (
-                    <div className="flex flex-col bg-depth-1 rounded-md shadow w-full text-nowrap">
-                        <div className="flex flex-col gap-1 m-1">
+                    {open && (
+                        <div className="flex flex-col bg-depth-1 rounded-md shadow w-full text-nowrap">
+                            <div className="flex flex-col gap-1 m-1">
+                                <button
+                                    onClick={() => setInvertY(!invertY)}
+                                    className="px-3 py-2 w-full flex justify-between bg-depth-2 hover:bg-depth-3 rounded-md cursor-pointer"
+                                >
+                                    Инвертировать Y
+                                    <FlipVertical2 size={16} className={`${invertY ? 'text-foreground' : 'text-gray'}`} />
+                                </button>
+
+                                <ThemeToggle label="Ночной режим" className="px-3 py-2 w-full flex justify-between" />
+                            </div>
+
+                            <hr className="border-b-0 border-depth-3" />
+
+                            <div className="m-1">
+                                <Link
+                                    href="/"
+                                    className="flex items-center justify-between gap-2 bg-depth-2 hover:bg-depth-3 px-3 py-2 rounded-md text-red"
+                                >
+                                    На главную
+                                    <Home size={16} />
+                                </Link>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                <div className="flex gap-2">
+                    {controls.map(({ active, onClick, Icon, label }, index) => (
+                        <Tooltip key={index} label={label}>
                             <button
-                                onClick={() => setInvertY(!invertY)}
-                                className="px-3 py-2 w-full flex justify-between bg-depth-2 hover:bg-depth-3 rounded-md cursor-pointer"
-                            >
-                                Инвертировать Y
-                                <FlipVertical2 size={16} className={`${invertY ? 'text-foreground' : 'text-gray'}`} />
-                            </button>
-
-                            <ThemeToggle label="Ночной режим" className="px-3 py-2 w-full flex justify-between" />
-                        </div>
-
-                        <hr className="border-b-0 border-depth-3" />
-
-                        <div className="m-1">
-                            <Link
-                                href="/"
-                                className="flex items-center justify-between gap-2 bg-depth-2 hover:bg-depth-3 px-3 py-2 rounded-md text-red"
-                            >
-                                На главную
-                                <Home size={16} />
-                            </Link>
-                        </div>
-                    </div>
-                )}
-            </div>
-
-            <div className="flex gap-2">
-                {controls.map(({ active, onClick, Icon, label }, index) => (
-                    <Tooltip key={index} label={label}>
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onClick();
-                            }}
-                            className={`
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onClick();
+                                }}
+                                className={`
                                 p-2 rounded-md w-fit shadow cursor-pointer
                                 ${active ? 'bg-bg-accent text-white' : 'bg-depth-2 hover:bg-depth-3'}
                             `}
-                        >
-                            <Icon size={16} />
-                        </button>
-                    </Tooltip>
-                ))}
+                            >
+                                <Icon size={16} />
+                            </button>
+                        </Tooltip>
+                    ))}
+                </div>
             </div>
-        </div>
+
+            <div className="absolute bottom-4 left-4 flex gap-1 z-10 text-sm">
+                <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-1">
+                        <div className="bg-depth-2 rounded-md px-3 py-1 shadow w-fit min-w-[9ch] tabular-nums">
+                            X: {offset.x.toFixed(0)}
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                        <div className="bg-depth-2 rounded-md px-3 py-1 shadow w-fit min-w-[9ch] tabular-nums">
+                            Y: {offset.y.toFixed(0)}
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    className="bg-depth-2 hover:bg-depth-3 rounded-md p-2 shadow w-fit cursor-pointer"
+                    onClick={() => center && setOffset(center)}
+                    disabled={!center}
+                >
+                    <RotateCcw size={16} />
+                </button>
+            </div>
+        </>
     );
 });
