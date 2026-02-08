@@ -51,7 +51,7 @@ export const HierarchyItem = memo(function HierarchyItem({ canvasItem }: Hierarc
 
             <div ref={dragRef} draggable>
                 <button
-                    className={` w-full px-3 h-9 rounded-md outline-none tabular-nums cursor-grab active:cursor-grabbing
+                    className={`w-full px-3 h-9 rounded-md outline-none tabular-nums cursor-grab active:cursor-grabbing
                         ${
                             isSelected
                                 ? 'bg-bg-accent/10 focus-visible:bg-bg-accent/15'
