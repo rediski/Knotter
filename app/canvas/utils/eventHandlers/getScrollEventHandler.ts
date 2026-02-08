@@ -9,7 +9,9 @@ export function getScrollEventHandler() {
         const dx = e.shiftKey ? e.deltaY : 0;
         const dy = !e.shiftKey ? e.deltaY : 0;
 
-        const { offset, setOffset, invertY } = useCanvasStore.getState();
+        const offset = useCanvasStore.getState().offset;
+        const setOffset = useCanvasStore.getState().setOffset;
+        const invertY = useCanvasStore.getState().invertY;
 
         setOffset({
             x: offset.x - dx,
