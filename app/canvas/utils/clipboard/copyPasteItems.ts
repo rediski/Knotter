@@ -3,25 +3,26 @@ import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { setClipboard, getClipboard } from '@/canvas/utils/clipboard/_clipboard';
 import { addToHistory } from '@/canvas/utils/clipboard/historyManager';
 
 import { createNode } from '@/canvas/utils/nodes/createNode';
 import { createText } from '@/canvas/utils/texts/createText';
 
 export function copySelectedItems(items: CanvasItem[], selectedIds: string[]) {
+    const setClipboard = useCanvasStore.getState().setClipboard;
     const selected = items.filter((item) => selectedIds.includes(item.id));
     setClipboard(selected);
 }
 
 export function pasteClipboardItems(insertionGap = NODE_MOVE_MAX_STEP) {
-    const copiedItems = getClipboard();
-    if (!copiedItems.length) return;
+    const clipboard = useCanvasStore.getState().clipboard;
+
+    if (!clipboard.length) return;
 
     const { setSelectedItemIds } = useCanvasStore.getState();
     const newItems: CanvasItem[] = [];
 
-    copiedItems.forEach((item) => {
+    clipboard.forEach((item) => {
         let newItem: CanvasItem | null = null;
 
         if (item.kind === 'node') {
@@ -49,5 +50,5 @@ export function pasteClipboardItems(insertionGap = NODE_MOVE_MAX_STEP) {
         items: newItems,
     });
 
-    setSelectedItemIds(newItems.map((i) => i.id));
+    setSelectedItemIds(newItems.map((item) => item.id));
 }

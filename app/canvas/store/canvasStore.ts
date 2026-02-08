@@ -47,6 +47,11 @@ export interface CanvasState {
 
     // ---
 
+    clipboard: CanvasItem[];
+    setClipboard: (items: CanvasItem[]) => void;
+
+    // ---
+
     tooltipMode: TooltipMode;
     setTooltipMode: (tooltipMode: TooltipMode) => void;
 
@@ -131,6 +136,11 @@ export const useCanvasStore = create<CanvasState>()(
 
             // ---
 
+            clipboard: [],
+            setClipboard: (items) => set({ clipboard: items }),
+
+            // ---
+
             tooltipMode: 'always',
             setTooltipMode: (tooltipMode) => set({ tooltipMode }),
 
@@ -181,6 +191,8 @@ export const useCanvasStore = create<CanvasState>()(
                 parameters: state.parameters,
                 selectedItemIds: state.selectedItemIds,
                 selectedItem: state.selectedItem,
+
+                clipboard: state.clipboard,
 
                 tooltipMode: state.tooltipMode,
                 isMagnet: state.isMagnet,
