@@ -5,7 +5,9 @@ import { useCallback, useRef, useState, useEffect } from 'react';
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
+
 import { selectItems } from '@/canvas/utils/items/selectItems';
+import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
 
 type DragPosition = 'top' | 'bottom' | null;
 
@@ -40,6 +42,10 @@ export function useHierarchyItem(item: CanvasItem) {
         (e: React.KeyboardEvent<HTMLLIElement>) => {
             if (e.key === 'Enter' && !isSelected) {
                 setSelectedIds([...selectedIds, item.id]);
+            }
+
+            if (e.key === 'Delete' && isSelected) {
+                deleteSelectedItems();
             }
         },
         [isSelected, selectedIds, item.id, setSelectedIds],
