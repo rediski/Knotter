@@ -1,29 +1,26 @@
 'use client';
 
-import type { Position } from '@/canvas/_core/_/canvas.types';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
 
 interface SelectionBoxProps {
-    selectionStartRef: React.RefObject<Position | null>;
-    selectionEndRef: React.RefObject<Position | null>;
     containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export function SelectionBox({ selectionStartRef, selectionEndRef, containerRef }: SelectionBoxProps) {
+export function SelectionBox({ containerRef }: SelectionBoxProps) {
     const offset = useCanvasStore((state) => state.offset);
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
     const invertY = useCanvasStore((state) => state.invertY);
+    const selectionStart = useCanvasStore((state) => state.selectionStart);
+    const selectionEnd = useCanvasStore((state) => state.selectionEnd);
 
-    const start = selectionStartRef.current;
-    const end = selectionEndRef.current;
+    if (!selectionStart || !selectionEnd) return null;
 
-    if (!start || !end) return null;
+    const width = Math.abs(selectionEnd.x - selectionStart.x) * zoomLevel;
+    const height = Math.abs(selectionEnd.y - selectionStart.y) * zoomLevel;
 
-    const width = Math.abs(end.x - start.x) * zoomLevel;
-    const height = Math.abs(end.y - start.y) * zoomLevel;
-
-    const left = Math.min(start.x, end.x) * zoomLevel + offset.x;
-    let top = Math.min(start.y, end.y) * zoomLevel + offset.y;
+    const left = Math.min(selectionStart.x, selectionEnd.x) * zoomLevel + offset.x;
+    let top = Math.min(selectionStart.y, selectionEnd.y) * zoomLevel + offset.y;
 
     const containerHeight = containerRef.current?.offsetHeight ?? 0;
 
