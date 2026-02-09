@@ -192,8 +192,6 @@ export const useCanvasStore = create<CanvasState>()(
                 selectedItemIds: state.selectedItemIds,
                 selectedItem: state.selectedItem,
 
-                clipboard: state.clipboard,
-
                 tooltipMode: state.tooltipMode,
                 isMagnet: state.isMagnet,
                 showGrid: state.showGrid,
