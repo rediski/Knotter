@@ -1,33 +1,41 @@
 'use client';
 
-import type { SidebarPanel } from '@/canvas/_core/_/sidebarPanel.types';
+import type { SidebarPanel as SidebarPanelType } from '@/canvas/_core/_/sidebarPanel.types';
 
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 import { Input } from '@/components/UI/Input';
 import { PanelContextMenu } from '@/canvas/CanvasSidebar/PanelContextMenu';
 import { useSidebarPanel } from '@/canvas/CanvasSidebar/useSidebarPanel';
+import { usePanelContextMenu } from '@/canvas/CanvasSidebar/usePanelContextMenu';
 
 import { Search } from 'lucide-react';
 
-export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
+export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
     const {
         panelRef,
-        isMenuOpenLocally,
-        menuPosition,
         filterText,
-
         PanelComponent,
-        content,
         panelOptions,
         currentPanelTitle,
         currentPanelIcon,
         panelIndex,
-
-        openMenu,
-        closeMenu,
         handleSelect,
         handleFilterChange,
     } = useSidebarPanel(panel);
+
+    const {
+        menuRef,
+        isMenuOpen,
+        menuPosition,
+        openMenu,
+        closeMenu,
+        canMoveUp,
+        canMoveDown,
+        handleAddPanel,
+        handleRemove,
+        handleMoveUp,
+        handleMoveDown,
+    } = usePanelContextMenu({ panel, panelRef });
 
     return (
         <div
@@ -37,11 +45,15 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
             onClick={closeMenu}
         >
             <PanelContextMenu
-                panel={panel}
-                panelRef={panelRef}
-                closeMenu={closeMenu}
-                isMenuOpenLocally={isMenuOpenLocally}
+                menuRef={menuRef}
+                isOpen={isMenuOpen}
                 position={menuPosition}
+                canMoveUp={canMoveUp}
+                canMoveDown={canMoveDown}
+                onAdd={handleAddPanel}
+                onRemove={handleRemove}
+                onMoveUp={handleMoveUp}
+                onMoveDown={handleMoveDown}
             />
 
             <div
@@ -67,10 +79,14 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
                     {panelOptions.map((option) => (
                         <button
                             key={option.value}
-                            onClick={() => handleSelect(option.value as any)}
+                            onClick={() => handleSelect(option.value)}
                             className={`
                                 flex items-center gap-2 px-3 h-8 text-left text-sm rounded-md cursor-pointer w-full 
-                                ${option.label === currentPanelTitle ? 'bg-bg-accent/15 text-text-accent' : 'bg-depth-3 hover:bg-depth-4'}
+                                ${
+                                    option.label === currentPanelTitle
+                                        ? 'bg-bg-accent/15 text-text-accent'
+                                        : 'bg-depth-3 hover:bg-depth-4'
+                                }
                             `}
                         >
                             {option.icon && <option.icon size={16} />}
@@ -82,7 +98,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanel }) {
 
             <hr className="border-b-0 border-depth-3 mt-1" />
 
-            {content && PanelComponent ? (
+            {PanelComponent ? (
                 <PanelComponent panelId={panel.id} />
             ) : (
                 <div className="h-full flex items-center justify-center text-gray text-sm">Выберите тип панели</div>
