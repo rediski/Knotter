@@ -7,7 +7,7 @@ let historyPosition = -1;
 
 export function addToHistory(action: CanvasAction) {
     history.splice(historyPosition + 1);
-    history.push(action);
+    history.push(structuredClone(action));
     historyPosition++;
 }
 
