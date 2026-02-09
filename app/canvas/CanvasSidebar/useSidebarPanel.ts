@@ -1,21 +1,37 @@
 'use client';
 
-import { useState, useRef, useCallback, useMemo } from 'react';
+import { useRef, useCallback, useMemo } from 'react';
 
 import type { SidebarPanel, PanelType } from '@/canvas/_core/_/sidebarPanel.types';
 
-import { panelDefinitions } from '@/canvas/CanvasSidebar/sidebarPanelDefinitions';
+import { Hierarchy } from '@/canvas/CanvasSidebar/Hierarchy/Hierarchy';
+import { Inspector } from '@/canvas/CanvasSidebar/Inspector/Inspector';
+import { Parameters } from '@/canvas/CanvasSidebar/Parameters/Parameters';
 import { useSidebarPanels } from '@/canvas/CanvasSidebar/useSidebarPanels';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-let activeMenuId: string | null = null;
-const menuCallbacks: Map<string, () => void> = new Map();
+import { ListTree, Settings, Braces, type LucideIcon } from 'lucide-react';
+
+const panelComponents = {
+    hierarchy: Hierarchy,
+    inspector: Inspector,
+    parameters: Parameters,
+};
+
+const panelTitles: Record<PanelType, string> = {
+    hierarchy: 'Иерархия',
+    inspector: 'Инспектор',
+    parameters: 'Параметры',
+};
+
+const panelIcons: Record<PanelType, LucideIcon> = {
+    hierarchy: ListTree,
+    inspector: Settings,
+    parameters: Braces,
+};
 
 export function useSidebarPanel(panel: SidebarPanel) {
     const panelRef = useRef<HTMLDivElement>(null);
-
-    const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
-    const [isMenuOpenLocally, setIsMenuOpenLocally] = useState(false);
 
     const { setPanelType } = useSidebarPanels();
 
@@ -23,53 +39,20 @@ export function useSidebarPanel(panel: SidebarPanel) {
     const filterText = useCanvasStore((state) => state.filterText[panel.id] || '');
     const setFilterText = useCanvasStore((state) => state.setFilterText);
 
-    const content = panel.type ? panelDefinitions[panel.type] : null;
-    const PanelComponent = content?.component;
-
-    const panelOptions = useMemo(
-        () =>
-            Object.entries(panelDefinitions).map(([key, value]) => ({
-                value: key,
-                label: value.label,
-                icon: value.icon,
-            })),
-        [],
-    );
-
-    const currentPanelTitle = panel.type ? panelDefinitions[panel.type]?.label : 'Пустая панель';
-
-    const currentPanelIcon = panel.type ? panelDefinitions[panel.type]?.icon : undefined;
+    const PanelComponent = panel.type ? panelComponents[panel.type] : null;
+    const currentPanelTitle = panel.type ? panelTitles[panel.type] : 'Пустая панель';
+    const currentPanelIcon = panel.type ? panelIcons[panel.type] : undefined;
 
     const panelIndex = sidebarPanels.findIndex((p) => p.id === panel.id);
 
-    const closeMenu = useCallback(() => {
-        setIsMenuOpenLocally(false);
-
-        if (activeMenuId === panel.id) {
-            activeMenuId = null;
-            menuCallbacks.delete(panel.id);
-        }
-    }, [panel.id]);
-
-    const openMenu = useCallback(
-        (e: React.MouseEvent) => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            if (activeMenuId && activeMenuId !== panel.id && menuCallbacks.has(activeMenuId)) {
-                menuCallbacks.get(activeMenuId)!();
-            }
-
-            setMenuPosition({
-                x: e.clientX,
-                y: e.clientY,
-            });
-
-            setIsMenuOpenLocally(true);
-            activeMenuId = panel.id;
-            menuCallbacks.set(panel.id, closeMenu);
-        },
-        [panel.id, closeMenu],
+    const panelOptions = useMemo(
+        () =>
+            Object.entries(panelTitles).map(([key, label]) => ({
+                value: key as PanelType,
+                label,
+                icon: panelIcons[key as PanelType],
+            })),
+        [],
     );
 
     const handleSelect = useCallback(
@@ -90,19 +73,13 @@ export function useSidebarPanel(panel: SidebarPanel) {
     return {
         panelRef,
 
-        isMenuOpenLocally,
-        menuPosition,
         filterText,
-
         PanelComponent,
-        content,
         panelOptions,
         currentPanelTitle,
         currentPanelIcon,
         panelIndex,
 
-        openMenu,
-        closeMenu,
         handleSelect,
         handleFilterChange,
     };
