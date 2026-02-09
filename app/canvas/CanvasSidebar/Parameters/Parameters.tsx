@@ -28,11 +28,7 @@ import {
 
 import { Plus } from 'lucide-react';
 
-interface ParametersProps {
-    panelId?: string;
-}
-
-export const Parameters = memo(function Parameters({ panelId }: ParametersProps) {
+export const Parameters = memo(function Parameters({ panelId }: { panelId?: string }) {
     const {
         parameters,
         parameterName,

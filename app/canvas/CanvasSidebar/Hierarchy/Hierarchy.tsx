@@ -8,11 +8,7 @@ import { HierarchyItem } from '@/canvas/CanvasSidebar/Hierarchy/HierarchyItem';
 import { useHierarchy } from '@/canvas/CanvasSidebar/Hierarchy/useHierarchy';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-interface HierarchyProps {
-    panelId?: string;
-}
-
-export const Hierarchy = memo(function Hierarchy({ panelId }: HierarchyProps) {
+export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string }) {
     const items = useCanvasStore((state) => state.items);
     const filterText = useCanvasStore((state) => (panelId ? state.filterText[panelId] : ''));
     const { filteredItems, deselect } = useHierarchy(filterText);

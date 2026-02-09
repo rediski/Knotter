@@ -19,10 +19,6 @@ import { PositionInputs } from '@/canvas/CanvasSidebar/Inspector/PositionInputs'
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
 
-interface InspectorProps {
-    panelId?: string;
-}
-
 const FIELD_TITLES = {
     NAME: 'Название',
     DESCRIPTION: 'Описание',
@@ -30,7 +26,7 @@ const FIELD_TITLES = {
     TRANSFORM: 'Трансформация',
 } as const;
 
-export const Inspector = memo(function Inspector({ panelId }: InspectorProps) {
+export const Inspector = memo(function Inspector({ panelId }: { panelId?: string }) {
     const {
         selectedNode,
         shapeType,
