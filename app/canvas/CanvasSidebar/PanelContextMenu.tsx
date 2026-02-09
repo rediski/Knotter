@@ -1,86 +1,55 @@
 'use client';
 
-import { useRef, RefObject } from 'react';
-
-import type { Position } from '@/canvas/_core/_/canvas.types';
-import type { SidebarPanel } from '@/canvas/_core/_/sidebarPanel.types';
-
+import { RefObject } from 'react';
 import { ContextMenu } from '@/components/UI/ContextMenu';
 import { ContextMenuItem } from '@/components/UI/ContextMenuItem';
-
-import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { useSidebarPanels } from '@/canvas/CanvasSidebar/useSidebarPanels';
-import { useClickOutside } from '@/hooks/useClickOutside';
-
 import { Plus, Minus, ArrowUp, ArrowDown } from 'lucide-react';
 
-interface PanelContextMenuProps {
-    panel: SidebarPanel;
-    panelRef: RefObject<HTMLDivElement | null>;
-    isMenuOpenLocally: boolean;
-    closeMenu: () => void;
-    position: Position;
+interface Props {
+    menuRef: RefObject<HTMLDivElement | null>;
+    isOpen: boolean;
+    position: { x: number; y: number };
+    canMoveUp: boolean;
+    canMoveDown: boolean;
+    onAdd: () => void;
+    onRemove: () => void;
+    onMoveUp: () => void;
+    onMoveDown: () => void;
 }
 
-export function PanelContextMenu({ panel, panelRef, closeMenu, isMenuOpenLocally, position }: PanelContextMenuProps) {
-    const sidebarPanels = useCanvasStore((state) => state.sidebarPanels);
-
-    const { addPanel, removePanel, movePanel } = useSidebarPanels();
-
-    const menuRef = useRef<HTMLDivElement>(null);
-
-    const panelIndex = sidebarPanels.findIndex((p) => p.id === panel.id);
-    const canMoveUp = panelIndex > 0;
-    const canMoveDown = panelIndex < sidebarPanels.length - 1;
-
-    useClickOutside(panelRef, closeMenu);
-
-    const handleRemove = () => {
-        removePanel(panel.id);
-        closeMenu();
-    };
-
-    const handleMoveUp = () => {
-        if (canMoveUp) {
-            movePanel(panelIndex, panelIndex - 1);
-            closeMenu();
-        }
-    };
-
-    const handleMoveDown = () => {
-        if (canMoveDown) {
-            movePanel(panelIndex, panelIndex + 1);
-            closeMenu();
-        }
-    };
-
-    const handleAddPanel = () => {
-        addPanel();
-        closeMenu();
-    };
-
+export function PanelContextMenu({
+    menuRef,
+    isOpen,
+    position,
+    canMoveUp,
+    canMoveDown,
+    onAdd,
+    onRemove,
+    onMoveUp,
+    onMoveDown,
+}: Props) {
     return (
         <div ref={menuRef}>
-            <ContextMenu isOpen={isMenuOpenLocally} position={position}>
-                <ContextMenuItem icon={Plus} onClick={handleAddPanel}>
+            <ContextMenu isOpen={isOpen} position={position}>
+                <ContextMenuItem icon={Plus} onClick={onAdd}>
                     Добавить панель
                 </ContextMenuItem>
 
                 {canMoveUp && (
-                    <ContextMenuItem icon={ArrowUp} onClick={handleMoveUp}>
+                    <ContextMenuItem icon={ArrowUp} onClick={onMoveUp}>
                         Переместить вверх
                     </ContextMenuItem>
                 )}
 
                 {canMoveDown && (
-                    <ContextMenuItem icon={ArrowDown} onClick={handleMoveDown}>
+                    <ContextMenuItem icon={ArrowDown} onClick={onMoveDown}>
                         Переместить вниз
                     </ContextMenuItem>
                 )}
 
                 <hr className="border-b-0 border-depth-6 my-1" />
 
-                <ContextMenuItem icon={Minus} onClick={handleRemove}>
+                <ContextMenuItem icon={Minus} onClick={onRemove}>
                     Удалить панель
                 </ContextMenuItem>
             </ContextMenu>
