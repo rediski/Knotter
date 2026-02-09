@@ -7,16 +7,20 @@ import type { SidebarPanel as SidebarPanelType, PanelType } from '@/canvas/_core
 import { useSidebarPanels } from '@/canvas/CanvasSidebar/useSidebarPanels';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { ListTree, Settings, Braces, type LucideIcon } from 'lucide-react';
+import { ListTree, Settings, Braces, FileBracesCorner, Clipboard, type LucideIcon } from 'lucide-react';
 
 const panelTitles: Record<PanelType, string> = {
+    details: 'Подробности',
     hierarchy: 'Иерархия',
+    history: 'История',
     inspector: 'Инспектор',
     parameters: 'Параметры',
 };
 
 const panelIcons: Record<PanelType, LucideIcon> = {
+    details: FileBracesCorner,
     hierarchy: ListTree,
+    history: Clipboard,
     inspector: Settings,
     parameters: Braces,
 };

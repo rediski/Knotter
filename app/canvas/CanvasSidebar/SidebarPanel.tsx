@@ -16,6 +16,8 @@ import { usePanelContextMenu } from '@/canvas/CanvasSidebar/usePanelContextMenu'
 
 import { Search } from 'lucide-react';
 import { EmptyState } from '@/components/UI/EmptyState';
+import { Details } from '@/canvas/CanvasSidebar/Details/Details';
+import { History } from '@/canvas/CanvasSidebar/History/History';
 
 export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
     const {
@@ -104,8 +106,12 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
 
             <hr className="border-b-0 border-depth-3 mt-1" />
 
-            {panel.type === 'hierarchy' ? (
+            {panel.type === 'details' ? (
+                <Details />
+            ) : panel.type === 'hierarchy' ? (
                 <Hierarchy panelId={panel.id} />
+            ) : panel.type === 'history' ? (
+                <History />
             ) : panel.type === 'inspector' ? (
                 <Inspector panelId={panel.id} />
             ) : panel.type === 'parameters' ? (

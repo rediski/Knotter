@@ -1,4 +1,4 @@
-export type PanelType = 'hierarchy' | 'inspector' | 'parameters';
+export type PanelType = 'details' | 'hierarchy' | 'history' | 'inspector' | 'parameters';
 
 export interface SidebarPanel {
     id: string;
