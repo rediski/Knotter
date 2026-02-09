@@ -4,17 +4,23 @@ import type { SidebarPanel as SidebarPanelType } from '@/canvas/_core/_/sidebarP
 
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 import { Input } from '@/components/UI/Input';
+
 import { PanelContextMenu } from '@/canvas/CanvasSidebar/PanelContextMenu';
+
+import { Hierarchy } from '@/canvas/CanvasSidebar/Hierarchy/Hierarchy';
+import { Inspector } from '@/canvas/CanvasSidebar/Inspector/Inspector';
+import { Parameters } from '@/canvas/CanvasSidebar/Parameters/Parameters';
+
 import { useSidebarPanel } from '@/canvas/CanvasSidebar/useSidebarPanel';
 import { usePanelContextMenu } from '@/canvas/CanvasSidebar/usePanelContextMenu';
 
 import { Search } from 'lucide-react';
+import { EmptyState } from '@/components/UI/EmptyState';
 
 export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
     const {
         panelRef,
         filterText,
-        PanelComponent,
         panelOptions,
         currentPanelTitle,
         currentPanelIcon,
@@ -63,7 +69,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                 `}
             >
                 <div className="flex-1">
-                    {PanelComponent && (
+                    {panel.type && (
                         <Input
                             value={filterText}
                             onChange={handleFilterChange}
@@ -98,10 +104,14 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
 
             <hr className="border-b-0 border-depth-3 mt-1" />
 
-            {PanelComponent ? (
-                <PanelComponent panelId={panel.id} />
+            {panel.type === 'hierarchy' ? (
+                <Hierarchy panelId={panel.id} />
+            ) : panel.type === 'inspector' ? (
+                <Inspector panelId={panel.id} />
+            ) : panel.type === 'parameters' ? (
+                <Parameters panelId={panel.id} />
             ) : (
-                <div className="h-full flex items-center justify-center text-gray text-sm">Выберите тип панели</div>
+                <EmptyState message="Выберите тип панели" />
             )}
         </div>
     );
