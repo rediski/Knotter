@@ -5,16 +5,14 @@ type AnyObject = { [key: string]: any } | any[] | Primitive;
 
 interface JsonNodeProps {
     value: AnyObject;
-    depth?: number;
 }
 
 function isObject(value: any): value is Record<string, any> {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function JsonNode({ value, depth = 0 }: JsonNodeProps) {
+function JsonNode({ value }: JsonNodeProps) {
     const indentSize = 4;
-    const indent = { paddingLeft: depth * indentSize + 'ch' };
 
     if (typeof value === 'string') return <span className="text-json-string">"{value}"</span>;
     if (typeof value === 'number') return <span className="text-json-number">{value}</span>;
@@ -23,24 +21,21 @@ function JsonNode({ value, depth = 0 }: JsonNodeProps) {
     if (value === null) return <span className="text-json-null">null</span>;
 
     if (Array.isArray(value)) {
-        if (value.length === 0) return <span className="text-json-brackets">{'[]'}</span>;
+        if (value.length === 0) return <span className="text-json-brackets">[]</span>;
 
         return (
-            <div>
+            <>
                 <span className="text-json-brackets">[</span>
-
                 {value.map((item, i) => (
-                    <div key={i} style={{ paddingLeft: (depth + 1) * indentSize + 'ch' }}>
-                        <JsonNode value={item} depth={depth + 1} />
+                    <div key={i} style={{ paddingLeft: indentSize + 'ch' }}>
+                        <JsonNode value={item} />
 
                         {i < value.length - 1 && <span>,</span>}
                     </div>
                 ))}
 
-                <div style={indent}>
-                    <span className="text-json-brackets">]</span>
-                </div>
-            </div>
+                <span className="text-json-brackets">]</span>
+            </>
         );
     }
 
@@ -50,24 +45,21 @@ function JsonNode({ value, depth = 0 }: JsonNodeProps) {
         if (entries.length === 0) return <span className="text-json-brackets">{'{}'}</span>;
 
         return (
-            <div>
+            <>
                 <span className="text-json-brackets">{'{'}</span>
-
-                {entries.map(([key, val], idx) => (
-                    <div key={key} style={{ paddingLeft: (depth + 1) * indentSize + 'ch' }}>
-                        <span className="text-json-key">"{key}"</span>: <JsonNode value={val} depth={depth + 1} />
+                {entries.map(([key, value], idx) => (
+                    <div key={key} style={{ paddingLeft: indentSize + 'ch' }}>
+                        <span className="text-json-key">"{key}"</span>: <JsonNode value={value} />
                         {idx < entries.length - 1 && <span>,</span>}
                     </div>
                 ))}
 
-                <div style={indent}>
-                    <span className="text-json-brackets">{'}'}</span>
-                </div>
-            </div>
+                <span className="text-json-brackets">{'}'}</span>
+            </>
         );
     }
 
-    return <span className="text-gr">unknown</span>;
+    return <span className="text-gray">unknown</span>;
 }
 
 interface CodeBlockProps<T = AnyObject> {
