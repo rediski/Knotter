@@ -161,6 +161,14 @@ export const CanvasControls = memo(function CanvasControls({ canvasRef }: Canvas
             </div>
 
             <div className="absolute bottom-4 left-4 flex gap-1 z-10 text-sm">
+                <button
+                    className="bg-depth-2 hover:bg-depth-3 rounded-md p-2 shadow w-fit cursor-pointer"
+                    onClick={() => center && setOffset(center)}
+                    disabled={!center}
+                >
+                    <RotateCcw size={16} />
+                </button>
+
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-1">
                         <div className="bg-depth-2 rounded-md px-3 py-1 shadow w-fit min-w-[9ch] tabular-nums">
@@ -174,14 +182,6 @@ export const CanvasControls = memo(function CanvasControls({ canvasRef }: Canvas
                         </div>
                     </div>
                 </div>
-
-                <button
-                    className="bg-depth-2 hover:bg-depth-3 rounded-md p-2 shadow w-fit cursor-pointer"
-                    onClick={() => center && setOffset(center)}
-                    disabled={!center}
-                >
-                    <RotateCcw size={16} />
-                </button>
             </div>
         </>
     );
