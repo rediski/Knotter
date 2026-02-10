@@ -1,6 +1,7 @@
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { EmptyState } from '@/components/UI/EmptyState';
 import { ArrowDownToLine } from 'lucide-react';
+import { CodeBlock } from '@/components/UI/CodeBlock';
 
 export const Details = () => {
     const selectedItem = useCanvasStore((state) => state.selectedItem);
@@ -33,7 +34,7 @@ export const Details = () => {
                 <ArrowDownToLine size={16} />
             </button>
 
-            <pre className="text-xs overflow-auto">{JSON.stringify(selectedItem, null, 2)}</pre>
+            <CodeBlock data={selectedItem} />
         </div>
     );
 };
