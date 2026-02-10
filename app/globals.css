@@ -27,6 +27,14 @@
     --yellow: #ffc107;
     --red: #ff4c4c;
     --gray: #999;
+
+    /* --syntax-key: #000000;
+    --syntax-string: #000000;
+    --syntax-number: #000000;
+    --syntax-boolean: #000000;
+    --syntax-null: #000000;
+    --syntax-brackets: #000000;
+    */
 }
 
 [data-theme='dark'] {
@@ -48,6 +56,13 @@
     --edge-temp: #ccc;
 
     --contrast: #fff;
+
+    --syntax-key: #9cdcfe;
+    --syntax-string: #ce9178;
+    --syntax-number: #b5cea8;
+    --syntax-boolean: #569cd6;
+    --syntax-null: #569cd6;
+    --syntax-brackets: #ffd700;
 }
 
 @theme inline {
@@ -77,6 +92,13 @@
     --color-yellow: var(--yellow);
     --color-red: var(--red);
     --color-gray: var(--gray);
+
+    --color-json-key: var(--syntax-key);
+    --color-json-string: var(--syntax-string);
+    --color-json-number: var(--syntax-number);
+    --color-json-boolean: var(--syntax-boolean);
+    --color-json-null: var(--syntax-null);
+    --color-json-brackets: var(--syntax-brackets);
 }
 
 body {
