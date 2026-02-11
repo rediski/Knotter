@@ -26,6 +26,7 @@ function JsonNode({ value }: JsonNodeProps) {
         return (
             <>
                 <span className="text-json-brackets">[</span>
+
                 {value.map((item, i) => (
                     <div key={i} style={{ paddingLeft: indentSize + 'ch' }}>
                         <JsonNode value={item} />
@@ -47,6 +48,7 @@ function JsonNode({ value }: JsonNodeProps) {
         return (
             <>
                 <span className="text-json-brackets">{'{'}</span>
+
                 {entries.map(([key, value], idx) => (
                     <div key={key} style={{ paddingLeft: indentSize + 'ch' }}>
                         <span className="text-json-key">"{key}"</span>: <JsonNode value={value} />
