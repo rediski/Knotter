@@ -26,7 +26,7 @@ export const Details = () => {
     }
 
     return (
-        <div className="relative m-1 p-4 bg-depth-2 rounded-md space-y-3">
+        <div className="relative m-1 p-4 bg-depth-2 rounded-md space-y-3 overflow-y-auto">
             <button
                 onClick={handleSave}
                 className="absolute right-2 top-2 p-2 rounded bg-depth-3 hover:bg-depth-4 shadow text-contrast cursor-pointer"
