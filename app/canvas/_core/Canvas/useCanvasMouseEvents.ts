@@ -13,7 +13,7 @@ import { moveItems } from '@/canvas/utils/items/moveItems';
 import { getMousePosition } from '@/canvas/utils/canvas/getMousePosition';
 import { handleClickOnItem } from '@/canvas/utils/items/handleClickOnItem';
 
-import { startDragging, stopDragging } from '@/canvas/utils/canvas/dragging';
+import { startDragging, stopDragging } from '@/canvas/utils/items/dragItems';
 
 export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | null>) {
     const items = useCanvasStore((state) => state.items);
