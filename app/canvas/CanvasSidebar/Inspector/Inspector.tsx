@@ -24,6 +24,8 @@ const FIELD_TITLES = {
     DESCRIPTION: 'Описание',
     SHAPE: 'Форма',
     TRANSFORM: 'Трансформация',
+    EDGE_FROM: 'Входящие связи',
+    EDGE_TO: 'Исходящие связи',
 } as const;
 
 export const Inspector = memo(function Inspector({ panelId }: { panelId?: string }) {
@@ -60,8 +62,10 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     const showDescription = shouldShowField(FIELD_TITLES.DESCRIPTION);
     const showShape = shouldShowField(FIELD_TITLES.SHAPE);
     const showPosition = shouldShowField(FIELD_TITLES.TRANSFORM);
+    const showEdgeFrom = shouldShowField(FIELD_TITLES.EDGE_FROM);
+    const showEdgeTo = shouldShowField(FIELD_TITLES.EDGE_TO);
 
-    const hasVisibleFields = showName || showDescription || showShape || showPosition;
+    const hasVisibleFields = showName || showDescription || showShape || showPosition || showEdgeFrom || showEdgeTo;
 
     if (filterText && !hasVisibleFields) {
         return (
@@ -113,6 +117,22 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                             onToggle={() => toggleDropdown(2)}
                         >
                             <PositionInputs positionX={positionX} positionY={positionY} onMove={changeItemsPosition} />
+                        </Dropdown>
+                    )}
+
+                    {showEdgeFrom && (
+                        <Dropdown
+                            title={FIELD_TITLES.EDGE_FROM}
+                            isOpen={isDropdownOpen(3)}
+                            onToggle={() => toggleDropdown(3)}
+                        >
+                            {selectedNode.edgeFrom}
+                        </Dropdown>
+                    )}
+
+                    {showEdgeTo && (
+                        <Dropdown title={FIELD_TITLES.EDGE_TO} isOpen={isDropdownOpen(3)} onToggle={() => toggleDropdown(3)}>
+                            {selectedNode.edgeTo}
                         </Dropdown>
                     )}
                 </>
