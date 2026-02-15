@@ -3,7 +3,7 @@
 type Primitive = string | number | boolean | null | undefined;
 type AnyObject = { [key: string]: any } | any[] | Primitive;
 
-interface JsonNodeProps {
+interface JsonProps {
     value: AnyObject;
 }
 
@@ -11,7 +11,7 @@ function isObject(value: any): value is Record<string, any> {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function JsonNode({ value }: JsonNodeProps) {
+function Json({ value }: JsonProps) {
     const indentSize = 4;
 
     if (typeof value === 'string') return <span className="text-json-string">"{value}"</span>;
@@ -29,7 +29,7 @@ function JsonNode({ value }: JsonNodeProps) {
 
                 {value.map((item, i) => (
                     <div key={i} style={{ paddingLeft: indentSize + 'ch' }}>
-                        <JsonNode value={item} />
+                        <Json value={item} />
 
                         {i < value.length - 1 && <span>,</span>}
                     </div>
@@ -51,7 +51,7 @@ function JsonNode({ value }: JsonNodeProps) {
 
                 {entries.map(([key, value], idx) => (
                     <div key={key} style={{ paddingLeft: indentSize + 'ch' }}>
-                        <span className="text-json-key">"{key}"</span>: <JsonNode value={value} />
+                        <span className="text-json-key">"{key}"</span>: <Json value={value} />
                         {idx < entries.length - 1 && <span>,</span>}
                     </div>
                 ))}
@@ -73,7 +73,7 @@ export function CodeBlock<T = AnyObject>({ data }: CodeBlockProps<T>) {
 
     return (
         <div className="font-mono text-sm leading-5 select-text">
-            <JsonNode value={data} />
+            <Json value={data} />
         </div>
     );
 }
