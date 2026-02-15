@@ -19,8 +19,6 @@ export interface Node {
     kind: 'node';
     shapeType: ShapeType;
     position: Position;
-    width?: number;
-    height?: number;
     edgeFrom: string[] | null;
     edgeTo: string[] | null;
     nodeParameters: Parameter[];
