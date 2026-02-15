@@ -124,7 +124,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                         </Dropdown>
                     )}
 
-                    {showEdgeFrom && selectedNode.edgeTo !== null && (
+                    {showEdgeFrom && selectedNode.edgeFrom !== null && (
                         <Dropdown
                             title={FIELD_TITLES.EDGE_FROM}
                             isOpen={isDropdownOpen(3)}
@@ -135,7 +135,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                     )}
 
                     {showEdgeTo && selectedNode.edgeTo !== null && (
-                        <Dropdown title={FIELD_TITLES.EDGE_TO} isOpen={isDropdownOpen(3)} onToggle={() => toggleDropdown(3)}>
+                        <Dropdown title={FIELD_TITLES.EDGE_TO} isOpen={isDropdownOpen(4)} onToggle={() => toggleDropdown(4)}>
                             <div></div>
                             {selectedNode.edgeTo}
                         </Dropdown>
