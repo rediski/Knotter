@@ -1,17 +1,25 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
-
 import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
+import { Position } from '@/canvas/_core/_/canvas.types';
 
-export function drawGrid(
-    ctx: CanvasRenderingContext2D,
-    canvasWidth: number,
-    canvasHeight: number,
+interface DrawGridParams {
+    ctx: CanvasRenderingContext2D;
+    canvasWidth: number;
+    canvasHeight: number;
+    offset: Position;
+    zoomLevel: number;
+    showGrid?: boolean;
+    showAxes?: boolean;
+}
+
+export function drawGrid({
+    ctx,
+    canvasWidth,
+    canvasHeight,
+    offset,
+    zoomLevel,
     showGrid = false,
     showAxes = false,
-) {
-    const offset = useCanvasStore.getState().offset;
-    const zoomLevel = useCanvasStore.getState().zoomLevel;
-
+}: DrawGridParams) {
     const baseGridSize = NODE_MOVE_MAX_STEP;
 
     const worldLeft = -offset.x / zoomLevel;
@@ -27,7 +35,9 @@ export function drawGrid(
     const axisXColor = styles.getPropertyValue('--red').trim();
     const axisYColor = styles.getPropertyValue('--green').trim();
 
-    ctx.lineWidth = 1 / zoomLevel;
+    const dpr = window.devicePixelRatio || 1;
+
+    ctx.lineWidth = (1 / zoomLevel) * dpr;
 
     if (showGrid) {
         const levels = [
