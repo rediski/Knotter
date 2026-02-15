@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
 
@@ -18,106 +18,87 @@ export const EdgeRenderer: React.FC<EdgeRendererProps> = ({ containerRef }) => {
 
     const mousePosition = useCanvasRefsStore((state) => state.mousePosition);
 
-    const tempLineRef = useRef<SVGLineElement | null>(null);
-    const animationRef = useRef<number | null>(null);
-
-    const nodes = useMemo(() => getNodes(items), [items]);
-
-    const nodeMap = useMemo(() => {
-        const map = new Map<string, (typeof nodes)[number]>();
-        nodes.forEach((node) => map.set(node.id, node));
-
-        return map;
-    }, [nodes]);
+    const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
     useEffect(() => {
-        const line = tempLineRef.current;
-        if (!line) return;
+        if (!tempEdge) return;
 
-        if (!tempEdge) {
-            line.style.display = 'none';
+        let frame: number | null = null;
 
-            if (animationRef.current) {
-                cancelAnimationFrame(animationRef.current);
-            }
+        const handleMove = () => {
+            if (frame !== null) return;
 
-            return;
-        }
-
-        const fromNode = nodeMap.get(tempEdge);
-        if (!fromNode) return;
-
-        const fromCoords = getScreenCoords(fromNode.position.x, fromNode.position.y, containerRef);
-
-        line.setAttribute('x1', String(fromCoords.x));
-        line.setAttribute('y1', String(fromCoords.y));
-        line.style.display = 'block';
-
-        const containerHeight = containerRef.current?.offsetHeight ?? 0;
-
-        const update = () => {
-            const { x, y } = mousePosition.current;
-
-            const x2 = x * zoomLevel + offset.x;
-            const y2 = invertY ? -y * zoomLevel + containerHeight + offset.y : y * zoomLevel + offset.y;
-
-            line.setAttribute('x2', String(x2));
-            line.setAttribute('y2', String(y2));
-
-            animationRef.current = requestAnimationFrame(update);
+            frame = requestAnimationFrame(() => {
+                forceUpdate();
+                frame = null;
+            });
         };
 
-        animationRef.current = requestAnimationFrame(update);
+        window.addEventListener('mousemove', handleMove);
 
         return () => {
-            if (animationRef.current) {
-                cancelAnimationFrame(animationRef.current);
-            }
+            window.removeEventListener('mousemove', handleMove);
+            if (frame !== null) cancelAnimationFrame(frame);
         };
-    }, [tempEdge, nodeMap, zoomLevel, offset, invertY, containerRef, mousePosition]);
+    }, [tempEdge]);
 
-    const renderedEdges = useMemo(() => {
-        const lines: React.ReactNode[] = [];
-
-        nodes.forEach((fromNode) => {
-            if (!fromNode.edgeTo) return;
-
-            const fromCoords = getScreenCoords(fromNode.position.x, fromNode.position.y, containerRef);
-
-            fromNode.edgeTo.forEach((toId) => {
-                const toNode = nodeMap.get(toId);
-                if (!toNode) return;
-
-                const toCoords = getScreenCoords(toNode.position.x, toNode.position.y, containerRef);
-
-                lines.push(
-                    <line
-                        key={`${fromNode.id}-${toId}`}
-                        x1={fromCoords.x}
-                        y1={fromCoords.y}
-                        x2={toCoords.x}
-                        y2={toCoords.y}
-                        stroke="var(--contrast)"
-                        strokeWidth={3}
-                    />,
-                );
-            });
-        });
-
-        return lines;
-    }, [nodes, nodeMap, containerRef]);
+    const nodes = getNodes(items);
 
     return (
         <svg className="absolute inset-0 pointer-events-none w-full h-full">
-            {renderedEdges}
+            {nodes.map((fromNode) => {
+                if (!fromNode.edgeTo || !Array.isArray(fromNode.edgeTo)) return null;
 
-            <line
-                ref={tempLineRef}
-                stroke="var(--edge-temp)"
-                strokeWidth={2}
-                strokeDasharray="4 2"
-                style={{ display: 'none' }}
-            />
+                const fromCoords = getScreenCoords(fromNode.position.x, fromNode.position.y, containerRef);
+
+                return fromNode.edgeTo.map((toId) => {
+                    const toNode = nodes.find((node) => node.id === toId);
+                    if (!toNode) return null;
+
+                    const toCoords = getScreenCoords(toNode.position.x, toNode.position.y, containerRef);
+
+                    return (
+                        <line
+                            key={`${fromNode.id}-${toId}`}
+                            x1={fromCoords.x}
+                            y1={fromCoords.y}
+                            x2={toCoords.x}
+                            y2={toCoords.y}
+                            stroke="var(--contrast)"
+                            strokeWidth={3}
+                        />
+                    );
+                });
+            })}
+
+            {tempEdge &&
+                (() => {
+                    const fromNode = nodes.find((node) => node.id === tempEdge);
+                    if (!fromNode) return null;
+
+                    const fromCoords = getScreenCoords(fromNode.position.x, fromNode.position.y, containerRef);
+
+                    const containerHeight = containerRef.current?.offsetHeight ?? 0;
+
+                    const toCoords = {
+                        x: mousePosition.current.x * zoomLevel + offset.x,
+                        y: invertY
+                            ? -mousePosition.current.y * zoomLevel + containerHeight + offset.y
+                            : mousePosition.current.y * zoomLevel + offset.y,
+                    };
+
+                    return (
+                        <line
+                            x1={fromCoords.x}
+                            y1={fromCoords.y}
+                            x2={toCoords.x}
+                            y2={toCoords.y}
+                            stroke="var(--edge-temp)"
+                            strokeWidth={2}
+                            strokeDasharray="4 2"
+                        />
+                    );
+                })()}
         </svg>
     );
 };
