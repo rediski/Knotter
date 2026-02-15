@@ -1,9 +1,7 @@
 'use client';
 
-import { useEffect, RefObject } from 'react';
-
+import { useEffect, useCallback, type RefObject } from 'react';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-
 import { drawGrid } from '@/canvas/utils/canvas/drawGrid';
 
 interface useCanvasRendererProps {
@@ -17,59 +15,73 @@ export function useCanvasRenderer({ canvasRef }: useCanvasRendererProps) {
     const showGrid = useCanvasStore((state) => state.showGrid);
     const showAxes = useCanvasStore((state) => state.showAxes);
 
-    useEffect(() => {
+    const renderCanvas = useCallback(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        let animationFrameId: number | null = null;
+        const dpr = window.devicePixelRatio || 1;
 
-        const renderCanvas = () => {
-            const dpr = window.devicePixelRatio || 1;
-            const width = canvas.clientWidth;
-            const height = canvas.clientHeight;
+        const canvasWidth = canvas.clientWidth;
+        const canvasHeight = canvas.clientHeight;
 
-            const pixelWidth = Math.round(width * dpr);
-            const pixelHeight = Math.round(height * dpr);
+        const pixelWidth = Math.round(canvasWidth * dpr);
+        const pixelHeight = Math.round(canvasHeight * dpr);
 
-            if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
-                canvas.width = pixelWidth;
-                canvas.height = pixelHeight;
-            }
+        if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+            canvas.width = pixelWidth;
+            canvas.height = pixelHeight;
+        }
 
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.resetTransform();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const scaleY = invertY ? -zoomLevel * dpr : zoomLevel * dpr;
-            const translateY = invertY ? canvas.height - offset.y * dpr : offset.y * dpr;
+        const scaleY = invertY ? -zoomLevel * dpr : zoomLevel * dpr;
+        const translateY = invertY ? canvas.height - offset.y * dpr : offset.y * dpr;
 
-            ctx.setTransform(zoomLevel * dpr, 0, 0, scaleY, offset.x * dpr, translateY);
+        ctx.setTransform(zoomLevel * dpr, 0, 0, scaleY, offset.x * dpr, translateY);
 
-            drawGrid(ctx, canvas.width / dpr, canvas.height / dpr, showGrid, showAxes);
-        };
+        drawGrid({
+            ctx,
+            canvasWidth,
+            canvasHeight,
+            offset,
+            zoomLevel,
+            showGrid,
+            showAxes,
+        });
+    }, [canvasRef, zoomLevel, offset, invertY, showGrid, showAxes]);
+
+    useEffect(() => {
+        requestAnimationFrame(renderCanvas);
+    }, [renderCanvas]);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        let animationFrame: number;
 
         const scheduleRender = () => {
-            if (animationFrameId != null) cancelAnimationFrame(animationFrameId);
-            animationFrameId = requestAnimationFrame(renderCanvas);
+            cancelAnimationFrame(animationFrame);
+            animationFrame = requestAnimationFrame(renderCanvas);
         };
-
-        scheduleRender();
 
         const resizeObserver = new ResizeObserver(scheduleRender);
         resizeObserver.observe(canvas);
 
-        const themeObserver = new MutationObserver(() => scheduleRender());
+        const themeObserver = new MutationObserver(scheduleRender);
         themeObserver.observe(document.documentElement, {
             attributes: true,
             attributeFilter: ['data-theme'],
         });
 
         return () => {
-            if (animationFrameId != null) cancelAnimationFrame(animationFrameId);
             resizeObserver.disconnect();
             themeObserver.disconnect();
+            cancelAnimationFrame(animationFrame);
         };
-    }, [canvasRef, zoomLevel, offset, invertY, showGrid, showAxes]);
+    }, [canvasRef, renderCanvas]);
 }
