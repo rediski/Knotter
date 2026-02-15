@@ -21,9 +21,9 @@ export interface Node {
     position: Position;
     width?: number;
     height?: number;
+    edgeFrom: string[] | null;
+    edgeTo: string[] | null;
     nodeParameters: Parameter[];
-    edgeFrom?: string[];
-    edgeTo?: string[];
 }
 
 export interface Text {

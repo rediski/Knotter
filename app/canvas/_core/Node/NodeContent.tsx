@@ -13,7 +13,8 @@ export default function NodeContent() {
 
     const nodes = getNodes(items);
 
-    const truncateNames = (edgeIds: string[] = [], maxEdges = 4) => {
+    const truncateNames = (edgeIds: string[] | null = [], maxEdges = 4) => {
+        if (!edgeIds) return null;
         if (!edgeIds.length) return '';
 
         const connectedNodes = edgeIds.map((id) => nodes.find((node) => node.id === id)?.name).filter(Boolean);

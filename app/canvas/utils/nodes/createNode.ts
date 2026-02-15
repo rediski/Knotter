@@ -38,6 +38,8 @@ export function createNode(): Node | null {
         kind: 'node',
         shapeType: 'point',
         position: { x, y },
+        edgeFrom: null,
+        edgeTo: null,
         nodeParameters: [],
     };
 
