@@ -3,12 +3,7 @@ import { Parameter } from '@/canvas/_core/_/parameter.types';
 
 export type Position = { x: number; y: number };
 
-export interface CanvasState {
-    nodes: Node[];
-    texts: Text[];
-}
-
-export type CanvasItem = Node | Text;
+export type CanvasItem = Node | Text | Edge;
 
 export type TooltipMode = 'always' | 'hover' | 'never';
 
@@ -19,9 +14,15 @@ export interface Node {
     kind: 'node';
     shapeType: ShapeType;
     position: Position;
-    edgeFrom: string[] | null;
-    edgeTo: string[] | null;
     nodeParameters: Parameter[];
+}
+
+export interface Edge {
+    id: string;
+    name: string;
+    kind: 'edge';
+    from: string;
+    to: string;
 }
 
 export interface Text {
