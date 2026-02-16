@@ -3,6 +3,7 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
 
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
+import { getEdges } from '@/canvas/utils/edges/getEdges';
 import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
 
 type EdgeRendererProps = {
@@ -43,32 +44,30 @@ export const EdgeRenderer: React.FC<EdgeRendererProps> = ({ containerRef }) => {
     }, [tempEdge]);
 
     const nodes = getNodes(items);
+    const edges = getEdges(items);
 
     return (
         <svg className="absolute inset-0 pointer-events-none w-full h-full">
-            {nodes.map((fromNode) => {
-                if (!fromNode.edgeTo || !Array.isArray(fromNode.edgeTo)) return null;
+            {edges.map((edge) => {
+                const fromNode = nodes.find((node) => node.id === edge.from);
+                const toNode = nodes.find((node) => node.id === edge.to);
+
+                if (!fromNode || !toNode) return null;
 
                 const fromCoords = getScreenCoords(fromNode.position.x, fromNode.position.y, containerRef);
+                const toCoords = getScreenCoords(toNode.position.x, toNode.position.y, containerRef);
 
-                return fromNode.edgeTo.map((toId) => {
-                    const toNode = nodes.find((node) => node.id === toId);
-                    if (!toNode) return null;
-
-                    const toCoords = getScreenCoords(toNode.position.x, toNode.position.y, containerRef);
-
-                    return (
-                        <line
-                            key={`${fromNode.id}-${toId}`}
-                            x1={fromCoords.x}
-                            y1={fromCoords.y}
-                            x2={toCoords.x}
-                            y2={toCoords.y}
-                            stroke="var(--contrast)"
-                            strokeWidth={3}
-                        />
-                    );
-                });
+                return (
+                    <line
+                        key={edge.id}
+                        x1={fromCoords.x}
+                        y1={fromCoords.y}
+                        x2={toCoords.x}
+                        y2={toCoords.y}
+                        stroke="var(--contrast)"
+                        strokeWidth={3}
+                    />
+                );
             })}
 
             {tempEdge &&
