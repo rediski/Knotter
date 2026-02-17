@@ -17,6 +17,8 @@ import { ShapeButtons } from '@/canvas/CanvasSidebar/Inspector/ShapeButtons';
 import { PositionInputs } from '@/canvas/CanvasSidebar/Inspector/PositionInputs';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
+import { getIncomingEdges } from '@/canvas/utils/edges/getIncomingEdges';
+import { getOutgoingEdges } from '@/canvas/utils/edges/getOutgoingEdges';
 import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
 
 const FIELD_TITLES = {
@@ -35,7 +37,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
         positionX,
         positionY,
 
-        сhangeItemName,
+        changeItemName,
         changeItemDescription,
         changeItemsPosition,
     } = useInspector();
@@ -44,6 +46,10 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
 
     const selectedItem = useCanvasStore((state) => state.selectedItem);
     const filterText = useCanvasStore((state) => (panelId ? state.filterText[panelId] : ''));
+    const items = useCanvasStore((state) => state.items);
+
+    const incomingEdges = getIncomingEdges(items, selectedNode?.id);
+    const outgoingEdges = getOutgoingEdges(items, selectedNode?.id);
 
     const nodeParameters = selectedNode?.nodeParameters;
 
@@ -81,7 +87,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                 <div className="flex flex-col gap-1">
                     <Input
                         value={selectedItem.name}
-                        onChange={сhangeItemName}
+                        onChange={changeItemName}
                         placeholder={FIELD_TITLES.NAME}
                         icon={Icon}
                         className="bg-depth-2"
@@ -89,10 +95,10 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                 </div>
             )}
 
-            {showDescription && (
+            {showDescription && selectedItem.kind !== 'edge' && (
                 <div className="flex flex-col gap-1">
                     <Textarea
-                        value={selectedItem.kind !== 'text' ? selectedItem.description : selectedItem.content}
+                        value={selectedItem.kind === 'node' ? selectedItem.description : selectedItem.content}
                         onChange={changeItemDescription}
                         placeholder={FIELD_TITLES.DESCRIPTION}
                     />
@@ -124,20 +130,37 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                         </Dropdown>
                     )}
 
-                    {showEdgeFrom && selectedNode.edgeFrom !== null && (
+                    {showEdgeFrom && incomingEdges.length > 0 && (
                         <Dropdown
                             title={FIELD_TITLES.EDGE_FROM}
                             isOpen={isDropdownOpen(3)}
                             onToggle={() => toggleDropdown(3)}
                         >
-                            {selectedNode.edgeFrom}
+                            <div className="flex flex-col gap-1 p-2">
+                                {incomingEdges.map((edge) => (
+                                    <div
+                                        key={edge.id}
+                                        className="text-sm text-text-primary bg-depth-3 hover:bg-depth-4 px-3 py-2 rounded-md cursor-pointer"
+                                    >
+                                        {edge.name}
+                                    </div>
+                                ))}
+                            </div>
                         </Dropdown>
                     )}
 
-                    {showEdgeTo && selectedNode.edgeTo !== null && (
+                    {showEdgeTo && outgoingEdges.length > 0 && (
                         <Dropdown title={FIELD_TITLES.EDGE_TO} isOpen={isDropdownOpen(4)} onToggle={() => toggleDropdown(4)}>
-                            <div></div>
-                            {selectedNode.edgeTo}
+                            <div className="flex flex-col gap-1">
+                                {outgoingEdges.map((edge) => (
+                                    <div
+                                        key={edge.id}
+                                        className="text-sm text-text-primary bg-depth-3 hover:bg-depth-4 px-3 py-2 rounded-md cursor-pointer"
+                                    >
+                                        {edge.name}
+                                    </div>
+                                ))}
+                            </div>
                         </Dropdown>
                     )}
                 </>
