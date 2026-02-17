@@ -136,7 +136,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                             isOpen={isDropdownOpen(3)}
                             onToggle={() => toggleDropdown(3)}
                         >
-                            <div className="flex flex-col gap-1 p-2">
+                            <div className="flex flex-col gap-1">
                                 {incomingEdges.map((edge) => (
                                     <div
                                         key={edge.id}
