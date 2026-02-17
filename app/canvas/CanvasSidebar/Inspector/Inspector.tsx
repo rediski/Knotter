@@ -45,6 +45,8 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
 
     const selectedItem = useCanvasStore((state) => state.selectedItem);
+    const selectedEdgeIds = useCanvasStore((state) => state.selectedEdgeIds);
+    const setSelectedEdgeIds = useCanvasStore((state) => state.setSelectedEdgeIds);
     const filterText = useCanvasStore((state) => (panelId ? state.filterText[panelId] : ''));
     const items = useCanvasStore((state) => state.items);
 
@@ -52,6 +54,37 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     const outgoingEdges = getOutgoingEdges(items, selectedNode?.id);
 
     const nodeParameters = selectedNode?.nodeParameters;
+
+    const handleEdgeClick = (edgeId: string) => {
+        setSelectedEdgeIds([edgeId]);
+    };
+
+    const renderEdgeList = (edges: any[], title: string, dropdownId: number) => {
+        if (edges.length === 0) return null;
+
+        return (
+            <Dropdown title={title} isOpen={isDropdownOpen(dropdownId)} onToggle={() => toggleDropdown(dropdownId)}>
+                <div className="flex flex-col gap-1">
+                    {edges.map((edge) => {
+                        const isSelected = selectedEdgeIds.includes(edge.id);
+
+                        return (
+                            <div
+                                key={edge.id}
+                                onClick={() => handleEdgeClick(edge.id)}
+                                className={`
+                                    text-sm px-3 py-2 rounded-md cursor-pointer
+                                    ${isSelected ? 'bg-bg-accent/10 text-text-accent' : 'bg-depth-3 hover:bg-depth-4 text-contrast'}
+                                `}
+                            >
+                                {edge.name}
+                            </div>
+                        );
+                    })}
+                </div>
+            </Dropdown>
+        );
+    };
 
     if (!selectedItem || !nodeParameters) {
         return <EmptyState message="Выберите элемент для инспектора" />;
@@ -130,39 +163,8 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                         </Dropdown>
                     )}
 
-                    {showEdgeFrom && incomingEdges.length > 0 && (
-                        <Dropdown
-                            title={FIELD_TITLES.EDGE_FROM}
-                            isOpen={isDropdownOpen(3)}
-                            onToggle={() => toggleDropdown(3)}
-                        >
-                            <div className="flex flex-col gap-1">
-                                {incomingEdges.map((edge) => (
-                                    <div
-                                        key={edge.id}
-                                        className="text-sm text-text-primary bg-depth-3 hover:bg-depth-4 px-3 py-2 rounded-md cursor-pointer"
-                                    >
-                                        {edge.name}
-                                    </div>
-                                ))}
-                            </div>
-                        </Dropdown>
-                    )}
-
-                    {showEdgeTo && outgoingEdges.length > 0 && (
-                        <Dropdown title={FIELD_TITLES.EDGE_TO} isOpen={isDropdownOpen(4)} onToggle={() => toggleDropdown(4)}>
-                            <div className="flex flex-col gap-1">
-                                {outgoingEdges.map((edge) => (
-                                    <div
-                                        key={edge.id}
-                                        className="text-sm text-text-primary bg-depth-3 hover:bg-depth-4 px-3 py-2 rounded-md cursor-pointer"
-                                    >
-                                        {edge.name}
-                                    </div>
-                                ))}
-                            </div>
-                        </Dropdown>
-                    )}
+                    {showEdgeFrom && renderEdgeList(incomingEdges, FIELD_TITLES.EDGE_FROM, 3)}
+                    {showEdgeTo && renderEdgeList(outgoingEdges, FIELD_TITLES.EDGE_TO, 4)}
                 </>
             )}
         </div>
