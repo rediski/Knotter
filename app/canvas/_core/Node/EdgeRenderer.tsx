@@ -16,6 +16,7 @@ export const EdgeRenderer: React.FC<EdgeRendererProps> = ({ containerRef }) => {
     const tempEdge = useCanvasStore((state) => state.tempEdge);
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
     const offset = useCanvasStore((state) => state.offset);
+    const selectedEdgeIds = useCanvasStore((state) => state.selectedEdgeIds);
 
     const mousePosition = useCanvasRefsStore((state) => state.mousePosition);
 
@@ -57,6 +58,8 @@ export const EdgeRenderer: React.FC<EdgeRendererProps> = ({ containerRef }) => {
                 const fromCoords = getScreenCoords(fromNode.position.x, fromNode.position.y, containerRef);
                 const toCoords = getScreenCoords(toNode.position.x, toNode.position.y, containerRef);
 
+                const isSelected = selectedEdgeIds.includes(edge.id);
+
                 return (
                     <line
                         key={edge.id}
@@ -64,8 +67,8 @@ export const EdgeRenderer: React.FC<EdgeRendererProps> = ({ containerRef }) => {
                         y1={fromCoords.y}
                         x2={toCoords.x}
                         y2={toCoords.y}
-                        stroke="var(--contrast)"
-                        strokeWidth={3}
+                        stroke={isSelected ? 'var(--color-bg-accent)' : 'var(--contrast)'}
+                        strokeWidth={2 * zoomLevel}
                     />
                 );
             })}
@@ -93,7 +96,7 @@ export const EdgeRenderer: React.FC<EdgeRendererProps> = ({ containerRef }) => {
                             x2={toCoords.x}
                             y2={toCoords.y}
                             stroke="var(--edge-temp)"
-                            strokeWidth={2}
+                            strokeWidth={zoomLevel}
                             strokeDasharray="4 2"
                         />
                     );
