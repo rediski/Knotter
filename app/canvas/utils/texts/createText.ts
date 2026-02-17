@@ -1,10 +1,12 @@
-import { Text, Position } from '@/canvas/_core/_/canvas.types';
+import type { Text, Position } from '@/canvas/_core/_/canvas.types';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
+
 import { getTexts } from '@/canvas/utils/texts/getTexts';
 import { resolvePosition } from '@/canvas/utils/items/resolvePosition';
 import { canAddItem } from '@/canvas/utils/items/canAddItem';
+import { generateUniqueName } from '@/canvas/utils/items/generateUniqueName';
 
 export function createText(content = ''): Text | null {
     if (!canAddItem()) return null;
@@ -20,15 +22,8 @@ export function createText(content = ''): Text | null {
     const y = position.y ?? 0;
 
     const baseName = 'Текст';
-    let name = baseName;
-    let counter = 0;
-
-    const existingNames = new Set(texts.map((text) => text.name));
-
-    while (existingNames.has(name)) {
-        counter++;
-        name = `${baseName} ${counter}`;
-    }
+    const existingNames = texts.map((text) => text.name);
+    const name = generateUniqueName(baseName, existingNames);
 
     const text: Text = {
         id: uuidv4(),

@@ -5,6 +5,7 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { resolvePosition } from '@/canvas/utils/items/resolvePosition';
 import { canAddItem } from '@/canvas/utils/items/canAddItem';
+import { generateUniqueName } from '@/canvas/utils/items/generateUniqueName';
 
 export function createNode(): Node | null {
     if (!canAddItem()) return null;
@@ -20,16 +21,11 @@ export function createNode(): Node | null {
     const y = position.y ?? 0;
 
     const baseName = 'Узел';
-    let name = baseName;
 
-    let counter = 0;
-
-    const existingNames = new Set(nodes.map((node) => node.name));
-
-    while (existingNames.has(name)) {
-        counter++;
-        name = `${baseName} ${counter}`;
-    }
+    const name = generateUniqueName(
+        baseName,
+        nodes.map((node) => node.name),
+    );
 
     const node: Node = {
         id: uuidv4(),
@@ -38,8 +34,6 @@ export function createNode(): Node | null {
         kind: 'node',
         shapeType: 'point',
         position: { x, y },
-        edgeFrom: null,
-        edgeTo: null,
         nodeParameters: [],
     };
 

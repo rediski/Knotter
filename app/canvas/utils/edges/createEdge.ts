@@ -1,35 +1,42 @@
-import type { Node } from '@/canvas/_core/_/canvas.types';
+import type { Edge } from '@/canvas/_core/_/canvas.types';
+import { v4 as uuid } from 'uuid';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { getNodes } from '@/canvas/utils/nodes/getNodes';
+import { getEdges } from '@/canvas/utils/edges/getEdges';
+import { canAddItem } from '@/canvas/utils/items/canAddItem';
+import { generateUniqueName } from '@/canvas/utils/items/generateUniqueName';
 
 export function createEdge(clickedNodeId: string) {
+    if (!canAddItem()) return null;
+
     const items = useCanvasStore.getState().items;
     const setItems = useCanvasStore.getState().setItems;
     const tempEdge = useCanvasStore.getState().tempEdge;
     const setTempEdge = useCanvasStore.getState().setTempEdge;
 
-    if (!tempEdge || !clickedNodeId || tempEdge === clickedNodeId) return;
+    const isSameNode = tempEdge === clickedNodeId;
 
-    const nodes = getNodes(items);
+    if (!tempEdge || !clickedNodeId || isSameNode) {
+        return null;
+    }
 
-    const addEdgeTo = (node: Node, toId: string) => ({
-        ...node,
-        edgeTo: node.edgeTo?.includes(toId) ? node.edgeTo : [...(node.edgeTo ?? []), toId],
-    });
+    const edges = getEdges(items);
 
-    const addEdgeFrom = (node: Node, fromId: string) => ({
-        ...node,
-        edgeFrom: node.edgeFrom?.includes(fromId) ? node.edgeFrom : [...(node.edgeFrom ?? []), fromId],
-    });
+    const baseName = 'Связь';
 
-    setItems(
-        nodes.map((node) => {
-            if (node.id === tempEdge) return addEdgeTo(node, clickedNodeId);
-            if (node.id === clickedNodeId) return addEdgeFrom(node, tempEdge);
-            return node;
-        }),
+    const name = generateUniqueName(
+        baseName,
+        edges.map((edge) => edge.name),
     );
 
+    const newEdge: Edge = {
+        id: uuid(),
+        name,
+        kind: 'edge',
+        from: tempEdge,
+        to: clickedNodeId,
+    };
+
+    setItems([...items, newEdge]);
     setTempEdge(null);
 }
