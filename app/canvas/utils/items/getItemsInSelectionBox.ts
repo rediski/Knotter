@@ -1,4 +1,5 @@
-import { CanvasItem, Position } from '@/canvas/_core/_/canvas.types';
+import type { CanvasItem, Position } from '@/canvas/_core/_/canvas.types';
+import { isMovableItem } from '@/canvas/utils/items/isMovableItem';
 
 export function getItemsInSelectionBox(items: CanvasItem[], selectionStart: Position, selectionEnd: Position): string[] {
     const left = Math.min(selectionStart.x, selectionEnd.x);
@@ -9,6 +10,7 @@ export function getItemsInSelectionBox(items: CanvasItem[], selectionStart: Posi
     const bounds = { left, right, top, bottom };
 
     return items
+        .filter(isMovableItem)
         .filter((item) => {
             const { x, y } = item.position;
 

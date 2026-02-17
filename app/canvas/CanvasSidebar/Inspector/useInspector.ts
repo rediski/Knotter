@@ -7,6 +7,7 @@ import type { Node, Position } from '@/canvas/_core/_/canvas.types';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { moveItems } from '@/canvas/utils/items/moveItems';
+import { isMovableItem } from '@/canvas/utils/items/isMovableItem';
 
 export function useInspector() {
     const items = useCanvasStore((state) => state.items);
@@ -27,15 +28,23 @@ export function useInspector() {
 
         if (selectedItemIds.length > 0) {
             items.forEach((item) => {
-                if (selectedItemIds.includes(item.id)) {
-                    map.set(item.id, { x: item.position.x, y: item.position.y });
+                if (selectedItemIds.includes(item.id) && isMovableItem(item)) {
+                    map.set(item.id, {
+                        x: item.position.x,
+                        y: item.position.y,
+                    });
                 }
             });
 
             return map;
         }
 
-        map.set(selectedItem.id, { x: selectedItem.position.x, y: selectedItem.position.y });
+        if (isMovableItem(selectedItem)) {
+            map.set(selectedItem.id, {
+                x: selectedItem.position.x,
+                y: selectedItem.position.y,
+            });
+        }
 
         return map;
     }, [selectedItem, selectedItemIds, items]);
@@ -46,7 +55,7 @@ export function useInspector() {
 
             if (updatedInitialPositions.size === 0 && selectedItem) {
                 items.forEach((item) => {
-                    if (selectedItemIds.includes(item.id) || item.id === selectedItem.id) {
+                    if ((selectedItemIds.includes(item.id) || item.id === selectedItem.id) && isMovableItem(item)) {
                         updatedInitialPositions.set(item.id, {
                             x: item.position.x,
                             y: item.position.y,
@@ -66,7 +75,7 @@ export function useInspector() {
         [selectedItem, positionX, positionY, initialPositions, items, selectedItemIds, setItems],
     );
 
-    const сhangeItemName = useCallback(
+    const changeItemName = useCallback(
         (newName: string) => {
             if (!selectedItem) return;
 
@@ -97,7 +106,7 @@ export function useInspector() {
         positionY,
         initialPositions,
 
-        сhangeItemName,
+        changeItemName,
         changeItemDescription,
         changeItemsPosition,
     };

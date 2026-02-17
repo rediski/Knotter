@@ -4,6 +4,7 @@ import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { addToHistory } from '@/canvas/utils/clipboard/historyManager';
+import { isMovableItem } from '@/canvas/utils/items/isMovableItem';
 
 import { v4 as uuid } from 'uuid';
 
@@ -16,19 +17,21 @@ export function copySelectedItems(items: CanvasItem[], selectedIds: string[]) {
 }
 
 export function pasteClipboardItems(insertionGap = NODE_MOVE_MAX_STEP) {
-    const clipboard = useCanvasStore.getState().clipboard;
-    if (!clipboard.length) return;
+    const store = useCanvasStore.getState();
+    const { clipboard, setSelectedItemIds, setItems, items } = store;
 
-    const { setSelectedItemIds } = useCanvasStore.getState();
+    if (!clipboard.length) return;
 
     const newItems: CanvasItem[] = clipboard.map((item) => {
         const clone = structuredClone(item);
-
         clone.id = uuid();
-        clone.position = {
-            x: (item.position?.x ?? 0) + insertionGap,
-            y: (item.position?.y ?? 0) + insertionGap,
-        };
+
+        if (isMovableItem(clone)) {
+            clone.position = {
+                x: clone.position.x + insertionGap,
+                y: clone.position.y + insertionGap,
+            };
+        }
 
         return clone;
     });
@@ -38,7 +41,7 @@ export function pasteClipboardItems(insertionGap = NODE_MOVE_MAX_STEP) {
         items: structuredClone(newItems),
     });
 
-    useCanvasStore.getState().setItems([...useCanvasStore.getState().items, ...newItems]);
+    setItems([...items, ...newItems]);
 
     setSelectedItemIds(newItems.map((item) => item.id));
 }

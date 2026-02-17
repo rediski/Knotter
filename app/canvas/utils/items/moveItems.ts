@@ -3,6 +3,7 @@ import type { Position, CanvasItem } from '@/canvas/_core/_/canvas.types';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { NODE_MOVE_MIN_STEP, NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
+import { isMovableItem } from '@/canvas/utils/items/isMovableItem';
 
 export function moveItems(dragDelta: Position, initialPositions: Map<string, Position>): CanvasItem[] {
     const selectedItemIds = useCanvasStore.getState().selectedItemIds;
@@ -15,6 +16,7 @@ export function moveItems(dragDelta: Position, initialPositions: Map<string, Pos
 
     const updatedItems = items.map((item) => {
         if (!selectedItemIds.includes(item.id)) return item;
+        if (!isMovableItem(item)) return item;
 
         const initialPos = initialPositions.get(item.id);
 
