@@ -3,33 +3,39 @@
 import { NodeParameters } from '@/canvas/_core/Node/NodeParameters';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
+import { getEdges } from '@/canvas/utils/edges/getEdges';
 
 export default function NodeContent() {
     const items = useCanvasStore((state) => state.items);
     const selectedTabId = useCanvasStore((state) => state.selectedTabId);
+
     const openedNode = items.find((item) => item.id === selectedTabId && item.kind === 'node');
 
     if (openedNode?.kind !== 'node') return null;
 
     const nodes = getNodes(items);
+    const edges = getEdges(items);
 
-    const truncateNames = (edgeIds: string[] | null = [], maxEdges = 4) => {
-        if (!edgeIds) return null;
-        if (!edgeIds.length) return '';
+    const truncateNames = (nodeIds: string[], maxEdges = 4) => {
+        if (!nodeIds.length) return '';
 
-        const connectedNodes = edgeIds.map((id) => nodes.find((node) => node.id === id)?.name).filter(Boolean);
+        const connectedNames = nodeIds.map((id) => nodes.find((node) => node.id === id)?.name).filter(Boolean);
 
-        if (connectedNodes.length <= maxEdges) {
-            return connectedNodes.join(', ');
+        if (connectedNames.length <= maxEdges) {
+            return connectedNames.join(', ');
         }
 
-        const displayed = connectedNodes.slice(0, maxEdges);
-        const remaining = connectedNodes.length - maxEdges;
+        const displayed = connectedNames.slice(0, maxEdges);
+        const remaining = connectedNames.length - maxEdges;
+
         return `${displayed.join(', ')} и ещё ${remaining}...`;
     };
 
-    const incoming = truncateNames(openedNode.edgeFrom);
-    const outgoing = truncateNames(openedNode.edgeTo);
+    const incomingNodeIds = edges.filter((edge) => edge.to === openedNode.id).map((edge) => edge.from);
+    const outgoingNodeIds = edges.filter((edge) => edge.from === openedNode.id).map((edge) => edge.to);
+
+    const incoming = truncateNames(incomingNodeIds);
+    const outgoing = truncateNames(outgoingNodeIds);
 
     return (
         <div className="flex flex-col gap-1 w-full overflow-y-auto overflow-x-hidden">
@@ -45,7 +51,7 @@ export default function NodeContent() {
                     <div className="w-fit border border-depth-4 py-1 px-3">Трансформация</div>
 
                     <div className="flex flex-col gap-1 flex-1 w-full pl-4">
-                        <div className="flex justify-between items-center gap-2 w-full border border-depth-3 py-1 px-3">
+                        <div className="flex justify-between items-center gap-2 border border-depth-3 py-1 px-3">
                             <span className="truncate">Положение X</span>
                             <span className="text-text-accent truncate">{openedNode.position.x}</span>
                         </div>
