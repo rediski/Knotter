@@ -1,7 +1,7 @@
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import type { ShapeType } from '@/canvas/_core/_/shapeType.type';
+import type { NodeShapeType } from '@/canvas/_core/_/nodeShapeType.type';
 
-export function changeShapeType(newShape: ShapeType) {
+export function changeShapeType(newShape: NodeShapeType) {
     const items = useCanvasStore.getState().items;
     const setItems = useCanvasStore.getState().setItems;
     const selectedItemIds = useCanvasStore.getState().selectedItemIds;
