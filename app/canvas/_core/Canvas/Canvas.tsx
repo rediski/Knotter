@@ -5,9 +5,9 @@ import { useRef } from 'react';
 import { Node } from '@/canvas/_core/Node/Node';
 import { Text } from '@/canvas/_core/Text/Text';
 
-import { SelectionBox } from '@/canvas/CanvasSelectionBox/SelectionBox';
-import { CanvasContextMenu } from '@/canvas/CanvasContextMenu/CanvasContextMenu';
-import { CanvasControls } from '@/canvas/CanvasControls/CanvasControls';
+import { SelectionBox } from '@/canvas/components/CanvasSelectionBox/SelectionBox';
+import { CanvasContextMenu } from '@/canvas/components/CanvasContextMenu/CanvasContextMenu';
+import { CanvasControls } from '@/canvas/components/CanvasControls/CanvasControls';
 
 import { useCanvasInteraction } from '@/canvas/_core/Canvas/useCanvasInteraction';
 import { useCanvasRenderer } from '@/canvas/_core/Canvas/useCanvasRenderer';

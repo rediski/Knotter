@@ -5,19 +5,19 @@ import type { SidebarPanel as SidebarPanelType } from '@/canvas/_core/_/sidebarP
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 import { Input } from '@/components/UI/Input';
 
-import { PanelContextMenu } from '@/canvas/CanvasSidebar/PanelContextMenu';
+import { PanelContextMenu } from '@/canvas/components/CanvasSidebar/PanelContextMenu';
 
-import { Hierarchy } from '@/canvas/CanvasSidebar/Hierarchy/Hierarchy';
-import { Inspector } from '@/canvas/CanvasSidebar/Inspector/Inspector';
-import { Parameters } from '@/canvas/CanvasSidebar/Parameters/Parameters';
+import { Hierarchy } from '@/canvas/components/CanvasSidebar/Hierarchy/Hierarchy';
+import { Inspector } from '@/canvas/components/CanvasSidebar/Inspector/Inspector';
+import { Parameters } from '@/canvas/components/CanvasSidebar/Parameters/Parameters';
 
-import { useSidebarPanel } from '@/canvas/CanvasSidebar/useSidebarPanel';
-import { usePanelContextMenu } from '@/canvas/CanvasSidebar/usePanelContextMenu';
+import { useSidebarPanel } from '@/canvas/components/CanvasSidebar/useSidebarPanel';
+import { usePanelContextMenu } from '@/canvas/components/CanvasSidebar/usePanelContextMenu';
 
 import { Search } from 'lucide-react';
 import { EmptyState } from '@/components/UI/EmptyState';
-import { Details } from '@/canvas/CanvasSidebar/Details/Details';
-import { History } from '@/canvas/CanvasSidebar/History/History';
+import { Details } from '@/canvas/components/CanvasSidebar/Details/Details';
+import { History } from '@/canvas/components/CanvasSidebar/History/History';
 
 export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
     const {

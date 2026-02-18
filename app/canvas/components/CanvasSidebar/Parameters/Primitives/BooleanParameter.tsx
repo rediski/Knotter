@@ -8,7 +8,7 @@ import { isBooleanValue } from '@/canvas/_core/_/parameter.type-guards';
 import { EditableName } from '@/components/UI/EditableName';
 import { Checkbox } from '@/components/UI/Checkbox';
 
-import { useParameters } from '@/canvas/CanvasSidebar/Parameters/useParameters';
+import { useParameters } from '@/canvas/components/CanvasSidebar/Parameters/useParameters';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 

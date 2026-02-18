@@ -8,8 +8,8 @@ import { isEnumValue } from '@/canvas/_core/_/parameter.type-guards';
 import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
 
-import { useParameters } from '@/canvas/CanvasSidebar/Parameters/useParameters';
-import { useEnumParameter } from '@/canvas/CanvasSidebar/Parameters/Primitives/useEnumParameter';
+import { useParameters } from '@/canvas/components/CanvasSidebar/Parameters/useParameters';
+import { useEnumParameter } from '@/canvas/components/CanvasSidebar/Parameters/Primitives/useEnumParameter';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 

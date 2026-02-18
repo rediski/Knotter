@@ -12,7 +12,7 @@ import { toggleMagnetMode } from '@/canvas/utils/canvas/toggleMagnetMode';
 import { toggleTooltipMode } from '@/canvas/utils/canvas/toggleTooltipMode';
 import { getCanvasCenter } from '@/canvas/utils/canvas/getCanvasCenter';
 
-import { useCanvasControlsMenu } from '@/canvas/CanvasControls/useCanvasControlsMenu';
+import { useCanvasControlsMenu } from '@/canvas/components/CanvasControls/useCanvasControlsMenu';
 
 import { FlipVertical2, Home, Menu, Magnet, Grid2x2, Move3d, Eye, EyeOff, EyeClosed, RotateCcw } from 'lucide-react';
 

@@ -10,8 +10,8 @@ import { EditableName } from '@/components/UI/EditableName';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
-import { useParameters } from '@/canvas/CanvasSidebar/Parameters/useParameters';
-import { useNumberParameter } from '@/canvas/CanvasSidebar/Parameters/Primitives/useNumberParameter';
+import { useParameters } from '@/canvas/components/CanvasSidebar/Parameters/useParameters';
+import { useNumberParameter } from '@/canvas/components/CanvasSidebar/Parameters/Primitives/useNumberParameter';
 
 import { X } from 'lucide-react';
 

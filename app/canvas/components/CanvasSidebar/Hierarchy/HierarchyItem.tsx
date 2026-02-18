@@ -5,7 +5,7 @@ import { memo } from 'react';
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 
 import { EditableName } from '@/components/UI/EditableName';
-import { useHierarchyItem } from '@/canvas/CanvasSidebar/Hierarchy/useHierarchyItem';
+import { useHierarchyItem } from '@/canvas/components/CanvasSidebar/Hierarchy/useHierarchyItem';
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 

@@ -6,7 +6,7 @@ import type { Node } from '@/canvas/_core/_/canvas.types';
 import type { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter.types';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { useParameters } from '@/canvas/CanvasSidebar/Parameters/useParameters';
+import { useParameters } from '@/canvas/components/CanvasSidebar/Parameters/useParameters';
 
 import { OptionPicker } from '@/components/UI/OptionPicker';
 import { Input } from '@/components/UI/Input';

@@ -5,7 +5,7 @@ import type { Parameter, ParameterType } from '@/canvas/_core/_/parameter.types'
 import type { Node } from '@/canvas/_core/_/canvas.types';
 
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
-import { parameterInitialValue } from '@/canvas/CanvasSidebar/Parameters/parameterInitialValue';
+import { parameterInitialValue } from '@/canvas/components/CanvasSidebar/Parameters/parameterInitialValue';
 
 import { v4 as uuid } from 'uuid';
 

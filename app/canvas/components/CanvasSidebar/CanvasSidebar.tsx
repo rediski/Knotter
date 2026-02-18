@@ -4,11 +4,11 @@ import React, { memo, useRef } from 'react';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { SidebarContextMenu } from '@/canvas/CanvasSidebar/SidebarContextMenu';
-import { useSidebarResize } from '@/canvas/CanvasSidebar/useSidebarResize';
+import { SidebarContextMenu } from '@/canvas/components/CanvasSidebar/SidebarContextMenu';
+import { useSidebarResize } from '@/canvas/components/CanvasSidebar/useSidebarResize';
 import { useContextMenu } from '@/hooks/useContextMenu';
 import { useClickOutside } from '@/hooks/useClickOutside';
-import { SidebarPanel } from '@/canvas/CanvasSidebar/SidebarPanel';
+import { SidebarPanel } from '@/canvas/components/CanvasSidebar/SidebarPanel';
 import { EmptyState } from '@/components/UI/EmptyState';
 
 export const CanvasSidebar = memo(function Sidebar() {

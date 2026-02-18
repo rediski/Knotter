@@ -4,7 +4,7 @@ import { useRef, useCallback, useMemo } from 'react';
 
 import type { SidebarPanel as SidebarPanelType, PanelType } from '@/canvas/_core/_/sidebarPanel.types';
 
-import { useSidebarPanels } from '@/canvas/CanvasSidebar/useSidebarPanels';
+import { useSidebarPanels } from '@/canvas/components/CanvasSidebar/useSidebarPanels';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { ListTree, Settings, Braces, FileBracesCorner, Clipboard, type LucideIcon } from 'lucide-react';
