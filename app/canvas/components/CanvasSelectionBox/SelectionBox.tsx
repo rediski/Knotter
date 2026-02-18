@@ -1,7 +1,6 @@
 'use client';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
 
 interface SelectionBoxProps {
     containerRef: React.RefObject<HTMLDivElement | null>;
