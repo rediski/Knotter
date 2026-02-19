@@ -16,9 +16,6 @@ import { handleClickOnItem } from '@/canvas/utils/items/handleClickOnItem';
 import { startDragging, stopDragging } from '@/canvas/utils/items/dragItems';
 
 export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | null>) {
-    const items = useCanvasStore((state) => state.items);
-    const setSelectedItemIds = useCanvasStore((state) => state.setSelectedItemIds);
-
     const onMouseDown = useCallback(
         (e: MouseEvent) => {
             if (!canvasRef.current) return;
@@ -27,7 +24,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             handleClickOnItem(e);
             startDragging(e, canvasRef);
         },
-        [canvasRef, items, setSelectedItemIds],
+        [canvasRef],
     );
 
     const onMouseMove = useCallback(
