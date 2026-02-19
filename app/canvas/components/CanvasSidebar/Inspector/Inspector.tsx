@@ -20,8 +20,9 @@ import { getIcon } from '@/canvas/utils/nodes/getIcon';
 import { getIncomingEdges } from '@/canvas/utils/edges/getIncomingEdges';
 import { getOutgoingEdges } from '@/canvas/utils/edges/getOutgoingEdges';
 import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
+import { deleteSelectedItemsById } from '@/canvas/utils/items/deleteSelectedItems';
 
-import { Link2Icon } from 'lucide-react';
+import { Link2Icon, X } from 'lucide-react';
 
 const FIELD_TITLES = {
     NAME: 'Название',
@@ -75,7 +76,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                                 key={edge.id}
                                 onClick={() => handleEdgeClick(edge.id)}
                                 className={`
-                                    flex items-center gap-2 text-sm px-3 py-2 rounded-md cursor-pointer
+                                    flex items-center gap-2 text-sm px-3 py-2 rounded-md cursor-pointer group
                                     ${isSelected ? 'bg-bg-accent/10 text-text-accent' : 'bg-depth-3 hover:bg-depth-4 text-contrast'}
                                 `}
                             >
@@ -83,7 +84,19 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
 
                                 <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/20' : 'border-depth-5'}`} />
 
-                                <div>{edge.name}</div>
+                                <div className="w-full">{edge.name}</div>
+
+                                <button
+                                    className={`
+                                        opacity-0 group-hover:opacity-100 rounded p-0.5 transition-opacity cursor-pointer
+                                        ${isSelected ? 'hover:bg-bg-accent/10' : 'hover:bg-depth-3'}
+                                    `}
+                                    onClick={() => {
+                                        deleteSelectedItemsById(edge.id);
+                                    }}
+                                >
+                                    <X size={16} />
+                                </button>
                             </div>
                         );
                     })}
