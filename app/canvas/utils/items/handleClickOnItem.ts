@@ -2,30 +2,49 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { selectItems } from '@/canvas/utils/items/selectItems';
 import { getNodeIdUnderCursor } from '@/canvas/utils/nodes/getNodeIdUnderCursor';
-import { createEdge } from '@/canvas/utils/edges/createEdge';
 import { getTextIdUnderCursor } from '@/canvas/utils/texts/getTextIdUnderCursor';
+import { getEdgeIdUnderCursor } from '@/canvas/utils/edges/getEdgeIdUnderCursor';
 import { getTextById } from '@/canvas/utils/texts/getTextById';
+import { createEdge } from '@/canvas/utils/edges/createEdge';
 
 export function handleClickOnItem(e: MouseEvent) {
-    const items = useCanvasStore.getState().items;
-    const setSelectedItemIds = useCanvasStore.getState().setSelectedItemIds;
-    const selectedItemIds = useCanvasStore.getState().selectedItemIds;
+    const { items, selectedItemIds, setSelectedItemIds, selectedEdgeIds, setSelectedEdgeIds } = useCanvasStore.getState();
 
-    const clickedNodeId = getNodeIdUnderCursor({ x: e.clientX, y: e.clientY });
-    const clickedTextId = getTextIdUnderCursor({ x: e.clientX, y: e.clientY });
-    const clickedItemId = clickedNodeId || clickedTextId;
+    const point = { x: e.clientX, y: e.clientY };
+    const isMultiSelect = e.ctrlKey || e.metaKey || e.shiftKey;
 
-    if (clickedItemId && selectedItemIds.includes(clickedItemId)) {
+    const clickedNodeId = getNodeIdUnderCursor(point);
+    const clickedEdgeId = getEdgeIdUnderCursor(point);
+    const clickedTextId = getTextIdUnderCursor(point);
+
+    if (clickedEdgeId) {
+        if (isMultiSelect) {
+            if (selectedEdgeIds.includes(clickedEdgeId)) {
+                setSelectedEdgeIds(selectedEdgeIds.filter((id) => id !== clickedEdgeId));
+                return;
+            }
+
+            setSelectedEdgeIds([...selectedEdgeIds, clickedEdgeId]);
+            return;
+        }
+
+        setSelectedEdgeIds([clickedEdgeId]);
+        setSelectedItemIds([]);
         return;
     }
 
-    if (clickedItemId) {
-        const newSelectedIds = selectItems({ itemId: clickedItemId, event: e });
-        setSelectedItemIds(newSelectedIds);
+    const itemId = clickedNodeId || clickedTextId;
+
+    if (!itemId) {
+        if (!isMultiSelect) {
+            setSelectedItemIds([]);
+        }
+        return;
     }
 
-    if (!clickedItemId && !(e.ctrlKey || e.metaKey || e.shiftKey)) {
-        setSelectedItemIds([]);
+    if (!selectedItemIds.includes(itemId)) {
+        const newSelectedIds = selectItems({ itemId, event: e });
+        setSelectedItemIds(newSelectedIds);
     }
 
     if (clickedNodeId) {
@@ -34,6 +53,7 @@ export function handleClickOnItem(e: MouseEvent) {
 
     if (clickedTextId) {
         const textItem = getTextById(items, clickedTextId);
+
         if (textItem?.isEditing) return;
     }
 }
