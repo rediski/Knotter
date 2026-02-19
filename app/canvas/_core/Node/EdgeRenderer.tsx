@@ -48,7 +48,7 @@ export const EdgeRenderer: React.FC<EdgeRendererProps> = ({ containerRef }) => {
     const edges = getEdges(items);
 
     return (
-        <svg className="absolute inset-0 pointer-events-none w-full h-full">
+        <svg className="absolute inset-0 w-full h-full">
             {edges.map((edge) => {
                 const fromNode = nodes.find((node) => node.id === edge.from);
                 const toNode = nodes.find((node) => node.id === edge.to);
@@ -69,6 +69,8 @@ export const EdgeRenderer: React.FC<EdgeRendererProps> = ({ containerRef }) => {
                         y2={toCoords.y}
                         stroke={isSelected ? 'var(--color-bg-accent)' : 'var(--contrast)'}
                         strokeWidth={2 * zoomLevel}
+                        data-edge-id={edge.id}
+                        className="cursor-pointer"
                     />
                 );
             })}
