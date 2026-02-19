@@ -16,7 +16,9 @@ import { createText } from '@/canvas/utils/texts/createText';
 import { initEdge } from '@/canvas/utils/edges/initEdge';
 
 export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>) {
-    const { setSelectedItemIds } = useCanvasStore();
+    const setSelectedItemIds = useCanvasStore.getState().setSelectedItemIds;
+    const setSelectedEdgeIds = useCanvasStore.getState().setSelectedEdgeIds;
+    const setTempEdge = useCanvasStore.getState().setTempEdge;
 
     const toggleGrid = useCanvasStore((state) => state.toggleShowGrid);
     const toggleAxes = useCanvasStore((state) => state.toggleShowAxes);
@@ -45,7 +47,22 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             keysPressed.add(key);
 
             if (key === 'escape') {
-                setSelectedItemIds([]);
+                const hasSelectedItems = useCanvasStore.getState().selectedItemIds.length > 0;
+                const hasSelectedEdges = useCanvasStore.getState().selectedEdgeIds.length > 0;
+                const hasTempEdge = useCanvasStore.getState().tempEdge !== null;
+
+                if (hasSelectedItems) {
+                    setSelectedItemIds([]);
+                }
+
+                if (hasSelectedEdges) {
+                    setSelectedEdgeIds([]);
+                }
+
+                if (hasTempEdge) {
+                    setTempEdge(null);
+                }
+
                 return;
             }
 
