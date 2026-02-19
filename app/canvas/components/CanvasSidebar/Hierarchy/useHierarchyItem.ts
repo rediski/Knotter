@@ -40,10 +40,6 @@ export function useHierarchyItem(item: CanvasItem) {
 
     const handleKeyDown = useCallback(
         (e: React.KeyboardEvent<HTMLLIElement>) => {
-            if (e.key === 'Enter' && !isSelected) {
-                setSelectedIds([...selectedIds, item.id]);
-            }
-
             if (e.key === 'Delete' && isSelected) {
                 deleteSelectedItems();
             }
