@@ -62,19 +62,27 @@ export default function NodeContent() {
                         </div>
                     </div>
 
-                    <div className="w-fit border border-depth-4 py-1 px-3">Связи</div>
+                    {(incomingNodeIds.length > 0 || outgoingNodeIds.length > 0) && (
+                        <>
+                            <div className="w-fit border border-depth-4 py-1 px-3">Связи</div>
 
-                    <div className="flex flex-col gap-1 flex-1 w-full pl-4">
-                        <div className="flex justify-between items-center gap-2 border border-depth-3 py-1 px-3">
-                            <span className="truncate">Входящие</span>
-                            <span className="text-text-accent truncate">{incoming}</span>
-                        </div>
+                            <div className="flex flex-col gap-1 flex-1 w-full pl-4">
+                                {incomingNodeIds.length > 0 && (
+                                    <div className="flex justify-between items-center gap-2 border border-depth-3 py-1 px-3">
+                                        <span className="truncate">Входящие</span>
+                                        <span className="text-text-accent truncate">{incoming}</span>
+                                    </div>
+                                )}
 
-                        <div className="flex justify-between items-center gap-2 border border-depth-3 py-1 px-3">
-                            <span className="truncate">Исходящие</span>
-                            <span className="text-text-accent truncate">{outgoing}</span>
-                        </div>
-                    </div>
+                                {outgoingNodeIds.length > 0 && (
+                                    <div className="flex justify-between items-center gap-2 border border-depth-3 py-1 px-3">
+                                        <span className="truncate">Исходящие</span>
+                                        <span className="text-text-accent truncate">{outgoing}</span>
+                                    </div>
+                                )}
+                            </div>
+                        </>
+                    )}
 
                     <div className="w-fit border border-depth-4 py-1 px-3">Наследники</div>
 
