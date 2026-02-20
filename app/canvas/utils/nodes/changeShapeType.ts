@@ -1,5 +1,5 @@
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import type { NodeShapeType } from '@/canvas/_core/_/nodeShapeType.type';
+import type { NodeShapeType } from '@/canvas/_core/_/nodeShapeType';
 
 export function changeShapeType(newShape: NodeShapeType) {
     const items = useCanvasStore.getState().items;

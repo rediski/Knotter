@@ -1,4 +1,4 @@
-import type { Parameter } from '@/canvas/_core/_/parameter.types';
+import type { Parameter } from '@/canvas/_core/_/parameter';
 import { isStructureValue } from '@/canvas/_core/_/parameter.type-guards';
 
 interface UseStructureParameterProps {

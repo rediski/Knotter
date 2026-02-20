@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import type { Parameter } from '@/canvas/_core/_/parameter.types';
+import type { Parameter } from '@/canvas/_core/_/parameter';
 import { isStringValue } from '@/canvas/_core/_/parameter.type-guards';
 
 import { Input } from '@/components/UI/Input';

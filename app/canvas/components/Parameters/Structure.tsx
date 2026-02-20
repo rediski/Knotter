@@ -1,7 +1,7 @@
 'use client';
 
 import { memo } from 'react';
-import { Parameter } from '@/canvas/_core/_/parameter.types';
+import { Parameter } from '@/canvas/_core/_/parameter';
 import { isStructureValue } from '@/canvas/_core/_/parameter.type-guards';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';

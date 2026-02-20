@@ -1,4 +1,4 @@
-import { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter.types';
+import { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
 import { isNumberValue } from '@/canvas/_core/_/parameter.type-guards';
 
 interface useNumberParameterProps {

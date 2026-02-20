@@ -1,4 +1,4 @@
-import type { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter.types';
+import type { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
 
 // prettier-ignore
 export const isNumberValue = (parameter: Parameter): 

@@ -7,16 +7,16 @@ import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 import { EmptyState } from '@/components/UI/EmptyState';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { useParameters } from '@/canvas/components/CanvasSidebar/Parameters/useParameters';
+import { useParameters } from '@/canvas/components/SidebarPanels/Parameters/useParameters';
 
-import { parameterTypes } from '@/canvas/_core/_/parameter.types';
+import { parameterTypes } from '@/canvas/_core/_/parameter';
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
-import { NumberParameter } from '@/canvas/components/CanvasSidebar/Parameters/Primitives/NumberParameter';
-import { StringParameter } from '@/canvas/components/CanvasSidebar/Parameters/Primitives/StringParameter';
-import { BooleanParameter } from '@/canvas/components/CanvasSidebar/Parameters/Primitives/BooleanParameter';
-import { EnumParameter } from '@/canvas/components/CanvasSidebar/Parameters/Primitives/EnumParameter';
-import { StructureParameter } from '@/canvas/components/CanvasSidebar/Parameters/Primitives/StructureParameter';
+import { NumberParameter } from '@/canvas/components/Parameters/Number';
+import { StringParameter } from '@/canvas/components/Parameters/String';
+import { BooleanParameter } from '@/canvas/components/Parameters/Boolean';
+import { EnumParameter } from '@/canvas/components/Parameters/Enum';
+import { StructureParameter } from '@/canvas/components/Parameters/Structure';
 
 import {
     isNumberValue,

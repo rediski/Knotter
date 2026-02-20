@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import type { Parameter } from '@/canvas/_core/_/parameter.types';
+import type { Parameter } from '@/canvas/_core/_/parameter';
 import { isNumberValue } from '@/canvas/_core/_/parameter.type-guards';
 
 import { Input } from '@/components/UI/Input';
@@ -10,8 +10,8 @@ import { EditableName } from '@/components/UI/EditableName';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
-import { useParameters } from '@/canvas/components/CanvasSidebar/Parameters/useParameters';
-import { useNumberParameter } from '@/canvas/components/CanvasSidebar/Parameters/Primitives/useNumberParameter';
+import { useParameters } from '@/canvas/components/SidebarPanels/Parameters/useParameters';
+import { useNumberParameter } from '@/canvas/components/Parameters/useNumber';
 
 import { X } from 'lucide-react';
 

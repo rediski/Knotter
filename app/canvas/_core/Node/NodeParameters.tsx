@@ -3,10 +3,10 @@
 import { memo } from 'react';
 
 import type { Node } from '@/canvas/_core/_/canvas.types';
-import type { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter.types';
+import type { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { useParameters } from '@/canvas/components/CanvasSidebar/Parameters/useParameters';
+import { useParameters } from '@/canvas/components/SidebarPanels/Parameters/useParameters';
 
 import { OptionPicker } from '@/components/UI/OptionPicker';
 import { Input } from '@/components/UI/Input';
@@ -15,11 +15,7 @@ import { Select } from '@/components/UI/Select';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
-interface NodeParametersProps {
-    node: Node;
-}
-
-export const NodeParameters = memo(function NodeParameters({ node }: NodeParametersProps) {
+export const NodeParameters = memo(function NodeParameters({ node }: { node: Node }) {
     const items = useCanvasStore((state) => state.items);
     const setItems = useCanvasStore((state) => state.setItems);
 

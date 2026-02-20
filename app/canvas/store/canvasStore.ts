@@ -2,8 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import type { CanvasItem, Position, TooltipMode } from '@/canvas/_core/_/canvas.types';
-import type { Parameter } from '@/canvas/_core/_/parameter.types';
-import type { SidebarPanel } from '@/canvas/_core/_/sidebarPanel.types';
+import type { Parameter } from '@/canvas/_core/_/parameter';
+import type { SidebarPanel } from '@/canvas/_core/_/sidebarPanel';
 import { INITIAL_ZOOM } from '@/canvas/_core/_/canvas.constants';
 
 import { v4 as uuid } from 'uuid';

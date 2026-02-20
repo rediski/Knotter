@@ -2,7 +2,7 @@
 
 import { v4 as uuid } from 'uuid';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { SidebarPanel } from '@/canvas/_core/_/sidebarPanel.types';
+import { SidebarPanel } from '@/canvas/_core/_/sidebarPanel';
 
 export const useSidebarPanels = () => {
     const sidebarPanels = useCanvasStore((state) => state.sidebarPanels);

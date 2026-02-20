@@ -2,13 +2,13 @@
 
 import { memo } from 'react';
 
-import type { Parameter } from '@/canvas/_core/_/parameter.types';
+import type { Parameter } from '@/canvas/_core/_/parameter';
 import { isBooleanValue } from '@/canvas/_core/_/parameter.type-guards';
 
 import { EditableName } from '@/components/UI/EditableName';
 import { Checkbox } from '@/components/UI/Checkbox';
 
-import { useParameters } from '@/canvas/components/CanvasSidebar/Parameters/useParameters';
+import { useParameters } from '@/canvas/components/SidebarPanels/Parameters/useParameters';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 

@@ -1,13 +1,48 @@
 import { useState } from 'react';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import type { Parameter, ParameterType } from '@/canvas/_core/_/parameter.types';
+import type { ParameterType, Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
 import type { Node } from '@/canvas/_core/_/canvas.types';
 
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
-import { parameterInitialValue } from '@/canvas/components/CanvasSidebar/Parameters/parameterInitialValue';
 
 import { v4 as uuid } from 'uuid';
+
+function parameterInitialValue(type: ParameterType): Parameter['value'] {
+    switch (type) {
+        case 'number': {
+            const numberConfig: ParameterTypeMap['number'] = {
+                currentValue: 0,
+                min: 0,
+                max: 100,
+                step: 1,
+            };
+
+            return numberConfig;
+        }
+
+        case 'string': {
+            return '' as ParameterTypeMap['string'];
+        }
+
+        case 'boolean': {
+            return false as ParameterTypeMap['boolean'];
+        }
+
+        case 'enum': {
+            const enumConfig: ParameterTypeMap['enum'] = {
+                currentValue: null,
+                options: [],
+            };
+
+            return enumConfig;
+        }
+
+        case 'structure': {
+            return [] as ParameterTypeMap['structure'];
+        }
+    }
+}
 
 export const useParameters = () => {
     const [parameterName, setParameterName] = useState('');

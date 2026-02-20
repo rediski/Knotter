@@ -1,4 +1,4 @@
-import { DEFAULT_SHAPE, NODE_SHAPES, type NodeShapeType } from '@/canvas/_core/_/nodeShapeType.type';
+import { DEFAULT_SHAPE, NODE_SHAPES, type NodeShapeType } from '@/canvas/_core/_/nodeShapeType';
 
 export function getShape(type?: NodeShapeType | string) {
     if (!type || !(type in NODE_SHAPES)) {

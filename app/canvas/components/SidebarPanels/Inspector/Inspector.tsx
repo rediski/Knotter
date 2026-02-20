@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import { useInspector } from '@/canvas/components/CanvasSidebar/Inspector/useInspector';
+import { useInspector } from '@/canvas/components/SidebarPanels/Inspector/useInspector';
 
 import { EmptyState } from '@/components/UI/EmptyState';
 import { Input } from '@/components/UI/Input';
@@ -13,8 +13,8 @@ import { useDropdownStore } from '@/canvas/store/dropdownStore';
 
 import { Dropdown } from '@/components/UI/Dropdown';
 
-import { ShapeButtons } from '@/canvas/components/CanvasSidebar/Inspector/ShapeButtons';
-import { PositionInputs } from '@/canvas/components/CanvasSidebar/Inspector/PositionInputs';
+import { ShapeButtons } from '@/canvas/components/SidebarPanels/Inspector/ShapeButtons';
+import { PositionInputs } from '@/canvas/components/SidebarPanels/Inspector/PositionInputs';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 import { getIncomingEdges } from '@/canvas/utils/edges/getIncomingEdges';
