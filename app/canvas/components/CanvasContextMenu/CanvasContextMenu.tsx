@@ -7,7 +7,7 @@ import { ContextMenuItem } from '@/components/UI/ContextMenuItem';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { selectAll } from '@/canvas/utils/items/selectAll';
+import { selectAllItems } from '@/canvas/utils/items/selectAllItems';
 import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
 
 import { getShape, getAllShapes } from '@/canvas/utils/nodes/getShape';
@@ -50,7 +50,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                     <ContextMenuItem
                         key="select-all"
                         onClick={() => {
-                            selectAll();
+                            selectAllItems();
                             closeMenu();
                         }}
                         disabled={items.length === 0}

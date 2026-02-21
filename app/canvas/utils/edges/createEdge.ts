@@ -1,42 +1,39 @@
-import type { Edge } from '@/canvas/_core/_/canvas.types';
 import { v4 as uuid } from 'uuid';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { getEdges } from '@/canvas/utils/edges/getEdges';
 import { canAddItem } from '@/canvas/utils/items/canAddItem';
-import { generateUniqueName } from '@/canvas/utils/items/generateUniqueName';
+import type { Node } from '@/canvas/_core/_/canvas.types';
 
 export function createEdge(clickedNodeId: string) {
     if (!canAddItem()) return null;
 
-    const items = useCanvasStore.getState().items;
-    const setItems = useCanvasStore.getState().setItems;
-    const tempEdge = useCanvasStore.getState().tempEdge;
-    const setTempEdge = useCanvasStore.getState().setTempEdge;
+    const { items, setItems, tempEdge: fromNodeId, setTempEdge } = useCanvasStore.getState();
 
-    const isSameNode = tempEdge === clickedNodeId;
-
-    if (!tempEdge || !clickedNodeId || isSameNode) {
+    if (!fromNodeId || !clickedNodeId || fromNodeId === clickedNodeId) {
         return null;
     }
 
-    const edges = getEdges(items);
+    setItems(
+        items.map((item) => {
+            if (item.kind !== 'node') return item;
+            if (item.id !== fromNodeId) return item;
 
-    const baseName = 'Связь';
+            if (item.edges.some((e) => e.to === clickedNodeId)) {
+                return item;
+            }
 
-    const name = generateUniqueName(
-        baseName,
-        edges.map((edge) => edge.name),
+            return {
+                ...item,
+                edges: [
+                    ...item.edges,
+                    {
+                        id: uuid(),
+                        to: clickedNodeId,
+                    },
+                ],
+            } satisfies Node;
+        }),
     );
 
-    const newEdge: Edge = {
-        id: uuid(),
-        name,
-        kind: 'edge',
-        from: tempEdge,
-        to: clickedNodeId,
-    };
-
-    setItems([...items, newEdge]);
     setTempEdge(null);
 }

@@ -7,7 +7,6 @@ import type { Node, Position } from '@/canvas/_core/_/canvas.types';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { moveItems } from '@/canvas/utils/items/moveItems';
-import { isMovableItem } from '@/canvas/utils/items/isMovableItem';
 
 export function useInspector() {
     const items = useCanvasStore((state) => state.items);
@@ -28,7 +27,7 @@ export function useInspector() {
 
         if (selectedItemIds.length > 0) {
             items.forEach((item) => {
-                if (selectedItemIds.includes(item.id) && isMovableItem(item)) {
+                if (selectedItemIds.includes(item.id)) {
                     map.set(item.id, {
                         x: item.position.x,
                         y: item.position.y,
@@ -39,12 +38,10 @@ export function useInspector() {
             return map;
         }
 
-        if (isMovableItem(selectedItem)) {
-            map.set(selectedItem.id, {
-                x: selectedItem.position.x,
-                y: selectedItem.position.y,
-            });
-        }
+        map.set(selectedItem.id, {
+            x: selectedItem.position.x,
+            y: selectedItem.position.y,
+        });
 
         return map;
     }, [selectedItem, selectedItemIds, items]);
@@ -55,7 +52,7 @@ export function useInspector() {
 
             if (updatedInitialPositions.size === 0 && selectedItem) {
                 items.forEach((item) => {
-                    if ((selectedItemIds.includes(item.id) || item.id === selectedItem.id) && isMovableItem(item)) {
+                    if (selectedItemIds.includes(item.id) || item.id === selectedItem.id) {
                         updatedInitialPositions.set(item.id, {
                             x: item.position.x,
                             y: item.position.y,

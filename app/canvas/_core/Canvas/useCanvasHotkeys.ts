@@ -9,7 +9,7 @@ import { undo, redo } from '@/canvas/utils/clipboard/historyManager';
 import { toggleTooltipMode } from '@/canvas/utils/canvas/toggleTooltipMode';
 import { toggleMagnetMode } from '@/canvas/utils/canvas/toggleMagnetMode';
 import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
-import { selectAll } from '@/canvas/utils/items/selectAll';
+import { selectAllItems } from '@/canvas/utils/items/selectAllItems';
 import { copySelectedItems, pasteClipboardItems } from '@/canvas/utils/clipboard/copyPasteItems';
 import { createNode } from '@/canvas/utils/nodes/createNode';
 import { createText } from '@/canvas/utils/texts/createText';
@@ -85,8 +85,8 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
 
             if (isCtrl) {
                 const ctrlMap: Record<string, () => void> = {
-                    a: () => selectAll(),
-                    ф: () => selectAll(),
+                    a: () => selectAllItems(),
+                    ф: () => selectAllItems(),
                     c: () => copySelectedItems(items, selectedItemIds),
                     с: () => copySelectedItems(items, selectedItemIds),
                     v: () => pasteClipboardItems(),

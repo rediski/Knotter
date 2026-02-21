@@ -17,11 +17,9 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
         <ul className="flex flex-col gap-1 p-1 overflow-y-auto h-full" onClick={deselect}>
             {filteredItems.length !== 0 && (
                 <React.Fragment>
-                    {filteredItems
-                        .filter((item) => item.kind !== 'edge')
-                        .map((item) => (
-                            <HierarchyItem key={item.id} canvasItem={item} />
-                        ))}
+                    {filteredItems.map((item) => (
+                        <HierarchyItem key={item.id} canvasItem={item} />
+                    ))}
                 </React.Fragment>
             )}
 

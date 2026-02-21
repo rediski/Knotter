@@ -24,22 +24,20 @@ export function deleteSelectedItemsById(itemIds: string | string[]) {
     const idsToDelete = new Set(Array.isArray(itemIds) ? itemIds : [itemIds]);
 
     const nodes = getNodes(items);
+    const deletedNodeIds = new Set(nodes.filter((node: Node) => idsToDelete.has(node.id)).map((node) => node.id));
 
-    const deletedNodeIds = new Set(nodes.filter((node: Node) => idsToDelete.has(node.id)).map((node: Node) => node.id));
+    const newItems = items
+        .map((item) => {
+            if (item.kind !== 'node') return item;
 
-    const newItems = items.filter((item) => {
-        if (idsToDelete.has(item.id)) return false;
+            const newEdges = item.edges.filter((edge) => !idsToDelete.has(edge.id) && !deletedNodeIds.has(edge.to));
 
-        if (item.kind === 'edge') {
-            const edge = item as Edge;
-
-            if (deletedNodeIds.has(edge.from) || deletedNodeIds.has(edge.to)) {
-                return false;
-            }
-        }
-
-        return true;
-    });
+            return {
+                ...item,
+                edges: newEdges,
+            };
+        })
+        .filter((item) => !idsToDelete.has(item.id));
 
     setItems(newItems);
 

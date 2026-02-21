@@ -4,7 +4,6 @@ import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { addToHistory } from '@/canvas/utils/clipboard/historyManager';
-import { isMovableItem } from '@/canvas/utils/items/isMovableItem';
 
 import { v4 as uuid } from 'uuid';
 
@@ -26,12 +25,10 @@ export function pasteClipboardItems(insertionGap = NODE_MOVE_MAX_STEP) {
         const clone = structuredClone(item);
         clone.id = uuid();
 
-        if (isMovableItem(clone)) {
-            clone.position = {
-                x: clone.position.x + insertionGap,
-                y: clone.position.y + insertionGap,
-            };
-        }
+        clone.position = {
+            x: clone.position.x + insertionGap,
+            y: clone.position.y + insertionGap,
+        };
 
         return clone;
     });
