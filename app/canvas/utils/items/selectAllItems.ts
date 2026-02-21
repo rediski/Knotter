@@ -1,6 +1,6 @@
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-export function selectAll() {
+export function selectAllItems() {
     const items = useCanvasStore.getState().items;
     const setSelectedItemIds = useCanvasStore.getState().setSelectedItemIds;
 
