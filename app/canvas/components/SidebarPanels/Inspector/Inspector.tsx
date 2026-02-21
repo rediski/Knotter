@@ -84,7 +84,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
 
                                 <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/20' : 'border-depth-5'}`} />
 
-                                <div className="w-full">{edge.name}</div>
+                                <div className="w-full">{edge.id}</div>
 
                                 <button
                                     className={`
