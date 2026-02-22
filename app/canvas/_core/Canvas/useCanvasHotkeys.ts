@@ -10,6 +10,7 @@ import { toggleTooltipMode } from '@/canvas/utils/canvas/toggleTooltipMode';
 import { toggleMagnetMode } from '@/canvas/utils/canvas/toggleMagnetMode';
 import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
 import { selectAllItems } from '@/canvas/utils/items/selectAllItems';
+import { selectAllEdges } from '@/canvas/utils/edges/selectAllEdges';
 import { copySelectedItems, pasteClipboardItems } from '@/canvas/utils/clipboard/copyPasteItems';
 import { createNode } from '@/canvas/utils/nodes/createNode';
 import { createText } from '@/canvas/utils/texts/createText';
@@ -87,6 +88,8 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
                 const ctrlMap: Record<string, () => void> = {
                     a: () => selectAllItems(),
                     ф: () => selectAllItems(),
+                    e: () => selectAllEdges(),
+                    у: () => selectAllEdges(),
                     c: () => copySelectedItems(items, selectedItemIds),
                     с: () => copySelectedItems(items, selectedItemIds),
                     v: () => pasteClipboardItems(),
