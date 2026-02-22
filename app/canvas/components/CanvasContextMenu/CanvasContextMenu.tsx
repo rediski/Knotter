@@ -8,11 +8,12 @@ import { useClickOutside } from '@/hooks/useClickOutside';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { selectAllItems } from '@/canvas/utils/items/selectAllItems';
+import { selectAllEdges } from '@/canvas/utils/edges/selectAllEdges';
+import { selectAllTexts } from '@/canvas/utils/texts/selectAllTexts';
+
 import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
 
-import { getShape, getAllShapes } from '@/canvas/utils/nodes/getShape';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
-import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
 import { selectAllNodes } from '@/canvas/utils/nodes/selectAllNodes';
 import { createNode } from '@/canvas/utils/nodes/createNode';
 
@@ -54,10 +55,11 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                             closeMenu();
                         }}
                         disabled={items.length === 0}
-                        shortcut="Ctrl + A"
+                        shortcut="Ctrl + Shift + A"
                     >
                         Выбрать всё
                     </ContextMenuItem>,
+
                     <ContextMenuItem
                         key="select-all-nodes"
                         onClick={() => {
@@ -65,8 +67,32 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                             closeMenu();
                         }}
                         disabled={nodes.length === 0}
+                        shortcut="Ctrl + A"
                     >
                         Выбрать все узлы
+                    </ContextMenuItem>,
+
+                    <ContextMenuItem
+                        key="select-all-edges"
+                        onClick={() => {
+                            selectAllEdges();
+                            closeMenu();
+                        }}
+                        disabled={nodes.length === 0}
+                        shortcut="Ctrl + E"
+                    >
+                        Выбрать все связи
+                    </ContextMenuItem>,
+
+                    <ContextMenuItem
+                        key="select-all-texts"
+                        onClick={() => {
+                            selectAllTexts();
+                            closeMenu();
+                        }}
+                        disabled={items.filter((item) => item.kind === 'text').length === 0}
+                    >
+                        Выбрать весь текст
                     </ContextMenuItem>,
                 ]}
             >
@@ -99,27 +125,6 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                 ]}
             >
                 Создать
-            </ContextMenuItem>
-
-            <ContextMenuItem
-                disabled={!onlyNodesSelected}
-                submenu={getAllShapes().map((type) => {
-                    const { label, icon } = getShape(type);
-                    return (
-                        <ContextMenuItem
-                            key={`shape-${type}`}
-                            onClick={() => {
-                                changeShapeType(type);
-                                closeMenu();
-                            }}
-                            icon={icon}
-                        >
-                            {label}
-                        </ContextMenuItem>
-                    );
-                })}
-            >
-                Изменить форму
             </ContextMenuItem>
 
             <hr className="border-b-0 border-depth-6 my-1" />
