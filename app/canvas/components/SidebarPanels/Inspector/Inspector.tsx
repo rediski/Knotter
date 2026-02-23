@@ -106,7 +106,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     };
 
     if (!selectedItem || !nodeParameters) {
-        return <EmptyState message="Выберите элемент для инспектора" />;
+        return <EmptyState message="Необходимо выбрать один из элементов" />;
     }
 
     const Icon = getIcon(selectedItem?.kind || 'bug');
