@@ -17,6 +17,8 @@ import { createNode } from '@/canvas/utils/nodes/createNode';
 import { createText } from '@/canvas/utils/texts/createText';
 import { initEdge } from '@/canvas/utils/edges/initEdge';
 import { clearSelection } from '@/canvas/utils/canvas/сlearSelection';
+import { openTabs } from '@/canvas/utils/canvas/openTabs';
+import { getSelectedNodesIds } from '@/canvas/utils/nodes/getSelectedNodesIds';
 
 export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>) {
     const toggleGrid = useCanvasStore((state) => state.toggleShowGrid);
@@ -41,15 +43,11 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
 
             const isCtrl = e.ctrlKey || e.metaKey;
             const isShift = e.shiftKey;
+            const isSpacebar = e.code === 'Space';
 
             if (keysPressed.has(key)) return;
 
             keysPressed.add(key);
-
-            if (key === 'escape') {
-                clearSelection();
-                return;
-            }
 
             if (isCtrl && isShift) {
                 const ctrlShiftMap: Record<string, () => void> = {
@@ -105,6 +103,16 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             if (!isCtrl && !isShift && toggleMap[key]) {
                 e.preventDefault();
                 return toggleMap[key]();
+            }
+
+            if (isSpacebar) {
+                openTabs(getSelectedNodesIds());
+                return;
+            }
+
+            if (key === 'escape') {
+                clearSelection();
+                return;
             }
 
             if (key === 'delete') {
