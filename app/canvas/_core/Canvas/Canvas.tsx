@@ -39,7 +39,7 @@ export default function Canvas() {
 
             <SelectionBox containerRef={containerRef} />
 
-            <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <Node containerRef={containerRef} />
                 <Text containerRef={containerRef} />
             </div>
