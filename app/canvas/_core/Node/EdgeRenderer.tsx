@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, type RefObject } from 'react';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
 
@@ -6,11 +6,7 @@ import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getEdges } from '@/canvas/utils/edges/getEdges';
 import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
 
-type EdgeRendererProps = {
-    containerRef: React.RefObject<HTMLDivElement | null>;
-};
-
-export const EdgeRenderer: React.FC<EdgeRendererProps> = ({ containerRef }) => {
+export const EdgeRenderer = ({ containerRef }: { containerRef: RefObject<HTMLDivElement | null> }) => {
     const items = useCanvasStore((state) => state.items);
     const invertY = useCanvasStore((state) => state.invertY);
     const tempEdge = useCanvasStore((state) => state.tempEdge);
@@ -48,7 +44,7 @@ export const EdgeRenderer: React.FC<EdgeRendererProps> = ({ containerRef }) => {
     const edges = getEdges(items);
 
     return (
-        <svg className="absolute inset-0 w-full h-full">
+        <svg className="absolute inset-0 w-full h-full pointer-events-none">
             {edges.map((edge) => {
                 const fromNode = nodes.find((node) => node.id === edge.from);
                 const toNode = nodes.find((node) => node.id === edge.to);
@@ -70,7 +66,7 @@ export const EdgeRenderer: React.FC<EdgeRendererProps> = ({ containerRef }) => {
                         stroke={isSelected ? 'var(--color-bg-accent)' : 'var(--contrast)'}
                         strokeWidth={2 * zoomLevel}
                         data-edge-id={edge.id}
-                        className="cursor-pointer"
+                        className="cursor-pointer pointer-events-auto"
                     />
                 );
             })}
