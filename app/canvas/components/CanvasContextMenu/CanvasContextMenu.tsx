@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, memo } from 'react';
+import { useRef, memo } from 'react';
 import { ContextMenu } from '@/components/UI/ContextMenu';
 import { ContextMenuItem } from '@/components/UI/ContextMenuItem';
 
@@ -18,6 +18,8 @@ import { selectAllNodes } from '@/canvas/utils/nodes/selectAllNodes';
 import { createNode } from '@/canvas/utils/nodes/createNode';
 
 import { createText } from '@/canvas/utils/texts/createText';
+import { openTabs } from '@/canvas/utils/canvas/openTabs';
+import { getSelectedNodesIds } from '@/canvas/utils/nodes/getSelectedNodesIds';
 
 type CanvasContextMenuProps = {
     isOpen: boolean;
@@ -30,19 +32,10 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
 
     const items = useCanvasStore((state) => state.items);
     const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
-    const offset = useCanvasStore((state) => state.offset);
 
     const nodes = getNodes(items);
 
     useClickOutside(menuRef, closeMenu);
-
-    useEffect(() => {
-        if (offset.x || offset.y) {
-            closeMenu();
-        }
-    }, [offset.x, offset.y, closeMenu]);
-
-    const onlyNodesSelected = selectedItemIds.every((id) => nodes.some((node) => node.id === id));
 
     return (
         <ContextMenu isOpen={isOpen} position={position} ref={menuRef}>
@@ -125,6 +118,18 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                 ]}
             >
                 Создать
+            </ContextMenuItem>
+
+            <ContextMenuItem
+                key="open-tab"
+                onClick={() => {
+                    openTabs(getSelectedNodesIds());
+                    closeMenu();
+                }}
+                disabled={useCanvasStore.getState().selectedItemIds.length === 0}
+                shortcut="Space"
+            >
+                Открыть вкладку
             </ContextMenuItem>
 
             <hr className="border-b-0 border-depth-6 my-1" />
