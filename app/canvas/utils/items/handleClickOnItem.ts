@@ -8,7 +8,16 @@ import { getTextById } from '@/canvas/utils/texts/getTextById';
 import { createEdge } from '@/canvas/utils/edges/createEdge';
 
 export function handleClickOnItem(e: MouseEvent) {
-    const { items, selectedItemIds, setSelectedItemIds, selectedEdgeIds, setSelectedEdgeIds } = useCanvasStore.getState();
+    if (e.button !== 0) return;
+
+    const state = useCanvasStore.getState();
+
+    const items = state.items;
+    const selectedItemIds = state.selectedItemIds;
+    const selectedEdgeIds = state.selectedEdgeIds;
+
+    const setSelectedItemIds = state.setSelectedItemIds;
+    const setSelectedEdgeIds = state.setSelectedEdgeIds;
 
     const point = { x: e.clientX, y: e.clientY };
     const isMultiSelect = e.ctrlKey || e.metaKey || e.shiftKey;
@@ -38,7 +47,9 @@ export function handleClickOnItem(e: MouseEvent) {
     if (!itemId) {
         if (!isMultiSelect) {
             setSelectedItemIds([]);
+            setSelectedEdgeIds([]);
         }
+
         return;
     }
 
@@ -53,7 +64,6 @@ export function handleClickOnItem(e: MouseEvent) {
 
     if (clickedTextId) {
         const textItem = getTextById(items, clickedTextId);
-
         if (textItem?.isEditing) return;
     }
 }
