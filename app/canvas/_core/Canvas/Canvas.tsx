@@ -3,7 +3,6 @@
 import { useRef } from 'react';
 
 import { Node } from '@/canvas/_core/Node/Node';
-import { Text } from '@/canvas/_core/Text/Text';
 
 import { SelectionBox } from '@/canvas/components/CanvasSelectionBox/SelectionBox';
 import { CanvasContextMenu } from '@/canvas/components/CanvasContextMenu/CanvasContextMenu';
@@ -41,7 +40,6 @@ export default function Canvas() {
 
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <Node containerRef={containerRef} />
-                <Text containerRef={containerRef} />
             </div>
         </div>
     );

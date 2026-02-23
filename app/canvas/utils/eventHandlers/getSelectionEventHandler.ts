@@ -5,7 +5,6 @@ import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
 
 import { selectItemsInSelectionBox } from '@/canvas/utils/canvas/selectItemsInSelectionBox';
 import { getNodeIdUnderCursor } from '@/canvas/utils/nodes/getNodeIdUnderCursor';
-import { getTextIdUnderCursor } from '@/canvas/utils/texts/getTextIdUnderCursor';
 import { getEdgeIdUnderCursor } from '@/canvas/utils/edges/getEdgeIdUnderCursor';
 import { findCanvasUnderCursor } from '@/canvas/utils/canvas/findCanvasUnderCursor';
 
@@ -19,7 +18,6 @@ export function getSelectionEventHandler(canvasRef: RefObject<HTMLCanvasElement 
 
             if (getNodeIdUnderCursor(e) !== null) return;
             if (getEdgeIdUnderCursor(e) !== null) return;
-            if (getTextIdUnderCursor(e) !== null) return;
 
             const mousePos = useCanvasRefsStore.getState().mousePosition.current;
             const setSelectionStart = useCanvasStore.getState().setSelectionStart;

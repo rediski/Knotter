@@ -157,16 +157,6 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                 </div>
             )}
 
-            {showDescription && selectedItem.kind === 'text' && (
-                <div className="flex flex-col gap-1">
-                    <Textarea
-                        value={selectedItem.content}
-                        onChange={changeItemDescription}
-                        placeholder={FIELD_TITLES.DESCRIPTION}
-                    />
-                </div>
-            )}
-
             {selectedItem.kind === 'node' && (
                 <>
                     {showShape && (

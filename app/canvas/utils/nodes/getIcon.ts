@@ -1,12 +1,11 @@
 import { LucideIcon } from 'lucide-react';
-import { Box, Hash, Type, Feather, FlagTriangleRight, List, Folder, Bug } from 'lucide-react';
+import { Box, Hash, Type, FlagTriangleRight, List, Folder, Bug } from 'lucide-react';
 
 const iconMap: Record<string, LucideIcon> = {
     node: Box,
 
     number: Hash,
     string: Type,
-    text: Feather,
     boolean: FlagTriangleRight,
     enum: List,
     structure: Folder,

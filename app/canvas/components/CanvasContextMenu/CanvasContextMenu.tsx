@@ -9,15 +9,12 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { selectAllItems } from '@/canvas/utils/items/selectAllItems';
 import { selectAllEdges } from '@/canvas/utils/edges/selectAllEdges';
-import { selectAllTexts } from '@/canvas/utils/texts/selectAllTexts';
-
 import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
 
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { selectAllNodes } from '@/canvas/utils/nodes/selectAllNodes';
 
 import { createNode } from '@/canvas/utils/nodes/createNode';
-import { createText } from '@/canvas/utils/texts/createText';
 import { initEdge } from '@/canvas/utils/edges/initEdge';
 
 import { openTabs } from '@/canvas/utils/canvas/openTabs';
@@ -78,17 +75,6 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                     >
                         Все связи
                     </ContextMenuItem>,
-
-                    <ContextMenuItem
-                        key="select-all-texts"
-                        onClick={() => {
-                            selectAllTexts();
-                            closeMenu();
-                        }}
-                        disabled={items.filter((item) => item.kind === 'text').length === 0}
-                    >
-                        Весь текст
-                    </ContextMenuItem>,
                 ]}
             >
                 Выбрать
@@ -105,17 +91,6 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                         shortcut="Shift + A"
                     >
                         Узел
-                    </ContextMenuItem>,
-
-                    <ContextMenuItem
-                        key="create-text"
-                        onClick={() => {
-                            createText();
-                            closeMenu();
-                        }}
-                        shortcut="Shift + T"
-                    >
-                        Текст
                     </ContextMenuItem>,
 
                     <ContextMenuItem

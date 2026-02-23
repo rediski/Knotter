@@ -14,7 +14,7 @@ import { selectAllNodes } from '@/canvas/utils/nodes/selectAllNodes';
 import { selectAllEdges } from '@/canvas/utils/edges/selectAllEdges';
 import { copySelectedItems, pasteClipboardItems } from '@/canvas/utils/clipboard/copyPasteItems';
 import { createNode } from '@/canvas/utils/nodes/createNode';
-import { createText } from '@/canvas/utils/texts/createText';
+
 import { initEdge } from '@/canvas/utils/edges/initEdge';
 import { clearSelection } from '@/canvas/utils/canvas/сlearSelection';
 import { openTabs } from '@/canvas/utils/canvas/openTabs';
@@ -85,7 +85,6 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
 
             if (isShift && !isCtrl) {
                 if (key === 'a' || key === 'ф') return createNode();
-                if (key === 't' || key === 'е') return createText();
                 if (key === 'e' || key === 'у') return initEdge();
             }
 

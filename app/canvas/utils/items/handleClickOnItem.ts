@@ -2,9 +2,7 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { selectItems } from '@/canvas/utils/items/selectItems';
 import { getNodeIdUnderCursor } from '@/canvas/utils/nodes/getNodeIdUnderCursor';
-import { getTextIdUnderCursor } from '@/canvas/utils/texts/getTextIdUnderCursor';
 import { getEdgeIdUnderCursor } from '@/canvas/utils/edges/getEdgeIdUnderCursor';
-import { getTextById } from '@/canvas/utils/texts/getTextById';
 import { createEdge } from '@/canvas/utils/edges/createEdge';
 
 export function handleClickOnItem(e: MouseEvent, isCanvasUnderCursor: boolean) {
@@ -12,7 +10,6 @@ export function handleClickOnItem(e: MouseEvent, isCanvasUnderCursor: boolean) {
 
     const state = useCanvasStore.getState();
 
-    const items = state.items;
     const selectedItemIds = state.selectedItemIds;
     const selectedEdgeIds = state.selectedEdgeIds;
 
@@ -24,7 +21,6 @@ export function handleClickOnItem(e: MouseEvent, isCanvasUnderCursor: boolean) {
 
     const clickedNodeId = getNodeIdUnderCursor(point);
     const clickedEdgeId = getEdgeIdUnderCursor(point);
-    const clickedTextId = getTextIdUnderCursor(point);
 
     if (clickedEdgeId) {
         if (isMultiSelect) {
@@ -42,7 +38,7 @@ export function handleClickOnItem(e: MouseEvent, isCanvasUnderCursor: boolean) {
         return;
     }
 
-    const itemId = clickedNodeId || clickedTextId;
+    const itemId = clickedNodeId;
 
     if (!itemId) {
         if (!isMultiSelect && isCanvasUnderCursor) {
@@ -60,10 +56,5 @@ export function handleClickOnItem(e: MouseEvent, isCanvasUnderCursor: boolean) {
 
     if (clickedNodeId) {
         createEdge(clickedNodeId);
-    }
-
-    if (clickedTextId) {
-        const textItem = getTextById(items, clickedTextId);
-        if (textItem?.isEditing) return;
     }
 }
