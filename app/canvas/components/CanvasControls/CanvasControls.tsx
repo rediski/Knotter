@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState, useEffect, useMemo, useCallback, RefObject } from 'react';
+import { memo, useState, useEffect, useMemo, useCallback, type RefObject } from 'react';
 import Link from 'next/link';
 
 import { Tooltip } from '@/components/UI/Tooltip';
@@ -16,11 +16,11 @@ import { useCanvasControlsMenu } from '@/canvas/components/CanvasControls/useCan
 
 import { FlipVertical2, Home, Menu, Magnet, Grid2x2, Move3d, Eye, EyeOff, EyeClosed, RotateCcw } from 'lucide-react';
 
-type CanvasControlsProps = {
+export const CanvasControls = memo(function CanvasControls({
+    canvasRef,
+}: {
     canvasRef: RefObject<HTMLCanvasElement | null>;
-};
-
-export const CanvasControls = memo(function CanvasControls({ canvasRef }: CanvasControlsProps) {
+}) {
     if (!canvasRef) return null;
 
     const offset = useCanvasStore((state) => state.offset);
@@ -160,7 +160,7 @@ export const CanvasControls = memo(function CanvasControls({ canvasRef }: Canvas
                 </div>
             </div>
 
-            <div className="absolute bottom-4 left-4 flex gap-1 z-10 text-sm">
+            <div className="absolute bottom-4 left-4 flex gap-1 z-10 text-sm select-none">
                 <button
                     className="bg-depth-2 hover:bg-depth-3 rounded-md p-2 shadow w-fit cursor-pointer"
                     onClick={() => center && setOffset(center)}
