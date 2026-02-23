@@ -11,7 +11,7 @@ import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { NODE_SIZE } from '@/canvas/_core/_/canvas.constants';
 import { EdgeRenderer } from './EdgeRenderer';
 import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
-import { openTab } from '@/canvas/utils/canvas/openTab';
+import { openTabs } from '@/canvas/utils/canvas/openTabs';
 
 type NodeProps = {
     containerRef: React.RefObject<HTMLDivElement | null>;
@@ -30,6 +30,8 @@ export const Node: React.FC<NodeProps> = ({ containerRef }) => {
     const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
     const hoveredNodeId = useCanvasStore((state) => state.hoveredNodeId);
 
+    const selectionStart = useCanvasStore((state) => state.selectionStart);
+
     const nodes = getNodes(items);
 
     const handleNodeClick = (nodeId: string) => {
@@ -37,7 +39,7 @@ export const Node: React.FC<NodeProps> = ({ containerRef }) => {
             clearTimeout(clickTimeoutRef.current);
             clickTimeoutRef.current = null;
 
-            openTab(nodeId);
+            openTabs(nodeId);
             return;
         }
 
@@ -65,7 +67,7 @@ export const Node: React.FC<NodeProps> = ({ containerRef }) => {
                 return (
                     <div
                         key={node.id}
-                        className="absolute"
+                        className={`absolute ${!selectionStart ? 'pointer-events-auto' : 'pointer-events-none'}`}
                         data-node-id={node.id}
                         style={{
                             left: `${screenX}px`,
