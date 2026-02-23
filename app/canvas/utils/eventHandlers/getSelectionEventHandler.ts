@@ -7,6 +7,7 @@ import { selectItemsInSelectionBox } from '@/canvas/utils/canvas/selectItemsInSe
 import { getNodeIdUnderCursor } from '@/canvas/utils/nodes/getNodeIdUnderCursor';
 import { getTextIdUnderCursor } from '@/canvas/utils/texts/getTextIdUnderCursor';
 import { getEdgeIdUnderCursor } from '@/canvas/utils/edges/getEdgeIdUnderCursor';
+import { findCanvasUnderCursor } from '@/canvas/utils/canvas/findCanvasUnderCursor';
 
 export function getSelectionEventHandler(canvasRef: RefObject<HTMLCanvasElement | null>) {
     return {
@@ -14,7 +15,7 @@ export function getSelectionEventHandler(canvasRef: RefObject<HTMLCanvasElement 
             if (e.button !== 0) return;
 
             const canvas = canvasRef.current;
-            if (!canvas) return;
+            if (!findCanvasUnderCursor(e, canvas)) return;
 
             if (getNodeIdUnderCursor(e) !== null) return;
             if (getEdgeIdUnderCursor(e) !== null) return;
@@ -37,7 +38,7 @@ export function getSelectionEventHandler(canvasRef: RefObject<HTMLCanvasElement 
             if (!selectionStart || !isLeftButtonPressed) return;
 
             const canvas = canvasRef.current;
-            if (!canvas) return;
+            if (!findCanvasUnderCursor(e, canvas)) return;
 
             const mousePos = useCanvasRefsStore.getState().mousePosition.current;
 
@@ -53,7 +54,7 @@ export function getSelectionEventHandler(canvasRef: RefObject<HTMLCanvasElement 
             if (!selectionStart || e.button !== 0) return;
 
             const canvas = canvasRef.current;
-            if (!canvas) return;
+            if (!findCanvasUnderCursor(e, canvas)) return;
 
             const mousePos = useCanvasRefsStore.getState().mousePosition.current;
 
