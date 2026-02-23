@@ -19,9 +19,11 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
     const onMouseDown = useCallback(
         (e: MouseEvent) => {
             if (!canvasRef.current) return;
-            if (findCanvasUnderCursor(e, canvasRef.current)) return;
 
-            handleClickOnItem(e);
+            const isCanvasUnderCursor = findCanvasUnderCursor(e, canvasRef.current);
+            if (isCanvasUnderCursor) return;
+
+            handleClickOnItem(e, isCanvasUnderCursor);
             startDragging(e, canvasRef);
         },
         [canvasRef],
