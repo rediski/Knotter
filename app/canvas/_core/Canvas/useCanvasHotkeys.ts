@@ -19,8 +19,6 @@ import { initEdge } from '@/canvas/utils/edges/initEdge';
 import { clearSelection } from '@/canvas/utils/canvas/сlearSelection';
 
 export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>) {
-    const setSelectedItemIds = useCanvasStore.getState().setSelectedItemIds;
-
     const toggleGrid = useCanvasStore((state) => state.toggleShowGrid);
     const toggleAxes = useCanvasStore((state) => state.toggleShowAxes);
 
@@ -125,5 +123,5 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             window.removeEventListener('keydown', onKeyDown);
             window.removeEventListener('keyup', onKeyUp);
         };
-    }, [canvasRef, setSelectedItemIds]);
+    }, [canvasRef]);
 }
