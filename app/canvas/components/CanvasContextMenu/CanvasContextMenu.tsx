@@ -15,9 +15,11 @@ import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
 
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { selectAllNodes } from '@/canvas/utils/nodes/selectAllNodes';
-import { createNode } from '@/canvas/utils/nodes/createNode';
 
+import { createNode } from '@/canvas/utils/nodes/createNode';
 import { createText } from '@/canvas/utils/texts/createText';
+import { initEdge } from '@/canvas/utils/edges/initEdge';
+
 import { openTabs } from '@/canvas/utils/canvas/openTabs';
 import { getSelectedNodesIds } from '@/canvas/utils/nodes/getSelectedNodesIds';
 
@@ -50,7 +52,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                         disabled={items.length === 0}
                         shortcut="Ctrl + Shift + A"
                     >
-                        Выбрать всё
+                        Все элементы
                     </ContextMenuItem>,
 
                     <ContextMenuItem
@@ -62,7 +64,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                         disabled={nodes.length === 0}
                         shortcut="Ctrl + A"
                     >
-                        Выбрать все узлы
+                        Все узлы
                     </ContextMenuItem>,
 
                     <ContextMenuItem
@@ -74,7 +76,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                         disabled={nodes.length === 0}
                         shortcut="Ctrl + E"
                     >
-                        Выбрать все связи
+                        Все связи
                     </ContextMenuItem>,
 
                     <ContextMenuItem
@@ -85,7 +87,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                         }}
                         disabled={items.filter((item) => item.kind === 'text').length === 0}
                     >
-                        Выбрать весь текст
+                        Весь текст
                     </ContextMenuItem>,
                 ]}
             >
@@ -102,7 +104,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                         }}
                         shortcut="Shift + A"
                     >
-                        Создать узел
+                        Узел
                     </ContextMenuItem>,
 
                     <ContextMenuItem
@@ -113,7 +115,19 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                         }}
                         shortcut="Shift + T"
                     >
-                        Создать текст
+                        Текст
+                    </ContextMenuItem>,
+
+                    <ContextMenuItem
+                        key="initiate-edge"
+                        onClick={() => {
+                            initEdge();
+                            closeMenu();
+                        }}
+                        disabled={selectedItemIds.length === 0}
+                        shortcut="Shift + E"
+                    >
+                        Cвязь
                     </ContextMenuItem>,
                 ]}
             >
