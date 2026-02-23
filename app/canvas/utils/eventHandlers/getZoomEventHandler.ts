@@ -1,8 +1,6 @@
 import { RefObject } from 'react';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { MIN_ZOOM, MAX_ZOOM } from '@/canvas/_core/_/canvas.constants';
-
-const ZOOM_FACTOR = 1.1;
+import { MIN_ZOOM, MAX_ZOOM, ZOOM_FACTOR } from '@/canvas/_core/_/canvas.constants';
 
 export function getZoomEventHandler(canvasRef: RefObject<HTMLCanvasElement | null>) {
     return (e: WheelEvent) => {
