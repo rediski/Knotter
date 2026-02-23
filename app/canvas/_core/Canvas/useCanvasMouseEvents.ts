@@ -30,6 +30,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
     const onMouseMove = useCallback(
         (e: MouseEvent) => {
             if (!canvasRef.current) return;
+
             const mousePosition = useCanvasRefsStore.getState().mousePosition;
 
             const isPanning = useCanvasRefsStore.getState().isPanning;
@@ -48,11 +49,18 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
                 updateHoveredNodeId(e);
             }
 
-            if (isPanning?.current || !dragStartMouse.current || initialNodePositions.current.size === 0) {
+            const isLeftMouseButtonPressed = e.buttons === 1;
+
+            const hasNodesToMove = initialNodePositions.current.size > 0;
+            const isCurrentlyPanning = isPanning?.current;
+
+            if (!isLeftMouseButtonPressed || isCurrentlyPanning || !hasNodesToMove) {
                 return;
             }
 
             isDragging.current = true;
+
+            if (!dragStartMouse.current) return;
 
             const dx = mousePos.x - dragStartMouse.current.x;
             const dy = mousePos.y - dragStartMouse.current.y;
