@@ -7,7 +7,7 @@ import { getEdgeIdUnderCursor } from '@/canvas/utils/edges/getEdgeIdUnderCursor'
 import { getTextById } from '@/canvas/utils/texts/getTextById';
 import { createEdge } from '@/canvas/utils/edges/createEdge';
 
-export function handleClickOnItem(e: MouseEvent) {
+export function handleClickOnItem(e: MouseEvent, isCanvasUnderCursor: boolean) {
     if (e.button !== 0) return;
 
     const state = useCanvasStore.getState();
@@ -45,7 +45,7 @@ export function handleClickOnItem(e: MouseEvent) {
     const itemId = clickedNodeId || clickedTextId;
 
     if (!itemId) {
-        if (!isMultiSelect) {
+        if (!isMultiSelect && isCanvasUnderCursor) {
             setSelectedItemIds([]);
             setSelectedEdgeIds([]);
         }
