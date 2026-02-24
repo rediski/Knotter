@@ -77,15 +77,7 @@ export const EdgeRenderer = ({ containerRef }: { containerRef: RefObject<HTMLDiv
                     if (!fromNode) return null;
 
                     const fromCoords = getScreenCoords(fromNode.position.x, fromNode.position.y, containerRef);
-
-                    const containerHeight = containerRef.current?.offsetHeight ?? 0;
-
-                    const toCoords = {
-                        x: mousePosition.current.x * zoomLevel + offset.x,
-                        y: invertY
-                            ? -mousePosition.current.y * zoomLevel + containerHeight + offset.y
-                            : mousePosition.current.y * zoomLevel + offset.y,
-                    };
+                    const toCoords = getScreenCoords(mousePosition.current.x, mousePosition.current.y, containerRef);
 
                     return (
                         <line
