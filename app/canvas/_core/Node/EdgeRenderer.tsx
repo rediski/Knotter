@@ -8,10 +8,8 @@ import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
 
 export const EdgeRenderer = ({ containerRef }: { containerRef: RefObject<HTMLDivElement | null> }) => {
     const items = useCanvasStore((state) => state.items);
-    const invertY = useCanvasStore((state) => state.invertY);
     const tempEdge = useCanvasStore((state) => state.tempEdge);
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
-    const offset = useCanvasStore((state) => state.offset);
     const selectedEdgeIds = useCanvasStore((state) => state.selectedEdgeIds);
 
     const mousePosition = useCanvasRefsStore((state) => state.mousePosition);
