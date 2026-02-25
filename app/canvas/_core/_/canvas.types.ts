@@ -21,5 +21,5 @@ export interface Node {
     shapeType: NodeShapeType;
     position: Position;
     edges: Omit<Edge, 'from'>[];
-    nodeParameters: Parameter[];
+    parameters: Parameter[];
 }

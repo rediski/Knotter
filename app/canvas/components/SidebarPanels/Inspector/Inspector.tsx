@@ -56,7 +56,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     const incomingEdges = getIncomingEdges(items, selectedNode?.id);
     const outgoingEdges = getOutgoingEdges(items, selectedNode?.id);
 
-    const nodeParameters = selectedNode?.nodeParameters;
+    const nodeParameters = selectedNode?.parameters;
 
     const handleEdgeClick = (edgeId: string) => {
         setSelectedEdgeIds([edgeId]);

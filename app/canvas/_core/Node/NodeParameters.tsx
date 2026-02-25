@@ -23,7 +23,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
 
     const storeNode = items.find((item) => item.kind === 'node' && item.id === node.id) as Node | undefined;
 
-    const nodeParameters = storeNode?.nodeParameters ?? [];
+    const nodeParameters = storeNode?.parameters ?? [];
 
     const filteredParameters = parameters.filter(
         (template) => !nodeParameters.some((nodeParam) => nodeParam.id === template.id),
@@ -41,13 +41,13 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
 
         const currentNode = items[nodeIndex] as Node;
 
-        const updatedNodeParameters = currentNode.nodeParameters.map((param) =>
+        const updatedNodeParameters = currentNode.parameters.map((param) =>
             param.id === parameterId ? { ...param, ...updates } : param,
         );
 
         const updatedNode: Node = {
             ...currentNode,
-            nodeParameters: updatedNodeParameters,
+            parameters: updatedNodeParameters,
         };
 
         const updatedItems = [...items];
@@ -62,29 +62,35 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                 <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-3">
                     {nodeParameters.map((parameter: Parameter) => {
                         if (parameter.type === 'number') {
-                            const numberValue = parameter.value as ParameterTypeMap['number'];
+                            const numberParameter = parameter.data as ParameterTypeMap['number'];
 
                             return (
                                 <div key={parameter.id} className="flex flex-col gap-1">
                                     <p className="text-sm truncate">{parameter.name}</p>
 
                                     <Input
-                                        min={numberValue.min}
-                                        max={numberValue.max}
-                                        value={numberValue.currentValue.toString()}
-                                        step={numberValue.step}
+                                        min={numberParameter.min}
+                                        max={numberParameter.max}
+                                        value={numberParameter.value.toString()}
                                         type="number"
                                         className="bg-depth-2 border border-depth-3 hover:bg-depth-3 active:bg-depth-4"
                                         onChange={(newValue) => {
                                             const numValue = parseFloat(newValue);
                                             if (!isNaN(numValue)) {
+                                                let clampedValue = numValue;
+
+                                                if (numberParameter.min !== undefined) {
+                                                    clampedValue = Math.max(clampedValue, numberParameter.min);
+                                                }
+
+                                                if (numberParameter.max !== undefined) {
+                                                    clampedValue = Math.min(clampedValue, numberParameter.max);
+                                                }
+
                                                 updateNodeParameter(node.id, parameter.id, {
-                                                    value: {
-                                                        ...numberValue,
-                                                        currentValue: Math.min(
-                                                            Math.max(numValue, numberValue.min),
-                                                            numberValue.max,
-                                                        ),
+                                                    data: {
+                                                        ...numberParameter,
+                                                        value: clampedValue,
                                                     },
                                                 });
                                             }
@@ -100,10 +106,10 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                                     <p className="text-sm truncate">{parameter.name}</p>
 
                                     <Input
-                                        value={parameter.value as string}
+                                        value={parameter.data as string}
                                         onChange={(newValue) => {
                                             updateNodeParameter(node.id, parameter.id, {
-                                                value: newValue,
+                                                data: newValue,
                                             });
                                         }}
                                         placeholder={parameter.name}
@@ -122,14 +128,14 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                                     {parameter.name}
 
                                     <Checkbox
-                                        checked={parameter.value as boolean}
+                                        checked={parameter.data as boolean}
                                         onChange={(checked) => {
                                             updateNodeParameter(node.id, parameter.id, {
-                                                value: checked,
+                                                data: checked,
                                             });
                                         }}
                                         className={`bg-depth-2 ${
-                                            parameter.value === true
+                                            parameter.data === true
                                                 ? 'hover:bg-bg-accent'
                                                 : 'hover:bg-depth-3 active:bg-depth-4'
                                         }`}
@@ -139,20 +145,20 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                         }
 
                         if (parameter.type === 'enum') {
-                            const enumValue = parameter.value as ParameterTypeMap['enum'];
+                            const enumParameter = parameter.data as ParameterTypeMap['enum'];
 
                             return (
                                 <div key={parameter.id} className="flex flex-col gap-1">
                                     <p className="text-sm truncate">{parameter.name}:</p>
 
                                     <Select
-                                        value={enumValue.currentValue}
-                                        options={enumValue.options}
+                                        value={enumParameter.value}
+                                        options={enumParameter.options}
                                         onChange={(newValue) => {
                                             updateNodeParameter(node.id, parameter.id, {
-                                                value: {
-                                                    ...enumValue,
-                                                    currentValue: newValue,
+                                                data: {
+                                                    ...enumParameter,
+                                                    value: newValue,
                                                 },
                                             });
                                         }}
