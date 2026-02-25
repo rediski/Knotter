@@ -3,7 +3,7 @@
 import { memo } from 'react';
 
 import type { Parameter } from '@/canvas/_core/_/parameter';
-import { isNumberValue } from '@/canvas/_core/_/parameter.type-guards';
+import { isNumber } from '@/canvas/_core/_/parameter.type-guards';
 
 import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
@@ -28,13 +28,15 @@ export const NumberParameter = memo(function NumberParameter({
 }: NumberParameterProps) {
     const { updateParameter } = useParameters();
 
-    const { handleUpdateCurrentValue, handleUpdateMinValue, handleUpdateMaxValue, handleUpdateStepValue } =
-        useNumberParameter({ parameter, updateParameter });
+    const { handleUpdateCurrentValue, handleUpdateMinValue, handleUpdateMaxValue } = useNumberParameter({
+        parameter,
+        updateParameter,
+    });
 
     const Icon = getIcon(parameter.type);
 
     if (!parameter) return;
-    if (!isNumberValue(parameter)) return;
+    if (!isNumber(parameter)) return;
 
     return (
         <div className="flex flex-col justify-center gap-2 px-3 py-1 text-sm bg-depth-2 rounded-md">
@@ -51,47 +53,47 @@ export const NumberParameter = memo(function NumberParameter({
             <div className="flex items-center gap-1">
                 <div className="flex flex-col gap-1 w-full">
                     <div className="flex items-center gap-2">
-                        <p className="truncate w-full text-right">Базовое значение</p>
+                        <p className="truncate w-full text-right">Текущее значение</p>
 
                         <Input
-                            value={parameter.value.currentValue.toString()}
+                            value={parameter.data.value.toString()}
                             onChange={handleUpdateCurrentValue}
                             className="bg-depth-3 border border-depth-4"
                             type="number"
                         />
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div
+                        className={`
+                            flex items-center gap-2
+                            ${!parameter.data.min && 'opacity-50'}
+                        `}
+                    >
                         <p className="truncate w-full text-right">Минимальное значение</p>
 
                         <Input
-                            value={parameter.value.min.toString()}
+                            value={parameter.data.min?.toString() ?? ''}
                             onChange={handleUpdateMinValue}
                             className="bg-depth-3 border border-depth-4"
                             type="number"
+                            placeholder="Не задано"
                         />
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div
+                        className={`
+                            flex items-center gap-2
+                            ${!parameter.data.max && 'opacity-50'}
+                        `}
+                    >
                         <p className="truncate w-full text-right">Максимальное значение</p>
 
                         <Input
-                            value={parameter.value.max.toString()}
+                            value={parameter.data.max?.toString() ?? ''}
                             onChange={handleUpdateMaxValue}
                             className="bg-depth-3 border border-depth-4"
                             type="number"
-                        />
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                        <p className="truncate w-full text-right">Шаг изменения</p>
-
-                        <Input
-                            value={parameter.value.step.toString()}
-                            onChange={handleUpdateStepValue}
-                            className="bg-depth-3 border border-depth-4"
-                            placeholder="1"
-                            type="number"
+                            placeholder="Не задано"
                         />
                     </div>
                 </div>
