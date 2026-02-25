@@ -1,31 +1,13 @@
-import type { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
+import type { Parameter, ParameterType, ParameterTypeMap } from '@/canvas/_core/_/parameter';
 
-// prettier-ignore
-export const isNumberValue = (parameter: Parameter): 
-    parameter is Parameter & { type: 'number'; value: ParameterTypeMap['number'] } => {
-        return parameter.type === 'number';
+const createTypeGuard = <T extends ParameterType>(type: T) => {
+    return (parameter: Parameter): parameter is Parameter & { type: T; data: ParameterTypeMap[T] } => {
+        return parameter.type === type;
     };
+};
 
-// prettier-ignore
-export const isStringValue = (parameter: Parameter): 
-    parameter is Parameter & { type: 'string'; value: ParameterTypeMap['string'] } => {
-        return parameter.type === 'string';
-    };
-
-// prettier-ignore
-export const isBooleanValue = (parameter: Parameter): 
-    parameter is Parameter & { type: 'boolean'; value: ParameterTypeMap['boolean'] } => {
-        return parameter.type === 'boolean';
-    };
-
-// prettier-ignore
-export const isEnumValue = (parameter: Parameter): 
-    parameter is Parameter & { type: 'enum'; value: ParameterTypeMap['enum'] } => {
-        return parameter.type === 'enum';
-    };
-
-// prettier-ignore
-export const isStructureValue = (parameter: Parameter): 
-    parameter is Parameter & { type: 'structure'; value: ParameterTypeMap['structure'] } => {
-        return parameter.type === 'structure';
-    };
+export const isNumber = createTypeGuard('number');
+export const isString = createTypeGuard('string');
+export const isBoolean = createTypeGuard('boolean');
+export const isEnum = createTypeGuard('enum');
+export const isStructure = createTypeGuard('structure');
