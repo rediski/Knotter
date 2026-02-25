@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 import { Parameter } from '@/canvas/_core/_/parameter';
-import { isStructureValue } from '@/canvas/_core/_/parameter.type-guards';
+import { isStructure } from '@/canvas/_core/_/parameter.type-guards';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
@@ -16,7 +16,7 @@ interface StructureParamterProps {
 export const StructureParameter = memo(function StructureParameter({ parameter, removeParameter }: StructureParamterProps) {
     const StructureIcon = getIcon('structure');
 
-    if (!isStructureValue(parameter)) return null;
+    if (!isStructure(parameter)) return null;
 
     return (
         <div className="flex flex-col gap-1 px-3 py-2 bg-depth-2 text-sm rounded-md">

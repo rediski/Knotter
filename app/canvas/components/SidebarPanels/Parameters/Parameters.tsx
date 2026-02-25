@@ -18,13 +18,7 @@ import { BooleanParameter } from '@/canvas/components/Parameters/Boolean';
 import { EnumParameter } from '@/canvas/components/Parameters/Enum';
 import { StructureParameter } from '@/canvas/components/Parameters/Structure';
 
-import {
-    isNumberValue,
-    isStringValue,
-    isBooleanValue,
-    isEnumValue,
-    isStructureValue,
-} from '@/canvas/_core/_/parameter.type-guards';
+import { isNumber, isString, isBoolean, isEnum, isStructure } from '@/canvas/_core/_/parameter.type-guards';
 
 import { Plus } from 'lucide-react';
 
@@ -115,11 +109,11 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
 
                         const handleInputChange = (value: string) => {
                             updateParameter(parameter.id, {
-                                value: value,
+                                data: value,
                             });
                         };
 
-                        if (isNumberValue(parameter)) {
+                        if (isNumber(parameter)) {
                             return (
                                 <NumberParameter
                                     key={parameter.id}
@@ -130,7 +124,7 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
                             );
                         }
 
-                        if (isStringValue(parameter)) {
+                        if (isString(parameter)) {
                             return (
                                 <StringParameter
                                     key={parameter.id}
@@ -142,7 +136,7 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
                             );
                         }
 
-                        if (isBooleanValue(parameter)) {
+                        if (isBoolean(parameter)) {
                             return (
                                 <BooleanParameter
                                     key={parameter.id}
@@ -153,7 +147,7 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
                             );
                         }
 
-                        if (isEnumValue(parameter)) {
+                        if (isEnum(parameter)) {
                             return (
                                 <EnumParameter
                                     key={parameter.id}
@@ -164,7 +158,7 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
                             );
                         }
 
-                        if (isStructureValue(parameter)) {
+                        if (isStructure(parameter)) {
                             return (
                                 <StructureParameter
                                     key={parameter.id}
