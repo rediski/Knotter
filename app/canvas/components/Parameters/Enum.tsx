@@ -3,7 +3,7 @@
 import { memo } from 'react';
 
 import { Parameter } from '@/canvas/_core/_/parameter';
-import { isEnumValue } from '@/canvas/_core/_/parameter.type-guards';
+import { isEnum } from '@/canvas/_core/_/parameter.type-guards';
 
 import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
@@ -36,9 +36,9 @@ export const EnumParameter = memo(function EnumParameter({
     const EnumIcon = getIcon('enum');
     const StringIcon = getIcon('string');
 
-    if (!isEnumValue(parameter)) return null;
+    if (!isEnum(parameter)) return null;
 
-    const enumValue = parameter.value;
+    const enumParameter = parameter.data;
 
     return (
         <div className="flex flex-col justify-center gap-2 px-3 py-1 text-sm bg-depth-2 rounded-md">
@@ -53,7 +53,7 @@ export const EnumParameter = memo(function EnumParameter({
             </div>
 
             <div className="flex flex-col gap-1">
-                {enumValue.options.map((option, index) => (
+                {enumParameter.options.map((option, index) => (
                     <div key={index} className="flex gap-2 items-center rounded-md">
                         <Input
                             value={option}
@@ -72,7 +72,7 @@ export const EnumParameter = memo(function EnumParameter({
                 <div
                     className={`
                         flex flex-col gap-1 rounded-md p-2 border border-dashed border-depth-6 hover:bg-bg-accent/10 hover:border-text-accent cursor-pointer              
-                        ${enumValue.options.length > 0 && 'mt-2'}
+                        ${enumParameter.options.length > 0 && 'mt-2'}
                     `}
                     onClick={handleAddEnumOption}
                 >

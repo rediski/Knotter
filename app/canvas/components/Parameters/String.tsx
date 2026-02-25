@@ -3,7 +3,7 @@
 import { memo } from 'react';
 
 import type { Parameter } from '@/canvas/_core/_/parameter';
-import { isStringValue } from '@/canvas/_core/_/parameter.type-guards';
+import { isString } from '@/canvas/_core/_/parameter.type-guards';
 
 import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
@@ -28,7 +28,7 @@ export const StringParameter = memo(function StringParameter({
     const Icon = getIcon(parameter.type);
 
     if (!parameter) return;
-    if (!isStringValue(parameter)) return;
+    if (!isString(parameter)) return;
 
     return (
         <div className="flex flex-col justify-center gap-2 px-3 py-1 text-sm bg-depth-2 rounded-md">
@@ -48,7 +48,7 @@ export const StringParameter = memo(function StringParameter({
                         <p className="truncate w-full text-right">Базовое значение</p>
 
                         <Input
-                            value={parameter.value}
+                            value={parameter.data}
                             onChange={(val) => handleInputChange(val)}
                             className="bg-depth-3 border border-depth-4"
                             max={16}

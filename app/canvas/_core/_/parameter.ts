@@ -1,8 +1,8 @@
 export type ParameterTypeMap = {
-    number: { currentValue: number; min: number; max: number; step: number };
+    number: { value: number; min?: number; max?: number };
     string: string;
     boolean: boolean;
-    enum: { currentValue: string | null; options: string[] };
+    enum: { value: string | null; options: string[] };
     structure: string[];
 };
 
@@ -12,7 +12,7 @@ export type Parameter<T extends ParameterType = ParameterType> = {
     id: string;
     name: string;
     type: T;
-    value: ParameterTypeMap[T];
+    data: ParameterTypeMap[T];
 };
 
 export const parameterTypes: { type: ParameterType; label: string }[] = [

@@ -3,7 +3,7 @@
 import { memo } from 'react';
 
 import type { Parameter } from '@/canvas/_core/_/parameter';
-import { isBooleanValue } from '@/canvas/_core/_/parameter.type-guards';
+import { isBoolean } from '@/canvas/_core/_/parameter.type-guards';
 
 import { EditableName } from '@/components/UI/EditableName';
 import { Checkbox } from '@/components/UI/Checkbox';
@@ -29,14 +29,14 @@ export const BooleanParameter = memo(function BooleanParameter({
 
     const handleCheckboxChange = (checked: boolean) => {
         updateParameter(parameter.id, {
-            value: checked,
+            data: checked,
         });
     };
 
     const Icon = getIcon(parameter.type);
 
     if (!parameter) return;
-    if (!isBooleanValue(parameter)) return;
+    if (!isBoolean(parameter)) return;
 
     return (
         <div className="flex flex-col justify-center gap-2 px-3 py-1 text-sm bg-depth-2 rounded-md">
@@ -57,7 +57,7 @@ export const BooleanParameter = memo(function BooleanParameter({
 
                         <div className="w-full">
                             <Checkbox
-                                checked={parameter.value}
+                                checked={parameter.data}
                                 onChange={(checked) => handleCheckboxChange(checked)}
                                 className="bg-depth-3 border border-depth-4"
                             />

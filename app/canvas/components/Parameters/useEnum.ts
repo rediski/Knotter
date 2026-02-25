@@ -1,5 +1,5 @@
 import { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
-import { isEnumValue } from '@/canvas/_core/_/parameter.type-guards';
+import { isEnum } from '@/canvas/_core/_/parameter.type-guards';
 
 interface useEnumParameterProps {
     parameter: Parameter | undefined;
@@ -9,9 +9,9 @@ interface useEnumParameterProps {
 export const useEnumParameter = ({ parameter, updateParameter }: useEnumParameterProps) => {
     const handleAddEnumOption = () => {
         if (!parameter) return;
-        if (!isEnumValue(parameter)) return;
+        if (!isEnum(parameter)) return;
 
-        const thisParameterData = parameter.value as ParameterTypeMap['enum'];
+        const thisParameterData = parameter.data as ParameterTypeMap['enum'];
         const ordinalNumber = thisParameterData.options.length + 1;
 
         let newValue = `Опция ${ordinalNumber}`;
@@ -24,7 +24,7 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
 
         updateParameter(parameter.id, {
             ...parameter,
-            value: {
+            data: {
                 ...thisParameterData,
                 options: [...thisParameterData.options, newValue],
             },
@@ -33,14 +33,14 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
 
     const handleRemoveEnumOption = (index: number) => {
         if (!parameter) return;
-        if (!isEnumValue(parameter)) return;
+        if (!isEnum(parameter)) return;
 
-        const thisParameterData = parameter.value as ParameterTypeMap['enum'];
+        const thisParameterData = parameter.data as ParameterTypeMap['enum'];
         const updatedOptions = thisParameterData.options.filter((_, i) => i !== index);
 
         updateParameter(parameter.id, {
             ...parameter,
-            value: {
+            data: {
                 ...thisParameterData,
                 options: updatedOptions,
             },
@@ -49,9 +49,9 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
 
     const handleUpdateEnumOption = (index: number, newValue: string) => {
         if (!parameter) return;
-        if (!isEnumValue(parameter)) return;
+        if (!isEnum(parameter)) return;
 
-        const thisParameterData = parameter.value as ParameterTypeMap['enum'];
+        const thisParameterData = parameter.data as ParameterTypeMap['enum'];
 
         if (thisParameterData.options.some((option, i) => i !== index && option === newValue)) {
             return;
@@ -61,7 +61,7 @@ export const useEnumParameter = ({ parameter, updateParameter }: useEnumParamete
 
         updateParameter(parameter.id, {
             ...parameter,
-            value: {
+            data: {
                 ...thisParameterData,
                 options: updatedOptions,
             },

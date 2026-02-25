@@ -8,14 +8,13 @@ import { getNodes } from '@/canvas/utils/nodes/getNodes';
 
 import { v4 as uuid } from 'uuid';
 
-function parameterInitialValue(type: ParameterType): Parameter['value'] {
+function parameterInitialValue(type: ParameterType): Parameter['data'] {
     switch (type) {
         case 'number': {
             const numberConfig: ParameterTypeMap['number'] = {
-                currentValue: 0,
-                min: 0,
-                max: 100,
-                step: 1,
+                value: 0,
+                min: undefined,
+                max: undefined,
             };
 
             return numberConfig;
@@ -31,7 +30,7 @@ function parameterInitialValue(type: ParameterType): Parameter['value'] {
 
         case 'enum': {
             const enumConfig: ParameterTypeMap['enum'] = {
-                currentValue: null,
+                value: null,
                 options: [],
             };
 
@@ -60,7 +59,7 @@ export const useParameters = () => {
             id: uuid(),
             name: name,
             type,
-            value: parameterInitialValue(type),
+            data: parameterInitialValue(type),
         } as Parameter;
 
         setParameters([...parameters, newParameter]);
@@ -85,7 +84,7 @@ export const useParameters = () => {
         const nodeIndex = items.findIndex((item) => item.kind === 'node' && item.id === nodeId);
         const parameter = parameters.find((parameter) => parameter.id === parameterId);
         const node = items[nodeIndex] as Node;
-        const parameterExists = node.nodeParameters.some((parameter) => parameter.id === parameterId);
+        const parameterExists = node.parameters.some((parameter) => parameter.id === parameterId);
 
         if (!parameter) return;
         if (nodeIndex === -1) return;
@@ -97,7 +96,7 @@ export const useParameters = () => {
 
         const updatedNode = {
             ...node,
-            nodeParameters: [...node.nodeParameters, nodeParameter],
+            parameters: [...node.parameters, nodeParameter],
         };
 
         const updatedItems = [...items];
@@ -110,7 +109,7 @@ export const useParameters = () => {
 
         if (!node) return null;
 
-        return node.nodeParameters;
+        return node.parameters;
     };
 
     return {
