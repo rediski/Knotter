@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, memo, Fragment } from 'react';
+import { useState, memo, useMemo, Fragment } from 'react';
 
 import { parameterTypes, ParameterType } from '@/canvas/_core/_/parameter';
 import { isNumber, isString, isBoolean, isEnum, isStructure } from '@/canvas/_core/_/parameter.type-guards';
@@ -28,12 +28,13 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
     const [parameterType, setParameterType] = useState<ParameterType>('number');
 
     const parameters = useCanvasStore((state) => state.parameters);
+    const filterText = useCanvasStore((state) => (panelId ? state.filterText[panelId] : ''));
 
     const foundParameterType = parameterTypes.find((parameter) => parameter.type === parameterType);
 
     if (!foundParameterType) return;
 
-    const filteredParameters = getFilteredParameters({ panelId });
+    const filteredParameters = useMemo(() => getFilteredParameters(parameters, filterText), [parameters, filterText]);
 
     const hasNoFilteredResults = parameters.length > 0 && filteredParameters.length === 0;
     const hasNoParameters = parameters.length === 0;

@@ -1,18 +1,7 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import type { Parameter } from '@/canvas/_core/_/parameter';
 
-export const getFilteredParameters = ({ panelId }: { panelId?: string }) => {
-    const state = useCanvasStore.getState();
-    const parameters = state.parameters;
-
-    let filterText = '';
-
-    if (panelId) {
-        filterText = state.filterText[panelId];
-    }
-
-    if (!filterText) {
-        return parameters;
-    }
+export const getFilteredParameters = (parameters: Parameter[], filterText?: string) => {
+    if (!filterText) return parameters;
 
     const searchText = filterText.toLowerCase();
 
