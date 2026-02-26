@@ -1,16 +1,13 @@
 'use client';
 
-import { memo, Fragment, useMemo } from 'react';
+import { useState, memo, Fragment } from 'react';
+
+import { parameterTypes, ParameterType } from '@/canvas/_core/_/parameter';
+import { isNumber, isString, isBoolean, isEnum, isStructure } from '@/canvas/_core/_/parameter.type-guards';
 
 import { Input } from '@/components/UI/Input';
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 import { EmptyState } from '@/components/UI/EmptyState';
-
-import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { useParameters } from '@/canvas/components/SidebarPanels/Parameters/useParameters';
-
-import { parameterTypes } from '@/canvas/_core/_/parameter';
-import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
 import { NumberParameter } from '@/canvas/components/Parameters/Number';
 import { StringParameter } from '@/canvas/components/Parameters/String';
@@ -18,40 +15,28 @@ import { BooleanParameter } from '@/canvas/components/Parameters/Boolean';
 import { EnumParameter } from '@/canvas/components/Parameters/Enum';
 import { StructureParameter } from '@/canvas/components/Parameters/Structure';
 
-import { isNumber, isString, isBoolean, isEnum, isStructure } from '@/canvas/_core/_/parameter.type-guards';
+import { useCanvasStore } from '@/canvas/store/canvasStore';
+
+import { getFilteredParameters } from '@/canvas/utils/parameters/getFilteredParameters';
+import { createParameter } from '@/canvas/utils/parameters/createParameter';
+import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
 import { Plus } from 'lucide-react';
 
 export const Parameters = memo(function Parameters({ panelId }: { panelId?: string }) {
-    const {
-        parameters,
-        parameterName,
-        parameterType,
-        setParameterName,
-        setParameterType,
-        createParameter,
-        updateParameter,
-        removeParameter,
-    } = useParameters();
+    const [parameterName, setParameterName] = useState<string>('');
+    const [parameterType, setParameterType] = useState<ParameterType>('number');
 
-    const filterText = useCanvasStore((state) => (panelId ? state.filterText[panelId] : ''));
+    const parameters = useCanvasStore((state) => state.parameters);
 
-    const filteredParameters = useMemo(() => {
-        if (!filterText) return parameters;
+    const foundParameterType = parameterTypes.find((parameter) => parameter.type === parameterType);
 
-        const searchText = filterText.toLowerCase();
-        return parameters.filter(
-            (parameter) =>
-                parameter.name.toLowerCase().includes(searchText) || parameter.type.toLowerCase().includes(searchText),
-        );
-    }, [parameters, filterText]);
+    if (!foundParameterType) return;
 
-    const currentType = parameterTypes.find((parameter) => parameter.type === parameterType);
+    const filteredParameters = getFilteredParameters({ panelId });
 
-    if (!currentType) return;
-
-    const showFilteredEmptyState = parameters.length > 0 && filteredParameters.length === 0;
-    const showNoParametersState = parameters.length === 0;
+    const hasNoFilteredResults = parameters.length > 0 && filteredParameters.length === 0;
+    const hasNoParameters = parameters.length === 0;
 
     return (
         <div className="flex flex-col gap-1 overflow-y-auto m-1">
@@ -64,7 +49,7 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
                     max={16}
                 />
 
-                <DropdownAbsolute title={currentType?.label} icon={getIcon(parameterType)}>
+                <DropdownAbsolute title={foundParameterType.label} icon={getIcon(parameterType)}>
                     {parameterTypes.map((parameter) => {
                         const Icon = getIcon(parameter.type);
 
@@ -96,85 +81,40 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
 
             {filteredParameters.length > 0 ? (
                 <div className="flex flex-col gap-1">
-                    {filteredParameters.map((p) => {
-                        const parameter = parameters.find((parameter) => parameter.id === p.id);
+                    {filteredParameters.map((filteredParameter) => {
+                        const parameter = parameters.find((parameter) => parameter.id === filteredParameter.id);
 
                         if (!parameter) {
-                            throw new Error(`Parameter с id ${p.id} не найден`);
+                            throw new Error(`Parameter с id ${filteredParameter.id} не найден`);
                         }
 
-                        const handleUpdateParameterName = (newName: string) => {
-                            updateParameter(p.id, { name: newName });
-                        };
-
-                        const handleInputChange = (value: string) => {
-                            updateParameter(parameter.id, {
-                                data: value,
-                            });
-                        };
-
                         if (isNumber(parameter)) {
-                            return (
-                                <NumberParameter
-                                    key={parameter.id}
-                                    parameter={parameter}
-                                    handleUpdateParameterName={handleUpdateParameterName}
-                                    removeParameter={removeParameter}
-                                />
-                            );
+                            return <NumberParameter key={parameter.id} parameter={parameter} />;
                         }
 
                         if (isString(parameter)) {
-                            return (
-                                <StringParameter
-                                    key={parameter.id}
-                                    parameter={parameter}
-                                    handleInputChange={handleInputChange}
-                                    handleUpdateParameterName={handleUpdateParameterName}
-                                    removeParameter={removeParameter}
-                                />
-                            );
+                            return <StringParameter key={parameter.id} parameter={parameter} />;
                         }
 
                         if (isBoolean(parameter)) {
-                            return (
-                                <BooleanParameter
-                                    key={parameter.id}
-                                    parameter={parameter}
-                                    handleUpdateParameterName={handleUpdateParameterName}
-                                    removeParameter={removeParameter}
-                                />
-                            );
+                            return <BooleanParameter key={parameter.id} parameter={parameter} />;
                         }
 
                         if (isEnum(parameter)) {
-                            return (
-                                <EnumParameter
-                                    key={parameter.id}
-                                    parameter={parameter}
-                                    handleUpdateParameterName={handleUpdateParameterName}
-                                    removeParameter={removeParameter}
-                                />
-                            );
+                            return <EnumParameter key={parameter.id} parameter={parameter} />;
                         }
 
                         if (isStructure(parameter)) {
-                            return (
-                                <StructureParameter
-                                    key={parameter.id}
-                                    parameter={parameter}
-                                    removeParameter={removeParameter}
-                                />
-                            );
+                            return <StructureParameter key={parameter.id} parameter={parameter} />;
                         }
                     })}
                 </div>
             ) : (
                 <Fragment>
-                    {showFilteredEmptyState ? (
-                        <EmptyState message={`Нет параметров по запросу "${filterText}"`} />
+                    {hasNoFilteredResults ? (
+                        <EmptyState message="Параметры с таким именем не найдены" />
                     ) : (
-                        showNoParametersState && <EmptyState message="Создайте переменную для использования в инспекторе" />
+                        hasNoParameters && <EmptyState message="Создайте переменную для использования в инспекторе" />
                     )}
                 </Fragment>
             )}
