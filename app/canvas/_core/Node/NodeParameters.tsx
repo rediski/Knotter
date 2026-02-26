@@ -13,7 +13,7 @@ import { Checkbox } from '@/components/UI/Checkbox';
 import { Select } from '@/components/UI/Select';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
-import { addParameterToSelectedNode } from '@/canvas/utils/parameters/addParameterToNode';
+import { addParameterToSelectedNode } from '@/canvas/utils/parameters/addParameterToSelectedNode';
 
 export const NodeParameters = memo(function NodeParameters({ node }: { node: Node }) {
     const items = useCanvasStore((state) => state.items);
