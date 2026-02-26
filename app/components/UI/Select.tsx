@@ -20,7 +20,7 @@ export const Select = memo(function Select({ value, options, onChange, label }: 
         <div ref={selectRef} className="flex flex-col w-full">
             <button
                 type="button"
-                onClick={() => setIsOpen((v) => !v)}
+                onClick={() => setIsOpen((value) => !value)}
                 className={`
                     flex items-center gap-2 h-8 px-3 w-full text-sm cursor-pointer
                     ${isOpen ? 'rounded-t-md bg-depth-3' : 'rounded-md bg-depth-2 hover:bg-depth-3'}
