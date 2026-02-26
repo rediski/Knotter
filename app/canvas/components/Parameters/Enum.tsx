@@ -8,26 +8,17 @@ import { isEnum } from '@/canvas/_core/_/parameter.type-guards';
 import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
 
-import { useParameters } from '@/canvas/components/SidebarPanels/Parameters/useParameters';
+import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
+import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
+import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
+
 import { useEnumParameter } from '@/canvas/components/Parameters/useEnum';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
 import { X } from 'lucide-react';
 
-interface EnumParameterProps {
-    parameter: Parameter;
-    handleUpdateParameterName: (newName: string) => void;
-    removeParameter: (parameterId: string) => void;
-}
-
-export const EnumParameter = memo(function EnumParameter({
-    parameter,
-    handleUpdateParameterName,
-    removeParameter,
-}: EnumParameterProps) {
-    const { updateParameter } = useParameters();
-
+export const EnumParameter = memo(function EnumParameter({ parameter }: { parameter: Parameter }) {
     const { handleAddEnumOption, handleRemoveEnumOption, handleUpdateEnumOption } = useEnumParameter({
         parameter,
         updateParameter,
@@ -38,14 +29,16 @@ export const EnumParameter = memo(function EnumParameter({
 
     if (!isEnum(parameter)) return null;
 
-    const enumParameter = parameter.data;
-
     return (
         <div className="flex flex-col justify-center gap-2 px-3 py-1 text-sm bg-depth-2 rounded-md">
             <div className="flex items-center gap-1 h-8">
                 <EnumIcon size={16} className="min-w-4" />
 
-                <EditableName name={parameter.name} onChange={handleUpdateParameterName} className="w-full" />
+                <EditableName
+                    name={parameter.name}
+                    onChange={(newName) => updateParameterName(parameter.id, newName)}
+                    className="w-full"
+                />
 
                 <button onClick={() => removeParameter(parameter.id)} className="ml-auto text-gray cursor-pointer">
                     <X size={16} />
@@ -53,7 +46,7 @@ export const EnumParameter = memo(function EnumParameter({
             </div>
 
             <div className="flex flex-col gap-1">
-                {enumParameter.options.map((option, index) => (
+                {parameter.data.options.map((option, index) => (
                     <div key={index} className="flex gap-2 items-center rounded-md">
                         <Input
                             value={option}
@@ -72,7 +65,7 @@ export const EnumParameter = memo(function EnumParameter({
                 <div
                     className={`
                         flex flex-col gap-1 rounded-md p-2 border border-dashed border-depth-6 hover:bg-bg-accent/10 hover:border-text-accent cursor-pointer              
-                        ${enumParameter.options.length > 0 && 'mt-2'}
+                        ${parameter.data.options.length > 0 && 'mt-2'}
                     `}
                     onClick={handleAddEnumOption}
                 >

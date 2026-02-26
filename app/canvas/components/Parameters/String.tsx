@@ -9,22 +9,13 @@ import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
+import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
+import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
+import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
 import { X } from 'lucide-react';
 
-interface StringParameterProps {
-    parameter: Parameter;
-    handleInputChange: (value: string) => void;
-    handleUpdateParameterName: (newName: string) => void;
-    removeParameter: (parameterId: string) => void;
-}
-
-export const StringParameter = memo(function StringParameter({
-    parameter,
-    handleInputChange,
-    handleUpdateParameterName,
-    removeParameter,
-}: StringParameterProps) {
+export const StringParameter = memo(function StringParameter({ parameter }: { parameter: Parameter }) {
     const Icon = getIcon(parameter.type);
 
     if (!parameter) return;
@@ -35,7 +26,11 @@ export const StringParameter = memo(function StringParameter({
             <div className="flex items-center gap-1 h-8">
                 <Icon size={16} className="min-w-4" />
 
-                <EditableName name={parameter.name} onChange={handleUpdateParameterName} className="w-full" />
+                <EditableName
+                    name={parameter.name}
+                    onChange={(newName) => updateParameterName(parameter.id, newName)}
+                    className="w-full"
+                />
 
                 <button onClick={() => removeParameter(parameter.id)} className="ml-auto text-gray cursor-pointer">
                     <X size={16} />
@@ -49,7 +44,11 @@ export const StringParameter = memo(function StringParameter({
 
                         <Input
                             value={parameter.data}
-                            onChange={(val) => handleInputChange(val)}
+                            onChange={(value) =>
+                                updateParameter(parameter.id, {
+                                    data: value,
+                                })
+                            }
                             className="bg-depth-3 border border-depth-4"
                             max={16}
                             placeholder="Введите текст..."

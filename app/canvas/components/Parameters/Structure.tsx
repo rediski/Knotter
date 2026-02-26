@@ -5,15 +5,11 @@ import { Parameter } from '@/canvas/_core/_/parameter';
 import { isStructure } from '@/canvas/_core/_/parameter.type-guards';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
+import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
 import { X } from 'lucide-react';
 
-interface StructureParamterProps {
-    parameter: Parameter;
-    removeParameter: (parameterId: string) => void;
-}
-
-export const StructureParameter = memo(function StructureParameter({ parameter, removeParameter }: StructureParamterProps) {
+export const StructureParameter = memo(function StructureParameter({ parameter }: { parameter: Parameter }) {
     const StructureIcon = getIcon('structure');
 
     if (!isStructure(parameter)) return null;

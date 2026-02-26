@@ -8,26 +8,16 @@ import { isNumber } from '@/canvas/_core/_/parameter.type-guards';
 import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
 
-import { getIcon } from '@/canvas/utils/nodes/getIcon';
-
-import { useParameters } from '@/canvas/components/SidebarPanels/Parameters/useParameters';
 import { useNumberParameter } from '@/canvas/components/Parameters/useNumber';
+
+import { getIcon } from '@/canvas/utils/nodes/getIcon';
+import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
+import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
+import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
 import { X } from 'lucide-react';
 
-interface NumberParameterProps {
-    parameter: Parameter;
-    handleUpdateParameterName: (newName: string) => void;
-    removeParameter: (parameterId: string) => void;
-}
-
-export const NumberParameter = memo(function NumberParameter({
-    parameter,
-    handleUpdateParameterName,
-    removeParameter,
-}: NumberParameterProps) {
-    const { updateParameter } = useParameters();
-
+export const NumberParameter = memo(function NumberParameter({ parameter }: { parameter: Parameter }) {
     const { handleUpdateCurrentValue, handleUpdateMinValue, handleUpdateMaxValue } = useNumberParameter({
         parameter,
         updateParameter,
@@ -43,7 +33,11 @@ export const NumberParameter = memo(function NumberParameter({
             <div className="flex items-center gap-1 h-8">
                 <Icon size={16} className="min-w-4" />
 
-                <EditableName name={parameter.name} onChange={handleUpdateParameterName} className="w-full" />
+                <EditableName
+                    name={parameter.name}
+                    onChange={(newName) => updateParameterName(parameter.id, newName)}
+                    className="w-full"
+                />
 
                 <button onClick={() => removeParameter(parameter.id)} className="ml-auto text-gray cursor-pointer">
                     <X size={16} />
