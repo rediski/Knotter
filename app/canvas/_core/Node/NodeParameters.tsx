@@ -6,7 +6,6 @@ import type { Node } from '@/canvas/_core/_/canvas.types';
 import type { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { useParameters } from '@/canvas/components/SidebarPanels/Parameters/useParameters';
 
 import { OptionPicker } from '@/components/UI/OptionPicker';
 import { Input } from '@/components/UI/Input';
@@ -14,12 +13,12 @@ import { Checkbox } from '@/components/UI/Checkbox';
 import { Select } from '@/components/UI/Select';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
+import { addParameterToSelectedNode } from '@/canvas/utils/parameters/addParameterToNode';
 
 export const NodeParameters = memo(function NodeParameters({ node }: { node: Node }) {
     const items = useCanvasStore((state) => state.items);
     const setItems = useCanvasStore((state) => state.setItems);
-
-    const { parameters, addParameterToNode } = useParameters();
+    const parameters = useCanvasStore((state) => state.parameters);
 
     const storeNode = items.find((item) => item.kind === 'node' && item.id === node.id) as Node | undefined;
 
@@ -62,16 +61,16 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                 <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-3">
                     {nodeParameters.map((parameter: Parameter) => {
                         if (parameter.type === 'number') {
-                            const numberParameter = parameter.data as ParameterTypeMap['number'];
+                            const parameterData = parameter.data as ParameterTypeMap['number'];
 
                             return (
                                 <div key={parameter.id} className="flex flex-col gap-1">
                                     <p className="text-sm truncate">{parameter.name}</p>
 
                                     <Input
-                                        min={numberParameter.min}
-                                        max={numberParameter.max}
-                                        value={numberParameter.value.toString()}
+                                        min={parameterData.min}
+                                        max={parameterData.max}
+                                        value={parameterData.value.toString()}
                                         type="number"
                                         className="bg-depth-2 border border-depth-3 hover:bg-depth-3 active:bg-depth-4"
                                         onChange={(newValue) => {
@@ -79,17 +78,17 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                                             if (!isNaN(numValue)) {
                                                 let clampedValue = numValue;
 
-                                                if (numberParameter.min !== undefined) {
-                                                    clampedValue = Math.max(clampedValue, numberParameter.min);
+                                                if (parameterData.min !== undefined) {
+                                                    clampedValue = Math.max(clampedValue, parameterData.min);
                                                 }
 
-                                                if (numberParameter.max !== undefined) {
-                                                    clampedValue = Math.min(clampedValue, numberParameter.max);
+                                                if (parameterData.max !== undefined) {
+                                                    clampedValue = Math.min(clampedValue, parameterData.max);
                                                 }
 
                                                 updateNodeParameter(node.id, parameter.id, {
                                                     data: {
-                                                        ...numberParameter,
+                                                        ...parameterData,
                                                         value: clampedValue,
                                                     },
                                                 });
@@ -145,19 +144,19 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                         }
 
                         if (parameter.type === 'enum') {
-                            const enumParameter = parameter.data as ParameterTypeMap['enum'];
+                            const parameterData = parameter.data as ParameterTypeMap['enum'];
 
                             return (
                                 <div key={parameter.id} className="flex flex-col gap-1">
                                     <p className="text-sm truncate">{parameter.name}:</p>
 
                                     <Select
-                                        value={enumParameter.value}
-                                        options={enumParameter.options}
+                                        value={parameterData.value}
+                                        options={parameterData.options}
                                         onChange={(newValue) => {
                                             updateNodeParameter(node.id, parameter.id, {
                                                 data: {
-                                                    ...enumParameter,
+                                                    ...parameterData,
                                                     value: newValue,
                                                 },
                                             });
@@ -175,7 +174,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
 
             <OptionPicker
                 options={options}
-                onSelect={(parameterId) => addParameterToNode(node.id, parameterId)}
+                onSelect={(parameterId) => addParameterToSelectedNode(parameterId)}
                 placeholder="Добавить параметр"
             />
         </div>
