@@ -43,7 +43,7 @@ export const CanvasSidebar = memo(function Sidebar() {
                 className="flex flex-col shrink-0 overflow-hidden bg-depth-1 border border-depth-3 rounded-md"
                 style={{ width: `${width}px` }}
                 onContextMenu={menu.handleContextMenu}
-                onClick={() => menu.closeMenu()}
+                onClick={menu.closeMenu}
             >
                 <div className={`flex flex-col h-full`}>
                     {panels.length > 0 ? (
