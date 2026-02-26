@@ -40,7 +40,7 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
     const hasNoParameters = parameters.length === 0;
 
     return (
-        <div className="flex flex-col gap-1 overflow-y-auto m-1">
+        <div className="flex flex-col gap-1 h-full overflow-y-auto m-1">
             <div className="flex gap-1 items-center">
                 <Input
                     value={parameterName}
