@@ -106,19 +106,22 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
 
             <hr className="border-b-0 border-depth-3 mt-1" />
 
-            {panel.type === 'details' ? (
-                <Details />
-            ) : panel.type === 'hierarchy' ? (
-                <Hierarchy panelId={panel.id} />
-            ) : panel.type === 'history' ? (
-                <History />
-            ) : panel.type === 'inspector' ? (
-                <Inspector panelId={panel.id} />
-            ) : panel.type === 'parameters' ? (
-                <Parameters panelId={panel.id} />
-            ) : (
-                <EmptyState message="Выберите тип панели" />
-            )}
+            {(() => {
+                switch (panel.type) {
+                    case 'details':
+                        return <Details />;
+                    case 'hierarchy':
+                        return <Hierarchy panelId={panel.id} />;
+                    case 'history':
+                        return <History />;
+                    case 'inspector':
+                        return <Inspector panelId={panel.id} />;
+                    case 'parameters':
+                        return <Parameters panelId={panel.id} />;
+                    default:
+                        return <EmptyState message="Выберите тип панели" />;
+                }
+            })()}
         </div>
     );
 }
