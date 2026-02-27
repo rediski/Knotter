@@ -38,6 +38,7 @@ export const useNumberParameter = ({ parameter, updateParameter }: useNumberPara
         }
 
         let clampedValue = numValue;
+
         if (newMin !== undefined) {
             clampedValue = Math.max(clampedValue, newMin);
         }

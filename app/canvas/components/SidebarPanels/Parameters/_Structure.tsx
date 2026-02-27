@@ -9,7 +9,7 @@ import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
 import { X } from 'lucide-react';
 
-export const StructureParameter = memo(function StructureParameter({ parameter }: { parameter: Parameter }) {
+export const Structure = memo(function Structure({ parameter }: { parameter: Parameter }) {
     const StructureIcon = getIcon('structure');
 
     if (!isStructure(parameter)) return null;

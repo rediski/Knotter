@@ -8,21 +8,17 @@ import { isEnum } from '@/canvas/_core/_/parameter.type-guards';
 import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
 
-import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
-import { useEnumParameter } from '@/canvas/components/Parameters/useEnum';
+import { useEnum } from '@/canvas/components/SidebarPanels/Parameters/_useEnum';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 
 import { X } from 'lucide-react';
 
-export const EnumParameter = memo(function EnumParameter({ parameter }: { parameter: Parameter }) {
-    const { handleAddEnumOption, handleRemoveEnumOption, handleUpdateEnumOption } = useEnumParameter({
-        parameter,
-        updateParameter,
-    });
+export const Enum = memo(function Enum({ parameter }: { parameter: Parameter }) {
+    const { handleAddEnumOption, handleRemoveEnumOption, handleUpdateEnumOption } = useEnum({ parameter });
 
     const EnumIcon = getIcon('enum');
     const StringIcon = getIcon('string');

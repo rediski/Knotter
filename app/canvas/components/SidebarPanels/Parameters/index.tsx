@@ -9,11 +9,11 @@ import { Input } from '@/components/UI/Input';
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 import { EmptyState } from '@/components/UI/EmptyState';
 
-import { NumberParameter } from '@/canvas/components/Parameters/Number';
-import { StringParameter } from '@/canvas/components/Parameters/String';
-import { BooleanParameter } from '@/canvas/components/Parameters/Boolean';
-import { EnumParameter } from '@/canvas/components/Parameters/Enum';
-import { StructureParameter } from '@/canvas/components/Parameters/Structure';
+import { Number } from '@/canvas/components/SidebarPanels/Parameters/_Number';
+import { String } from '@/canvas/components/SidebarPanels/Parameters/_String';
+import { Boolean } from '@/canvas/components/SidebarPanels/Parameters/_Boolean';
+import { Enum } from '@/canvas/components/SidebarPanels/Parameters/_Enum';
+import { Structure } from '@/canvas/components/SidebarPanels/Parameters/_Structure';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
@@ -90,23 +90,23 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
                         }
 
                         if (isNumber(parameter)) {
-                            return <NumberParameter key={parameter.id} parameter={parameter} />;
+                            return <Number key={parameter.id} parameter={parameter} />;
                         }
 
                         if (isString(parameter)) {
-                            return <StringParameter key={parameter.id} parameter={parameter} />;
+                            return <String key={parameter.id} parameter={parameter} />;
                         }
 
                         if (isBoolean(parameter)) {
-                            return <BooleanParameter key={parameter.id} parameter={parameter} />;
+                            return <Boolean key={parameter.id} parameter={parameter} />;
                         }
 
                         if (isEnum(parameter)) {
-                            return <EnumParameter key={parameter.id} parameter={parameter} />;
+                            return <Enum key={parameter.id} parameter={parameter} />;
                         }
 
                         if (isStructure(parameter)) {
-                            return <StructureParameter key={parameter.id} parameter={parameter} />;
+                            return <Structure key={parameter.id} parameter={parameter} />;
                         }
                     })}
                 </div>

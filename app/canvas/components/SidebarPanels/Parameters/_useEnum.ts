@@ -1,12 +1,8 @@
 import { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
+import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { isEnum } from '@/canvas/_core/_/parameter.type-guards';
 
-interface useEnumParameterProps {
-    parameter: Parameter | undefined;
-    updateParameter: (parameterId: string, updates: Partial<Parameter>) => void;
-}
-
-export const useEnumParameter = ({ parameter, updateParameter }: useEnumParameterProps) => {
+export const useEnum = ({ parameter }: { parameter: Parameter | undefined }) => {
     const handleAddEnumOption = () => {
         if (!parameter) return;
         if (!isEnum(parameter)) return;

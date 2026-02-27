@@ -3,30 +3,23 @@
 import { memo } from 'react';
 
 import type { Parameter } from '@/canvas/_core/_/parameter';
-import { isBoolean } from '@/canvas/_core/_/parameter.type-guards';
+import { isString } from '@/canvas/_core/_/parameter.type-guards';
 
+import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
-import { Checkbox } from '@/components/UI/Checkbox';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
-
 import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
 import { X } from 'lucide-react';
 
-export const BooleanParameter = memo(function BooleanParameter({ parameter }: { parameter: Parameter }) {
-    const handleCheckboxChange = (checked: boolean) => {
-        updateParameter(parameter.id, {
-            data: checked,
-        });
-    };
-
+export const String = memo(function String({ parameter }: { parameter: Parameter }) {
     const Icon = getIcon(parameter.type);
 
     if (!parameter) return;
-    if (!isBoolean(parameter)) return;
+    if (!isString(parameter)) return;
 
     return (
         <div className="flex flex-col justify-center gap-2 px-3 py-1 text-sm bg-depth-2 rounded-md">
@@ -49,13 +42,17 @@ export const BooleanParameter = memo(function BooleanParameter({ parameter }: { 
                     <div className="flex items-center gap-2">
                         <p className="truncate w-full text-right">Базовое значение</p>
 
-                        <div className="w-full">
-                            <Checkbox
-                                checked={parameter.data}
-                                onChange={(checked) => handleCheckboxChange(checked)}
-                                className="bg-depth-3 border border-depth-4"
-                            />
-                        </div>
+                        <Input
+                            value={parameter.data}
+                            onChange={(value) =>
+                                updateParameter(parameter.id, {
+                                    data: value,
+                                })
+                            }
+                            className="bg-depth-3 border border-depth-4"
+                            max={16}
+                            placeholder="Введите текст..."
+                        />
                     </div>
                 </div>
             </div>

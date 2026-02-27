@@ -9,7 +9,7 @@ import { PanelContextMenu } from '@/canvas/components/PanelContextMenu/PanelCont
 
 import { Hierarchy } from '@/canvas/components/SidebarPanels/Hierarchy/Hierarchy';
 import { Inspector } from '@/canvas/components/SidebarPanels/Inspector/Inspector';
-import { Parameters } from '@/canvas/components/SidebarPanels/Parameters/Parameters';
+import { Parameters } from '@/canvas/components/SidebarPanels/Parameters';
 
 import { useSidebarPanel } from '@/canvas/components/SidebarPanel/useSidebarPanel';
 import { usePanelContextMenu } from '@/canvas/components/SidebarContextMenu/usePanelContextMenu';

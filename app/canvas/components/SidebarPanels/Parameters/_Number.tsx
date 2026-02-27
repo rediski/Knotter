@@ -8,7 +8,7 @@ import { isNumber } from '@/canvas/_core/_/parameter.type-guards';
 import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
 
-import { useNumberParameter } from '@/canvas/components/Parameters/useNumber';
+import { useNumberParameter } from '@/canvas/components/SidebarPanels/Parameters/_useNumber';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
@@ -17,7 +17,7 @@ import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
 import { X } from 'lucide-react';
 
-export const NumberParameter = memo(function NumberParameter({ parameter }: { parameter: Parameter }) {
+export const Number = memo(function Number({ parameter }: { parameter: Parameter }) {
     const { handleUpdateCurrentValue, handleUpdateMinValue, handleUpdateMaxValue } = useNumberParameter({
         parameter,
         updateParameter,
