@@ -6,7 +6,7 @@ import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getEdges } from '@/canvas/utils/edges/getEdges';
 import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
 
-export const EdgeRenderer = ({ containerRef }: { containerRef: RefObject<HTMLDivElement | null> }) => {
+export const Edge = ({ containerRef }: { containerRef: RefObject<HTMLDivElement | null> }) => {
     const items = useCanvasStore((state) => state.items);
     const tempEdge = useCanvasStore((state) => state.tempEdge);
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);

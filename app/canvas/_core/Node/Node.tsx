@@ -1,15 +1,17 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
+
+import { NODE_SIZE } from '@/canvas/_core/_/canvas.constants';
+
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
+import { Edge } from '@/canvas/_core/Node/Edge';
 import { NodeRenderer } from '@/canvas/_core/Node/NodeRenderer';
 import { NodeTooltip } from '@/canvas/_core/Node/NodeTooltip';
 
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 
-import { NODE_SIZE } from '@/canvas/_core/_/canvas.constants';
-import { EdgeRenderer } from './EdgeRenderer';
 import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
 import { openTabs } from '@/canvas/utils/canvas/openTabs';
 
@@ -58,7 +60,7 @@ export const Node: React.FC<NodeProps> = ({ containerRef }) => {
 
     return (
         <div ref={nodeRef} className="absolute inset-0">
-            <EdgeRenderer containerRef={containerRef} />
+            <Edge containerRef={containerRef} />
 
             {nodes.map((node) => {
                 const isSelected = selectedItemIds.includes(node.id);
