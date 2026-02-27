@@ -37,8 +37,6 @@ export interface CanvasState {
     selectedItemIds: string[];
     setSelectedItemIds: (ids: string[]) => void;
 
-    selectedItem: CanvasItem | null;
-
     selectedEdgeIds: string[];
     setSelectedEdgeIds: (ids: string[]) => void;
 
@@ -110,24 +108,13 @@ export const useCanvasStore = create<CanvasState>()(
             // ---
 
             items: [],
-            setItems: (items) =>
-                set({
-                    items,
-                    selectedItem:
-                        get().selectedItemIds.length > 0
-                            ? (items.find((item) => item.id === get().selectedItemIds[0]) ?? null)
-                            : null,
-                }),
+            setItems: (items) => set({ items }),
 
             parameters: [],
             setParameters: (parameters) => set({ parameters }),
 
             selectedItemIds: [],
-            setSelectedItemIds: (ids) =>
-                set({
-                    selectedItemIds: ids,
-                    selectedItem: ids.length > 0 ? (get().items.find((item) => item.id === ids[0]) ?? null) : null,
-                }),
+            setSelectedItemIds: (ids) => set({ selectedItemIds: ids }),
 
             selectedItem: null,
 
@@ -196,7 +183,6 @@ export const useCanvasStore = create<CanvasState>()(
                 items: state.items,
                 parameters: state.parameters,
                 selectedItemIds: state.selectedItemIds,
-                selectedItem: state.selectedItem,
                 selectedEdgeIds: state.selectedEdgeIds,
 
                 tooltipMode: state.tooltipMode,
