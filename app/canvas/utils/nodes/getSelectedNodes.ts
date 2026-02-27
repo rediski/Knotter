@@ -1,6 +1,9 @@
-import { CanvasItem, Node } from '@/canvas/_core/_/canvas.types';
+import { Node } from '@/canvas/_core/_/canvas.types';
+import { getSelectedItems } from '@/canvas/utils/items/getSelectedItems';
 
-import { getNodes } from '@/canvas/utils/nodes/getNodes';
+export const getSelectedNodes = (): Node[] => {
+    const selectedItems = getSelectedItems();
+    const selectedNodes = selectedItems.filter((item): item is Node => item.kind === 'node');
 
-export const getSelectedNodes = (items: CanvasItem[], selectedIds: string[]): Node[] =>
-    getNodes(items).filter((node) => selectedIds.includes(node.id));
+    return selectedNodes;
+};
