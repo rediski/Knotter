@@ -1,9 +1,14 @@
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 
-export function getSelectedItems(): CanvasItem[] {
-    const items = useCanvasStore.getState().items;
-    const selectedItemIds = useCanvasStore.getState().selectedItemIds;
+export const getSelectedItems = (): CanvasItem[] => {
+    const state = useCanvasStore.getState();
 
-    return items.filter((item) => selectedItemIds.includes(item.id));
-}
+    const items = state.items;
+    const selectedItemIds = state.selectedItemIds;
+
+    const selectedIdsSet = new Set(selectedItemIds);
+    const selectedItems = items.filter((item) => selectedIdsSet.has(item.id));
+
+    return selectedItems;
+};
