@@ -69,8 +69,14 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
                     ф: () => selectAllNodes(),
                     e: () => selectAllEdges(),
                     у: () => selectAllEdges(),
-                    c: () => copySelectedItems(items, selectedItemIds),
-                    с: () => copySelectedItems(items, selectedItemIds),
+                    c: () => {
+                        const store = useCanvasStore.getState();
+                        copySelectedItems(store.items, store.selectedItemIds);
+                    },
+                    с: () => {
+                        const store = useCanvasStore.getState();
+                        copySelectedItems(store.items, store.selectedItemIds);
+                    },
                     v: () => pasteClipboardItems(),
                     м: () => pasteClipboardItems(),
                     z: () => undo(),
