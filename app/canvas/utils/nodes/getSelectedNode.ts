@@ -1,14 +1,9 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { getNodes } from '@/canvas/utils/nodes/getNodes';
+import { getSelectedItem } from '@/canvas/utils/items/getSelectedItem';
 
 export const getSelectedNode = () => {
-    const state = useCanvasStore.getState();
-    const selectedItem = state.selectedItem;
+    const selectedItem = getSelectedItem();
 
     if (selectedItem?.kind !== 'node') return null;
 
-    const nodes = getNodes(state.items);
-    const selectedNode = nodes.find((node) => node.id === selectedItem.id);
-
-    return selectedNode || null;
+    return selectedItem;
 };
