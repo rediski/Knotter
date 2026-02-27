@@ -17,6 +17,8 @@ import { ShapeButtons } from '@/canvas/components/SidebarPanels/Inspector/ShapeB
 import { PositionInputs } from '@/canvas/components/SidebarPanels/Inspector/PositionInputs';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
+import { getSelectedItem } from '@/canvas/utils/items/getSelectedItem';
+import { getSelectedNode } from '@/canvas/utils/nodes/getSelectedNode';
 import { getIncomingEdges } from '@/canvas/utils/edges/getIncomingEdges';
 import { getOutgoingEdges } from '@/canvas/utils/edges/getOutgoingEdges';
 import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
@@ -35,7 +37,6 @@ const FIELD_TITLES = {
 
 export const Inspector = memo(function Inspector({ panelId }: { panelId?: string }) {
     const {
-        selectedNode,
         shapeType,
         positionX,
         positionY,
@@ -47,7 +48,9 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
 
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
 
-    const selectedItem = useCanvasStore((state) => state.selectedItem);
+    const selectedItem = getSelectedItem();
+    const selectedNode = getSelectedNode();
+
     const selectedEdgeIds = useCanvasStore((state) => state.selectedEdgeIds);
     const setSelectedEdgeIds = useCanvasStore((state) => state.setSelectedEdgeIds);
     const filterText = useCanvasStore((state) => (panelId ? state.filterText[panelId] : ''));

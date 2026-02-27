@@ -2,19 +2,20 @@
 
 import { useCallback, useMemo } from 'react';
 
-import type { Node, Position } from '@/canvas/_core/_/canvas.types';
-
+import type { Position } from '@/canvas/_core/_/canvas.types';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { moveItems } from '@/canvas/utils/items/moveItems';
+import { getSelectedItem } from '@/canvas/utils/items/getSelectedItem';
+import { getSelectedNode } from '@/canvas/utils/nodes/getSelectedNode';
 
 export function useInspector() {
     const items = useCanvasStore((state) => state.items);
     const setItems = useCanvasStore((state) => state.setItems);
-    const selectedItem = useCanvasStore((state) => state.selectedItem);
     const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
 
-    const selectedNode: Node | null = selectedItem?.kind === 'node' ? selectedItem : null;
+    const selectedItem = getSelectedItem();
+    const selectedNode = getSelectedNode();
 
     const shapeType = selectedNode?.shapeType ?? null;
     const positionX = selectedNode?.position?.x ?? 0;
@@ -97,7 +98,6 @@ export function useInspector() {
     );
 
     return {
-        selectedNode,
         shapeType,
         positionX,
         positionY,
