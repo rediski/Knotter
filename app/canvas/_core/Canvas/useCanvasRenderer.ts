@@ -5,18 +5,20 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { drawGrid } from '@/canvas/utils/canvas/drawGrid';
 
 export function useCanvasRenderer({ canvasRef }: { canvasRef: RefObject<HTMLCanvasElement | null> }) {
-    const offset = useCanvasStore((state) => state.offset);
-    const zoomLevel = useCanvasStore((state) => state.zoomLevel);
-    const invertY = useCanvasStore((state) => state.invertY);
-    const showGrid = useCanvasStore((state) => state.showGrid);
-    const showAxes = useCanvasStore((state) => state.showAxes);
-
     const renderCanvas = useCallback(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
+
+        const state = useCanvasStore.getState();
+
+        const offset = state.offset;
+        const zoomLevel = state.zoomLevel;
+        const invertY = state.invertY;
+        const showGrid = state.showGrid;
+        const showAxes = state.showAxes;
 
         const dpr = window.devicePixelRatio || 1;
 
@@ -48,10 +50,16 @@ export function useCanvasRenderer({ canvasRef }: { canvasRef: RefObject<HTMLCanv
             showGrid,
             showAxes,
         });
-    }, [canvasRef, zoomLevel, offset, invertY, showGrid, showAxes]);
+    }, [canvasRef]);
 
     useEffect(() => {
+        const unsubscribe = useCanvasStore.subscribe(() => {
+            requestAnimationFrame(renderCanvas);
+        });
+
         requestAnimationFrame(renderCanvas);
+
+        return unsubscribe;
     }, [renderCanvas]);
 
     useEffect(() => {
