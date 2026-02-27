@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState, useEffect, useMemo, useCallback, type RefObject } from 'react';
+import { memo, useState, useEffect } from 'react';
 import Link from 'next/link';
 
 import { Tooltip } from '@/components/UI/Tooltip';
@@ -10,21 +10,17 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { toggleMagnetMode } from '@/canvas/utils/canvas/toggleMagnetMode';
 import { toggleTooltipMode } from '@/canvas/utils/canvas/toggleTooltipMode';
-import { getCanvasCenter } from '@/canvas/utils/canvas/getCanvasCenter';
-
-import { useCanvasControlsMenu } from '@/canvas/components/CanvasControls/useCanvasControlsMenu';
+import { Coordinates } from '@/canvas/components/CanvasControls/Coordinates';
 
 import { FlipVertical2, Home, Menu, Magnet, Grid2x2, Move3d, Eye, EyeOff, EyeClosed, RotateCcw } from 'lucide-react';
 
 export const CanvasControls = memo(function CanvasControls({
     canvasRef,
 }: {
-    canvasRef: RefObject<HTMLCanvasElement | null>;
+    canvasRef: React.RefObject<HTMLCanvasElement | null>;
 }) {
     if (!canvasRef) return null;
 
-    const offset = useCanvasStore((state) => state.offset);
-    const setOffset = useCanvasStore((state) => state.setOffset);
     const isMagnet = useCanvasStore((state) => state.isMagnet);
     const showGrid = useCanvasStore((state) => state.showGrid);
     const showAxes = useCanvasStore((state) => state.showAxes);
@@ -34,16 +30,14 @@ export const CanvasControls = memo(function CanvasControls({
     const toggleShowGrid = useCanvasStore((state) => state.toggleShowGrid);
     const toggleShowAxes = useCanvasStore((state) => state.toggleShowAxes);
 
-    const center = getCanvasCenter(canvasRef);
-    const { open, menuRef, toggleMenu } = useCanvasControlsMenu();
-
     const [mounted, setMounted] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    const getTooltipIcon = useCallback(() => {
+    const getTooltipIcon = () => {
         switch (tooltipMode) {
             case 'always':
                 return Eye;
@@ -52,9 +46,9 @@ export const CanvasControls = memo(function CanvasControls({
             case 'never':
                 return EyeOff;
         }
-    }, [tooltipMode]);
+    };
 
-    const getTooltipLabel = useCallback(() => {
+    const getTooltipLabel = () => {
         switch (tooltipMode) {
             case 'always':
                 return 'Подсказки: Всегда (T)';
@@ -63,55 +57,52 @@ export const CanvasControls = memo(function CanvasControls({
             case 'never':
                 return 'Подсказки: Никогда (T)';
         }
-    }, [tooltipMode]);
+    };
 
-    const controls = useMemo(
-        () => [
-            {
-                active: tooltipMode !== 'never',
-                onClick: toggleTooltipMode,
-                Icon: getTooltipIcon(),
-                label: getTooltipLabel(),
-            },
-            {
-                active: isMagnet,
-                onClick: toggleMagnetMode,
-                Icon: Magnet,
-                label: 'Магнит (M)',
-            },
-            {
-                active: showGrid,
-                onClick: toggleShowGrid,
-                Icon: Grid2x2,
-                label: 'Сетка (G)',
-            },
-            {
-                active: showAxes,
-                onClick: toggleShowAxes,
-                Icon: Move3d,
-                label: 'Оси (A)',
-            },
-        ],
-        [tooltipMode, isMagnet, showGrid, showAxes, getTooltipIcon, getTooltipLabel, toggleShowGrid, toggleShowAxes],
-    );
+    const controls = [
+        {
+            active: tooltipMode !== 'never',
+            onClick: toggleTooltipMode,
+            Icon: getTooltipIcon(),
+            label: getTooltipLabel(),
+        },
+        {
+            active: isMagnet,
+            onClick: toggleMagnetMode,
+            Icon: Magnet,
+            label: 'Магнит (M)',
+        },
+        {
+            active: showGrid,
+            onClick: toggleShowGrid,
+            Icon: Grid2x2,
+            label: 'Сетка (G)',
+        },
+        {
+            active: showAxes,
+            onClick: toggleShowAxes,
+            Icon: Move3d,
+            label: 'Оси (A)',
+        },
+    ];
 
     if (!mounted) return null;
 
     return (
         <>
             <div className="flex justify-between items-start gap-12 absolute top-4 left-0 right-0 px-4 z-10 text-sm">
-                <div className="flex flex-col gap-2 max-w-60 w-full" ref={menuRef}>
+                <div className="flex flex-col gap-2 max-w-60 w-full">
                     <button
-                        onClick={toggleMenu}
+                        onClick={() => setMenuOpen(!menuOpen)}
                         className={`
-                        p-2 rounded-md w-fit shadow cursor-pointer 
-                        ${open ? 'bg-bg-accent text-white' : 'bg-depth-2 hover:bg-depth-3'}
-                    `}
+                            p-2 rounded-md w-fit shadow cursor-pointer 
+                            ${menuOpen ? 'bg-bg-accent text-white' : 'bg-depth-2 hover:bg-depth-3'}
+                        `}
                     >
                         <Menu size={16} />
                     </button>
 
-                    {open && (
+                    {menuOpen && (
                         <div className="flex flex-col bg-depth-1 rounded-md shadow w-full text-nowrap">
                             <div className="flex flex-col gap-1 m-1">
                                 <button
@@ -160,29 +151,7 @@ export const CanvasControls = memo(function CanvasControls({
                 </div>
             </div>
 
-            <div className="absolute bottom-4 left-4 flex gap-1 z-10 text-sm select-none">
-                <button
-                    className="bg-depth-2 hover:bg-depth-3 rounded-md p-2 shadow w-fit cursor-pointer"
-                    onClick={() => center && setOffset(center)}
-                    disabled={!center}
-                >
-                    <RotateCcw size={16} />
-                </button>
-
-                <div className="flex flex-col gap-1">
-                    <div className="flex items-center gap-1">
-                        <div className="bg-depth-2 rounded-md px-3 py-1 shadow w-fit min-w-[9ch] tabular-nums">
-                            X: {offset.x.toFixed(0)}
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-1">
-                        <div className="bg-depth-2 rounded-md px-3 py-1 shadow w-fit min-w-[9ch] tabular-nums">
-                            Y: {offset.y.toFixed(0)}
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Coordinates canvasRef={canvasRef} />
         </>
     );
 });
