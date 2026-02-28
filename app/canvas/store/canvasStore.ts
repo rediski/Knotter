@@ -87,7 +87,7 @@ export interface CanvasState {
 
 export const useCanvasStore = create<CanvasState>()(
     persist(
-        (set, get) => ({
+        (set) => ({
             offset: { x: 0, y: 0 },
             setOffset: (offset) => set({ offset }),
 
