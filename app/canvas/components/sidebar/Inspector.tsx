@@ -16,7 +16,6 @@ import { Dropdown } from '@/components/UI/Dropdown';
 import { ShapeButtons } from '@/canvas/components/sidebar/ShapeButtons';
 import { PositionInputs } from '@/canvas/components/sidebar/PositionInputs';
 
-import { getIcon } from '@/canvas/utils/nodes/getIcon';
 import { getSelectedItem } from '@/canvas/utils/items/getSelectedItem';
 import { getSelectedNode } from '@/canvas/utils/nodes/getSelectedNode';
 import { getIncomingEdges } from '@/canvas/utils/edges/getIncomingEdges';
@@ -24,7 +23,7 @@ import { getOutgoingEdges } from '@/canvas/utils/edges/getOutgoingEdges';
 import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
 import { deleteSelectedItemsById } from '@/canvas/utils/items/deleteSelectedItems';
 
-import { Link2Icon, X } from 'lucide-react';
+import { Box, Link2Icon, X } from 'lucide-react';
 
 const FIELD_TITLES = {
     NAME: 'Название',
@@ -112,8 +111,6 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
         return <EmptyState message="Необходимо выбрать один из элементов" />;
     }
 
-    const Icon = getIcon(selectedItem?.kind || 'bug');
-
     const shouldShowField = (fieldTitle: string) => {
         if (!filterText) return true;
         return fieldTitle.toLowerCase().includes(filterText.toLowerCase());
@@ -144,7 +141,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                         value={selectedItem.name}
                         onChange={changeItemName}
                         placeholder={FIELD_TITLES.NAME}
-                        icon={Icon}
+                        icon={Box}
                         className="bg-depth-2"
                     />
                 </div>

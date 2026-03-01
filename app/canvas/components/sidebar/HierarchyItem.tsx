@@ -6,8 +6,9 @@ import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 
 import { EditableName } from '@/components/UI/EditableName';
 import { useHierarchyItem } from '@/canvas/components/sidebar/useHierarchyItem';
-import { getIcon } from '@/canvas/utils/nodes/getIcon';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
+
+import { Box } from 'lucide-react';
 
 interface HierarchyItemProps {
     canvasItem: CanvasItem;
@@ -25,7 +26,6 @@ export const HierarchyItem = memo(function HierarchyItem({ canvasItem }: Hierarc
         dragPosition,
     } = useHierarchyItem(canvasItem);
 
-    const Icon = getIcon(canvasItem.kind);
     const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
 
     const isSelected = selectedItemIds.includes(canvasItem.id);
@@ -56,7 +56,7 @@ export const HierarchyItem = memo(function HierarchyItem({ canvasItem }: Hierarc
                     `}
                 >
                     <div className="flex items-center gap-2 w-full pointer-events-none">
-                        <Icon size={16} />
+                        <Box size={16} />
 
                         <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/10' : 'border-depth-4'}`} />
 

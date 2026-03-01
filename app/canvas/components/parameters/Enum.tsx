@@ -13,22 +13,17 @@ import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
 import { useEnum } from '@/canvas/components/parameters/useEnum';
 
-import { getIcon } from '@/canvas/utils/nodes/getIcon';
-
-import { X } from 'lucide-react';
+import { List, Type, X } from 'lucide-react';
 
 export const Enum = memo(function Enum({ parameter }: { parameter: Parameter }) {
     const { handleAddEnumOption, handleRemoveEnumOption, handleUpdateEnumOption } = useEnum({ parameter });
-
-    const EnumIcon = getIcon('enum');
-    const StringIcon = getIcon('string');
 
     if (!isEnum(parameter)) return null;
 
     return (
         <div className="flex flex-col justify-center gap-2 px-3 py-1 text-sm bg-depth-2 rounded-md">
             <div className="flex items-center gap-1 h-8">
-                <EnumIcon size={16} className="min-w-4" />
+                <List size={16} className="min-w-4" />
 
                 <EditableName
                     name={parameter.name}
@@ -69,7 +64,7 @@ export const Enum = memo(function Enum({ parameter }: { parameter: Parameter }) 
                         <span>Кликните чтобы добавить параметр</span>
 
                         <div className="flex items-center gap-2 bg-bg-accent/10 px-2 py-1 rounded-md text-text-accent">
-                            <StringIcon size={16} /> Текст
+                            <Type size={16} /> Текст
                         </div>
                     </div>
                 </div>

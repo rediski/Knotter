@@ -10,12 +10,11 @@ import { EditableName } from '@/components/UI/EditableName';
 
 import { useNumberParameter } from '@/canvas/components/parameters/useNumber';
 
-import { getIcon } from '@/canvas/utils/nodes/getIcon';
 import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
-import { X } from 'lucide-react';
+import { Hash, X } from 'lucide-react';
 
 export const Number = memo(function Number({ parameter }: { parameter: Parameter }) {
     const { handleUpdateCurrentValue, handleUpdateMinValue, handleUpdateMaxValue } = useNumberParameter({
@@ -23,15 +22,13 @@ export const Number = memo(function Number({ parameter }: { parameter: Parameter
         updateParameter,
     });
 
-    const Icon = getIcon(parameter.type);
-
     if (!parameter) return;
     if (!isNumber(parameter)) return;
 
     return (
         <div className="flex flex-col justify-center gap-2 px-3 py-1 text-sm bg-depth-2 rounded-md">
             <div className="flex items-center gap-1 h-8">
-                <Icon size={16} className="min-w-4" />
+                <Hash size={16} className="min-w-4" />
 
                 <EditableName
                     name={parameter.name}
