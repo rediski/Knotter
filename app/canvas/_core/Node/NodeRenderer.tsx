@@ -5,14 +5,12 @@ import type { Node } from '@/canvas/_core/_/canvas.types';
 import { getShape } from '@/canvas/utils/nodes/getShape';
 import { NODE_SIZE } from '@/canvas/_core/_/canvas.constants';
 
-interface NodeRendererProps {
-    node: Node;
-    isSelected: boolean;
-}
+import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-export function NodeRenderer({ node, isSelected }: NodeRendererProps) {
-    const shape = getShape(node.shapeType);
-    const Icon = shape.icon;
+export function NodeRenderer({ node }: { node: Node }) {
+    const isSelected = useCanvasStore((state) => state.selectedItemIds.includes(node.id));
+
+    const Icon = getShape(node.shapeType).icon;
     const isPoint = node.shapeType === 'point';
 
     return (
