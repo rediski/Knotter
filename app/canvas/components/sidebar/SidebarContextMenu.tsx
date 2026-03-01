@@ -6,7 +6,7 @@ import type { Position } from '@/canvas/_core/_/canvas.types';
 import { ContextMenu } from '@/components/UI/ContextMenu';
 import { ContextMenuItem } from '@/components/UI/ContextMenuItem';
 
-import { useSidebarPanels } from '@/canvas/components/SidebarPanel/useSidebarPanels';
+import { useSidebarPanels } from '@/canvas/components/sidebar/useSidebarPanels';
 
 import { Plus } from 'lucide-react';
 

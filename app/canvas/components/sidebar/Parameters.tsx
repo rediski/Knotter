@@ -9,11 +9,11 @@ import { Input } from '@/components/UI/Input';
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 import { EmptyState } from '@/components/UI/EmptyState';
 
-import { Number } from '@/canvas/components/SidebarPanels/Parameters/_Number';
-import { String } from '@/canvas/components/SidebarPanels/Parameters/_String';
-import { Boolean } from '@/canvas/components/SidebarPanels/Parameters/_Boolean';
-import { Enum } from '@/canvas/components/SidebarPanels/Parameters/_Enum';
-import { Structure } from '@/canvas/components/SidebarPanels/Parameters/_Structure';
+import { Number } from '@/canvas/components/parameters/Number';
+import { String } from '@/canvas/components/parameters/String';
+import { Boolean } from '@/canvas/components/parameters/Boolean';
+import { Enum } from '@/canvas/components/parameters/Enum';
+import { Structure } from '@/canvas/components/parameters/Structure';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 

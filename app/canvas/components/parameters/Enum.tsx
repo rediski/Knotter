@@ -11,7 +11,7 @@ import { EditableName } from '@/components/UI/EditableName';
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
-import { useEnum } from '@/canvas/components/SidebarPanels/Parameters/_useEnum';
+import { useEnum } from '@/canvas/components/parameters/useEnum';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 

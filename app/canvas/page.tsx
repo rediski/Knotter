@@ -5,7 +5,7 @@ import Link from 'next/link';
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 
 import { ToastProvider } from '@/components/UI/Toast';
-import { CanvasSidebar } from '@/canvas/components/CanvasSidebar';
+import { CanvasSidebar } from '@/canvas/components/canvas/CanvasSidebar';
 
 import Canvas from '@/canvas/_core/Canvas';
 import NodeContent from '@/canvas/_core/Node/NodeContent';

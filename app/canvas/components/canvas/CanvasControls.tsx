@@ -10,7 +10,7 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { toggleMagnetMode } from '@/canvas/utils/canvas/toggleMagnetMode';
 import { toggleTooltipMode } from '@/canvas/utils/canvas/toggleTooltipMode';
-import { Coordinates } from '@/canvas/components/CanvasControls/Coordinates';
+import { Coordinates } from '@/canvas/components/canvas/Coordinates';
 
 import { FlipVertical2, Home, Menu, Magnet, Grid2x2, Move3d, Eye, EyeOff, EyeClosed, RotateCcw } from 'lucide-react';
 

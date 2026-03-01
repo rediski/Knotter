@@ -8,7 +8,7 @@ import { isNumber } from '@/canvas/_core/_/parameter.type-guards';
 import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
 
-import { useNumberParameter } from '@/canvas/components/SidebarPanels/Parameters/_useNumber';
+import { useNumberParameter } from '@/canvas/components/parameters/useNumber';
 
 import { getIcon } from '@/canvas/utils/nodes/getIcon';
 import { updateParameter } from '@/canvas/utils/parameters/updateParameter';

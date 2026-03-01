@@ -3,9 +3,9 @@
 import React, { memo } from 'react';
 
 import { EmptyState } from '@/components/UI/EmptyState';
-import { HierarchyItem } from '@/canvas/components/SidebarPanels/Hierarchy/HierarchyItem';
+import { HierarchyItem } from '@/canvas/components/sidebar/HierarchyItem';
 
-import { useHierarchy } from '@/canvas/components/SidebarPanels/Hierarchy/useHierarchy';
+import { useHierarchy } from '@/canvas/components/sidebar/useHierarchy';
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string }) {
