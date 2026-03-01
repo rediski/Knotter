@@ -2,11 +2,11 @@
 
 import { useRef } from 'react';
 
-import { Node } from '@/canvas/_core/Node/Node';
+import { Node } from '@/canvas/_core/Node';
 
-import { SelectionBox } from '@/canvas/components/CanvasSelectionBox/SelectionBox';
-import { CanvasContextMenu } from '@/canvas/components/CanvasContextMenu/CanvasContextMenu';
-import { CanvasControls } from '@/canvas/components/CanvasControls/CanvasControls';
+import { SelectionBox } from '@/canvas/components/CanvasSelectionBox';
+import { CanvasContextMenu } from '@/canvas/components/CanvasContextMenu';
+import { CanvasControls } from '@/canvas/components/CanvasControls';
 
 import { useCanvasInteraction } from '@/canvas/_core/Canvas/useCanvasInteraction';
 import { useCanvasRenderer } from '@/canvas/_core/Canvas/useCanvasRenderer';

@@ -99,7 +99,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                             initEdge();
                             closeMenu();
                         }}
-                        disabled={selectedItemIds.length === 0}
+                        disabled={selectedItemIds.length === 0 || items.length < 2}
                         shortcut="Shift + E"
                     >
                         Cвязь

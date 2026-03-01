@@ -6,7 +6,7 @@ import { NODE_SIZE } from '@/canvas/_core/_/canvas.constants';
 
 import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-import { Edge } from '@/canvas/_core/Node/Edge';
+import { EdgeRenderer } from '@/canvas/_core/Node/EdgeRenderer';
 import { NodeRenderer } from '@/canvas/_core/Node/NodeRenderer';
 import { NodeTooltip } from '@/canvas/_core/Node/NodeTooltip';
 
@@ -60,10 +60,9 @@ export const Node: React.FC<NodeProps> = ({ containerRef }) => {
 
     return (
         <div ref={nodeRef} className="absolute inset-0">
-            <Edge containerRef={containerRef} />
+            <EdgeRenderer containerRef={containerRef} />
 
             {nodes.map((node) => {
-                const isSelected = selectedItemIds.includes(node.id);
                 const { x: screenX, y: screenY } = getScreenCoords(node.position.x, node.position.y, containerRef);
 
                 return (
@@ -79,7 +78,7 @@ export const Node: React.FC<NodeProps> = ({ containerRef }) => {
                         }}
                         onClick={() => handleNodeClick(node.id)}
                     >
-                        <NodeRenderer node={node} isSelected={isSelected} />
+                        <NodeRenderer node={node} />
                     </div>
                 );
             })}
