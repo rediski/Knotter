@@ -14,26 +14,21 @@ interface HierarchyItemProps {
 }
 
 export const HierarchyItem = memo(function HierarchyItem({ canvasItem }: HierarchyItemProps) {
-    const { isSelected, handleSelect, handleKeyDown, handleNameChange, dragRef, dropRef, isDragOver, dragPosition } =
-        useHierarchyItem(canvasItem);
+    const {
+        handleSelect,
+        handleKeyDown,
+        handleNameChange,
+        handleNodeDoubleClick,
+        dragRef,
+        dropRef,
+        isDragOver,
+        dragPosition,
+    } = useHierarchyItem(canvasItem);
 
     const Icon = getIcon(canvasItem.kind);
+    const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
 
-    const openedTabIds = useCanvasStore((state) => state.openedTabIds);
-    const setOpenedTabIds = useCanvasStore((state) => state.setOpenedTabIds);
-    const setSelectedTabId = useCanvasStore((state) => state.setSelectedTabId);
-    const setSelectedItemIds = useCanvasStore((state) => state.setSelectedItemIds);
-
-    const handleNodeDoubleClick = (nodeId: string) => {
-        if (canvasItem.kind !== 'node') return;
-
-        if (!openedTabIds.includes(nodeId)) {
-            setOpenedTabIds([...openedTabIds, nodeId]);
-        }
-
-        setSelectedTabId(nodeId);
-        setSelectedItemIds([nodeId]);
-    };
+    const isSelected = selectedItemIds.includes(canvasItem.id);
 
     return (
         <li
@@ -41,7 +36,7 @@ export const HierarchyItem = memo(function HierarchyItem({ canvasItem }: Hierarc
             className="relative select-none"
             onClick={handleSelect}
             onKeyDown={handleKeyDown}
-            onDoubleClick={() => handleNodeDoubleClick(canvasItem.id)}
+            onDoubleClick={handleNodeDoubleClick}
         >
             {isDragOver && (
                 <div
@@ -51,7 +46,8 @@ export const HierarchyItem = memo(function HierarchyItem({ canvasItem }: Hierarc
 
             <div ref={dragRef} draggable>
                 <button
-                    className={`w-full px-3 h-9 rounded-md outline-none tabular-nums cursor-grab active:cursor-grabbing
+                    className={`
+                        w-full px-3 h-9 rounded-md outline-none tabular-nums cursor-grab active:cursor-grabbing
                         ${
                             isSelected
                                 ? 'bg-bg-accent/10 focus-visible:bg-bg-accent/15'
