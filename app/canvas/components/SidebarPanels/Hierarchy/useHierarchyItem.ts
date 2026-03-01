@@ -11,10 +11,14 @@ import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
 
 type DragPosition = 'top' | 'bottom' | null;
 
-export function useHierarchyItem(item: CanvasItem) {
-    const selectedIds = useCanvasStore((state) => state.selectedItemIds);
+export function useHierarchyItem(canvasItem: CanvasItem) {
+    const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
     const setSelectedIds = useCanvasStore((state) => state.setSelectedItemIds);
     const setItems = useCanvasStore((state) => state.setItems);
+
+    const openedTabIds = useCanvasStore((state) => state.openedTabIds);
+    const setOpenedTabIds = useCanvasStore((state) => state.setOpenedTabIds);
+    const setSelectedTabId = useCanvasStore((state) => state.setSelectedTabId);
 
     const dragRef = useRef<HTMLDivElement | null>(null);
     const dropRef = useRef<HTMLLIElement | null>(null);
@@ -22,52 +26,61 @@ export function useHierarchyItem(item: CanvasItem) {
     const [isDragOver, setIsDragOver] = useState(false);
     const [dragPosition, setDragPosition] = useState<DragPosition>(null);
 
-    const isSelected = selectedIds.includes(item.id);
-
     const handleSelect = useCallback(
         (e: React.MouseEvent<HTMLLIElement>) => {
             e.stopPropagation();
 
             const newSelectedIds = selectItems({
-                itemId: item.id,
+                itemId: canvasItem.id,
                 event: e,
             });
 
             setSelectedIds(newSelectedIds);
         },
-        [selectedIds, item.id, setSelectedIds],
+        [selectedItemIds, canvasItem.id, setSelectedIds],
     );
 
     const handleKeyDown = useCallback(
         (e: React.KeyboardEvent<HTMLLIElement>) => {
-            if (e.key === 'Delete' && isSelected) {
+            if (e.key === 'Delete' && selectedItemIds.includes(canvasItem.id)) {
                 deleteSelectedItems();
             }
         },
-        [isSelected, selectedIds, item.id, setSelectedIds],
+        [selectedItemIds, canvasItem.id, setSelectedIds],
     );
 
     const handleNameChange = useCallback(
         (newName: string) => {
             const prev = useCanvasStore.getState().items;
-            const next = prev.map((i) => (i.id === item.id ? { ...i, name: newName } : i));
+            const next = prev.map((item) => (item.id === canvasItem.id ? { ...item, name: newName } : item));
             setItems(next);
         },
-        [item.id, setItems],
+        [canvasItem.id, setItems],
     );
+
+    const handleNodeDoubleClick = useCallback(() => {
+        if (canvasItem.kind !== 'node') return;
+
+        if (!openedTabIds.includes(canvasItem.id)) {
+            setOpenedTabIds([...openedTabIds, canvasItem.id]);
+        }
+
+        setSelectedTabId(canvasItem.id);
+        setSelectedIds([canvasItem.id]);
+    }, [canvasItem.id, canvasItem.kind, openedTabIds, setOpenedTabIds, setSelectedTabId, setSelectedIds]);
 
     useEffect(() => {
         const el = dragRef.current;
         if (!el) return;
 
         const handleDragStart = (e: DragEvent) => {
-            e.dataTransfer?.setData('text/plain', item.id);
+            e.dataTransfer?.setData('text/plain', canvasItem.id);
             e.dataTransfer!.effectAllowed = 'move';
         };
 
         el.addEventListener('dragstart', handleDragStart);
         return () => el.removeEventListener('dragstart', handleDragStart);
-    }, [item.id]);
+    }, [canvasItem.id]);
 
     useEffect(() => {
         const el = dropRef.current;
@@ -95,12 +108,12 @@ export function useHierarchyItem(item: CanvasItem) {
             setIsDragOver(false);
 
             const draggedId = e.dataTransfer?.getData('text/plain');
-            if (!draggedId || draggedId === item.id) return;
+            if (!draggedId || draggedId === canvasItem.id) return;
 
             const prev = useCanvasStore.getState().items;
 
             const fromIndex = prev.findIndex((i) => i.id === draggedId);
-            const toIndex = prev.findIndex((i) => i.id === item.id);
+            const toIndex = prev.findIndex((i) => i.id === canvasItem.id);
 
             if (fromIndex === -1 || toIndex === -1) return;
 
@@ -123,13 +136,13 @@ export function useHierarchyItem(item: CanvasItem) {
             el.removeEventListener('dragleave', handleDragLeave);
             el.removeEventListener('drop', handleDrop);
         };
-    }, [item.id, dragPosition, setItems]);
+    }, [canvasItem.id, dragPosition, setItems]);
 
     return {
-        isSelected,
         handleSelect,
         handleKeyDown,
         handleNameChange,
+        handleNodeDoubleClick,
         dragRef,
         dropRef,
         isDragOver,
