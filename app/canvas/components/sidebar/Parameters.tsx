@@ -19,7 +19,7 @@ import { useCanvasStore } from '@/canvas/store/canvasStore';
 
 import { getFilteredParameters } from '@/canvas/utils/parameters/getFilteredParameters';
 import { createParameter } from '@/canvas/utils/parameters/createParameter';
-import { getIcon } from '@/canvas/utils/nodes/getIcon';
+import { getParameterIcon } from '@/canvas/utils/nodes/getParameterIcon';
 
 import { Plus } from 'lucide-react';
 
@@ -40,7 +40,7 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
     const hasNoParameters = parameters.length === 0;
 
     return (
-        <div className="flex flex-col gap-1 h-full overflow-y-auto m-1">
+        <div className="flex flex-col gap-1 h-full overflow-y-auto p-1">
             <div className="flex gap-1 items-center">
                 <Input
                     value={parameterName}
@@ -50,9 +50,9 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
                     max={16}
                 />
 
-                <DropdownAbsolute title={foundParameterType.label} icon={getIcon(parameterType)}>
+                <DropdownAbsolute title={foundParameterType.label} icon={getParameterIcon(parameterType)}>
                     {parameterTypes.map((parameter) => {
-                        const Icon = getIcon(parameter.type);
+                        const Icon = getParameterIcon(parameter.type);
 
                         return (
                             <button
@@ -115,7 +115,7 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
                     {hasNoFilteredResults ? (
                         <EmptyState message="Параметры с таким именем не найдены" />
                     ) : (
-                        hasNoParameters && <EmptyState message="Создайте переменную для использования в инспекторе" />
+                        hasNoParameters && <EmptyState message="Параметры не найдены" />
                     )}
                 </Fragment>
             )}

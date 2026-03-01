@@ -12,7 +12,7 @@ import { Input } from '@/components/UI/Input';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Select } from '@/components/UI/Select';
 
-import { getIcon } from '@/canvas/utils/nodes/getIcon';
+import { getParameterIcon } from '@/canvas/utils/nodes/getParameterIcon';
 import { addParameterToSelectedNode } from '@/canvas/utils/parameters/addParameterToSelectedNode';
 
 export const NodeParameters = memo(function NodeParameters({ node }: { node: Node }) {
@@ -31,7 +31,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
     const options = filteredParameters.map((param) => ({
         value: param.id,
         label: param.name,
-        icon: getIcon(param.type),
+        icon: getParameterIcon(param.type),
     }));
 
     const updateNodeParameter = (nodeId: string, parameterId: string, updates: Partial<Parameter>) => {
