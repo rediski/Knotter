@@ -5,6 +5,7 @@ import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
 
 import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
+import { useRefChangeObserver } from '@/hooks/useRefChangeObserver';
 
 export const TempEdge = ({ containerRef }: { containerRef: RefObject<HTMLDivElement | null> }) => {
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
@@ -12,6 +13,7 @@ export const TempEdge = ({ containerRef }: { containerRef: RefObject<HTMLDivElem
     const tempEdge = useCanvasStore((state) => state.tempEdge);
 
     const mousePosition = useCanvasRefsStore((state) => state.mousePosition);
+    useRefChangeObserver(mousePosition);
 
     const nodes = getNodes(items);
 
