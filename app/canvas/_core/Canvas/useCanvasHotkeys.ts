@@ -24,9 +24,6 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
     const toggleGrid = useCanvasStore((state) => state.toggleShowGrid);
     const toggleAxes = useCanvasStore((state) => state.toggleShowAxes);
 
-    const items = useCanvasStore((state) => state.items);
-    const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
-
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
