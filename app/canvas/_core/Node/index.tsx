@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, type RefObject } from 'react';
 
 import { NODE_SIZE } from '@/canvas/_core/_/canvas.constants';
 
@@ -15,11 +15,7 @@ import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
 import { openTabs } from '@/canvas/utils/canvas/openTabs';
 
-type NodeProps = {
-    containerRef: React.RefObject<HTMLDivElement | null>;
-};
-
-export const Node: React.FC<NodeProps> = ({ containerRef }) => {
+export const Node = ({ containerRef }: { containerRef: RefObject<HTMLDivElement | null> }) => {
     const nodeRef = useRef<HTMLDivElement>(null);
 
     const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
