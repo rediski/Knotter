@@ -2,7 +2,7 @@
 
 import React, { memo, useRef } from 'react';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 import { SidebarContextMenu } from '@/canvas/components/sidebar/SidebarContextMenu';
 import { useSidebarResize } from '@/canvas/components/sidebar/useSidebarResize';

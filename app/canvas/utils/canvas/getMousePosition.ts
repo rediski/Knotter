@@ -1,5 +1,5 @@
 import type { Position } from '@/canvas/_core/_/canvas.types';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 export function getMousePosition(e: MouseEvent, canvas: HTMLCanvasElement): Position {
     const rect = canvas.getBoundingClientRect();

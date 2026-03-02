@@ -1,11 +1,11 @@
 import type { Parameter } from '@/canvas/_core/_/parameter';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export const updateParameter = (parameterId: string, updates: Partial<Parameter>) => {
-    const state = useCanvasStore.getState();
+    const itemsState = useItemsStore.getState();
 
-    const parameters = state.parameters;
-    const setParameters = state.setParameters;
+    const parameters = itemsState.parameters;
+    const setParameters = itemsState.setParameters;
 
     setParameters(
         parameters.map((parameter) =>

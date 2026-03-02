@@ -1,4 +1,5 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 export interface SelectCanvasItemEvent {
     ctrlKey: boolean;
@@ -14,8 +15,10 @@ export interface SelectCanvasItemParams {
 export function selectItems(params: SelectCanvasItemParams): string[] {
     const { itemId, event: e } = params;
 
-    const items = useCanvasStore.getState().items;
-    const selectedItemIds = useCanvasStore.getState().selectedItemIds;
+    const itemsState = useItemsStore.getState();
+
+    const items = itemsState.items;
+    const selectedItemIds = itemsState.selectedItemIds;
 
     const item = items.find((i) => i.id === itemId);
 

@@ -3,7 +3,7 @@
 import { memo } from 'react';
 
 import { InfiniteSlider } from '@/components/UI/InfiniteSlider';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 import { NODE_MOVE_MAX_STEP, NODE_MOVE_MIN_STEP } from '@/canvas/_core/_/canvas.constants';
 

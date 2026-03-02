@@ -2,7 +2,7 @@
 
 import { useEffect, RefObject } from 'react';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 import { undo, redo } from '@/canvas/utils/clipboard/historyManager';
 
@@ -19,6 +19,7 @@ import { initEdge } from '@/canvas/utils/edges/initEdge';
 import { clearSelection } from '@/canvas/utils/canvas/сlearSelection';
 import { openTabs } from '@/canvas/utils/canvas/openTabs';
 import { getSelectedNodesIds } from '@/canvas/utils/nodes/getSelectedNodesIds';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>) {
     const toggleGrid = useCanvasStore((state) => state.toggleShowGrid);
@@ -67,11 +68,11 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
                     e: () => selectAllEdges(),
                     у: () => selectAllEdges(),
                     c: () => {
-                        const store = useCanvasStore.getState();
+                        const store = useItemsStore.getState();
                         copySelectedItems(store.items, store.selectedItemIds);
                     },
                     с: () => {
-                        const store = useCanvasStore.getState();
+                        const store = useItemsStore.getState();
                         copySelectedItems(store.items, store.selectedItemIds);
                     },
                     v: () => pasteClipboardItems(),

@@ -1,4 +1,4 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 export function toggleTooltipMode() {
     const tooltipMode = useCanvasStore.getState().tooltipMode;

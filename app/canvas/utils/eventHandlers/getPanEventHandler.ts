@@ -1,5 +1,5 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useCanvasRefsStore } from '@/canvas/store/useCanvasRefsStore';
 
 export function getPanEventHandler() {
     const isPanning = useCanvasRefsStore.getState().isPanning;

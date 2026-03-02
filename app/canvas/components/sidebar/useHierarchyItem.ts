@@ -4,17 +4,18 @@ import { useCallback, useRef, useState, useEffect } from 'react';
 
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 import { selectItems } from '@/canvas/utils/items/selectItems';
 import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 type DragPosition = 'top' | 'bottom' | null;
 
 export function useHierarchyItem(canvasItem: CanvasItem) {
-    const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
-    const setSelectedIds = useCanvasStore((state) => state.setSelectedItemIds);
-    const setItems = useCanvasStore((state) => state.setItems);
+    const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
+    const setSelectedIds = useItemsStore((state) => state.setSelectedItemIds);
+    const setItems = useItemsStore((state) => state.setItems);
 
     const openedTabIds = useCanvasStore((state) => state.openedTabIds);
     const setOpenedTabIds = useCanvasStore((state) => state.setOpenedTabIds);
@@ -51,7 +52,7 @@ export function useHierarchyItem(canvasItem: CanvasItem) {
 
     const handleNameChange = useCallback(
         (newName: string) => {
-            const prev = useCanvasStore.getState().items;
+            const prev = useItemsStore.getState().items;
             const next = prev.map((item) => (item.id === canvasItem.id ? { ...item, name: newName } : item));
             setItems(next);
         },
@@ -110,7 +111,7 @@ export function useHierarchyItem(canvasItem: CanvasItem) {
             const draggedId = e.dataTransfer?.getData('text/plain');
             if (!draggedId || draggedId === canvasItem.id) return;
 
-            const prev = useCanvasStore.getState().items;
+            const prev = useItemsStore.getState().items;
 
             const fromIndex = prev.findIndex((i) => i.id === draggedId);
             const toIndex = prev.findIndex((i) => i.id === canvasItem.id);

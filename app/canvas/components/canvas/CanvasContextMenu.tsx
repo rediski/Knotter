@@ -5,7 +5,8 @@ import { ContextMenu } from '@/components/UI/ContextMenu';
 import { ContextMenuItem } from '@/components/UI/ContextMenuItem';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { selectAllItems } from '@/canvas/utils/items/selectAllItems';
 import { selectAllEdges } from '@/canvas/utils/edges/selectAllEdges';
@@ -29,8 +30,8 @@ type CanvasContextMenuProps = {
 export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, position, closeMenu }: CanvasContextMenuProps) {
     const menuRef = useRef<HTMLDivElement | null>(null);
 
-    const items = useCanvasStore((state) => state.items);
-    const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
+    const items = useItemsStore((state) => state.items);
+    const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
 
     const nodes = getNodes(items);
 
@@ -115,7 +116,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                     openTabs(getSelectedNodesIds());
                     closeMenu();
                 }}
-                disabled={useCanvasStore.getState().selectedItemIds.length === 0}
+                disabled={useItemsStore.getState().selectedItemIds.length === 0}
                 shortcut="Space"
             >
                 Открыть вкладку

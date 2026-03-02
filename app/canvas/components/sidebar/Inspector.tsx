@@ -8,8 +8,8 @@ import { EmptyState } from '@/components/UI/EmptyState';
 import { Input } from '@/components/UI/Input';
 import { Textarea } from '@/components/UI/Textarea';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { useDropdownStore } from '@/canvas/store/dropdownStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useDropdownStore } from '@/canvas/store/useDropdownStore';
 
 import { Dropdown } from '@/components/UI/Dropdown';
 
@@ -24,6 +24,7 @@ import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
 import { deleteSelectedItemsById } from '@/canvas/utils/items/deleteSelectedItems';
 
 import { Box, Link2Icon, X } from 'lucide-react';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 const FIELD_TITLES = {
     NAME: 'Название',
@@ -50,10 +51,10 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     const selectedItem = getSelectedItem();
     const selectedNode = getSelectedNode();
 
-    const selectedEdgeIds = useCanvasStore((state) => state.selectedEdgeIds);
-    const setSelectedEdgeIds = useCanvasStore((state) => state.setSelectedEdgeIds);
+    const items = useItemsStore((state) => state.items);
+    const selectedEdgeIds = useItemsStore((state) => state.selectedEdgeIds);
+    const setSelectedEdgeIds = useItemsStore((state) => state.setSelectedEdgeIds);
     const filterText = useCanvasStore((state) => (panelId ? state.filterText[panelId] : ''));
-    const items = useCanvasStore((state) => state.items);
 
     const incomingEdges = getIncomingEdges(items, selectedNode?.id);
     const outgoingEdges = getOutgoingEdges(items, selectedNode?.id);

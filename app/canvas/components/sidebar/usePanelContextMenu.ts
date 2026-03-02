@@ -4,7 +4,7 @@ import { useState, useCallback, useRef, RefObject } from 'react';
 
 import type { SidebarPanel } from '@/canvas/_core/_/sidebarPanel';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { useSidebarPanels } from '@/canvas/components/sidebar/useSidebarPanels';
 import { useClickOutside } from '@/hooks/useClickOutside';
 

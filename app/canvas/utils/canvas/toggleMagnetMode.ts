@@ -1,32 +1,52 @@
+import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
+
 import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
 
-export function toggleMagnetMode() {
-    useCanvasStore.setState((state) => {
-        const newMagnet = !state.isMagnet;
+interface SnapSelectedNodesOptions {
+    items: CanvasItem[];
+    selectedItemIds: string[];
+    step?: number;
+}
 
-        let updatedItems = state.items;
-
-        if (newMagnet) {
-            updatedItems = state.items.map((item) => {
-                if (item.kind !== 'node') return item;
-                if (!state.selectedItemIds.includes(item.id)) return item;
-
-                const newX = Math.round(item.position.x / NODE_MOVE_MAX_STEP) * NODE_MOVE_MAX_STEP;
-                const newY = Math.round(item.position.y / NODE_MOVE_MAX_STEP) * NODE_MOVE_MAX_STEP;
-
-                if (newX === item.position.x && newY === item.position.y) return item;
-
-                return {
-                    ...item,
-                    position: { x: newX, y: newY },
-                };
-            });
+const snapSelectedNodes = ({
+    items,
+    selectedItemIds,
+    step = NODE_MOVE_MAX_STEP,
+}: SnapSelectedNodesOptions): CanvasItem[] => {
+    return items.map((item) => {
+        if (item.kind !== 'node' || !selectedItemIds.includes(item.id)) {
+            return item;
         }
 
-        return {
-            isMagnet: newMagnet,
-            items: updatedItems,
+        const newPosition = {
+            x: Math.round(item.position.x / step) * step,
+            y: Math.round(item.position.y / step) * step,
         };
+
+        return newPosition.x === item.position.x && newPosition.y === item.position.y
+            ? item
+            : { ...item, position: newPosition };
+    });
+};
+
+export function toggleMagnetMode() {
+    const canvasState = useCanvasStore.getState();
+    const itemsState = useItemsStore.getState();
+
+    const newMagnet = !canvasState.isMagnet;
+
+    useCanvasStore.setState({
+        isMagnet: newMagnet,
+    });
+
+    useItemsStore.setState({
+        items: newMagnet
+            ? snapSelectedNodes({
+                  items: itemsState.items,
+                  selectedItemIds: itemsState.selectedItemIds,
+              })
+            : itemsState.items,
     });
 }

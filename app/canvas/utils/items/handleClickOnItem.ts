@@ -1,20 +1,21 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 import { selectItems } from '@/canvas/utils/items/selectItems';
 import { getNodeIdUnderCursor } from '@/canvas/utils/nodes/getNodeIdUnderCursor';
 import { getEdgeIdUnderCursor } from '@/canvas/utils/edges/getEdgeIdUnderCursor';
 import { createEdge } from '@/canvas/utils/edges/createEdge';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function handleClickOnItem(e: MouseEvent, isCanvasUnderCursor: boolean) {
     if (e.button !== 0) return;
 
-    const state = useCanvasStore.getState();
+    const itemsState = useItemsStore.getState();
 
-    const selectedItemIds = state.selectedItemIds;
-    const selectedEdgeIds = state.selectedEdgeIds;
+    const selectedItemIds = itemsState.selectedItemIds;
+    const selectedEdgeIds = itemsState.selectedEdgeIds;
 
-    const setSelectedItemIds = state.setSelectedItemIds;
-    const setSelectedEdgeIds = state.setSelectedEdgeIds;
+    const setSelectedItemIds = itemsState.setSelectedItemIds;
+    const setSelectedEdgeIds = itemsState.setSelectedEdgeIds;
 
     const point = { x: e.clientX, y: e.clientY };
     const isMultiSelect = e.ctrlKey || e.metaKey || e.shiftKey;

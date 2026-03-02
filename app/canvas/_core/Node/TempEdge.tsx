@@ -1,15 +1,16 @@
 import { type RefObject } from 'react';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useCanvasRefsStore } from '@/canvas/store/useCanvasRefsStore';
 
 import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { useRefChangeObserver } from '@/hooks/useRefChangeObserver';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export const TempEdge = ({ containerRef }: { containerRef: RefObject<HTMLDivElement | null> }) => {
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
-    const items = useCanvasStore((state) => state.items);
+    const items = useItemsStore((state) => state.items);
     const tempEdge = useCanvasStore((state) => state.tempEdge);
 
     const mousePosition = useCanvasRefsStore((state) => state.mousePosition);

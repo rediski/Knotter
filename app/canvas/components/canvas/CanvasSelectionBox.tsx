@@ -1,6 +1,7 @@
 'use client';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 interface SelectionBoxProps {
     containerRef: React.RefObject<HTMLDivElement | null>;
@@ -10,8 +11,8 @@ export function SelectionBox({ containerRef }: SelectionBoxProps) {
     const offset = useCanvasStore((state) => state.offset);
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
     const invertY = useCanvasStore((state) => state.invertY);
-    const selectionStart = useCanvasStore((state) => state.selectionStart);
-    const selectionEnd = useCanvasStore((state) => state.selectionEnd);
+    const selectionStart = useItemsStore((state) => state.selectionStart);
+    const selectionEnd = useItemsStore((state) => state.selectionEnd);
 
     if (!selectionStart || !selectionEnd) return null;
 

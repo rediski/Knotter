@@ -2,8 +2,8 @@
 
 import { RefObject, useCallback } from 'react';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
+import { useCanvasRefsStore } from '@/canvas/store/useCanvasRefsStore';
 
 import { findCanvasUnderCursor } from '@/canvas/utils/canvas/findCanvasUnderCursor';
 
@@ -40,8 +40,8 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             const dragStartMouse = useCanvasRefsStore.getState().dragStartMouse;
             const initialNodePositions = useCanvasRefsStore.getState().initialNodePositions;
 
-            const tempEdge = useCanvasStore.getState().tempEdge;
-            const setItems = useCanvasStore.getState().setItems;
+            const tempEdge = useItemsStore.getState().tempEdge;
+            const setItems = useItemsStore.getState().setItems;
 
             const mousePos = getMousePosition(e, canvasRef.current);
 

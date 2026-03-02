@@ -15,7 +15,8 @@ import { Boolean } from '@/canvas/components/parameters/Boolean';
 import { Enum } from '@/canvas/components/parameters/Enum';
 import { Structure } from '@/canvas/components/parameters/Structure';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { getFilteredParameters } from '@/canvas/utils/parameters/getFilteredParameters';
 import { createParameter } from '@/canvas/utils/parameters/createParameter';
@@ -27,7 +28,7 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
     const [parameterName, setParameterName] = useState<string>('');
     const [parameterType, setParameterType] = useState<ParameterType>('number');
 
-    const parameters = useCanvasStore((state) => state.parameters);
+    const parameters = useItemsStore((state) => state.parameters);
     const filterText = useCanvasStore((state) => (panelId ? state.filterText[panelId] : ''));
 
     const foundParameterType = parameterTypes.find((parameter) => parameter.type === parameterType);

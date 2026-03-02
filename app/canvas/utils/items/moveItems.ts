@@ -1,12 +1,16 @@
 import type { Position, CanvasItem } from '@/canvas/_core/_/canvas.types';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 import { NODE_MOVE_MIN_STEP, NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function moveItems(dragDelta: Position, initialPositions: Map<string, Position>): CanvasItem[] {
-    const selectedItemIds = useCanvasStore.getState().selectedItemIds;
-    const items = useCanvasStore.getState().items;
+    const itemsState = useItemsStore.getState();
+
+    const selectedItemIds = itemsState.selectedItemIds;
+    const items = itemsState.items;
+
     const isMagnet = useCanvasStore.getState().isMagnet;
 
     const { x: dx, y: dy } = dragDelta;

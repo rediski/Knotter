@@ -1,7 +1,7 @@
 'use client';
 
 import { v4 as uuid } from 'uuid';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { SidebarPanel } from '@/canvas/_core/_/sidebarPanel';
 
 export const useSidebarPanels = () => {

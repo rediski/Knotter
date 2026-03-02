@@ -1,9 +1,10 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 import { selectAllEdges } from '@/canvas/utils/edges/selectAllEdges';
 
 export function selectAllItems() {
-    const items = useCanvasStore.getState().items;
-    const setSelectedItemIds = useCanvasStore.getState().setSelectedItemIds;
+    const itemsStore = useItemsStore.getState();
+    const items = itemsStore.items;
+    const setSelectedItemIds = itemsStore.setSelectedItemIds;
 
     selectAllEdges();
     setSelectedItemIds(items.map((item) => item.id));

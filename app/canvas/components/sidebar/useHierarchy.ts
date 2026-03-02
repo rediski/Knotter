@@ -1,11 +1,11 @@
 'use client';
 
 import { useMemo, useCallback } from 'react';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function useHierarchy(filterText: string) {
-    const items = useCanvasStore((state) => state.items);
-    const setSelectedIds = useCanvasStore((state) => state.setSelectedItemIds);
+    const items = useItemsStore((state) => state.items);
+    const setSelectedIds = useItemsStore((state) => state.setSelectedItemIds);
 
     const filteredItems = useMemo(() => {
         const lower = filterText?.toLowerCase() || '';

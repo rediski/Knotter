@@ -1,11 +1,11 @@
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 import type { CanvasAction } from '@/canvas/_core/_/clipboard.types';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function restoreCanvasFromHistory(actions: CanvasAction[]) {
-    const setItems = useCanvasStore.getState().setItems;
-    const setSelectedItemIds = useCanvasStore.getState().setSelectedItemIds;
+    const setItems = useItemsStore.getState().setItems;
+    const setSelectedItemIds = useItemsStore.getState().setSelectedItemIds;
 
     let canvasItems: CanvasItem[] = [];
 

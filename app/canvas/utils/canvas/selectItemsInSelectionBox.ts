@@ -1,11 +1,12 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { getItemsInSelectionBox } from '@/canvas/utils/items/getItemsInSelectionBox';
 import type { Position } from '@/canvas/_core/_/canvas.types';
+import { getItemsInSelectionBox } from '@/canvas/utils/items/getItemsInSelectionBox';
+
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function selectItemsInSelectionBox(start: Position, end: Position) {
-    const items = useCanvasStore.getState().items;
-    const setSelectedItemIds = useCanvasStore.getState().setSelectedItemIds;
-    const setSelectedEdgeIds = useCanvasStore.getState().setSelectedEdgeIds;
+    const items = useItemsStore.getState().items;
+    const setSelectedItemIds = useItemsStore.getState().setSelectedItemIds;
+    const setSelectedEdgeIds = useItemsStore.getState().setSelectedEdgeIds;
 
     const selected = getItemsInSelectionBox(items, start, end);
 

@@ -1,4 +1,4 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { getNodeIdUnderCursor } from '@/canvas/utils/nodes/getNodeIdUnderCursor';
 
 export function updateHoveredNodeId(e: MouseEvent) {

@@ -1,4 +1,4 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { EmptyState } from '@/components/UI/EmptyState';
 
 export const Clipboard = () => {

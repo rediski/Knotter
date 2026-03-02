@@ -3,14 +3,15 @@
 import Link from 'next/link';
 
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
-
 import { ToastProvider } from '@/components/UI/Toast';
 import { CanvasSidebar } from '@/canvas/components/canvas/CanvasSidebar';
 
 import Canvas from '@/canvas/_core/Canvas';
 import NodeContent from '@/canvas/_core/Node/NodeContent';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
+
 import { useMobileDetection } from '@/hooks/useMobileDetection';
 
 import { LoaderCircle, Frown, LandPlot, Box, X, type LucideIcon } from 'lucide-react';
@@ -20,11 +21,12 @@ export interface EditorModeOption {
 }
 
 export default function CanvasPage() {
-    const items = useCanvasStore((state) => state.items);
+    const items = useItemsStore((state) => state.items);
+    const setSelectedItemIds = useItemsStore((state) => state.setSelectedItemIds);
+
     const selectedTabId = useCanvasStore((state) => state.selectedTabId);
     const openedTabIds = useCanvasStore((state) => state.openedTabIds);
 
-    const setSelectedItemIds = useCanvasStore((state) => state.setSelectedItemIds);
     const setSelectedTabId = useCanvasStore((state) => state.setSelectedTabId);
     const setOpenedTabIds = useCanvasStore((state) => state.setOpenedTabIds);
 

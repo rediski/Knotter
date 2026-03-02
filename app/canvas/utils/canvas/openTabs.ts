@@ -1,7 +1,9 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export const openTabs = (nodeIds: string | string[]) => {
-    const setSelectedItemIds = useCanvasStore.getState().setSelectedItemIds;
+    const setSelectedItemIds = useItemsStore.getState().setSelectedItemIds;
+
     const setSelectedTabId = useCanvasStore.getState().setSelectedTabId;
     const openedTabIds = useCanvasStore.getState().openedTabIds;
     const setOpenedTabIds = useCanvasStore.getState().setOpenedTabIds;

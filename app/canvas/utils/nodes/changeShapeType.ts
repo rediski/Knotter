@@ -1,10 +1,12 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
 import type { NodeShapeType } from '@/canvas/_core/_/nodeShapeType';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function changeShapeType(newShape: NodeShapeType) {
-    const items = useCanvasStore.getState().items;
-    const setItems = useCanvasStore.getState().setItems;
-    const selectedItemIds = useCanvasStore.getState().selectedItemIds;
+    const itemsStore = useItemsStore.getState();
+
+    const items = itemsStore.items;
+    const setItems = itemsStore.setItems;
+    const selectedItemIds = itemsStore.selectedItemIds;
 
     const updatedItems = items.map((item) => {
         if (item.kind === 'node' && selectedItemIds.includes(item.id)) {

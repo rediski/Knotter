@@ -1,8 +1,8 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import type { Position } from '@/canvas/_core/_/canvas.types';
 
 import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
-import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
+import { useCanvasRefsStore } from '@/canvas/store/useCanvasRefsStore';
 
 export function resolvePosition(): Position {
     const mousePosition = useCanvasRefsStore.getState().mousePosition.current;

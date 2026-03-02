@@ -1,7 +1,7 @@
 'use client';
 
 import { useLayoutEffect, RefObject } from 'react';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 export function useInitialCanvasOffset(canvasRef: RefObject<HTMLCanvasElement | null>) {
     const offset = useCanvasStore((state) => state.offset);

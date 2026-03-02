@@ -6,7 +6,7 @@ import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 
 import { EditableName } from '@/components/UI/EditableName';
 import { useHierarchyItem } from '@/canvas/components/sidebar/useHierarchyItem';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { Box } from 'lucide-react';
 
@@ -26,7 +26,7 @@ export const HierarchyItem = memo(function HierarchyItem({ canvasItem }: Hierarc
         dragPosition,
     } = useHierarchyItem(canvasItem);
 
-    const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
+    const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
 
     const isSelected = selectedItemIds.includes(canvasItem.id);
 

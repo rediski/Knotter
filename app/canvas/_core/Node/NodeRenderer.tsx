@@ -5,10 +5,10 @@ import type { Node } from '@/canvas/_core/_/canvas.types';
 import { getShape } from '@/canvas/utils/nodes/getShape';
 import { NODE_SIZE } from '@/canvas/_core/_/canvas.constants';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function NodeRenderer({ node }: { node: Node }) {
-    const isSelected = useCanvasStore((state) => state.selectedItemIds.includes(node.id));
+    const isSelected = useItemsStore((state) => state.selectedItemIds.includes(node.id));
 
     const Icon = getShape(node.shapeType).icon;
     const isPoint = node.shapeType === 'point';

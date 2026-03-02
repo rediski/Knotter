@@ -1,4 +1,4 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 export function getScrollEventHandler() {
     return (e: WheelEvent) => {

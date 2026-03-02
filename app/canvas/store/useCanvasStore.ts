@@ -28,26 +28,6 @@ export interface CanvasState {
 
     // ---
 
-    items: CanvasItem[];
-    setItems: (items: CanvasItem[]) => void;
-
-    parameters: Parameter[];
-    setParameters: (parameters: Parameter[]) => void;
-
-    selectedItemIds: string[];
-    setSelectedItemIds: (ids: string[]) => void;
-
-    selectedEdgeIds: string[];
-    setSelectedEdgeIds: (ids: string[]) => void;
-
-    selectionStart: Position | null;
-    setSelectionStart: (pos: Position | null) => void;
-
-    selectionEnd: Position | null;
-    setSelectionEnd: (pos: Position | null) => void;
-
-    // ---
-
     clipboard: CanvasItem[];
     setClipboard: (items: CanvasItem[]) => void;
 
@@ -107,28 +87,6 @@ export const useCanvasStore = create<CanvasState>()(
 
             // ---
 
-            items: [],
-            setItems: (items) => set({ items }),
-
-            parameters: [],
-            setParameters: (parameters) => set({ parameters }),
-
-            selectedItemIds: [],
-            setSelectedItemIds: (ids) => set({ selectedItemIds: ids }),
-
-            selectedItem: null,
-
-            selectedEdgeIds: [],
-            setSelectedEdgeIds: (ids) => set({ selectedEdgeIds: ids }),
-
-            selectionStart: null,
-            setSelectionStart: (pos) => set({ selectionStart: pos }),
-
-            selectionEnd: null,
-            setSelectionEnd: (pos) => set({ selectionEnd: pos }),
-
-            // ---
-
             clipboard: [],
             setClipboard: (items) => set({ clipboard: items }),
 
@@ -179,11 +137,6 @@ export const useCanvasStore = create<CanvasState>()(
                 offset: state.offset,
                 zoomLevel: state.zoomLevel,
                 invertY: state.invertY,
-
-                items: state.items,
-                parameters: state.parameters,
-                selectedItemIds: state.selectedItemIds,
-                selectedEdgeIds: state.selectedEdgeIds,
 
                 tooltipMode: state.tooltipMode,
                 isMagnet: state.isMagnet,

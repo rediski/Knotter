@@ -1,24 +1,33 @@
 import { v4 as uuid } from 'uuid';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { canAddItem } from '@/canvas/utils/items/canAddItem';
 import type { Node } from '@/canvas/_core/_/canvas.types';
+
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function createEdge(clickedNodeId: string) {
     if (!canAddItem()) return null;
 
-    const { items, setItems, tempEdge: fromNodeId, setTempEdge } = useCanvasStore.getState();
+    const canvasState = useCanvasStore.getState();
+    const itemsState = useItemsStore.getState();
 
-    if (!fromNodeId || !clickedNodeId || fromNodeId === clickedNodeId) {
+    const tempEdge = canvasState.tempEdge;
+    const setTempEdge = canvasState.setTempEdge;
+
+    const items = itemsState.items;
+    const setItems = itemsState.setItems;
+
+    if (!tempEdge || !clickedNodeId || tempEdge === clickedNodeId) {
         return null;
     }
 
     setItems(
         items.map((item) => {
             if (item.kind !== 'node') return item;
-            if (item.id !== fromNodeId) return item;
+            if (item.id !== tempEdge) return item;
 
-            if (item.edges.some((e) => e.to === clickedNodeId)) {
+            if (item.edges.some((edge) => edge.to === clickedNodeId)) {
                 return item;
             }
 

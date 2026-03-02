@@ -1,12 +1,13 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 export const clearSelection = () => {
-    const hasSelectedItems = useCanvasStore.getState().selectedItemIds.length > 0;
-    const hasSelectedEdges = useCanvasStore.getState().selectedEdgeIds.length > 0;
-    const hasTempEdge = useCanvasStore.getState().tempEdge !== null;
+    const hasSelectedItems = useItemsStore.getState().selectedItemIds.length > 0;
+    const hasSelectedEdges = useItemsStore.getState().selectedEdgeIds.length > 0;
+    const setSelectedItemIds = useItemsStore.getState().setSelectedItemIds;
+    const setSelectedEdgeIds = useItemsStore.getState().setSelectedEdgeIds;
 
-    const setSelectedItemIds = useCanvasStore.getState().setSelectedItemIds;
-    const setSelectedEdgeIds = useCanvasStore.getState().setSelectedEdgeIds;
+    const hasTempEdge = useCanvasStore.getState().tempEdge !== null;
     const setTempEdge = useCanvasStore.getState().setTempEdge;
 
     if (hasSelectedItems) {

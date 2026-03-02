@@ -5,7 +5,7 @@ import { useRef, useCallback, useMemo } from 'react';
 import type { SidebarPanel as SidebarPanelType, PanelType } from '@/canvas/_core/_/sidebarPanel';
 
 import { useSidebarPanels } from '@/canvas/components/sidebar/useSidebarPanels';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 import { panelTitles, panelIcons } from '@/canvas/_core/_/sidebarPanel';
 

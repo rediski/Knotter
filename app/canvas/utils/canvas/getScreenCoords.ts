@@ -1,4 +1,4 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 export const getScreenCoords = (x: number, y: number, containerRef: React.RefObject<HTMLDivElement | null>) => {
     const zoomLevel = useCanvasStore.getState().zoomLevel;

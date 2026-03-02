@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Tooltip } from '@/components/UI/Tooltip';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 import { toggleMagnetMode } from '@/canvas/utils/canvas/toggleMagnetMode';
 import { toggleTooltipMode } from '@/canvas/utils/canvas/toggleTooltipMode';

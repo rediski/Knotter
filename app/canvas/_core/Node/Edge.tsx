@@ -1,14 +1,15 @@
 import { type RefObject } from 'react';
 import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { type Edge as EdgeType } from '@/canvas/_core/_/canvas.types';
 
 export const Edge = ({ edge, containerRef }: { edge: EdgeType; containerRef: RefObject<HTMLDivElement | null> }) => {
-    const items = useCanvasStore((state) => state.items);
+    const items = useItemsStore((state) => state.items);
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
-    const selectedEdgeIds = useCanvasStore((state) => state.selectedEdgeIds);
+    const selectedEdgeIds = useItemsStore((state) => state.selectedEdgeIds);
 
     const isSelected = selectedEdgeIds.includes(edge.id);
 

@@ -4,7 +4,7 @@ import { useRef, useEffect, type RefObject } from 'react';
 
 import { NODE_SIZE } from '@/canvas/_core/_/canvas.constants';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 import { EdgeRenderer } from '@/canvas/_core/Node/EdgeRenderer';
 import { NodeRenderer } from '@/canvas/_core/Node/NodeRenderer';
@@ -14,6 +14,7 @@ import { getNodes } from '@/canvas/utils/nodes/getNodes';
 
 import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
 import { openTabs } from '@/canvas/utils/canvas/openTabs';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export const Node = ({ containerRef }: { containerRef: RefObject<HTMLDivElement | null> }) => {
     const nodeRef = useRef<HTMLDivElement>(null);
@@ -24,11 +25,11 @@ export const Node = ({ containerRef }: { containerRef: RefObject<HTMLDivElement 
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
     const tooltipMode = useCanvasStore((state) => state.tooltipMode);
 
-    const items = useCanvasStore((state) => state.items);
-    const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
-    const hoveredNodeId = useCanvasStore((state) => state.hoveredNodeId);
+    const items = useItemsStore((state) => state.items);
+    const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
+    const hoveredNodeId = useItemsStore((state) => state.hoveredNodeId);
 
-    const selectionStart = useCanvasStore((state) => state.selectionStart);
+    const selectionStart = useItemsStore((state) => state.selectionStart);
 
     const nodes = getNodes(items);
 

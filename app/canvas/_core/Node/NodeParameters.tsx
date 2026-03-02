@@ -5,7 +5,7 @@ import { memo } from 'react';
 import type { Node } from '@/canvas/_core/_/canvas.types';
 import type { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { OptionPicker } from '@/components/UI/OptionPicker';
 import { Input } from '@/components/UI/Input';
@@ -16,9 +16,9 @@ import { getParameterIcon } from '@/canvas/utils/nodes/getParameterIcon';
 import { addParameterToSelectedNode } from '@/canvas/utils/parameters/addParameterToSelectedNode';
 
 export const NodeParameters = memo(function NodeParameters({ node }: { node: Node }) {
-    const items = useCanvasStore((state) => state.items);
-    const setItems = useCanvasStore((state) => state.setItems);
-    const parameters = useCanvasStore((state) => state.parameters);
+    const items = useItemsStore((state) => state.items);
+    const setItems = useItemsStore((state) => state.setItems);
+    const parameters = useItemsStore((state) => state.parameters);
 
     const storeNode = items.find((item) => item.kind === 'node' && item.id === node.id) as Node | undefined;
 

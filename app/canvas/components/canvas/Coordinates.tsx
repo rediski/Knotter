@@ -1,6 +1,6 @@
 'use client';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { getCanvasCenter } from '@/canvas/utils/canvas/getCanvasCenter';
 
 import { RotateCcw } from 'lucide-react';

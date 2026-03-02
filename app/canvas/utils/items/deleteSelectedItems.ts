@@ -1,10 +1,13 @@
 import type { Edge, Node } from '@/canvas/_core/_/canvas.types';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 
 export function deleteSelectedItems() {
-    const selectedItemIds = useCanvasStore.getState().selectedItemIds;
-    const selectedEdgeIds = useCanvasStore.getState().selectedEdgeIds;
+    const itemsState = useItemsStore.getState();
+
+    const selectedItemIds = itemsState.selectedItemIds;
+    const selectedEdgeIds = itemsState.selectedEdgeIds;
 
     const idsToDelete = [...selectedItemIds, ...selectedEdgeIds];
 
@@ -14,12 +17,14 @@ export function deleteSelectedItems() {
 }
 
 export function deleteSelectedItemsById(itemIds: string | string[]) {
-    const items = useCanvasStore.getState().items;
-    const setItems = useCanvasStore.getState().setItems;
-    const selectedItemIds = useCanvasStore.getState().selectedItemIds;
-    const selectedEdgeIds = useCanvasStore.getState().selectedEdgeIds;
-    const setSelectedItemIds = useCanvasStore.getState().setSelectedItemIds;
-    const setSelectedEdgeIds = useCanvasStore.getState().setSelectedEdgeIds;
+    const itemsState = useItemsStore.getState();
+
+    const items = itemsState.items;
+    const setItems = itemsState.setItems;
+    const selectedItemIds = itemsState.selectedItemIds;
+    const selectedEdgeIds = itemsState.selectedEdgeIds;
+    const setSelectedItemIds = itemsState.setSelectedItemIds;
+    const setSelectedEdgeIds = itemsState.setSelectedEdgeIds;
 
     const idsToDelete = new Set(Array.isArray(itemIds) ? itemIds : [itemIds]);
 

@@ -1,6 +1,6 @@
 import { RefObject } from 'react';
 
-import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
+import { useCanvasRefsStore } from '@/canvas/store/useCanvasRefsStore';
 
 import { getMousePosition } from '@/canvas/utils/canvas/getMousePosition';
 import { getSelectedItemsPositions } from '@/canvas/utils/items/getSelectedItemsPositions';

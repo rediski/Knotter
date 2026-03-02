@@ -1,12 +1,13 @@
 'use client';
 
 import { NodeParameters } from '@/canvas/_core/Node/NodeParameters';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getEdges } from '@/canvas/utils/edges/getEdges';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export default function NodeContent() {
-    const items = useCanvasStore((state) => state.items);
+    const items = useItemsStore((state) => state.items);
     const selectedTabId = useCanvasStore((state) => state.selectedTabId);
 
     const openedNode = items.find((item) => item.id === selectedTabId && item.kind === 'node');

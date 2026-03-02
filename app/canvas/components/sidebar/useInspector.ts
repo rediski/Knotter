@@ -3,16 +3,17 @@
 import { useCallback, useMemo } from 'react';
 
 import type { Position } from '@/canvas/_core/_/canvas.types';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { moveItems } from '@/canvas/utils/items/moveItems';
 import { getSelectedItem } from '@/canvas/utils/items/getSelectedItem';
 import { getSelectedNode } from '@/canvas/utils/nodes/getSelectedNode';
 
 export function useInspector() {
-    const items = useCanvasStore((state) => state.items);
-    const setItems = useCanvasStore((state) => state.setItems);
-    const selectedItemIds = useCanvasStore((state) => state.selectedItemIds);
+    const items = useItemsStore((state) => state.items);
+    const setItems = useItemsStore((state) => state.setItems);
+    const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
 
     const selectedItem = getSelectedItem();
     const selectedNode = getSelectedNode();

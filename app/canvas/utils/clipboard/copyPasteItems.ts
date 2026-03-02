@@ -1,11 +1,12 @@
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 import { addToHistory } from '@/canvas/utils/clipboard/historyManager';
 
 import { v4 as uuid } from 'uuid';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function copySelectedItems(items: CanvasItem[], selectedIds: string[]) {
     const setClipboard = useCanvasStore.getState().setClipboard;
@@ -16,8 +17,14 @@ export function copySelectedItems(items: CanvasItem[], selectedIds: string[]) {
 }
 
 export function pasteClipboardItems(insertionGap = NODE_MOVE_MAX_STEP) {
-    const store = useCanvasStore.getState();
-    const { clipboard, setSelectedItemIds, setItems, items } = store;
+    const canvasState = useCanvasStore.getState();
+    const itemsState = useItemsStore.getState();
+
+    const clipboard = canvasState.clipboard;
+
+    const items = itemsState.items;
+    const setItems = itemsState.setItems;
+    const setSelectedItemIds = itemsState.setSelectedItemIds;
 
     if (!clipboard.length) return;
 

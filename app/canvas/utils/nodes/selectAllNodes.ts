@@ -1,8 +1,10 @@
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function selectAllNodes() {
-    const items = useCanvasStore.getState().items;
-    const setSelectedItemIds = useCanvasStore.getState().setSelectedItemIds;
+    const itemsState = useItemsStore.getState();
+
+    const items = itemsState.items;
+    const setSelectedItemIds = itemsState.setSelectedItemIds;
 
     setSelectedItemIds(items.filter((item) => item.kind === 'node').map((node) => node.id));
 }

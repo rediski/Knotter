@@ -1,12 +1,13 @@
 import { type RefObject } from 'react';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
-import { useCanvasRefsStore } from '@/canvas/store/canvasRefStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useCanvasRefsStore } from '@/canvas/store/useCanvasRefsStore';
 
 import { selectItemsInSelectionBox } from '@/canvas/utils/canvas/selectItemsInSelectionBox';
 import { getNodeIdUnderCursor } from '@/canvas/utils/nodes/getNodeIdUnderCursor';
 import { getEdgeIdUnderCursor } from '@/canvas/utils/edges/getEdgeIdUnderCursor';
 import { findCanvasUnderCursor } from '@/canvas/utils/canvas/findCanvasUnderCursor';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function getSelectionEventHandler(canvasRef: RefObject<HTMLCanvasElement | null>) {
     return {
@@ -20,16 +21,21 @@ export function getSelectionEventHandler(canvasRef: RefObject<HTMLCanvasElement 
             if (getEdgeIdUnderCursor(e) !== null) return;
 
             const mousePos = useCanvasRefsStore.getState().mousePosition.current;
-            const setSelectionStart = useCanvasStore.getState().setSelectionStart;
-            const setSelectionEnd = useCanvasStore.getState().setSelectionEnd;
+
+            const itemsStore = useItemsStore.getState();
+
+            const setSelectionStart = itemsStore.setSelectionStart;
+            const setSelectionEnd = itemsStore.setSelectionEnd;
 
             setSelectionStart(mousePos);
             setSelectionEnd(mousePos);
         },
 
         handleMouseMove(e: MouseEvent) {
-            const selectionStart = useCanvasStore.getState().selectionStart;
-            const setSelectionEnd = useCanvasStore.getState().setSelectionEnd;
+            const itemsStore = useItemsStore.getState();
+
+            const selectionStart = itemsStore.selectionStart;
+            const setSelectionEnd = itemsStore.setSelectionEnd;
 
             const isLeftButtonPressed = (e.buttons & 1) === 1;
 
@@ -45,9 +51,11 @@ export function getSelectionEventHandler(canvasRef: RefObject<HTMLCanvasElement 
         },
 
         handleMouseUp(e: MouseEvent) {
-            const selectionStart = useCanvasStore.getState().selectionStart;
-            const setSelectionStart = useCanvasStore.getState().setSelectionStart;
-            const setSelectionEnd = useCanvasStore.getState().setSelectionEnd;
+            const itemsStore = useItemsStore.getState();
+
+            const selectionStart = itemsStore.selectionStart;
+            const setSelectionStart = itemsStore.setSelectionStart;
+            const setSelectionEnd = itemsStore.setSelectionEnd;
 
             if (!selectionStart || e.button !== 0) return;
 

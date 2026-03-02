@@ -1,18 +1,20 @@
 import type { Node } from '@/canvas/_core/_/canvas.types';
 import { v4 as uuidv4 } from 'uuid';
 
-import { useCanvasStore } from '@/canvas/store/canvasStore';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { resolvePosition } from '@/canvas/utils/items/resolvePosition';
 import { canAddItem } from '@/canvas/utils/items/canAddItem';
 import { generateUniqueName } from '@/canvas/utils/items/generateUniqueName';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function createNode(): Node | null {
     if (!canAddItem()) return null;
 
-    const items = useCanvasStore.getState().items;
-    const setItems = useCanvasStore.getState().setItems;
-    const setSelectedItemIds = useCanvasStore.getState().setSelectedItemIds;
+    const itemsState = useItemsStore.getState();
+
+    const items = itemsState.items;
+    const setItems = itemsState.setItems;
+    const setSelectedItemIds = itemsState.setSelectedItemIds;
 
     const nodes = getNodes(items);
     const position = resolvePosition();

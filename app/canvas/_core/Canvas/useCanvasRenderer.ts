@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useCallback, type RefObject } from 'react';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { drawGrid } from '@/canvas/utils/canvas/drawGrid';
 
 export function useCanvasRenderer({ canvasRef }: { canvasRef: RefObject<HTMLCanvasElement | null> }) {

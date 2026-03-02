@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { useCanvasStore } from '@/canvas/store/canvasStore';
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { MIN_ZOOM, MAX_ZOOM, ZOOM_FACTOR } from '@/canvas/_core/_/canvas.constants';
 
 export function getZoomEventHandler(canvasRef: RefObject<HTMLCanvasElement | null>) {
