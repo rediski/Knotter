@@ -3,17 +3,15 @@ import { v4 as uuid } from 'uuid';
 import { canAddItem } from '@/canvas/utils/items/canAddItem';
 import type { Node } from '@/canvas/_core/_/canvas.types';
 
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function createEdge(clickedNodeId: string) {
     if (!canAddItem()) return null;
 
-    const canvasState = useCanvasStore.getState();
     const itemsState = useItemsStore.getState();
 
-    const tempEdge = canvasState.tempEdge;
-    const setTempEdge = canvasState.setTempEdge;
+    const tempEdge = itemsState.tempEdge;
+    const setTempEdge = itemsState.setTempEdge;
 
     const items = itemsState.items;
     const setItems = itemsState.setItems;

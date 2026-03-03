@@ -10,8 +10,9 @@ import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export const TempEdge = ({ containerRef }: { containerRef: RefObject<HTMLDivElement | null> }) => {
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
+
     const items = useItemsStore((state) => state.items);
-    const tempEdge = useCanvasStore((state) => state.tempEdge);
+    const tempEdge = useItemsStore((state) => state.tempEdge);
 
     const mousePosition = useCanvasRefsStore((state) => state.mousePosition);
     useRefChangeObserver(mousePosition);

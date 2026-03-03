@@ -1,12 +1,14 @@
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 import { getNodeIdUnderCursor } from '@/canvas/utils/nodes/getNodeIdUnderCursor';
 
 export function updateHoveredNodeId(e: MouseEvent) {
-    const setHoveredNodeId = useCanvasStore.getState().setHoveredNodeId;
-    const hoveredNodeId = getNodeIdUnderCursor({ x: e.clientX, y: e.clientY });
-    const currentHoveredNodeId = useCanvasStore.getState().hoveredNodeId;
+    const itemsStore = useItemsStore.getState();
+    const setHoveredNodeId = itemsStore.setHoveredNodeId;
+    const hoveredNodeId = itemsStore.hoveredNodeId;
 
-    if (hoveredNodeId !== currentHoveredNodeId) {
+    const nodeIdUnderCursor = getNodeIdUnderCursor({ x: e.clientX, y: e.clientY });
+
+    if (hoveredNodeId !== nodeIdUnderCursor) {
         setHoveredNodeId(hoveredNodeId);
     }
 }

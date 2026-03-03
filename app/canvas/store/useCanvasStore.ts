@@ -20,14 +20,6 @@ export interface CanvasState {
 
     // ---
 
-    hoveredNodeId: string | null;
-    setHoveredNodeId: (id: string | null) => void;
-
-    tempEdge: string | null;
-    setTempEdge: (id: string | null) => void;
-
-    // ---
-
     clipboard: CanvasItem[];
     setClipboard: (items: CanvasItem[]) => void;
 
@@ -76,14 +68,6 @@ export const useCanvasStore = create<CanvasState>()(
 
             invertY: true,
             setInvertY: (value) => set({ invertY: value }),
-
-            // ---
-
-            hoveredNodeId: null,
-            setHoveredNodeId: (hoveredNodeId) => set({ hoveredNodeId }),
-
-            tempEdge: null,
-            setTempEdge: (tempEdge) => set({ tempEdge }),
 
             // ---
 

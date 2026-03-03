@@ -1,9 +1,10 @@
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function initEdge() {
-    const selectedItemIds = useItemsStore.getState().selectedItemIds;
-    const setTempEdge = useCanvasStore.getState().setTempEdge;
+    const itemsState = useItemsStore.getState();
+
+    const selectedItemIds = itemsState.selectedItemIds;
+    const setTempEdge = itemsState.setTempEdge;
 
     if (selectedItemIds.length === 0) return;
 
