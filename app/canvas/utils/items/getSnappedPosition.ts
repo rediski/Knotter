@@ -4,7 +4,7 @@ import type { Position } from '@/canvas/_core/_/canvas.types';
 import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 import { useCanvasRefsStore } from '@/canvas/store/useCanvasRefsStore';
 
-export function resolvePosition(): Position {
+export function getSnappedPosition(): Position {
     const mousePosition = useCanvasRefsStore.getState().mousePosition.current;
     const isMagnet = useCanvasStore.getState().isMagnet;
 
