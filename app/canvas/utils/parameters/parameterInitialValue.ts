@@ -1,35 +1,13 @@
 import type { ParameterType, Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
 
+const INITIAL_PARAMETER_VALUES = {
+    number: { value: 0, min: undefined, max: undefined } satisfies ParameterTypeMap['number'],
+    string: '' satisfies ParameterTypeMap['string'],
+    boolean: false satisfies ParameterTypeMap['boolean'],
+    enum: { value: null, options: [] } satisfies ParameterTypeMap['enum'],
+    structure: [] satisfies ParameterTypeMap['structure'],
+} as const;
+
 export function parameterInitialValue(type: ParameterType): Parameter['data'] {
-    switch (type) {
-        case 'number': {
-            const numberConfig: ParameterTypeMap['number'] = {
-                value: 0,
-                min: undefined,
-                max: undefined,
-            };
-
-            return numberConfig;
-        }
-
-        case 'string': {
-            return '' as ParameterTypeMap['string'];
-        }
-
-        case 'boolean': {
-            return false as ParameterTypeMap['boolean'];
-        }
-
-        case 'enum': {
-            const enumConfig: ParameterTypeMap['enum'] = {
-                value: null,
-                options: [],
-            };
-            return enumConfig;
-        }
-
-        case 'structure': {
-            return [] as ParameterTypeMap['structure'];
-        }
-    }
+    return INITIAL_PARAMETER_VALUES[type];
 }
