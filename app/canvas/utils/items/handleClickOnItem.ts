@@ -1,5 +1,3 @@
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
-
 import { selectItems } from '@/canvas/utils/items/selectItems';
 import { getNodeIdUnderCursor } from '@/canvas/utils/nodes/getNodeIdUnderCursor';
 import { getEdgeIdUnderCursor } from '@/canvas/utils/edges/getEdgeIdUnderCursor';
@@ -20,28 +18,26 @@ export function handleClickOnItem(e: MouseEvent, isCanvasUnderCursor: boolean) {
     const point = { x: e.clientX, y: e.clientY };
     const isMultiSelect = e.ctrlKey || e.metaKey || e.shiftKey;
 
-    const clickedNodeId = getNodeIdUnderCursor(point);
-    const clickedEdgeId = getEdgeIdUnderCursor(point);
+    const nodeIdUnderCursor = getNodeIdUnderCursor(point);
+    const edgeIdUnderCursor = getEdgeIdUnderCursor(point);
 
-    if (clickedEdgeId) {
+    if (edgeIdUnderCursor) {
         if (isMultiSelect) {
-            if (selectedEdgeIds.includes(clickedEdgeId)) {
-                setSelectedEdgeIds(selectedEdgeIds.filter((id) => id !== clickedEdgeId));
+            if (selectedEdgeIds.includes(edgeIdUnderCursor)) {
+                setSelectedEdgeIds(selectedEdgeIds.filter((id) => id !== edgeIdUnderCursor));
                 return;
             }
 
-            setSelectedEdgeIds([...selectedEdgeIds, clickedEdgeId]);
+            setSelectedEdgeIds([...selectedEdgeIds, edgeIdUnderCursor]);
             return;
         }
 
-        setSelectedEdgeIds([clickedEdgeId]);
+        setSelectedEdgeIds([edgeIdUnderCursor]);
         setSelectedItemIds([]);
         return;
     }
 
-    const itemId = clickedNodeId;
-
-    if (!itemId) {
+    if (!nodeIdUnderCursor) {
         if (!isMultiSelect && isCanvasUnderCursor) {
             setSelectedItemIds([]);
             setSelectedEdgeIds([]);
@@ -50,12 +46,12 @@ export function handleClickOnItem(e: MouseEvent, isCanvasUnderCursor: boolean) {
         return;
     }
 
-    if (!selectedItemIds.includes(itemId)) {
-        const newSelectedIds = selectItems({ itemId, event: e });
+    if (!selectedItemIds.includes(nodeIdUnderCursor)) {
+        const newSelectedIds = selectItems({ itemId: nodeIdUnderCursor, event: e });
         setSelectedItemIds(newSelectedIds);
     }
 
-    if (clickedNodeId) {
-        createEdge(clickedNodeId);
+    if (nodeIdUnderCursor) {
+        createEdge(nodeIdUnderCursor);
     }
 }
