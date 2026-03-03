@@ -1,9 +1,10 @@
 import type { Position, CanvasItem } from '@/canvas/_core/_/canvas.types';
 
 import { useCanvasStore } from '@/canvas/store/useCanvasStore';
-
-import { NODE_MOVE_MIN_STEP, NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
+
+import { snapPosition } from '@/canvas/utils/items/getSnappedPosition'; // добавляем импорт
+import { NODE_MOVE_MIN_STEP, NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 
 export function moveItems(dragDelta: Position, initialPositions: Map<string, Position>): CanvasItem[] {
     const itemsState = useItemsStore.getState();
@@ -24,21 +25,21 @@ export function moveItems(dragDelta: Position, initialPositions: Map<string, Pos
 
         if (!initialPos) return item;
 
+        const targetPosition = {
+            x: initialPos.x + dx,
+            y: initialPos.y + dy,
+        };
+
         const step = isMagnet ? NODE_MOVE_MAX_STEP : NODE_MOVE_MIN_STEP;
 
-        const newX = Math.round((initialPos.x + dx) / step) * step;
-        const newY = Math.round((initialPos.y + dy) / step) * step;
+        const newPosition = snapPosition(targetPosition, step);
 
-        if (newX === item.position.x && newY === item.position.y) {
+        if (newPosition.x === item.position.x && newPosition.y === item.position.y) {
             return item;
         }
 
         changed = true;
-
-        return {
-            ...item,
-            position: { x: newX, y: newY },
-        };
+        return { ...item, position: newPosition };
     });
 
     return changed ? updatedItems : items;
