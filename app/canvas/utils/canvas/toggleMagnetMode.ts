@@ -1,29 +1,20 @@
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
-
-import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
+import { getSnappedPosition } from '@/canvas/utils/items/getSnappedPosition';
 
 interface SnapSelectedNodesOptions {
     items: CanvasItem[];
     selectedItemIds: string[];
-    step?: number;
 }
 
-const snapSelectedNodes = ({
-    items,
-    selectedItemIds,
-    step = NODE_MOVE_MAX_STEP,
-}: SnapSelectedNodesOptions): CanvasItem[] => {
+const snapSelectedNodes = ({ items, selectedItemIds }: SnapSelectedNodesOptions): CanvasItem[] => {
     return items.map((item) => {
         if (item.kind !== 'node' || !selectedItemIds.includes(item.id)) {
             return item;
         }
 
-        const newPosition = {
-            x: Math.round(item.position.x / step) * step,
-            y: Math.round(item.position.y / step) * step,
-        };
+        const newPosition = getSnappedPosition();
 
         return newPosition.x === item.position.x && newPosition.y === item.position.y
             ? item

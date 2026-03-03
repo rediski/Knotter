@@ -2,7 +2,7 @@ import type { Node } from '@/canvas/_core/_/canvas.types';
 import { v4 as uuidv4 } from 'uuid';
 
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
-import { resolvePosition } from '@/canvas/utils/items/resolvePosition';
+import { getSnappedPosition } from '@/canvas/utils/items/getSnappedPosition';
 import { canAddItem } from '@/canvas/utils/items/canAddItem';
 import { generateUniqueName } from '@/canvas/utils/items/generateUniqueName';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
@@ -17,7 +17,7 @@ export function createNode(): Node | null {
     const setSelectedItemIds = itemsState.setSelectedItemIds;
 
     const nodes = getNodes(items);
-    const position = resolvePosition();
+    const position = getSnappedPosition();
 
     const x = position.x ?? 0;
     const y = position.y ?? 0;
