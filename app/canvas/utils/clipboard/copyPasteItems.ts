@@ -7,6 +7,7 @@ import { addToHistory } from '@/canvas/utils/clipboard/historyManager';
 
 import { v4 as uuid } from 'uuid';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
+import { canAddItems } from '@/canvas/utils/items/canAddItems';
 
 export function copySelectedItems(items: CanvasItem[], selectedIds: string[]) {
     const setClipboard = useCanvasStore.getState().setClipboard;
@@ -27,6 +28,8 @@ export function pasteClipboardItems(insertionGap = NODE_MOVE_MAX_STEP) {
     const setSelectedItemIds = itemsState.setSelectedItemIds;
 
     if (!clipboard.length) return;
+
+    if (!canAddItems(clipboard.length)) return;
 
     const newItems: CanvasItem[] = clipboard.map((item) => {
         const clone = structuredClone(item);
