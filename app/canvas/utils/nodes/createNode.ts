@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getSnappedPosition } from '@/canvas/utils/items/getSnappedPosition';
-import { canAddItem } from '@/canvas/utils/items/canAddItem';
+import { canAddItem } from '@/canvas/utils/items/canAddItems';
 import { generateUniqueName } from '@/canvas/utils/items/generateUniqueName';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 

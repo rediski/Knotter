@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import { canAddItem } from '@/canvas/utils/items/canAddItem';
+import { canAddItem } from '@/canvas/utils/items/canAddItems';
 import type { Node } from '@/canvas/_core/_/canvas.types';
 
 import { useItemsStore } from '@/canvas/store/useItemsStore';
