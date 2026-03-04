@@ -1,16 +1,15 @@
+import { v4 as uuid } from 'uuid';
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
+import { useClipboardStore } from '@/canvas/store/useClipboardStore';
 
+import { canAddItems } from '@/canvas/utils/items/canAddItems';
 import { addToHistory } from '@/canvas/utils/clipboard/historyManager';
 
-import { v4 as uuid } from 'uuid';
-import { useItemsStore } from '@/canvas/store/useItemsStore';
-import { canAddItems } from '@/canvas/utils/items/canAddItems';
-
 export function copySelectedItems(items: CanvasItem[], selectedIds: string[]) {
-    const setClipboard = useCanvasStore.getState().setClipboard;
+    const setClipboard = useClipboardStore.getState().setClipboard;
 
     const snapshot = items.filter((item) => selectedIds.includes(item.id)).map((item) => structuredClone(item));
 
@@ -18,10 +17,10 @@ export function copySelectedItems(items: CanvasItem[], selectedIds: string[]) {
 }
 
 export function pasteClipboardItems(insertionGap = NODE_MOVE_MAX_STEP) {
-    const canvasState = useCanvasStore.getState();
+    const clipboardState = useClipboardStore.getState();
     const itemsState = useItemsStore.getState();
 
-    const clipboard = canvasState.clipboard;
+    const clipboard = clipboardState.clipboard;
 
     const items = itemsState.items;
     const setItems = itemsState.setItems;

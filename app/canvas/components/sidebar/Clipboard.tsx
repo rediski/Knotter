@@ -1,8 +1,8 @@
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useClipboardStore } from '@/canvas/store/useClipboardStore';
 import { EmptyState } from '@/components/UI/EmptyState';
 
 export const Clipboard = () => {
-    const clipboard = useCanvasStore((state) => state.clipboard);
+    const clipboard = useClipboardStore((state) => state.clipboard);
 
     return (
         <div className="flex flex-col gap-1 m-1 text-sm h-full">
