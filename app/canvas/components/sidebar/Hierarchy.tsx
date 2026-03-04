@@ -6,12 +6,12 @@ import { EmptyState } from '@/components/UI/EmptyState';
 import { HierarchyItem } from '@/canvas/components/sidebar/HierarchyItem';
 
 import { useHierarchy } from '@/canvas/components/sidebar/useHierarchy';
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useSidebarStore } from '@/canvas/store/useSidebarStore';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string }) {
     const items = useItemsStore((state) => state.items);
-    const filterText = useCanvasStore((state) => (panelId ? state.filterText[panelId] : ''));
+    const filterText = useSidebarStore((state) => (panelId ? state.filterText[panelId] : ''));
     const { filteredItems, deselect } = useHierarchy(filterText);
 
     return (

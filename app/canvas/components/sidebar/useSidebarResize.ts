@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useSidebarStore } from '@/canvas/store/useSidebarStore';
 
 const MIN_WIDTH = 320;
 
 export function useSidebarResize() {
-    const setSidebarWidth = useCanvasStore((s) => s.setSidebarWidth);
-    const sidebarWidth = useCanvasStore((s) => s.sidebarWidth);
+    const setSidebarWidth = useSidebarStore((state) => state.setSidebarWidth);
+    const sidebarWidth = useSidebarStore((state) => state.sidebarWidth);
 
     const [isResizingSidebar, setIsResizingSidebar] = useState(false);
 

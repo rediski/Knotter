@@ -2,7 +2,7 @@
 
 import React, { memo, useRef } from 'react';
 
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useSidebarStore } from '@/canvas/store/useSidebarStore';
 
 import { SidebarContextMenu } from '@/canvas/components/sidebar/SidebarContextMenu';
 import { useSidebarResize } from '@/canvas/components/sidebar/useSidebarResize';
@@ -12,7 +12,7 @@ import { SidebarPanel } from '@/canvas/components/sidebar/SidebarPanel';
 import { EmptyState } from '@/components/UI/EmptyState';
 
 export const CanvasSidebar = memo(function Sidebar() {
-    const panels = useCanvasStore((state) => state.sidebarPanels);
+    const panels = useSidebarStore((state) => state.sidebarPanels);
 
     const menu = useContextMenu();
 

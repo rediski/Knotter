@@ -8,7 +8,7 @@ import { EmptyState } from '@/components/UI/EmptyState';
 import { Input } from '@/components/UI/Input';
 import { Textarea } from '@/components/UI/Textarea';
 
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useSidebarStore } from '@/canvas/store/useSidebarStore';
 import { useDropdownStore } from '@/canvas/store/useDropdownStore';
 
 import { Dropdown } from '@/components/UI/Dropdown';
@@ -54,7 +54,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     const items = useItemsStore((state) => state.items);
     const selectedEdgeIds = useItemsStore((state) => state.selectedEdgeIds);
     const setSelectedEdgeIds = useItemsStore((state) => state.setSelectedEdgeIds);
-    const filterText = useCanvasStore((state) => (panelId ? state.filterText[panelId] : ''));
+    const filterText = useSidebarStore((state) => (panelId ? state.filterText[panelId] : ''));
 
     const incomingEdges = getIncomingEdges(items, selectedNode?.id);
     const outgoingEdges = getOutgoingEdges(items, selectedNode?.id);

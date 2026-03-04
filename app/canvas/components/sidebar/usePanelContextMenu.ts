@@ -4,7 +4,7 @@ import { useState, useCallback, useRef, RefObject } from 'react';
 
 import type { SidebarPanel } from '@/canvas/_core/_/sidebarPanel';
 
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useSidebarStore } from '@/canvas/store/useSidebarStore';
 import { useSidebarPanels } from '@/canvas/components/sidebar/useSidebarPanels';
 import { useClickOutside } from '@/hooks/useClickOutside';
 
@@ -17,7 +17,7 @@ interface UsePanelContextMenuParams {
 }
 
 export function usePanelContextMenu({ panel, panelRef }: UsePanelContextMenuParams) {
-    const sidebarPanels = useCanvasStore((state) => state.sidebarPanels);
+    const sidebarPanels = useSidebarStore((state) => state.sidebarPanels);
     const { addPanel, removePanel, movePanel } = useSidebarPanels();
 
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });

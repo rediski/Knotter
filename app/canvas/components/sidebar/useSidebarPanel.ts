@@ -5,7 +5,7 @@ import { useRef, useCallback, useMemo } from 'react';
 import type { SidebarPanel as SidebarPanelType, PanelType } from '@/canvas/_core/_/sidebarPanel';
 
 import { useSidebarPanels } from '@/canvas/components/sidebar/useSidebarPanels';
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useSidebarStore } from '@/canvas/store/useSidebarStore';
 
 import { panelTitles, panelIcons } from '@/canvas/_core/_/sidebarPanel';
 
@@ -14,9 +14,9 @@ export function useSidebarPanel(panel: SidebarPanelType) {
 
     const { setPanelType } = useSidebarPanels();
 
-    const sidebarPanels = useCanvasStore((state) => state.sidebarPanels);
-    const filterText = useCanvasStore((state) => state.filterText[panel.id] || '');
-    const setFilterText = useCanvasStore((state) => state.setFilterText);
+    const sidebarPanels = useSidebarStore((state) => state.sidebarPanels);
+    const filterText = useSidebarStore((state) => state.filterText[panel.id] || '');
+    const setFilterText = useSidebarStore((state) => state.setFilterText);
 
     const panelIndex = sidebarPanels.findIndex((p) => p.id === panel.id);
 

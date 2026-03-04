@@ -1,12 +1,12 @@
 'use client';
 
 import { v4 as uuid } from 'uuid';
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useSidebarStore } from '@/canvas/store/useSidebarStore';
 import { SidebarPanel } from '@/canvas/_core/_/sidebarPanel';
 
 export const useSidebarPanels = () => {
-    const sidebarPanels = useCanvasStore((state) => state.sidebarPanels);
-    const setSidebarPanels = useCanvasStore((state) => state.setSidebarPanels);
+    const sidebarPanels = useSidebarStore((state) => state.sidebarPanels);
+    const setSidebarPanels = useSidebarStore((state) => state.setSidebarPanels);
 
     const addPanel = () => {
         const newPanel: SidebarPanel = { id: uuid(), type: null };
