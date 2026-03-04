@@ -1,12 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import type { CanvasItem, Position, TooltipMode } from '@/canvas/_core/_/canvas.types';
-import type { Parameter } from '@/canvas/_core/_/parameter';
-import type { SidebarPanel } from '@/canvas/_core/_/sidebarPanel';
-import { INITIAL_ZOOM } from '@/canvas/_core/_/canvas.constants';
+import type { Position, TooltipMode } from '@/canvas/_core/_/canvas.types';
 
-import { v4 as uuid } from 'uuid';
+import { INITIAL_ZOOM } from '@/canvas/_core/_/canvas.constants';
 
 export interface CanvasState {
     offset: Position;
@@ -17,11 +14,6 @@ export interface CanvasState {
 
     invertY: boolean;
     setInvertY: (value: boolean) => void;
-
-    // ---
-
-    clipboard: CanvasItem[];
-    setClipboard: (items: CanvasItem[]) => void;
 
     // ---
 
@@ -44,17 +36,6 @@ export interface CanvasState {
 
     openedTabIds: string[];
     setOpenedTabIds: (nodeIds: string[]) => void;
-
-    // ---
-
-    sidebarPanels: SidebarPanel[];
-    setSidebarPanels: (panels: SidebarPanel[]) => void;
-
-    sidebarWidth: number;
-    setSidebarWidth: (width: number) => void;
-
-    filterText: Record<string, string>;
-    setFilterText: (panelId: string, text: string) => void;
 }
 
 export const useCanvasStore = create<CanvasState>()(
@@ -68,11 +49,6 @@ export const useCanvasStore = create<CanvasState>()(
 
             invertY: true,
             setInvertY: (value) => set({ invertY: value }),
-
-            // ---
-
-            clipboard: [],
-            setClipboard: (items) => set({ clipboard: items }),
 
             // ---
 
@@ -94,26 +70,6 @@ export const useCanvasStore = create<CanvasState>()(
 
             openedTabIds: [],
             setOpenedTabIds: (openedTabIds) => set({ openedTabIds }),
-
-            // ---
-
-            sidebarWidth: 380,
-            setSidebarWidth: (sidebarWidth) => set({ sidebarWidth }),
-
-            sidebarPanels: [
-                { id: uuid(), type: 'hierarchy' },
-                { id: uuid(), type: 'inspector' },
-            ],
-            setSidebarPanels: (sidebarPanels) => set({ sidebarPanels }),
-
-            filterText: {},
-            setFilterText: (panelId, text) =>
-                set((state) => ({
-                    filterText: {
-                        ...state.filterText,
-                        [panelId]: text,
-                    },
-                })),
         }),
         {
             name: 'canvas-storage',
@@ -129,10 +85,6 @@ export const useCanvasStore = create<CanvasState>()(
 
                 selectedTabId: state.selectedTabId,
                 openedTabIds: state.openedTabIds,
-
-                sidebarWidth: state.sidebarWidth,
-                sidebarPanels: state.sidebarPanels,
-                filterText: state.filterText,
             }),
         },
     ),
