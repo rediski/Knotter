@@ -57,7 +57,7 @@ export const useItemsStore = create<ItemsState>()(
             setSelectionEnd: (pos) => set({ selectionEnd: pos }),
         }),
         {
-            name: 'canvas-items-storage',
+            name: 'items-storage',
             partialize: (state) => ({
                 items: state.items,
                 parameters: state.parameters,
