@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, RefObject, useRef } from 'react';
+import { useEffect, RefObject } from 'react';
 
-import { useInitialCanvasOffset } from '@/canvas/_core/Canvas/useInitialCanvasOffset';
 import { useCanvasHotkeys } from '@/canvas/_core/Canvas/useCanvasHotkeys';
 import { useCanvasMouseEvents } from '@/canvas/_core/Canvas/useCanvasMouseEvents';
 
@@ -17,7 +16,6 @@ interface useCanvasInteractionProps {
 }
 
 export function useCanvasInteraction({ containerRef, canvasRef }: useCanvasInteractionProps) {
-    useInitialCanvasOffset(canvasRef);
     useCanvasHotkeys(canvasRef);
 
     const { onMouseDown, onMouseMove, onMouseUp } = useCanvasMouseEvents(canvasRef);

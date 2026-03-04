@@ -5,6 +5,12 @@ import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { drawGrid } from '@/canvas/utils/canvas/drawGrid';
 
 export function useCanvasRenderer({ canvasRef }: { canvasRef: RefObject<HTMLCanvasElement | null> }) {
+    const setOffset = useCanvasStore((state) => state.setOffset);
+    const offset = useCanvasStore((state) => state.offset);
+    const invertY = useCanvasStore((state) => state.invertY);
+
+    const isInitialOffsetSet = offset.x !== 0 || offset.y !== 0;
+
     const renderCanvas = useCallback(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -51,6 +57,20 @@ export function useCanvasRenderer({ canvasRef }: { canvasRef: RefObject<HTMLCanv
             showAxes,
         });
     }, [canvasRef]);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas || isInitialOffsetSet) return;
+
+        const rect = canvas.getBoundingClientRect();
+
+        if (rect.width > 0 && rect.height > 0) {
+            setOffset({
+                x: rect.width / 2,
+                y: invertY ? rect.height / 2 : -rect.height / 2,
+            });
+        }
+    }, [canvasRef, isInitialOffsetSet, setOffset, invertY]);
 
     useEffect(() => {
         const unsubscribe = useCanvasStore.subscribe(() => {
