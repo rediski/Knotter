@@ -1,5 +1,6 @@
 import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { getWorldCoords } from '@/canvas/utils/canvas/getWorldCoords';
 
 interface DrawGridParams {
     ctx: CanvasRenderingContext2D;
@@ -8,15 +9,15 @@ interface DrawGridParams {
 }
 
 export function drawGrid({ ctx, canvasWidth, canvasHeight }: DrawGridParams) {
-    const state = useCanvasStore.getState();
-    const { offset, zoomLevel, showGrid, showAxes } = state;
+    const canvasState = useCanvasStore.getState();
+
+    const zoomLevel = canvasState.zoomLevel;
+    const showGrid = canvasState.showGrid;
+    const showAxes = canvasState.showAxes;
 
     const baseGridSize = NODE_MOVE_MAX_STEP;
 
-    const worldLeft = -offset.x / zoomLevel;
-    const worldTop = -offset.y / zoomLevel;
-    const worldRight = worldLeft + canvasWidth / zoomLevel;
-    const worldBottom = worldTop + canvasHeight / zoomLevel;
+    const world = getWorldCoords(canvasWidth, canvasHeight);
 
     const styles = getComputedStyle(document.documentElement);
 
@@ -43,18 +44,18 @@ export function drawGrid({ ctx, canvasWidth, canvasHeight }: DrawGridParams) {
             ctx.beginPath();
             ctx.strokeStyle = color;
 
-            const startX = Math.floor(worldLeft / step) * step;
+            const startX = Math.floor(world.left / step) * step;
 
-            for (let x = startX; x <= worldRight; x += step) {
-                ctx.moveTo(x, worldTop);
-                ctx.lineTo(x, worldBottom);
+            for (let x = startX; x <= world.right; x += step) {
+                ctx.moveTo(x, world.top);
+                ctx.lineTo(x, world.bottom);
             }
 
-            const startY = Math.floor(worldTop / step) * step;
+            const startY = Math.floor(world.top / step) * step;
 
-            for (let y = startY; y <= worldBottom; y += step) {
-                ctx.moveTo(worldLeft, y);
-                ctx.lineTo(worldRight, y);
+            for (let y = startY; y <= world.bottom; y += step) {
+                ctx.moveTo(world.left, y);
+                ctx.lineTo(world.right, y);
             }
 
             ctx.stroke();
@@ -64,14 +65,14 @@ export function drawGrid({ ctx, canvasWidth, canvasHeight }: DrawGridParams) {
     if (showAxes) {
         ctx.beginPath();
         ctx.strokeStyle = axisYColor;
-        ctx.moveTo(0, worldTop);
-        ctx.lineTo(0, worldBottom);
+        ctx.moveTo(0, world.top);
+        ctx.lineTo(0, world.bottom);
         ctx.stroke();
 
         ctx.beginPath();
         ctx.strokeStyle = axisXColor;
-        ctx.moveTo(worldLeft, 0);
-        ctx.lineTo(worldRight, 0);
+        ctx.moveTo(world.left, 0);
+        ctx.lineTo(world.right, 0);
         ctx.stroke();
     }
 }
