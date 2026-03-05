@@ -2,7 +2,6 @@
 
 import { useEffect, RefObject } from 'react';
 
-import { useCanvasHotkeys } from '@/canvas/_core/Canvas/useCanvasHotkeys';
 import { useCanvasMouseEvents } from '@/canvas/_core/Canvas/useCanvasMouseEvents';
 
 import { getPanEventHandler } from '@/canvas/utils/eventHandlers/getPanEventHandler';
@@ -16,8 +15,6 @@ interface useCanvasInteractionProps {
 }
 
 export function useCanvasInteraction({ containerRef, canvasRef }: useCanvasInteractionProps) {
-    useCanvasHotkeys(canvasRef);
-
     const { onMouseDown, onMouseMove, onMouseUp } = useCanvasMouseEvents(canvasRef);
 
     useEffect(() => {

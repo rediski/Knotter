@@ -10,6 +10,7 @@ import { CanvasControls } from '@/canvas/components/canvas/CanvasControls';
 
 import { useCanvasInteraction } from '@/canvas/_core/Canvas/useCanvasInteraction';
 import { useCanvasRenderer } from '@/canvas/_core/Canvas/useCanvasRenderer';
+import { useCanvasHotkeys } from '@/canvas/_core/Canvas/useCanvasHotkeys';
 
 import { useContextMenu } from '@/hooks/useContextMenu';
 
@@ -22,7 +23,8 @@ export default function Canvas() {
         canvasRef,
     });
 
-    useCanvasRenderer({ canvasRef });
+    useCanvasHotkeys(canvasRef);
+    useCanvasRenderer(canvasRef);
 
     const { isOpen, position, handleContextMenu, closeMenu } = useContextMenu();
 
