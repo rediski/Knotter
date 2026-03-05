@@ -4,7 +4,7 @@ import { useEffect, useCallback, type RefObject } from 'react';
 import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { drawGrid } from '@/canvas/utils/canvas/drawGrid';
 
-export function useCanvasRenderer({ canvasRef }: { canvasRef: RefObject<HTMLCanvasElement | null> }) {
+export function useCanvasRenderer(canvasRef: RefObject<HTMLCanvasElement | null>) {
     const setOffset = useCanvasStore((state) => state.setOffset);
     const offset = useCanvasStore((state) => state.offset);
     const invertY = useCanvasStore((state) => state.invertY);
