@@ -21,9 +21,5 @@ export function drawCanvas(canvas: HTMLCanvasElement) {
         ctx,
         canvasWidth: displayWidth,
         canvasHeight: displayHeight,
-        offset: state.offset,
-        zoomLevel: state.zoomLevel,
-        showGrid: state.showGrid,
-        showAxes: state.showAxes,
     });
 }
