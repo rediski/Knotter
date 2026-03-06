@@ -4,14 +4,19 @@ import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 export function getMousePosition(e: MouseEvent, canvas: HTMLCanvasElement): Position {
     const rect = canvas.getBoundingClientRect();
 
-    const offset = useCanvasStore.getState().offset;
-    const zoomLevel = useCanvasStore.getState().zoomLevel;
-    const invertY = useCanvasStore.getState().invertY;
+    const canvasState = useCanvasStore.getState();
+
+    const offset = canvasState.offset;
+    const zoomLevel = canvasState.zoomLevel;
+    const invertY = canvasState.invertY;
+
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const adjustedY = invertY ? rect.height - mouseY : mouseY;
 
     return {
-        x: (e.clientX - rect.left - offset.x) / zoomLevel,
-        y: invertY
-            ? (rect.height - (e.clientY - rect.top) - offset.y) / zoomLevel
-            : (e.clientY - rect.top - offset.y) / zoomLevel,
+        x: (mouseX - offset.x) / zoomLevel,
+        y: (adjustedY - offset.y) / zoomLevel,
     };
 }
