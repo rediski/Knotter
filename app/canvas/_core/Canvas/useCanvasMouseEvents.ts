@@ -33,15 +33,18 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
         (e: MouseEvent) => {
             if (!canvasRef.current) return;
 
-            const mousePosition = useCanvasRefsStore.getState().mousePosition;
+            const refsState = useCanvasRefsStore.getState();
 
-            const isPanning = useCanvasRefsStore.getState().isPanning;
-            const isDragging = useCanvasRefsStore.getState().isDragging;
-            const dragStartMouse = useCanvasRefsStore.getState().dragStartMouse;
-            const initialNodePositions = useCanvasRefsStore.getState().initialNodePositions;
+            const mousePosition = refsState.mousePosition;
+            const isPanning = refsState.isPanning;
+            const isDragging = refsState.isDragging;
+            const dragStartMouse = refsState.dragStartMouse;
+            const initialNodePositions = refsState.initialNodePositions;
 
-            const tempEdge = useItemsStore.getState().tempEdge;
-            const setItems = useItemsStore.getState().setItems;
+            const itemsState = useItemsStore.getState();
+
+            const tempEdge = itemsState.tempEdge;
+            const setItems = itemsState.setItems;
 
             const mousePos = getMousePosition(e, canvasRef.current);
 
