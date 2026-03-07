@@ -3,7 +3,7 @@ import type { Position, CanvasItem } from '@/canvas/_core/_/canvas.types';
 import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
-import { snapPosition } from '@/canvas/utils/items/getSnappedPosition'; // добавляем импорт
+import { snapPosition } from '@/canvas/utils/items/getSnappedPosition';
 import { NODE_MOVE_MIN_STEP, NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 
 export function moveItems(dragDelta: Position, initialPositions: Map<string, Position>): CanvasItem[] {
