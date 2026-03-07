@@ -7,16 +7,16 @@ import type { Position } from '@/canvas/_core/_/canvas.types';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { moveItems } from '@/canvas/utils/items/moveItems';
-import { getSelectedItem } from '@/canvas/utils/items/getSelectedItem';
-import { getSelectedNode } from '@/canvas/utils/nodes/getSelectedNode';
+import { getSelectedItem } from '@/canvas/utils/items/getSelectedItems';
+import { getSelectedNode } from '@/canvas/utils/nodes/getSelectedNodes';
 
 export function useInspector() {
     const items = useItemsStore((state) => state.items);
     const setItems = useItemsStore((state) => state.setItems);
     const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
 
-    const selectedItem = getSelectedItem();
-    const selectedNode = getSelectedNode();
+    const selectedItem = getSelectedItem({ items, selectedItemIds });
+    const selectedNode = getSelectedNode({ items, selectedItemIds });
 
     const shapeType = selectedNode?.shapeType ?? null;
     const positionX = selectedNode?.position?.x ?? 0;
@@ -103,6 +103,8 @@ export function useInspector() {
         positionX,
         positionY,
         initialPositions,
+        selectedItem,
+        selectedNode,
 
         changeItemName,
         changeItemDescription,

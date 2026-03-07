@@ -16,8 +16,6 @@ import { Dropdown } from '@/components/UI/Dropdown';
 import { ShapeButtons } from '@/canvas/components/sidebar/ShapeButtons';
 import { PositionInputs } from '@/canvas/components/sidebar/PositionInputs';
 
-import { getSelectedItem } from '@/canvas/utils/items/getSelectedItem';
-import { getSelectedNode } from '@/canvas/utils/nodes/getSelectedNode';
 import { getIncomingEdges } from '@/canvas/utils/edges/getIncomingEdges';
 import { getOutgoingEdges } from '@/canvas/utils/edges/getOutgoingEdges';
 import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
@@ -40,6 +38,8 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
         shapeType,
         positionX,
         positionY,
+        selectedItem,
+        selectedNode,
 
         changeItemName,
         changeItemDescription,
@@ -47,9 +47,6 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     } = useInspector();
 
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
-
-    const selectedItem = getSelectedItem();
-    const selectedNode = getSelectedNode();
 
     const items = useItemsStore((state) => state.items);
     const selectedEdgeIds = useItemsStore((state) => state.selectedEdgeIds);
