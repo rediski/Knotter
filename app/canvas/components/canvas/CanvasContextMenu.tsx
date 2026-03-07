@@ -19,7 +19,7 @@ import { createNode } from '@/canvas/utils/nodes/createNode';
 import { initEdge } from '@/canvas/utils/edges/initEdge';
 
 import { openTabs } from '@/canvas/utils/canvas/openTabs';
-import { getSelectedNodesIds } from '@/canvas/utils/nodes/getSelectedNodesIds';
+import { getSelectedNodesIds } from '@/canvas/utils/nodes/getSelectedNodes';
 
 type CanvasContextMenuProps = {
     isOpen: boolean;
@@ -113,7 +113,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
             <ContextMenuItem
                 key="open-tab"
                 onClick={() => {
-                    openTabs(getSelectedNodesIds());
+                    openTabs(getSelectedNodesIds({ items, selectedItemIds }));
                     closeMenu();
                 }}
                 disabled={useItemsStore.getState().selectedItemIds.length === 0}

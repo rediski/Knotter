@@ -18,10 +18,13 @@ import { createNode } from '@/canvas/utils/nodes/createNode';
 import { initEdge } from '@/canvas/utils/edges/initEdge';
 import { clearSelection } from '@/canvas/utils/canvas/сlearSelection';
 import { openTabs } from '@/canvas/utils/canvas/openTabs';
-import { getSelectedNodesIds } from '@/canvas/utils/nodes/getSelectedNodesIds';
+import { getSelectedNodesIds } from '@/canvas/utils/nodes/getSelectedNodes';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>) {
+    const items = useItemsStore((state) => state.items);
+    const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
+
     const toggleGrid = useCanvasStore((state) => state.toggleShowGrid);
     const toggleAxes = useCanvasStore((state) => state.toggleShowAxes);
 
@@ -109,7 +112,7 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             }
 
             if (isSpacebar) {
-                openTabs(getSelectedNodesIds());
+                openTabs(getSelectedNodesIds({ items, selectedItemIds }));
                 return;
             }
 

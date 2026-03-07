@@ -1,12 +1,16 @@
 import { EmptyState } from '@/components/UI/EmptyState';
 import { CodeBlock } from '@/components/UI/CodeBlock';
 
-import { getSelectedItem } from '@/canvas/utils/items/getSelectedItem';
+import { getSelectedItem } from '@/canvas/utils/items/getSelectedItems';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { ArrowDownToLine } from 'lucide-react';
 
 export const Details = () => {
-    const selectedItem = getSelectedItem();
+    const items = useItemsStore((state) => state.items);
+    const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
+
+    const selectedItem = getSelectedItem({ items, selectedItemIds });
 
     const handleSave = () => {
         if (!selectedItem) return;

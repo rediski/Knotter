@@ -1,14 +1,15 @@
 import { useItemsStore } from '@/canvas/store/useItemsStore';
-import { getSelectedNode } from '@/canvas/utils/nodes/getSelectedNode';
+import { getSelectedNode } from '@/canvas/utils/nodes/getSelectedNodes';
 
 export const addParameterToSelectedNode = (parameterId: string) => {
     const itemsState = useItemsStore.getState();
 
     const items = itemsState.items;
     const setItems = itemsState.setItems;
+    const selectedItemIds = itemsState.selectedItemIds;
     const parameters = itemsState.parameters;
 
-    const node = getSelectedNode();
+    const node = getSelectedNode({ items, selectedItemIds });
     const parameter = parameters.find((parameter) => parameter.id === parameterId);
 
     if (!node || !parameter) return;
