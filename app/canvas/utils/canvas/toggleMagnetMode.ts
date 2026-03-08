@@ -1,7 +1,8 @@
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
-import { getSnappedPosition } from '@/canvas/utils/items/getSnappedPosition';
+import { snapPosition } from '@/canvas/utils/items/getSnappedPosition';
+import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 
 interface SnapSelectedNodesOptions {
     items: CanvasItem[];
@@ -14,7 +15,7 @@ const snapSelectedNodes = ({ items, selectedItemIds }: SnapSelectedNodesOptions)
             return item;
         }
 
-        const newPosition = getSnappedPosition();
+        const newPosition = snapPosition(item.position, NODE_MOVE_MAX_STEP);
 
         return newPosition.x === item.position.x && newPosition.y === item.position.y
             ? item
@@ -32,12 +33,12 @@ export function toggleMagnetMode() {
         isMagnet: newMagnet,
     });
 
-    useItemsStore.setState({
-        items: newMagnet
-            ? snapSelectedNodes({
-                  items: itemsState.items,
-                  selectedItemIds: itemsState.selectedItemIds,
-              })
-            : itemsState.items,
-    });
+    if (newMagnet) {
+        useItemsStore.setState({
+            items: snapSelectedNodes({
+                items: itemsState.items,
+                selectedItemIds: itemsState.selectedItemIds,
+            }),
+        });
+    }
 }
