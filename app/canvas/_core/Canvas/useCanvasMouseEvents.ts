@@ -21,6 +21,17 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             if (!canvasRef.current) return;
 
             const isCanvasUnderCursor = findCanvasUnderCursor(e, canvasRef.current);
+
+            const itemsState = useItemsStore.getState();
+
+            const tempEdge = itemsState.tempEdge;
+            const setTempEdge = itemsState.setTempEdge;
+
+            if (tempEdge && isCanvasUnderCursor) {
+                setTempEdge(null);
+                return;
+            }
+
             if (isCanvasUnderCursor) return;
 
             handleClickOnItem(e, isCanvasUnderCursor);
