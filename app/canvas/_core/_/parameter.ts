@@ -3,7 +3,7 @@ export type ParameterTypeMap = {
     string: string;
     boolean: boolean;
     enum: { value: string | null; options: string[] };
-    structure: string[];
+    structure: Parameter[];
 };
 
 export type ParameterType = keyof ParameterTypeMap;
