@@ -22,7 +22,7 @@ export const Enum = memo(function Enum({ parameter }: { parameter: Parameter }) 
 
     return (
         <div className="flex flex-col justify-center gap-2 px-3 py-1 text-sm bg-depth-2 rounded-md">
-            <div className="flex items-center gap-1 h-8">
+            <div className="flex items-center gap-2 h-8">
                 <List size={16} className="min-w-4" />
 
                 <EditableName
