@@ -35,7 +35,7 @@ export const Structure = memo(function Structure({ parameter }: { parameter: Par
             <div className="flex flex-col gap-1 border-l pl-4 border-depth-6">
                 <CreateParameterForm depth={3} />
 
-                <div>{parameter.data.length === 0 && <EmptyState message="Параметры не найдены" />}</div>
+                <div className="py-2">{parameter.data.length === 0 && <EmptyState message="Параметры не найдены" />}</div>
             </div>
         </div>
     );
