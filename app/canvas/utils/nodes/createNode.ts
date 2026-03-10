@@ -19,8 +19,8 @@ export function createNode(): Node | null {
     const nodes = getNodes(items);
     const position = getSnappedPosition();
 
-    const x = position.x ?? 0;
-    const y = position.y ?? 0;
+    const x = Math.round(position.x ?? 0);
+    const y = Math.round(position.y ?? 0);
 
     const baseName = 'Узел';
 
