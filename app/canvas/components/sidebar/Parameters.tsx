@@ -6,6 +6,8 @@ import { isNumber, isString, isBoolean, isEnum, isStructure } from '@/canvas/_co
 
 import { EmptyState } from '@/components/UI/EmptyState';
 
+import { CreateParameterForm } from '@/canvas/components/sidebar/CreateParameterForm';
+
 import { Number } from '@/canvas/components/parameters/Number';
 import { String } from '@/canvas/components/parameters/String';
 import { Boolean } from '@/canvas/components/parameters/Boolean';
@@ -16,8 +18,6 @@ import { useSidebarStore } from '@/canvas/store/useSidebarStore';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { getFilteredParameters } from '@/canvas/utils/parameters/getFilteredParameters';
-
-import { AddParameterForm } from '@/canvas/components/sidebar/AddParameterForm';
 
 export const Parameters = memo(function Parameters({ panelId }: { panelId?: string }) {
     const parameters = useItemsStore((state) => state.parameters);
@@ -30,7 +30,7 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
 
     return (
         <div className="flex flex-col gap-1 h-full overflow-y-auto p-1">
-            <AddParameterForm />
+            <CreateParameterForm />
 
             {filteredParameters.length > 0 ? (
                 <div className="flex flex-col gap-1">

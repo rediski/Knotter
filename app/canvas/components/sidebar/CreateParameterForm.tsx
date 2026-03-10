@@ -9,7 +9,7 @@ import { getParameterIcon } from '@/canvas/utils/nodes/getParameterIcon';
 
 import { Plus } from 'lucide-react';
 
-export const AddParameterForm = ({ depth = 2 }: { depth?: number }) => {
+export const CreateParameterForm = ({ depth = 2 }: { depth?: number }) => {
     const [parameterName, setParameterName] = useState<string>('');
     const [parameterType, setParameterType] = useState<ParameterType>('number');
 
