@@ -8,6 +8,8 @@ import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
 import { Folder, X } from 'lucide-react';
 
+import { AddParameterForm } from '@/canvas/components/sidebar/AddParameterForm';
+
 export const Structure = memo(function Structure({ parameter }: { parameter: Parameter }) {
     if (!isStructure(parameter)) return null;
 
@@ -21,7 +23,9 @@ export const Structure = memo(function Structure({ parameter }: { parameter: Par
                 </button>
             </div>
 
-            <div className="flex flex-col gap-1 border-l pl-6 border-depth-6">В разработке...</div>
+            <div className="flex flex-col gap-1 border-l pl-4 border-depth-6">
+                <AddParameterForm depth={3} />
+            </div>
         </div>
     );
 });
