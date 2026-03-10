@@ -5,6 +5,7 @@ import { Parameter } from '@/canvas/_core/_/parameter';
 import { isStructure } from '@/canvas/_core/_/parameter.type-guards';
 
 import { CreateParameterForm } from '@/canvas/components/sidebar/CreateParameterForm';
+import { EmptyState } from '@/components/UI/EmptyState';
 
 import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
@@ -25,6 +26,8 @@ export const Structure = memo(function Structure({ parameter }: { parameter: Par
 
             <div className="flex flex-col gap-1 border-l pl-4 border-depth-6">
                 <CreateParameterForm depth={3} />
+
+                <div>{parameter.data.length === 0 && <EmptyState message="Параметры не найдены" />}</div>
             </div>
         </div>
     );
