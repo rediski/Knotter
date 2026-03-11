@@ -92,6 +92,7 @@ export default function NodeContent() {
                     </div>
                 </div>
             </div>
+
             <NodeParameters node={openedNode} />
         </div>
     );
