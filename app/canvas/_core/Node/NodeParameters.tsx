@@ -14,13 +14,13 @@ import { Select } from '@/components/UI/Select';
 
 import { getParameterIcon } from '@/canvas/utils/nodes/getParameterIcon';
 import { addParameterToSelectedNode } from '@/canvas/utils/parameters/addParameterToSelectedNode';
-import { removeParameterFromSelectedNode } from '@/canvas/utils/parameters/removeParameterFromSelectedNode'; // Добавлен импорт
+import { removeParameterFromSelectedNode } from '@/canvas/utils/parameters/removeParameterFromSelectedNode';
+import { updateNodeParameter } from '@/canvas/utils/parameters/updateNodeParameter';
 
 import { X } from 'lucide-react';
 
 export const NodeParameters = memo(function NodeParameters({ node }: { node: Node }) {
     const items = useItemsStore((state) => state.items);
-    const setItems = useItemsStore((state) => state.setItems);
     const parameters = useItemsStore((state) => state.parameters);
 
     const storeNode = items.find((item) => item.kind === 'node' && item.id === node.id) as Node | undefined;
@@ -37,39 +37,24 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
         icon: getParameterIcon(param.type),
     }));
 
-    const updateNodeParameter = (nodeId: string, parameterId: string, updates: Partial<Parameter>) => {
-        const nodeIndex = items.findIndex((item) => item.kind === 'node' && item.id === nodeId);
-        if (nodeIndex === -1) return;
-
-        const currentNode = items[nodeIndex] as Node;
-
-        const updatedNodeParameters = currentNode.parameters.map((param) =>
-            param.id === parameterId ? { ...param, ...updates } : param,
-        );
-
-        const updatedNode: Node = {
-            ...currentNode,
-            parameters: updatedNodeParameters,
-        };
-
-        const updatedItems = [...items];
-        updatedItems[nodeIndex] = updatedNode;
-
-        setItems(updatedItems);
-    };
-
     return (
-        <div className="flex flex-col w-full gap-1">
+        <div className="flex flex-col w-full gap-1 text-sm">
             {nodeParameters.length > 0 && (
                 <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-3">
                     {nodeParameters.map((parameter: Parameter) => {
+                        const ParameterIcon = getParameterIcon(parameter.type);
+
                         const parameterContent = (() => {
                             if (parameter.type === 'number') {
                                 const parameterData = parameter.data as ParameterTypeMap['number'];
 
                                 return (
                                     <div className="flex items-center gap-1 w-full">
-                                        <p className="w-full text-sm truncate">{parameter.name}</p>
+                                        <div className="flex items-center gap-2 w-full truncate">
+                                            <ParameterIcon size={16} />
+                                            <p className="truncate">{parameter.name}</p>
+                                        </div>
+
                                         <Input
                                             min={parameterData.min}
                                             max={parameterData.max}
@@ -78,6 +63,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                                             className="bg-depth-2 border border-depth-3 hover:bg-depth-3 active:bg-depth-4"
                                             onChange={(newValue) => {
                                                 const numValue = parseFloat(newValue);
+
                                                 if (!isNaN(numValue)) {
                                                     let clampedValue = numValue;
 
@@ -105,7 +91,11 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                             if (parameter.type === 'string') {
                                 return (
                                     <div className="flex items-center gap-1 w-full">
-                                        <p className="w-full text-sm truncate">{parameter.name}</p>
+                                        <div className="flex items-center gap-2 w-full truncate">
+                                            <ParameterIcon size={16} />
+                                            <p className="truncate">{parameter.name}</p>
+                                        </div>
+
                                         <Input
                                             value={parameter.data as string}
                                             onChange={(newValue) => {
@@ -122,8 +112,12 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
 
                             if (parameter.type === 'boolean') {
                                 return (
-                                    <label className="flex items-center justify-between w-full gap-1 select-none cursor-pointer truncate">
-                                        {parameter.name}
+                                    <label className="flex items-center justify-between w-full gap-1 select-none cursor-pointer">
+                                        <div className="flex items-center gap-2 truncate">
+                                            <ParameterIcon size={16} />
+                                            <span className="truncate">{parameter.name}</span>
+                                        </div>
+
                                         <Checkbox
                                             checked={parameter.data as boolean}
                                             onChange={(checked) => {
@@ -146,7 +140,11 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
 
                                 return (
                                     <div className="flex items-center gap-1 w-full">
-                                        <p className="w-full text-sm truncate">{parameter.name}</p>
+                                        <div className="flex items-center gap-2 w-full truncate">
+                                            <ParameterIcon size={16} />
+                                            <p className="truncate">{parameter.name}</p>
+                                        </div>
+
                                         <Select
                                             value={parameterData.value}
                                             options={parameterData.options}
@@ -160,6 +158,19 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                                             }}
                                             label={parameter.name}
                                         />
+                                    </div>
+                                );
+                            }
+
+                            if (parameter.type === 'structure') {
+                                return (
+                                    <div className="flex items-center gap-1 w-full">
+                                        <div className="flex items-center gap-2 truncate w-full">
+                                            <ParameterIcon size={16} className="text-icon-secondary shrink-0" />
+                                            <p className="truncate w-full">{parameter.name}</p>
+                                        </div>
+
+                                        <p className="flex items-center w-full h-8">В разработке...</p>
                                     </div>
                                 );
                             }
