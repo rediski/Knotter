@@ -44,7 +44,7 @@ export const Number = memo(function Number({ parameter }: { parameter: Parameter
             <div className="flex items-center gap-1">
                 <div className="flex flex-col gap-1 w-full">
                     <div className="flex items-center gap-2">
-                        <p className="truncate w-full text-right">Текущее значение</p>
+                        <p className="truncate w-full text-right">Базовое значение</p>
 
                         <Input
                             value={parameter.data.value.toString()}
