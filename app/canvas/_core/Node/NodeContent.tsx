@@ -39,16 +39,14 @@ export default function NodeContent() {
     const outgoing = truncateNames(outgoingNodeIds);
 
     return (
-        <div className="flex flex-col gap-1 w-full overflow-y-auto overflow-x-hidden">
-            <div className="max-w-2xl min-w-sm w-full h-fit p-3 bg-depth-1 border border-depth-3 rounded-md">
-                <div className="flex flex-col">
-                    <h2>{openedNode.name || '-'}</h2>
-                    <p className="text-text-accent text-sm">{openedNode.description || '-'}</p>
+        <div className="flex gap-1 w-full overflow-y-auto overflow-x-hidden">
+            <div className="flex-col max-w-2xl min-w-sm w-full h-fit p-3 bg-depth-1 border border-depth-3 rounded-md text-sm">
+                <div className="flex flex-col mb-4">
+                    <h2 className="wrap-break-word">{openedNode.name || '-'}</h2>
+                    <p className="text-text-accent text-sm wrap-break-word`">{openedNode.description || '-'}</p>
                 </div>
-            </div>
 
-            <div className="flex flex-col gap-1 w-full max-w-2xl min-w-sm">
-                <div className="flex flex-col gap-1 bg-depth-1 w-full border border-depth-3 rounded-md text-sm p-3">
+                <div className="flex flex-col gap-1 w-full max-w-2xl">
                     <div className="w-fit border border-depth-4 py-1 px-3">Трансформация</div>
 
                     <div className="flex flex-col gap-1 flex-1 w-full pl-4">
@@ -93,9 +91,8 @@ export default function NodeContent() {
                         </div>
                     </div>
                 </div>
-
-                <NodeParameters node={openedNode} />
             </div>
+            <NodeParameters node={openedNode} />
         </div>
     );
 }
