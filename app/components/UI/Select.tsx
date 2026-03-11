@@ -2,6 +2,7 @@
 
 import { memo, useState, useRef } from 'react';
 import { ChevronDown, Ban } from 'lucide-react';
+import { EmptyState } from './EmptyState';
 
 interface SelectProps {
     value: string | null;
@@ -33,53 +34,47 @@ export const Select = memo(function Select({ value, options, onChange, label }: 
                         ${isOpen && 'rotate-180'} 
                     `}
                 />
-                <span className="truncate">{selected ?? label}</span>
+                <span className="truncate">{selected ?? 'Не выбрано'}</span>
             </button>
 
             {isOpen && (
-                <div className="w-full rounded-b-md bg-depth-2">
-                    {label && (
-                        <div className="m-1 p-1 text-gray border-b border-depth-4 text-xs tracking-wide text-muted-foreground select-none">
-                            {label}
-                        </div>
-                    )}
+                <div className="flex flex-col gap-1 p-1 w-full rounded-b-md bg-depth-2">
+                    {options.map((option) => {
+                        const isSelected = option === value;
 
-                    <div className="flex flex-col gap-1 p-1">
-                        {options.map((option) => {
-                            const isSelected = option === value;
-
-                            return (
-                                <button
-                                    key={option}
-                                    type="button"
-                                    onClick={() => {
-                                        onChange(option);
-                                    }}
-                                    className={`
+                        return (
+                            <button
+                                key={option}
+                                type="button"
+                                onClick={() => {
+                                    onChange(option);
+                                }}
+                                className={`
                                         w-full px-3 h-8 text-left text-sm truncate rounded-md cursor-pointer
                                         ${isSelected ? 'bg-bg-accent/10 text-text-accent' : 'bg-depth-3 hover:bg-depth-4'}
                                     `}
-                                >
-                                    {option}
-                                </button>
-                            );
-                        })}
-
-                        {selected !== undefined && <hr className="border-b-0 border-depth-4 my-0.5" />}
-
-                        {selected !== undefined && (
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    onChange(null);
-                                }}
-                                className="flex items-center justify-between w-full px-3 h-8 text-left text-sm text-red truncate rounded-md cursor-pointer bg-depth-3 hover:bg-depth-4"
                             >
-                                Не выбрано
-                                <Ban size={14} />
+                                {option}
                             </button>
-                        )}
-                    </div>
+                        );
+                    })}
+
+                    {options.length === 0 && <EmptyState message="Нет доступных опций" />}
+
+                    {selected !== undefined && <hr className="border-b-0 border-depth-4 my-0.5" />}
+
+                    {selected !== undefined && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                onChange(null);
+                            }}
+                            className="flex items-center justify-between w-full px-3 h-8 text-left text-sm text-red truncate rounded-md cursor-pointer bg-depth-3 hover:bg-depth-4"
+                        >
+                            Не выбрано
+                            <Ban size={14} />
+                        </button>
+                    )}
                 </div>
             )}
         </div>
