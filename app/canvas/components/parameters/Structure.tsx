@@ -8,13 +8,34 @@ import { CreateParameterForm } from '@/canvas/components/sidebar/CreateParameter
 import { EditableName } from '@/components/UI/EditableName';
 import { EmptyState } from '@/components/UI/EmptyState';
 
+import { Number } from '@/canvas/components/parameters/Number';
+import { String } from '@/canvas/components/parameters/String';
+import { Boolean } from '@/canvas/components/parameters/Boolean';
+import { Enum } from '@/canvas/components/parameters/Enum';
+
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
 import { Folder, X } from 'lucide-react';
 
+const parameterComponents = {
+    number: Number,
+    string: String,
+    boolean: Boolean,
+    enum: Enum,
+} as const;
+
+type ParameterType = keyof typeof parameterComponents;
+
 export const Structure = memo(function Structure({ parameter }: { parameter: Parameter }) {
     if (!isStructure(parameter)) return null;
+
+    const renderChildParameter = (childParameter: Parameter) => {
+        const Component = parameterComponents[childParameter.type as ParameterType];
+        return <Component key={childParameter.id} parameter={childParameter} />;
+    };
+
+    const supportedParameters = parameter.data.filter((p) => p.type in parameterComponents);
 
     return (
         <div className="flex flex-col gap-1 px-3 py-1 bg-depth-2 text-sm rounded-md">
@@ -32,10 +53,16 @@ export const Structure = memo(function Structure({ parameter }: { parameter: Par
                 </button>
             </div>
 
-            <div className="flex flex-col gap-1 border-l pl-4 border-depth-6">
-                <CreateParameterForm depth={3} />
+            <div className="flex flex-col gap-1">
+                <CreateParameterForm depth={3} parentStructureId={parameter.id} />
 
-                <div className="py-2">{parameter.data.length === 0 && <EmptyState message="Параметры не найдены" />}</div>
+                <div className="flex flex-col gap-1 py-2">
+                    {supportedParameters.length === 0 ? (
+                        <EmptyState message="Параметры не найдены" />
+                    ) : (
+                        supportedParameters.map(renderChildParameter)
+                    )}
+                </div>
             </div>
         </div>
     );
