@@ -4,17 +4,25 @@ import { ParameterType, parameterTypes } from '@/canvas/_core/_/parameter';
 import { Input } from '@/components/UI/Input';
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 
-import { createParameter } from '@/canvas/utils/parameters/createParameter';
+import { createParameter, createStructureParameter } from '@/canvas/utils/parameters/createParameter';
 import { getParameterIcon } from '@/canvas/utils/nodes/getParameterIcon';
 
 import { Plus } from 'lucide-react';
 
-export const CreateParameterForm = ({ depth = 2 }: { depth?: number }) => {
+export const CreateParameterForm = ({ depth = 2, parentStructureId }: { depth?: number; parentStructureId?: string }) => {
     const [parameterName, setParameterName] = useState<string>('');
     const [parameterType, setParameterType] = useState<ParameterType>('number');
 
     const foundParameterType = parameterTypes.find((parameter) => parameter.type === parameterType);
     if (!foundParameterType) return;
+
+    const handleCreateParameter = () => {
+        parentStructureId
+            ? createStructureParameter(parameterName, parameterType, parentStructureId)
+            : createParameter(parameterName, parameterType);
+
+        setParameterName('');
+    };
 
     return (
         <div className="flex gap-1 items-center">
@@ -22,7 +30,7 @@ export const CreateParameterForm = ({ depth = 2 }: { depth?: number }) => {
                 value={parameterName}
                 onChange={setParameterName}
                 placeholder="Имя переменной"
-                className={`bg-depth-${depth}`}
+                className={`bg-depth-${depth} border border-depth-${depth + 1}`}
                 max={16}
             />
 
@@ -34,7 +42,7 @@ export const CreateParameterForm = ({ depth = 2 }: { depth?: number }) => {
                         <button
                             key={parameter.type}
                             onClick={() => setParameterType(parameter.type)}
-                            className={`px-3 py-2 w-full flex items-center gap-2 text-left bg-depth-${depth} hover:bg-depth-${depth + 1} rounded-md cursor-pointer`}
+                            className={`px-3 py-2 w-full flex items-center gap-2 text-left bg-depth-${depth + 1} hover:bg-depth-${depth + 2} rounded-md cursor-pointer`}
                         >
                             <Icon size={16} className="min-w-4" />
 
@@ -45,9 +53,9 @@ export const CreateParameterForm = ({ depth = 2 }: { depth?: number }) => {
             </DropdownAbsolute>
 
             <button
-                onClick={() => createParameter(parameterName, parameterType)}
+                onClick={handleCreateParameter}
                 className={`
-                        flex items-center justify-center max-w-8 w-full h-8 rounded-md cursor-pointer
+                        flex items-center justify-center max-w-8 w-full h-8 rounded-md cursor-pointer border border-depth-3
                         ${parameterName.length === 0 ? `bg-depth-${depth} text-foreground/50` : `bg-depth-${depth} hover:bg-depth-${depth + 1} active:bg-depth-${depth + 2} text-foreground`} 
                     `}
                 disabled={parameterName.length === 0}
