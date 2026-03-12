@@ -17,7 +17,7 @@ const ActionButton = ({ onClick, icon: Icon, isSuccess = false }: ActionButtonPr
     <button
         onClick={onClick}
         className={`
-                p-2 rounded shadow bg-depth-3 hover:bg-depth-4 active:bg-depth-5 cursor-pointer  
+                p-2 rounded-md shadow bg-depth-3 hover:bg-depth-4 active:bg-depth-5 cursor-pointer  
                 ${isSuccess ? 'text-green' : 'text-contrast'}
             `}
     >
