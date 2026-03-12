@@ -46,7 +46,7 @@ export const DropdownAbsolute = memo(function DropdownAbsolute({ title, children
         <div ref={dropdownRef} className="relative w-fit">
             <button
                 onClick={toggle}
-                className={`flex justify-between items-center gap-1 px-3 py-1 h-8 w-full bg-depth-${depth} hover:bg-depth-${depth + 1} text-sm rounded-md cursor-pointer`}
+                className={`flex justify-between items-center gap-1 px-3 py-1 h-8 w-full bg-depth-${depth} hover:bg-depth-${depth + 1} border border-depth-${depth + 1} text-sm rounded-md cursor-pointer`}
             >
                 <div className="flex items-center gap-2">
                     {Icon && <Icon size={16} />}

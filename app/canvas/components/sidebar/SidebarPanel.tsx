@@ -78,7 +78,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                             placeholder="Фильтр..."
                             icon={Search}
                             iconSize={14}
-                            className="bg-depth-2"
+                            className="bg-depth-2 border border-depth-3"
                         />
                     )}
                 </div>
