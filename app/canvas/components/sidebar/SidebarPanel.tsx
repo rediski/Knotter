@@ -104,8 +104,6 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                 </DropdownAbsolute>
             </div>
 
-            <hr className="border-b-0 border-depth-3 mt-1" />
-
             {(() => {
                 switch (panel.type) {
                     case 'details':
