@@ -140,7 +140,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                         onChange={changeItemName}
                         placeholder={FIELD_TITLES.NAME}
                         icon={Box}
-                        className="bg-depth-2"
+                        className="bg-depth-2 border border-depth-3"
                     />
                 </div>
             )}
@@ -151,6 +151,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                         value={selectedItem.description}
                         onChange={changeItemDescription}
                         placeholder={FIELD_TITLES.DESCRIPTION}
+                        className="border border-depth-3"
                     />
                 </div>
             )}

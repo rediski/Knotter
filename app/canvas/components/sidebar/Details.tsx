@@ -69,7 +69,7 @@ export const Details = () => {
     }
 
     return (
-        <div className="relative m-1 p-4 bg-depth-2 rounded-md space-y-3 overflow-y-auto">
+        <div className="relative m-1 p-4 bg-depth-2 border border-depth-3 rounded-md overflow-y-auto">
             <div className="absolute right-2 top-2 flex gap-2">
                 <ActionButton onClick={handleCopy} icon={isCopied ? Check : Copy} isSuccess={isCopied} />
 

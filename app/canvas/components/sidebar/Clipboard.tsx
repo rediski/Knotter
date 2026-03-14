@@ -9,7 +9,10 @@ export const Clipboard = () => {
             {clipboard.length !== 0 ? (
                 clipboard.map((item) => {
                     return (
-                        <div key={item.id} className="flex items-center px-3 py-1 bg-depth-2 rounded-md h-9">
+                        <div
+                            key={item.id}
+                            className="flex items-center px-3 py-1 bg-depth-2 border border-depth-3 rounded-md h-9"
+                        >
                             {item.name}
                         </div>
                     );
