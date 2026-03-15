@@ -17,7 +17,6 @@ export const Dropdown = memo(function Dropdown({
     disabled = false,
     isOpen = false,
     onToggle,
-    ...props
 }: DropdownProps) {
     const toggle = () => {
         if (!disabled && onToggle) {
@@ -28,10 +27,9 @@ export const Dropdown = memo(function Dropdown({
     return (
         <div
             className={`
-                flex flex-col gap-1 rounded-md bg-depth-2 w-full 
+                flex flex-col gap-1 rounded-md bg-depth-2 border border-depth-3 w-full 
                 ${disabled && 'opacity-50 cursor-not-allowed'}
             `}
-            {...props}
         >
             <button
                 onClick={toggle}
