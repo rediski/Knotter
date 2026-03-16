@@ -17,7 +17,7 @@ import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 import { Hash, X } from 'lucide-react';
 
 export const Number = memo(function Number({ parameter }: { parameter: Parameter }) {
-    const { handleUpdateCurrentValue, handleUpdateMinValue, handleUpdateMaxValue } = useNumberParameter({
+    const { handleUpdateMinValue, handleUpdateMaxValue } = useNumberParameter({
         parameter,
         updateParameter,
     });
@@ -43,17 +43,6 @@ export const Number = memo(function Number({ parameter }: { parameter: Parameter
 
             <div className="flex items-center gap-1">
                 <div className="flex flex-col gap-1 w-full">
-                    <div className="flex items-center gap-2">
-                        <p className="truncate w-full text-right">Базовое значение</p>
-
-                        <Input
-                            value={parameter.data.value.toString()}
-                            onChange={handleUpdateCurrentValue}
-                            className="bg-depth-3 border border-depth-4"
-                            type="number"
-                        />
-                    </div>
-
                     <div
                         className={`
                             flex items-center gap-2

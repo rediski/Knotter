@@ -7,130 +7,54 @@ interface useNumberParameterProps {
 }
 
 export const useNumberParameter = ({ parameter, updateParameter }: useNumberParameterProps) => {
-    const parseNumberWithValidation = (value: string): number | null | undefined => {
-        if (value === '' || value === '-') {
-            return undefined;
-        }
+    if (!parameter || !isNumber(parameter)) {
+        return {
+            handleUpdateMinValue: () => {},
+            handleUpdateMaxValue: () => {},
+        };
+    }
 
-        const numValue = parseFloat(value);
-        return isNaN(numValue) ? null : numValue;
+    const parseNumber = (value: string): number | undefined => {
+        if (value === '' || value === '-') return undefined;
+        const num = parseFloat(value);
+        return isNaN(num) ? undefined : num;
     };
 
-    const handleUpdateCurrentValue = (value: string) => {
-        if (!parameter || !isNumber(parameter)) return;
-
-        const numValue = parseNumberWithValidation(value);
-        if (numValue === null) return;
-
-        const thisParameterData = parameter.data as ParameterTypeMap['number'];
-
-        if (numValue === undefined) return;
-
-        let newMin = thisParameterData.min;
-        let newMax = thisParameterData.max;
-
-        if (newMin !== undefined && numValue < newMin) {
-            newMin = numValue;
-        }
-
-        if (newMax !== undefined && numValue > newMax) {
-            newMax = numValue;
-        }
-
-        let clampedValue = numValue;
-
-        if (newMin !== undefined) {
-            clampedValue = Math.max(clampedValue, newMin);
-        }
-        if (newMax !== undefined) {
-            clampedValue = Math.min(clampedValue, newMax);
-        }
-
-        updateParameter(parameter.id, {
-            ...parameter,
-            data: {
-                ...thisParameterData,
-                value: clampedValue,
-                ...(newMin !== thisParameterData.min && { min: newMin }),
-                ...(newMax !== thisParameterData.max && { max: newMax }),
-            },
-        });
-    };
+    const data = parameter.data as ParameterTypeMap['number'];
 
     const handleUpdateMinValue = (value: string) => {
-        if (!parameter || !isNumber(parameter)) return;
+        const numValue = parseNumber(value);
 
-        const numValue = parseNumberWithValidation(value);
-
-        const thisParameterData = parameter.data as ParameterTypeMap['number'];
-
-        if (numValue === undefined) {
-            updateParameter(parameter.id, {
-                ...parameter,
-                data: {
-                    ...thisParameterData,
-                    min: undefined,
-                },
-            });
+        if (numValue !== undefined && data.max !== undefined && numValue > data.max) {
             return;
         }
 
-        if (numValue === null) return;
-
-        const minValue = numValue;
-
-        const currentValue = Math.max(minValue, thisParameterData.value);
-        const maxValue = thisParameterData.max !== undefined ? Math.max(minValue, thisParameterData.max) : undefined;
-
         updateParameter(parameter.id, {
             ...parameter,
             data: {
-                ...thisParameterData,
-                min: minValue,
-                value: currentValue,
-                ...(maxValue !== undefined && { max: maxValue }),
+                ...data,
+                min: numValue,
             },
         });
     };
 
     const handleUpdateMaxValue = (value: string) => {
-        if (!parameter || !isNumber(parameter)) return;
+        const numValue = parseNumber(value);
 
-        const numValue = parseNumberWithValidation(value);
-
-        const thisParameterData = parameter.data as ParameterTypeMap['number'];
-
-        if (numValue === undefined) {
-            updateParameter(parameter.id, {
-                ...parameter,
-                data: {
-                    ...thisParameterData,
-                    max: undefined,
-                },
-            });
+        if (numValue !== undefined && data.min !== undefined && numValue < data.min) {
             return;
         }
-
-        if (numValue === null) return;
-
-        const maxValue = numValue;
-
-        const currentValue = Math.min(maxValue, thisParameterData.value);
-        const minValue = thisParameterData.min !== undefined ? Math.min(maxValue, thisParameterData.min) : undefined;
 
         updateParameter(parameter.id, {
             ...parameter,
             data: {
-                ...thisParameterData,
-                max: maxValue,
-                value: currentValue,
-                ...(minValue !== undefined && { min: minValue }),
+                ...data,
+                max: numValue,
             },
         });
     };
 
     return {
-        handleUpdateCurrentValue,
         handleUpdateMinValue,
         handleUpdateMaxValue,
     };
