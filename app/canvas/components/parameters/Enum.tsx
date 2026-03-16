@@ -13,7 +13,7 @@ import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
 import { useEnum } from '@/canvas/components/parameters/useEnum';
 
-import { List, Type, X } from 'lucide-react';
+import { List, PlusIcon, X } from 'lucide-react';
 
 export const Enum = memo(function Enum({ parameter }: { parameter: Parameter }) {
     const { handleAddEnumOption, handleRemoveEnumOption, handleUpdateEnumOption } = useEnum({ parameter });
@@ -52,21 +52,11 @@ export const Enum = memo(function Enum({ parameter }: { parameter: Parameter }) 
                         </button>
                     </div>
                 ))}
-
                 <div
-                    className={`
-                        flex flex-col gap-1 rounded-md p-2 border border-dashed border-depth-6 hover:bg-bg-accent/10 hover:border-text-accent cursor-pointer              
-                        ${parameter.data.options.length > 0 && 'mt-2'}
-                    `}
+                    className="flex m-auto items-center gap-2 px-3 py-1 bg-depth-3 hover:bg-depth-4 border border-depth-4 rounded-md cursor-pointer"
                     onClick={handleAddEnumOption}
                 >
-                    <div className="flex flex-wrap items-center justify-center py-4 gap-2 text-center">
-                        <span>Кликните чтобы добавить параметр</span>
-
-                        <div className="flex items-center gap-2 bg-bg-accent/10 px-2 py-1 rounded-md text-text-accent">
-                            <Type size={16} /> Текст
-                        </div>
-                    </div>
+                    <PlusIcon size={16} /> Добавить опцию
                 </div>
             </div>
         </div>
