@@ -5,10 +5,8 @@ import { memo } from 'react';
 import type { Parameter } from '@/canvas/_core/_/parameter';
 import { isString } from '@/canvas/_core/_/parameter.type-guards';
 
-import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
 
-import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
@@ -32,26 +30,6 @@ export const String = memo(function String({ parameter }: { parameter: Parameter
                 <button onClick={() => removeParameter(parameter.id)} className="ml-auto text-gray cursor-pointer">
                     <X size={16} />
                 </button>
-            </div>
-
-            <div className="flex items-center gap-1">
-                <div className="flex flex-col gap-1 w-full">
-                    <div className="flex items-center gap-2">
-                        <p className="truncate w-full text-right">Базовое значение</p>
-
-                        <Input
-                            value={parameter.data}
-                            onChange={(value) =>
-                                updateParameter(parameter.id, {
-                                    data: value,
-                                })
-                            }
-                            className="bg-depth-3 border border-depth-4"
-                            max={16}
-                            placeholder="Введите текст..."
-                        />
-                    </div>
-                </div>
             </div>
         </div>
     );
