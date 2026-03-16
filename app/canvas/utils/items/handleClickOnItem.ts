@@ -46,6 +46,10 @@ export function handleClickOnItem(e: MouseEvent, isCanvasUnderCursor: boolean) {
         return;
     }
 
+    if (!isMultiSelect && selectedEdgeIds.length > 0) {
+        setSelectedEdgeIds([]);
+    }
+
     if (!selectedItemIds.includes(nodeIdUnderCursor)) {
         const newSelectedIds = selectItems({ itemId: nodeIdUnderCursor, event: e });
         setSelectedItemIds(newSelectedIds);
