@@ -49,7 +49,7 @@ export const Number = memo(function Number({ parameter }: { parameter: Parameter
                             ${!parameter.data.min && 'opacity-50'}
                         `}
                     >
-                        <p className="truncate w-full text-right">Минимальное значение</p>
+                        <p className="truncate w-full">Минимальное значение</p>
 
                         <Input
                             value={parameter.data.min?.toString() ?? ''}
@@ -66,7 +66,7 @@ export const Number = memo(function Number({ parameter }: { parameter: Parameter
                             ${!parameter.data.max && 'opacity-50'}
                         `}
                     >
-                        <p className="truncate w-full text-right">Максимальное значение</p>
+                        <p className="truncate w-full">Максимальное значение</p>
 
                         <Input
                             value={parameter.data.max?.toString() ?? ''}
