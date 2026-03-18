@@ -38,7 +38,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
     }));
 
     return (
-        <div className="flex flex-col w-full gap-1 text-sm">
+        <div className="flex flex-col w-full max-w-2xl gap-1 text-sm">
             {nodeParameters.length > 0 && (
                 <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-3">
                     {nodeParameters.map((parameter: Parameter) => {
