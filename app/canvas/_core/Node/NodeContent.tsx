@@ -1,10 +1,26 @@
 'use client';
 
+import { memo } from 'react';
+
 import { NodeParameters } from '@/canvas/_core/Node/NodeParameters';
 import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getEdges } from '@/canvas/utils/edges/getEdges';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
+
+const Section = memo(({ title, children }: { title: string; children: React.ReactNode }) => (
+    <div className="border border-depth-3 bg-depth-2 rounded-md px-3 py-1">
+        <div className="py-2">{title}</div>
+        <div className="flex flex-col gap-1 flex-1 w-full">{children}</div>
+    </div>
+));
+
+const InfoRow = memo(({ label, value }: { label: string; value: string | number }) => (
+    <div className="flex justify-between items-center gap-2 bg-depth-3 border border-depth-4 rounded-md py-1 px-3">
+        <span className="truncate">{label}</span>
+        <span className="truncate">{value}</span>
+    </div>
+));
 
 export default function NodeContent() {
     const items = useItemsStore((state) => state.items);
@@ -35,61 +51,34 @@ export default function NodeContent() {
     const incomingNodeIds = edges.filter((edge) => edge.to === openedNode.id).map((edge) => edge.from);
     const outgoingNodeIds = edges.filter((edge) => edge.from === openedNode.id).map((edge) => edge.to);
 
-    const incoming = truncateNames(incomingNodeIds);
-    const outgoing = truncateNames(outgoingNodeIds);
-
     return (
         <div className="flex gap-1 w-full overflow-y-auto overflow-x-hidden">
-            <div className="flex-col max-w-2xl min-w-sm w-full h-fit p-3 bg-depth-1 border border-depth-3 rounded-md text-sm">
-                <div className="flex flex-col mb-4">
+            <div className="flex flex-col gap-1 max-w-2xl min-w-sm w-full h-fit p-1 bg-depth-1 border border-depth-3 rounded-md text-sm">
+                <div className="flex flex-col gap-1 border border-depth-3 bg-depth-2 rounded-md px-3 py-1">
                     <h2 className="wrap-break-word">{openedNode.name || '-'}</h2>
-                    <p className="text-text-accent text-sm wrap-break-word`">{openedNode.description || '-'}</p>
+                    <p className="text-sm wrap-break-word`">{openedNode.description || '-'}</p>
                 </div>
 
                 <div className="flex flex-col gap-1 w-full max-w-2xl">
-                    <div className="w-fit border border-depth-4 py-1 px-3">Трансформация</div>
-
-                    <div className="flex flex-col gap-1 flex-1 w-full pl-4">
-                        <div className="flex justify-between items-center gap-2 border border-depth-3 py-1 px-3">
-                            <span className="truncate">Положение X</span>
-                            <span className="text-text-accent truncate">{openedNode.position.x}</span>
-                        </div>
-
-                        <div className="flex justify-between items-center gap-2 border border-depth-3 py-1 px-3">
-                            <span className="truncate">Положение Y</span>
-                            <span className="text-text-accent truncate">{openedNode.position.y}</span>
-                        </div>
-                    </div>
+                    <Section title="Трансформация">
+                        <InfoRow label="Положение X" value={openedNode.position.x} />
+                        <InfoRow label="Положение Y" value={openedNode.position.y} />
+                    </Section>
 
                     {(incomingNodeIds.length > 0 || outgoingNodeIds.length > 0) && (
-                        <>
-                            <div className="w-fit border border-depth-4 py-1 px-3">Связи</div>
-
-                            <div className="flex flex-col gap-1 flex-1 w-full pl-4">
-                                {incomingNodeIds.length > 0 && (
-                                    <div className="flex justify-between items-center gap-2 border border-depth-3 py-1 px-3">
-                                        <span className="truncate">Входящие</span>
-                                        <span className="text-text-accent truncate">{incoming}</span>
-                                    </div>
-                                )}
-
-                                {outgoingNodeIds.length > 0 && (
-                                    <div className="flex justify-between items-center gap-2 border border-depth-3 py-1 px-3">
-                                        <span className="truncate">Исходящие</span>
-                                        <span className="text-text-accent truncate">{outgoing}</span>
-                                    </div>
-                                )}
-                            </div>
-                        </>
+                        <Section title="Связи">
+                            {incomingNodeIds.length > 0 && (
+                                <InfoRow label="Входящие" value={truncateNames(incomingNodeIds)} />
+                            )}
+                            {outgoingNodeIds.length > 0 && (
+                                <InfoRow label="Исходящие" value={truncateNames(outgoingNodeIds)} />
+                            )}
+                        </Section>
                     )}
 
-                    <div className="w-fit border border-depth-4 py-1 px-3">Наследники</div>
-
-                    <div className="flex flex-col gap-1 flex-1 w-full pl-4">
-                        <div className="flex justify-between items-center gap-2 border border-depth-3 py-1 px-3">
-                            <span className="truncate">В разработке...</span>
-                        </div>
-                    </div>
+                    <Section title="Наследники">
+                        <InfoRow label="В разработке..." value="" />
+                    </Section>
                 </div>
             </div>
 
