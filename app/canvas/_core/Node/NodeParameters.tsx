@@ -157,7 +157,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                                 <X
                                     size={16}
                                     onClick={() => removeParameterFromSelectedNode(parameter.id)}
-                                    className="cursor-pointer"
+                                    className="cursor-pointer text-gray"
                                 />
                             </div>
                         );
