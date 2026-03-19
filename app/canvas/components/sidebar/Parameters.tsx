@@ -55,7 +55,7 @@ export const Parameters = memo(function Parameters({ panelId }: { panelId?: stri
     };
 
     return (
-        <div className="flex flex-col gap-1 h-full overflow-y-auto p-1">
+        <div className="flex flex-col gap-1 h-full overflow-y-auto p-1 pt-0 mt-1">
             <CreateParameterForm />
 
             {filteredParameters.length > 0 ? (
