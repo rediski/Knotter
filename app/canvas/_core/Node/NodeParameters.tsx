@@ -27,28 +27,27 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
 
     const nodeParameters = storeNode?.parameters ?? [];
 
-    const filteredParameters = parameters.filter(
-        (template) => !nodeParameters.some((nodeParam) => nodeParam.id === template.id),
-    );
-
-    const options = filteredParameters.map((param) => ({
-        value: param.id,
-        label: param.name,
-        icon: getParameterIcon(param.type),
-    }));
+    const availableOptions = parameters
+        .filter((template) => !nodeParameters.some((nodeParam) => nodeParam.id === template.id))
+        .map((param) => ({
+            value: param.id,
+            label: param.name,
+            icon: getParameterIcon(param.type),
+        }));
 
     return (
         <div className="flex flex-col w-full max-w-2xl gap-1 text-sm">
             {nodeParameters.length > 0 && (
-                <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-3">
+                <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1">
                     {nodeParameters.map((parameter: Parameter) => {
                         const ParameterIcon = getParameterIcon(parameter.type);
 
-                        const parameterContent = (() => {
-                            if (parameter.type === 'number') {
-                                const parameterData = parameter.data as ParameterTypeMap['number'];
-
-                                return (
+                        return (
+                            <div
+                                key={parameter.id}
+                                className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1"
+                            >
+                                {parameter.type === 'number' && (
                                     <div className="flex items-center gap-1 w-full">
                                         <div className="flex items-center gap-2 w-full truncate">
                                             <ParameterIcon size={16} />
@@ -56,40 +55,36 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                                         </div>
 
                                         <Input
-                                            min={parameterData.min}
-                                            max={parameterData.max}
-                                            value={parameterData.value.toString()}
+                                            min={(parameter.data as ParameterTypeMap['number']).min}
+                                            max={(parameter.data as ParameterTypeMap['number']).max}
+                                            value={(parameter.data as ParameterTypeMap['number']).value.toString()}
                                             type="number"
-                                            className="bg-depth-2 border border-depth-3 hover:bg-depth-3 active:bg-depth-4"
+                                            className="bg-depth-3 border border-depth-4 hover:bg-depth-4"
                                             onChange={(newValue) => {
                                                 const numValue = parseFloat(newValue);
 
-                                                if (!isNaN(numValue)) {
-                                                    let clampedValue = numValue;
+                                                if (isNaN(numValue)) return;
 
-                                                    if (parameterData.min !== undefined) {
-                                                        clampedValue = Math.max(clampedValue, parameterData.min);
-                                                    }
+                                                const paramData = parameter.data as ParameterTypeMap['number'];
+                                                let clampedValue = numValue;
 
-                                                    if (parameterData.max !== undefined) {
-                                                        clampedValue = Math.min(clampedValue, parameterData.max);
-                                                    }
-
-                                                    updateNodeParameter(node.id, parameter.id, {
-                                                        data: {
-                                                            ...parameterData,
-                                                            value: clampedValue,
-                                                        },
-                                                    });
+                                                if (paramData.min !== undefined) {
+                                                    clampedValue = Math.max(clampedValue, paramData.min);
                                                 }
+
+                                                if (paramData.max !== undefined) {
+                                                    clampedValue = Math.min(clampedValue, paramData.max);
+                                                }
+
+                                                updateNodeParameter(node.id, parameter.id, {
+                                                    data: { ...paramData, value: clampedValue },
+                                                });
                                             }}
                                         />
                                     </div>
-                                );
-                            }
+                                )}
 
-                            if (parameter.type === 'string') {
-                                return (
+                                {parameter.type === 'string' && (
                                     <div className="flex items-center gap-1 w-full">
                                         <div className="flex items-center gap-2 w-full truncate">
                                             <ParameterIcon size={16} />
@@ -99,19 +94,15 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                                         <Input
                                             value={parameter.data as string}
                                             onChange={(newValue) => {
-                                                updateNodeParameter(node.id, parameter.id, {
-                                                    data: newValue,
-                                                });
+                                                updateNodeParameter(node.id, parameter.id, { data: newValue });
                                             }}
-                                            placeholder={parameter.name}
-                                            className="bg-depth-2 hover:bg-depth-3 border border-depth-3"
+                                            placeholder="Введите значение"
+                                            className="bg-depth-3 hover:bg-depth-4 border border-depth-4"
                                         />
                                     </div>
-                                );
-                            }
+                                )}
 
-                            if (parameter.type === 'boolean') {
-                                return (
+                                {parameter.type === 'boolean' && (
                                     <label className="flex items-center justify-between w-full gap-1 select-none cursor-pointer">
                                         <div className="flex items-center gap-2 truncate">
                                             <ParameterIcon size={16} />
@@ -121,24 +112,17 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                                         <Checkbox
                                             checked={parameter.data as boolean}
                                             onChange={(checked) => {
-                                                updateNodeParameter(node.id, parameter.id, {
-                                                    data: checked,
-                                                });
+                                                updateNodeParameter(node.id, parameter.id, { data: checked });
                                             }}
-                                            className={`bg-depth-2 ${
-                                                parameter.data === true
-                                                    ? 'hover:bg-bg-accent'
-                                                    : 'hover:bg-depth-3 active:bg-depth-4'
-                                            }`}
+                                            className={`
+                                                bg-depth-3 border border-depth-4
+                                                ${parameter.data === true ? 'hover:bg-bg-accent' : 'hover:bg-depth-4'}
+                                            `}
                                         />
                                     </label>
-                                );
-                            }
+                                )}
 
-                            if (parameter.type === 'enum') {
-                                const parameterData = parameter.data as ParameterTypeMap['enum'];
-
-                                return (
+                                {parameter.type === 'enum' && (
                                     <div className="flex items-center gap-1 w-full">
                                         <div className="flex items-center gap-2 w-full truncate">
                                             <ParameterIcon size={16} />
@@ -146,47 +130,35 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
                                         </div>
 
                                         <Select
-                                            value={parameterData.value}
-                                            options={parameterData.options}
+                                            value={(parameter.data as ParameterTypeMap['enum']).value}
+                                            options={(parameter.data as ParameterTypeMap['enum']).options}
+                                            depth={3}
                                             onChange={(newValue) => {
+                                                const paramData = parameter.data as ParameterTypeMap['enum'];
+
                                                 updateNodeParameter(node.id, parameter.id, {
-                                                    data: {
-                                                        ...parameterData,
-                                                        value: newValue,
-                                                    },
+                                                    data: { ...paramData, value: newValue },
                                                 });
                                             }}
-                                            label={parameter.name}
                                         />
                                     </div>
-                                );
-                            }
+                                )}
 
-                            if (parameter.type === 'structure') {
-                                return (
+                                {parameter.type === 'structure' && (
                                     <div className="flex items-center gap-1 w-full">
                                         <div className="flex items-center gap-2 truncate w-full">
                                             <ParameterIcon size={16} className="text-icon-secondary shrink-0" />
                                             <p className="truncate w-full">{parameter.name}</p>
                                         </div>
-
                                         <p className="flex items-center w-full h-8">В разработке...</p>
                                     </div>
-                                );
-                            }
+                                )}
 
-                            return null;
-                        })();
-
-                        return (
-                            <div key={parameter.id} className="flex items-center gap-2">
-                                {parameterContent}
-                                <button
+                                <X
+                                    size={16}
                                     onClick={() => removeParameterFromSelectedNode(parameter.id)}
                                     className="cursor-pointer"
-                                >
-                                    <X size={16} />
-                                </button>
+                                />
                             </div>
                         );
                     })}
@@ -194,7 +166,7 @@ export const NodeParameters = memo(function NodeParameters({ node }: { node: Nod
             )}
 
             <OptionPicker
-                options={options}
+                options={availableOptions}
                 onSelect={(parameterId) => addParameterToSelectedNode(parameterId)}
                 placeholder="Добавить параметр"
             />
