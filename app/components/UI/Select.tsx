@@ -7,11 +7,11 @@ import { EmptyState } from './EmptyState';
 interface SelectProps {
     value: string | null;
     options: string[];
+    depth?: number;
     onChange: (value: string | null) => void;
-    label?: string;
 }
 
-export const Select = memo(function Select({ value, options, onChange, label }: SelectProps) {
+export const Select = memo(function Select({ value, options, depth = 2, onChange }: SelectProps) {
     const [isOpen, setIsOpen] = useState(false);
     const selectRef = useRef<HTMLDivElement>(null);
 
@@ -23,8 +23,8 @@ export const Select = memo(function Select({ value, options, onChange, label }: 
                 type="button"
                 onClick={() => setIsOpen((value) => !value)}
                 className={`
-                    flex items-center gap-2 h-8 px-3 w-full text-sm cursor-pointer
-                    ${isOpen ? 'rounded-t-md bg-depth-3' : 'rounded-md bg-depth-2 hover:bg-depth-3'}
+                    flex items-center gap-2 h-8 px-3 w-full text-sm cursor-pointer border border-depth-${depth + 1}
+                    ${isOpen ? `rounded-t-md bg-depth-${depth + 1}` : `rounded-md bg-depth-${depth} hover:bg-depth-${depth + 1}`}
                 `}
             >
                 <ChevronDown
@@ -38,7 +38,9 @@ export const Select = memo(function Select({ value, options, onChange, label }: 
             </button>
 
             {isOpen && (
-                <div className="flex flex-col gap-1 p-1 w-full rounded-b-md bg-depth-2">
+                <div
+                    className={`flex flex-col gap-1 p-1 w-full rounded-b-md bg-depth-${depth} border border-depth-${depth + 1}`}
+                >
                     {options.map((option) => {
                         const isSelected = option === value;
 
@@ -51,7 +53,7 @@ export const Select = memo(function Select({ value, options, onChange, label }: 
                                 }}
                                 className={`
                                         w-full px-3 h-8 text-left text-sm truncate rounded-md cursor-pointer
-                                        ${isSelected ? 'bg-bg-accent/10 text-text-accent' : 'bg-depth-3 hover:bg-depth-4'}
+                                        ${isSelected ? 'bg-bg-accent/10 text-text-accent' : `bg-depth-${depth + 1} hover:bg-depth-${depth + 2}`}
                                     `}
                             >
                                 {option}
@@ -61,7 +63,7 @@ export const Select = memo(function Select({ value, options, onChange, label }: 
 
                     {options.length === 0 && <EmptyState message="Нет доступных опций" />}
 
-                    {selected !== undefined && <hr className="border-b-0 border-depth-4 my-0.5" />}
+                    {selected !== undefined && <hr className={`border-b-0 border-depth-${depth + 2} my-0.5`} />}
 
                     {selected !== undefined && (
                         <button
@@ -69,7 +71,7 @@ export const Select = memo(function Select({ value, options, onChange, label }: 
                             onClick={() => {
                                 onChange(null);
                             }}
-                            className="flex items-center justify-between w-full px-3 h-8 text-left text-sm text-red truncate rounded-md cursor-pointer bg-depth-3 hover:bg-depth-4"
+                            className={`flex items-center justify-between w-full px-3 h-8 text-left text-sm text-red truncate rounded-md cursor-pointer bg-depth-${depth + 1} hover:bg-depth-${depth + 2}`}
                         >
                             Не выбрано
                             <Ban size={14} />
