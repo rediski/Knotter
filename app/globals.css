@@ -28,13 +28,12 @@
     --red: #ff4c4c;
     --gray: #999;
 
-    /* --syntax-key: #000000;
-    --syntax-string: #000000;
-    --syntax-number: #000000;
-    --syntax-boolean: #000000;
-    --syntax-null: #000000;
-    --syntax-brackets: #000000;
-    */
+    --syntax-key: #0451a5;
+    --syntax-string: #a31515;
+    --syntax-number: #098658;
+    --syntax-boolean: #0000ff;
+    --syntax-null: #0000ff;
+    --syntax-brackets: #0431fa;
 }
 
 [data-theme='dark'] {
