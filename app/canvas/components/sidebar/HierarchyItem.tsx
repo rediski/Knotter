@@ -5,8 +5,11 @@ import { memo } from 'react';
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 
 import { EditableName } from '@/components/UI/EditableName';
-import { useHierarchyItem } from '@/canvas/components/sidebar/useHierarchyItem';
+
 import { useItemsStore } from '@/canvas/store/useItemsStore';
+
+import { useDragAndDrop } from '@/hooks/useDragAndDrop';
+import { useHierarchyItem } from '@/canvas/components/sidebar/useHierarchyItem';
 
 import { Box } from 'lucide-react';
 
@@ -15,16 +18,11 @@ interface HierarchyItemProps {
 }
 
 export const HierarchyItem = memo(function HierarchyItem({ canvasItem }: HierarchyItemProps) {
-    const {
-        handleSelect,
-        handleKeyDown,
-        handleNameChange,
-        handleNodeDoubleClick,
-        dragRef,
-        dropRef,
-        isDragOver,
-        dragPosition,
-    } = useHierarchyItem(canvasItem);
+    const { handleSelect, handleKeyDown, handleNameChange, handleNodeDoubleClick } = useHierarchyItem(canvasItem);
+
+    const { dragRef, dropRef, isDragOver, dragPosition } = useDragAndDrop({
+        itemId: canvasItem.id,
+    });
 
     const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
 
