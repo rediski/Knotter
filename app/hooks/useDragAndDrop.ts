@@ -5,12 +5,12 @@ import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 type DragPosition = 'top' | 'bottom' | null;
 
-interface UseDragAndDropProps {
+interface useDragAndDropProps {
     itemId: string;
     onDrop?: (draggedId: string, targetId: string, position: DragPosition) => void;
 }
 
-export function useDragAndDrop({ itemId, onDrop }: UseDragAndDropProps) {
+export function useDragAndDrop({ itemId, onDrop }: useDragAndDropProps) {
     const dragRef = useRef<HTMLDivElement | null>(null);
     const dropRef = useRef<HTMLLIElement | null>(null);
 
