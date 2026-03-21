@@ -19,7 +19,7 @@ export function useCanvasRenderer(canvasRef: RefObject<HTMLCanvasElement | null>
         }
     }, [canvasRef]);
 
-    useEffect(() => {
+    const initializeCanvasOffset = useCallback(() => {
         const canvas = canvasRef.current;
         if (!canvas || isInitialOffsetSet) return;
 
@@ -33,7 +33,7 @@ export function useCanvasRenderer(canvasRef: RefObject<HTMLCanvasElement | null>
         }
     }, [canvasRef, isInitialOffsetSet, setOffset, invertY]);
 
-    useEffect(() => {
+    const subscribeToStoreChanges = useCallback(() => {
         const unsubscribe = useCanvasStore.subscribe(() => {
             requestAnimationFrame(renderCanvas);
         });
@@ -43,29 +43,42 @@ export function useCanvasRenderer(canvasRef: RefObject<HTMLCanvasElement | null>
         return unsubscribe;
     }, [renderCanvas]);
 
-    useEffect(() => {
+    const observeCanvasResizeAndTheme = useCallback(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
         let frame: number;
-        const onRender = () => {
+
+        const scheduleRender = () => {
             cancelAnimationFrame(frame);
             frame = requestAnimationFrame(renderCanvas);
         };
 
-        const resize = new ResizeObserver(onRender);
-        resize.observe(canvas);
+        const resizeObserver = new ResizeObserver(scheduleRender);
+        resizeObserver.observe(canvas);
 
-        const theme = new MutationObserver(onRender);
-        theme.observe(document.documentElement, {
+        const themeObserver = new MutationObserver(scheduleRender);
+        themeObserver.observe(document.documentElement, {
             attributes: true,
             attributeFilter: ['data-theme'],
         });
 
         return () => {
-            resize.disconnect();
-            theme.disconnect();
+            resizeObserver.disconnect();
+            themeObserver.disconnect();
             cancelAnimationFrame(frame);
         };
     }, [canvasRef, renderCanvas]);
+
+    useEffect(() => {
+        initializeCanvasOffset();
+    }, [initializeCanvasOffset]);
+
+    useEffect(() => {
+        return subscribeToStoreChanges();
+    }, [subscribeToStoreChanges]);
+
+    useEffect(() => {
+        return observeCanvasResizeAndTheme();
+    }, [observeCanvasResizeAndTheme]);
 }
