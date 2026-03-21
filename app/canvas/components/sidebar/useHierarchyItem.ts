@@ -1,16 +1,13 @@
 'use client';
 
-import { useCallback, useRef, useState, useEffect } from 'react';
+import { useCallback } from 'react';
 
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 
 import { useCanvasStore } from '@/canvas/store/useCanvasStore';
-
 import { selectItems } from '@/canvas/utils/items/selectItems';
 import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
-
-type DragPosition = 'top' | 'bottom' | null;
 
 export function useHierarchyItem(canvasItem: CanvasItem) {
     const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
@@ -20,12 +17,6 @@ export function useHierarchyItem(canvasItem: CanvasItem) {
     const openedTabIds = useCanvasStore((state) => state.openedTabIds);
     const setOpenedTabIds = useCanvasStore((state) => state.setOpenedTabIds);
     const setSelectedTabId = useCanvasStore((state) => state.setSelectedTabId);
-
-    const dragRef = useRef<HTMLDivElement | null>(null);
-    const dropRef = useRef<HTMLLIElement | null>(null);
-
-    const [isDragOver, setIsDragOver] = useState(false);
-    const [dragPosition, setDragPosition] = useState<DragPosition>(null);
 
     const handleSelect = useCallback(
         (e: React.MouseEvent<HTMLLIElement>) => {
@@ -38,7 +29,7 @@ export function useHierarchyItem(canvasItem: CanvasItem) {
 
             setSelectedIds(newSelectedIds);
         },
-        [selectedItemIds, canvasItem.id, setSelectedIds],
+        [canvasItem.id, setSelectedIds],
     );
 
     const handleKeyDown = useCallback(
@@ -47,7 +38,7 @@ export function useHierarchyItem(canvasItem: CanvasItem) {
                 deleteSelectedItems();
             }
         },
-        [selectedItemIds, canvasItem.id, setSelectedIds],
+        [selectedItemIds, canvasItem.id],
     );
 
     const handleNameChange = useCallback(
@@ -70,83 +61,10 @@ export function useHierarchyItem(canvasItem: CanvasItem) {
         setSelectedIds([canvasItem.id]);
     }, [canvasItem.id, canvasItem.kind, openedTabIds, setOpenedTabIds, setSelectedTabId, setSelectedIds]);
 
-    useEffect(() => {
-        const el = dragRef.current;
-        if (!el) return;
-
-        const handleDragStart = (e: DragEvent) => {
-            e.dataTransfer?.setData('text/plain', canvasItem.id);
-            e.dataTransfer!.effectAllowed = 'move';
-        };
-
-        el.addEventListener('dragstart', handleDragStart);
-        return () => el.removeEventListener('dragstart', handleDragStart);
-    }, [canvasItem.id]);
-
-    useEffect(() => {
-        const el = dropRef.current;
-        if (!el) return;
-
-        const handleDragOver = (e: DragEvent) => {
-            e.preventDefault();
-            e.dataTransfer!.dropEffect = 'move';
-
-            const rect = el.getBoundingClientRect();
-            const offset = e.clientY - rect.top;
-            const pos: DragPosition = offset < rect.height / 2 ? 'top' : 'bottom';
-
-            setDragPosition(pos);
-            setIsDragOver(true);
-        };
-
-        const handleDragLeave = () => {
-            setIsDragOver(false);
-            setDragPosition(null);
-        };
-
-        const handleDrop = (e: DragEvent) => {
-            e.preventDefault();
-            setIsDragOver(false);
-
-            const draggedId = e.dataTransfer?.getData('text/plain');
-            if (!draggedId || draggedId === canvasItem.id) return;
-
-            const prev = useItemsStore.getState().items;
-
-            const fromIndex = prev.findIndex((i) => i.id === draggedId);
-            const toIndex = prev.findIndex((i) => i.id === canvasItem.id);
-
-            if (fromIndex === -1 || toIndex === -1) return;
-
-            const next = [...prev];
-            const [moved] = next.splice(fromIndex, 1);
-
-            const insertIndex = dragPosition === 'top' ? toIndex : toIndex + 1;
-            next.splice(insertIndex, 0, moved);
-
-            setItems(next);
-            setDragPosition(null);
-        };
-
-        el.addEventListener('dragover', handleDragOver);
-        el.addEventListener('dragleave', handleDragLeave);
-        el.addEventListener('drop', handleDrop);
-
-        return () => {
-            el.removeEventListener('dragover', handleDragOver);
-            el.removeEventListener('dragleave', handleDragLeave);
-            el.removeEventListener('drop', handleDrop);
-        };
-    }, [canvasItem.id, dragPosition, setItems]);
-
     return {
         handleSelect,
         handleKeyDown,
         handleNameChange,
         handleNodeDoubleClick,
-        dragRef,
-        dropRef,
-        isDragOver,
-        dragPosition,
     };
 }
