@@ -1,7 +1,8 @@
-import type { Edge, Node } from '@/canvas/_core/_/canvas.types';
+import type { Node } from '@/canvas/_core/_/canvas.types';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
+import { addToHistory } from '@/canvas/utils/clipboard/historyManager'; // Добавить импорт
 
 export function deleteSelectedItems() {
     const itemsState = useItemsStore.getState();
@@ -43,6 +44,11 @@ export function deleteSelectedItemsById(itemIds: string | string[]) {
             };
         })
         .filter((item) => !idsToDelete.has(item.id));
+
+    addToHistory({
+        type: 'DELETE_ITEMS',
+        ids: Array.from(idsToDelete),
+    });
 
     setItems(newItems);
 
