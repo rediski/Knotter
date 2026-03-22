@@ -6,6 +6,7 @@ import { getSnappedPosition } from '@/canvas/utils/items/getSnappedPosition';
 import { canAddItem } from '@/canvas/utils/items/canAddItems';
 import { generateUniqueName } from '@/canvas/utils/items/generateUniqueName';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
+import { addToHistory } from '@/canvas/utils/clipboard/historyManager'; // Добавить импорт
 
 export function createNode(): Node | null {
     if (!canAddItem()) return null;
@@ -39,6 +40,11 @@ export function createNode(): Node | null {
         edges: [],
         parameters: [],
     };
+
+    addToHistory({
+        type: 'ADD_ITEMS',
+        items: [structuredClone(node)],
+    });
 
     setItems([...items, node]);
     setSelectedItemIds([node.id]);
