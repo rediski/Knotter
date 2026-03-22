@@ -1,6 +1,8 @@
-import type { CanvasAction } from '@/canvas/_core/_/clipboard.types';
+import type { CanvasAction } from '@/canvas/_core/_/history.types';
 import { useHistoryStore } from '@/canvas/store/useHistoryStore';
 import { restoreCanvasFromHistory } from '@/canvas/utils/clipboard/restoreCanvasFromHistory';
+
+export const MAX_HISTORY_SIZE = 100;
 
 export function addToHistory(action: CanvasAction) {
     const historyState = useHistoryStore.getState();
@@ -11,10 +13,21 @@ export function addToHistory(action: CanvasAction) {
     const historyPosition = historyState.historyPosition;
     const setHistoryPosition = historyState.setHistoryPosition;
 
-    const newHistory = [...history.slice(0, historyPosition + 1), structuredClone(action)];
+    let newHistory = [...history.slice(0, historyPosition + 1), structuredClone(action)];
 
-    setHistory(newHistory);
-    setHistoryPosition(historyPosition + 1);
+    if (newHistory.length > MAX_HISTORY_SIZE) {
+        const excess = newHistory.length - MAX_HISTORY_SIZE;
+        newHistory = newHistory.slice(excess);
+
+        const newPosition = historyPosition + 1 - excess;
+        setHistoryPosition(newPosition);
+        setHistory(newHistory);
+    }
+
+    if (newHistory.length <= MAX_HISTORY_SIZE) {
+        setHistory(newHistory);
+        setHistoryPosition(historyPosition + 1);
+    }
 }
 
 export function getHistoryUpToCurrent() {
