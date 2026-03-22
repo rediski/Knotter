@@ -14,6 +14,7 @@ import { getMousePosition } from '@/canvas/utils/canvas/getMousePosition';
 import { handleClickOnItem } from '@/canvas/utils/items/handleClickOnItem';
 
 import { startDragging, stopDragging } from '@/canvas/utils/items/dragItems';
+import { addToHistory } from '@/canvas/utils/clipboard/historyManager';
 
 export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | null>) {
     const onMouseDown = useCallback(
@@ -86,7 +87,30 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
         [canvasRef],
     );
 
-    const onMouseUp = useCallback(() => stopDragging(), []);
+    const onMouseUp = useCallback(() => {
+        const refsState = useCanvasRefsStore.getState();
+        const itemsState = useItemsStore.getState();
+
+        const initialNodePositions = refsState.initialNodePositions;
+        const items = itemsState.items;
+        const selectedItemIds = itemsState.selectedItemIds;
+
+        const movedItems = items.filter((item) => selectedItemIds.includes(item.id));
+
+        const changedItems = movedItems.filter((item) => {
+            const initialPos = initialNodePositions.current.get(item.id);
+            return initialPos && (initialPos.x !== item.position.x || initialPos.y !== item.position.y);
+        });
+
+        if (changedItems.length > 0) {
+            addToHistory({
+                type: 'MOVE_ITEMS',
+                items: structuredClone(changedItems),
+            });
+        }
+
+        stopDragging();
+    }, []);
 
     return { onMouseDown, onMouseMove, onMouseUp };
 }
