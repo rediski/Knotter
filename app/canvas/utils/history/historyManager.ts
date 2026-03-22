@@ -1,6 +1,6 @@
 import type { CanvasAction } from '@/canvas/_core/_/history.types';
 import { useHistoryStore } from '@/canvas/store/useHistoryStore';
-import { restoreCanvasFromHistory } from '@/canvas/utils/clipboard/restoreCanvasFromHistory';
+import { restoreCanvasFromHistory } from '@/canvas/utils/history/restoreCanvasFromHistory';
 
 export const MAX_HISTORY_SIZE = 100;
 

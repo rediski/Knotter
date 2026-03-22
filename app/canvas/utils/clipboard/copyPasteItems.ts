@@ -6,7 +6,7 @@ import { useItemsStore } from '@/canvas/store/useItemsStore';
 import { useClipboardStore } from '@/canvas/store/useClipboardStore';
 
 import { canAddItems } from '@/canvas/utils/items/canAddItems';
-import { addToHistory } from '@/canvas/utils/clipboard/historyManager';
+import { addToHistory } from '@/canvas/utils/history/historyManager';
 
 export function copySelectedItems(items: CanvasItem[], selectedIds: string[]) {
     const setClipboard = useClipboardStore.getState().setClipboard;

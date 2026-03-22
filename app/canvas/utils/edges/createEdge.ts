@@ -4,7 +4,7 @@ import type { Node } from '@/canvas/_core/_/canvas.types';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { canAddItem } from '@/canvas/utils/items/canAddItems';
-import { addToHistory } from '@/canvas/utils/clipboard/historyManager';
+import { addToHistory } from '@/canvas/utils/history/historyManager';
 
 export function createEdge(clickedNodeId: string) {
     if (!canAddItem()) return null;

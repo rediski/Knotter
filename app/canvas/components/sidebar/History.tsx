@@ -1,5 +1,5 @@
 import { useHistoryStore } from '@/canvas/store/useHistoryStore';
-import { restoreCanvasFromHistory } from '@/canvas/utils/clipboard/restoreCanvasFromHistory';
+import { restoreCanvasFromHistory } from '@/canvas/utils/history/restoreCanvasFromHistory';
 import { EmptyState } from '@/components/UI/EmptyState';
 
 export const History = () => {

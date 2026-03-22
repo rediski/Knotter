@@ -6,7 +6,7 @@ import { getSnappedPosition } from '@/canvas/utils/items/getSnappedPosition';
 import { canAddItem } from '@/canvas/utils/items/canAddItems';
 import { generateUniqueName } from '@/canvas/utils/items/generateUniqueName';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
-import { addToHistory } from '@/canvas/utils/clipboard/historyManager'; // Добавить импорт
+import { addToHistory } from '@/canvas/utils/history/historyManager'; // Добавить импорт
 
 export function createNode(): Node | null {
     if (!canAddItem()) return null;

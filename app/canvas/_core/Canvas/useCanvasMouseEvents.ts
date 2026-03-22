@@ -14,7 +14,7 @@ import { getMousePosition } from '@/canvas/utils/canvas/getMousePosition';
 import { handleClickOnItem } from '@/canvas/utils/items/handleClickOnItem';
 
 import { startDragging, stopDragging } from '@/canvas/utils/items/dragItems';
-import { addToHistory } from '@/canvas/utils/clipboard/historyManager';
+import { addToHistory } from '@/canvas/utils/history/historyManager';
 
 export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | null>) {
     const onMouseDown = useCallback(
