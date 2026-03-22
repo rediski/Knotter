@@ -2,14 +2,14 @@
 
 import React, { memo, useRef } from 'react';
 
-import { useSidebarStore } from '@/canvas/store/useSidebarStore';
-
+import { SidebarPanel } from '@/canvas/components/sidebar/SidebarPanel';
 import { SidebarContextMenu } from '@/canvas/components/sidebar/SidebarContextMenu';
+import { EmptyState } from '@/components/UI/EmptyState';
+
+import { useSidebarStore } from '@/canvas/store/useSidebarStore';
 import { useSidebarResize } from '@/canvas/components/sidebar/useSidebarResize';
 import { useContextMenu } from '@/hooks/useContextMenu';
 import { useClickOutside } from '@/hooks/useClickOutside';
-import { SidebarPanel } from '@/canvas/components/sidebar/SidebarPanel';
-import { EmptyState } from '@/components/UI/EmptyState';
 
 export const CanvasSidebar = memo(function Sidebar() {
     const panels = useSidebarStore((state) => state.sidebarPanels);
