@@ -2,22 +2,22 @@
 
 import type { SidebarPanel as SidebarPanelType } from '@/canvas/_core/_/sidebarPanel';
 
-import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
-import { Input } from '@/components/UI/Input';
-
-import { PanelContextMenu } from '@/canvas/components/sidebar/PanelContextMenu';
-
+import { Clipboard } from '@/canvas/components/sidebar/Clipboard';
+import { Details } from '@/canvas/components/sidebar/Details';
 import { Hierarchy } from '@/canvas/components/sidebar/Hierarchy';
 import { Inspector } from '@/canvas/components/sidebar/Inspector';
 import { Parameters } from '@/canvas/components/sidebar/Parameters';
+import { History } from '@/canvas/components/sidebar/History';
+
+import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
+import { Input } from '@/components/UI/Input';
+import { EmptyState } from '@/components/UI/EmptyState';
+import { PanelContextMenu } from '@/canvas/components/sidebar/PanelContextMenu';
 
 import { useSidebarPanel } from '@/canvas/components/sidebar/useSidebarPanel';
 import { usePanelContextMenu } from '@/canvas/components/sidebar/usePanelContextMenu';
 
 import { Search } from 'lucide-react';
-import { EmptyState } from '@/components/UI/EmptyState';
-import { Details } from '@/canvas/components/sidebar/Details';
-import { Clipboard } from '@/canvas/components/sidebar/Clipboard';
 
 export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
     const {
@@ -112,6 +112,8 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                         return <Hierarchy panelId={panel.id} />;
                     case 'clipboard':
                         return <Clipboard />;
+                    case 'history':
+                        return <History />;
                     case 'inspector':
                         return <Inspector panelId={panel.id} />;
                     case 'parameters':
