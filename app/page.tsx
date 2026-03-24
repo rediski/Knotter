@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-import { GitCommitHorizontal } from 'lucide-react';
+import { Diamond, Square, Circle, Triangle } from 'lucide-react';
 
 export const metadata: Metadata = {
     title: 'Knotter',
@@ -17,24 +16,32 @@ export default function Home() {
         <>
             <Header />
 
-            <div className="flex flex-col items-center justify-center gap-6 h-[calc(100vh-64px-56px-1px)] px-4">
-                <div className="flex flex-col items-center justify-center gap-2">
-                    <GitCommitHorizontal size={48} className="text-text-accent" />
+            <div className="px-4">
+                <div className="flex flex-col items-center mt-24 gap-8 container m-auto">
+                    <div className="flex flex-col items-center justify-start max-w-2xl text-center">
+                        <div className="w-full text-6xl font-bold mt-2">The open source workspace for graphs</div>
+                    </div>
 
-                    <h1 className="text-6xl font-extrabold uppercase">Knotter</h1>
+                    <div className="bg-linear-to-br from-bg-accent to-bg-accent/50 w-fit rounded-lg">
+                        <div className="relative flex bg-background m-8 p-16 rounded-2xl">
+                            <div
+                                className="
+                                    absolute inset-0 rounded-2xl 
+                                    bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] 
+                                    bg-size-[128px_128px]
+                                "
+                            />
+
+                            <Diamond size={128} className="fill-background z-10" />
+
+                            <Square size={128} className="fill-background z-10 ml-32" />
+
+                            <Circle size={128} className="fill-background z-10 ml-32" />
+
+                            <Triangle size={128} className="fill-background z-10 ml-32" />
+                        </div>
+                    </div>
                 </div>
-
-                <div className="max-w-2xl text-center text-lg gap-1">
-                    Редактор графов, сфокусированный на разработке деревьев талантов для RPG-систем. Построен на&nbsp;
-                    <strong>React</strong>, <strong>TypeScript</strong> и <strong>Tailwind CSS</strong>.
-                </div>
-
-                <Link
-                    href="/canvas"
-                    className="flex items-center gap-1 px-3 py-1 bg-depth-2 hover:bg-depth-3 border border-depth-3 text-foreground rounded-md select-none"
-                >
-                    Начать - Бесплатно
-                </Link>
             </div>
 
             <Footer />
