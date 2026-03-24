@@ -45,11 +45,11 @@ export default function GithubBager() {
 
     return (
         <Link href={`https://github.com/${username}/${repo}`} target="_blank" className="flex items-center">
-            <div className="w-9 h-8.5 flex items-center justify-center bg-depth-2 border border-depth-3 rounded-l-md">
+            <div className="w-9 h-8 flex items-center justify-center bg-depth-2 border border-depth-3 rounded-l-md">
                 {githubIcon}
             </div>
 
-            <div className="h-8.5 flex items-center justify-center bg-depth-2 border border-depth-3 border-l-0 rounded-r-md">
+            <div className="h-8 flex items-center justify-center bg-depth-2 border border-depth-3 border-l-0 rounded-r-md">
                 <Star fill="var(--yellow)" stroke="var(--yellow)" size={16} className="ml-2" />
 
                 <p className="mx-2 text-xs font-bold">{stars}</p>
