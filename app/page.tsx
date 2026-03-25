@@ -17,28 +17,30 @@ export default function Home() {
             <Header />
 
             <div className="px-4">
-                <div className="flex flex-col items-center mt-24 gap-8 container m-auto">
+                <div className="flex flex-col items-center my-24 gap-12 container m-auto">
                     <div className="flex flex-col items-center justify-start max-w-2xl text-center">
                         <div className="w-full text-6xl font-bold mt-2">The open source workspace for graphs</div>
                     </div>
 
-                    <div className="bg-linear-to-br from-bg-accent to-bg-accent/50 w-fit rounded-lg">
-                        <div className="relative flex bg-background m-8 p-16 rounded-2xl">
+                    <div className="bg-linear-to-br from-bg-accent to-bg-accent/50 w-fit rounded-2xl">
+                        <div className="relative flex bg-background m-8 p-16 rounded-lg">
                             <div
                                 className="
-                                    absolute inset-0 rounded-2xl 
-                                    bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] 
+                                    absolute inset-0 rounded-lg
+                                    bg-[linear-gradient(to_right,var(--grid-color-1)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color-1)_1px,transparent_1px)] 
                                     bg-size-[128px_128px]
                                 "
                             />
 
-                            <Diamond size={128} className="fill-background z-10" />
+                            <div className="flex gap-32 z-10">
+                                <Diamond size={128} className="fill-background" />
 
-                            <Square size={128} className="fill-background z-10 ml-32" />
+                                <Square size={128} className="fill-background" />
 
-                            <Circle size={128} className="fill-background z-10 ml-32" />
+                                <Circle size={128} className="fill-background" />
 
-                            <Triangle size={128} className="fill-background z-10 ml-32" />
+                                <Triangle size={128} className="fill-background" />
+                            </div>
                         </div>
                     </div>
                 </div>
