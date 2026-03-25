@@ -103,11 +103,11 @@ export const CanvasControls = memo(function CanvasControls({
                     </button>
 
                     {menuOpen && (
-                        <div className="flex flex-col bg-depth-1 rounded-md shadow w-full text-nowrap">
+                        <div className="flex flex-col bg-depth-1 border border-depth-3 rounded-md w-full text-nowrap">
                             <div className="flex flex-col gap-1 m-1">
                                 <button
                                     onClick={() => setInvertY(!invertY)}
-                                    className="px-3 py-2 w-full flex justify-between bg-depth-2 hover:bg-depth-3 rounded-md cursor-pointer"
+                                    className="px-3 py-2 h-8 w-full flex justify-between bg-depth-2 hover:bg-depth-3 border border-depth-3 rounded-md cursor-pointer"
                                 >
                                     Инвертировать Y
                                     <FlipVertical2 size={16} className={`${invertY ? 'text-foreground' : 'text-gray'}`} />
@@ -121,7 +121,7 @@ export const CanvasControls = memo(function CanvasControls({
                             <div className="m-1">
                                 <Link
                                     href="/"
-                                    className="flex items-center justify-between gap-2 bg-depth-2 hover:bg-depth-3 px-3 py-2 rounded-md text-red"
+                                    className="flex items-center justify-between gap-2 bg-depth-2 hover:bg-depth-3 border border-depth-3 px-3 py-2 h-8 rounded-md text-red"
                                 >
                                     На главную
                                     <Home size={16} />
