@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 
 import Link from 'next/link';
 
-import { Star } from 'lucide-react';
-
 const githubIcon = (
     <svg
         height="20"
@@ -44,16 +42,13 @@ export default function GithubBager() {
     }, [username, repo]);
 
     return (
-        <Link href={`https://github.com/${username}/${repo}`} target="_blank" className="flex items-center">
-            <div className="w-9 h-8 flex items-center justify-center bg-depth-2 border border-depth-3 rounded-l-md">
-                {githubIcon}
-            </div>
-
-            <div className="h-8 flex items-center justify-center bg-depth-2 border border-depth-3 border-l-0 rounded-r-md">
-                <Star fill="var(--yellow)" stroke="var(--yellow)" size={16} className="ml-2" />
-
-                <p className="mx-2 text-xs font-bold">{stars}</p>
-            </div>
+        <Link
+            href={`https://github.com/${username}/${repo}`}
+            target="_blank"
+            className="flex items-center h-8 gap-2 w-fit bg-depth-2 hover:bg-depth-3 border border-depth-3 rounded-md text-sm px-2"
+        >
+            <div className="w-5 h-8 flex items-center justify-center">{githubIcon}</div>
+            <p>{stars}</p>
         </Link>
     );
 }
