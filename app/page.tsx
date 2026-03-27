@@ -3,7 +3,8 @@ import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-import { Diamond, Square, Circle, Triangle } from 'lucide-react';
+import { Diamond, Square, Circle, Triangle, Hexagon } from 'lucide-react';
+import { CodeBlock } from './components/UI/CodeBlock';
 
 export const metadata: Metadata = {
     title: 'Knotter',
@@ -13,10 +14,10 @@ export const metadata: Metadata = {
 
 const Card = ({ title, text }: { title: string; text: string }) => {
     return (
-        <div className="bg-depth-1 border border-depth-3 rounded-lg p-6">
+        <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-lg p-6">
             <h3>{title}</h3>
 
-            <p className="mt-2 text-text-accent text-sm leading-6 font-bold">{text}</p>
+            <p className="text-text-accent text-sm leading-5 font-bold">{text}</p>
         </div>
     );
 };
@@ -27,39 +28,54 @@ export default function Home() {
             <Header />
 
             <div className="px-4">
-                <div className="flex flex-col items-center my-24 gap-12 container m-auto">
-                    <div className="flex flex-col items-center justify-start max-w-2xl text-center">
-                        <div className="w-full text-6xl font-bold mt-2">The open source workspace for graphs</div>
-                    </div>
-
-                    <div className="bg-linear-to-br from-bg-accent to-bg-accent/50 w-full rounded-2xl">
-                        <div className="relative flex justify-center bg-background m-8 p-16 rounded-lg">
-                            <div
-                                className="
-                                    absolute inset-0 -left-8 rounded-lg
-                                    bg-[linear-gradient(to_right,var(--grid-color-1)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color-1)_1px,transparent_1px)] 
-                                    bg-size-[128px_128px]
-                                "
-                            />
-
-                            <div className="flex gap-32 z-10">
-                                <Diamond size={128} className="fill-background" />
-
-                                <Square size={128} className="fill-background" />
-
-                                <Circle size={128} className="fill-background" />
-
-                                <Triangle size={128} className="fill-background" />
-                            </div>
+                <div className="flex flex-col items-center my-24 gap-12 container m-auto max-w-5xl">
+                    <div className="flex flex-col items-center justify-start text-center">
+                        <div className="w-full text-6xl font-bold mt-2">
+                            The open source <br /> workspace for graphs
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-4">
-                        <div className="flex">
-                            <h2 className="text-3xl font-bold">Features</h2>
+                        <div className="flex max-lg:flex-col gap-4">
+                            <div
+                                className="relative bg-depth-1 w-full min-h-63.5 h-full rounded-lg border border-depth-3 overflow-hidden"
+                                style={{
+                                    backgroundImage: `
+                                        linear-gradient(to right, var(--grid-color-1) 1px, transparent 1px),
+                                        linear-gradient(to bottom, var(--grid-color-1) 1px, transparent 1px)
+                                    `,
+                                    backgroundSize: '64px 64px',
+                                    backgroundPosition: 'center center',
+                                    backgroundRepeat: 'repeat',
+                                }}
+                            >
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <Diamond
+                                        size={64}
+                                        className="fill-depth-1 -translate-x-24 -translate-y-8"
+                                        strokeWidth={1.5}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="bg-depth-1 p-4 border border-depth-3 rounded-md w-full">
+                                <CodeBlock
+                                    data={{
+                                        name: 'The best node',
+                                        kind: 'node',
+                                        shapeType: 'diamond',
+                                        position: {
+                                            x: 0,
+                                            y: 0,
+                                        },
+                                        edges: [],
+                                        parameters: [],
+                                    }}
+                                ></CodeBlock>
+                            </div>
                         </div>
 
-                        <div className="grid grid-cols-3 gap-4 w-full">
+                        <div className="grid grid-cols-3 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-4 w-full">
                             <Card
                                 title="Clipboard"
                                 text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cupidatat sunt commodo aliqua irure
