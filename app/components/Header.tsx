@@ -6,7 +6,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 
 export default function Header() {
     return (
-        <header className="sticky top-4 mt-4 w-full border-depth-3 bg-background z-50">
+        <header className="sticky top-4 mt-4 w-full border-depth-3 z-50 px-4">
             <div className="container flex justify-between items-center bg-depth-1 border border-depth-3 px-6 py-1 rounded-md mx-auto">
                 <div className="flex items-center">
                     <Link href="/" className="tracking-wide font-extrabold text-base select-none uppercase">
