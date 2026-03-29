@@ -7,6 +7,7 @@ import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getEdges } from '@/canvas/utils/edges/getEdges';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
+import { NODE_SHAPES } from '@/canvas/_core/_/nodeShapeType'; // импортируйте из правильного пути
 
 const Section = memo(({ title, children }: { title: string; children: React.ReactNode }) => (
     <div className="border border-depth-3 bg-depth-2 rounded-md px-3 py-1">
@@ -51,12 +52,19 @@ export default function NodeContent() {
     const incomingNodeIds = edges.filter((edge) => edge.to === openedNode.id).map((edge) => edge.from);
     const outgoingNodeIds = edges.filter((edge) => edge.from === openedNode.id).map((edge) => edge.to);
 
+    const shapeInfo = NODE_SHAPES[openedNode.shapeType as keyof typeof NODE_SHAPES];
+    const Icon = shapeInfo?.icon;
+
     return (
         <div className="flex gap-1 w-full overflow-y-auto overflow-x-hidden">
             <div className="flex flex-col gap-1 max-w-2xl min-w-sm w-full h-fit p-1 bg-depth-1 border border-depth-3 rounded-md text-sm">
-                <div className="flex flex-col gap-1 border border-depth-3 bg-depth-2 rounded-md px-3 py-1">
-                    <h2 className="wrap-break-word">{openedNode.name || '-'}</h2>
-                    <p className="text-sm wrap-break-word`">{openedNode.description || '-'}</p>
+                <div className="flex flex-col border border-depth-3 bg-depth-2 rounded-md px-3 py-1">
+                    <div className="flex items-center gap-2">
+                        {Icon && <Icon size={20} className="text-text-accent" />}
+                        <h2 className="wrap-break-word text-base">{openedNode.name || '-'}</h2>
+                    </div>
+
+                    <p className="text-sm wrap-break-word text-text-accent-light mt-1">{openedNode.description || '-'}</p>
                 </div>
 
                 <div className="flex flex-col gap-1 w-full max-w-2xl">
