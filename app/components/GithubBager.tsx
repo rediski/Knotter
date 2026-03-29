@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import { GithubIcon } from '@/components/icons/GithubIcon';
 
-export default function GithubBager() {
+export function GithubBager() {
     const [stars, setStars] = useState(null);
 
     const username = 'rediski';
