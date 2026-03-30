@@ -14,7 +14,6 @@
 
     --background-accent: rgb(32, 112, 235);
     --text-accent: rgb(68, 148, 235);
-    --text-accent-light: rgb(104, 184, 235);
 
     --grid-color-1: rgba(0, 0, 0, 0.05);
     --grid-color-2: rgba(0, 0, 0, 0.08);
@@ -27,7 +26,8 @@
     --green: #4cd27a;
     --yellow: #ffc107;
     --red: #ff4c4c;
-    --gray: #999;
+
+    --gray: rgba(0, 0, 0, 0.56);
 
     --syntax-key: #0451a5;
     --syntax-string: #a31515;
@@ -57,6 +57,8 @@
 
     --contrast: #fff;
 
+    --gray: rgba(255, 255, 255, 0.56);
+
     --syntax-key: #9cdcfe;
     --syntax-string: #ce9178;
     --syntax-number: #b5cea8;
@@ -79,7 +81,6 @@
 
     --color-bg-accent: var(--background-accent);
     --color-text-accent: var(--text-accent);
-    --color-text-accent-light: var(--text-accent-light);
     --color-grid-1: var(--grid-color-1);
     --color-grid-2: var(--grid-color-2);
     --color-grid-3: var(--grid-color-3);
