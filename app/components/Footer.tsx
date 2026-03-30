@@ -16,7 +16,7 @@ export default function Footer() {
                 </Link>
             </div>
 
-            <div className="flex items-center gap-2 text-text-accent">
+            <div className="flex items-center gap-2 text-gray">
                 <Link href="https://t.me/denisdd1" target="_blank">
                     <TelegramIcon size={20} />
                 </Link>
