@@ -36,7 +36,7 @@ export function GithubBager() {
             className="flex items-center h-8 gap-2 w-fit bg-depth-2 hover:bg-depth-3 border border-depth-3 rounded-md text-sm px-2"
         >
             <div className="w-5 h-8 flex items-center justify-center">
-                <GithubIcon size={24} />
+                <GithubIcon size={18} />
             </div>
 
             <p>{stars}</p>
