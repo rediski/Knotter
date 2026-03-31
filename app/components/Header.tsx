@@ -7,7 +7,7 @@ import { GithubBager } from '@/components/GithubBager';
 
 export default function Header() {
     return (
-        <header className="sticky top-4 w-full">
+        <header className="sticky top-4 w-full z-50">
             <div className="container flex justify-between items-center bg-depth-1 border border-depth-3 px-6 py-1 rounded-md mx-auto">
                 <div className="flex items-center">
                     <Link href="/" className="tracking-wide font-extrabold text-base select-none uppercase">
@@ -33,7 +33,7 @@ export default function Header() {
                 </div>
             </div>
 
-            <div className="fixed top-0 left-0 w-full h-15 bg-linear-to-b from-depth-1 to-transparent backdrop-blur-xs -z-1" />
+            <div className="fixed top-0 left-0 w-full h-14.5 bg-linear-to-b from-depth-1 to-transparent backdrop-blur-xs -z-1" />
         </header>
     );
 }
