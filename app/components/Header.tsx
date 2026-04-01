@@ -3,7 +3,6 @@
 import Link from 'next/link';
 
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { GithubBager } from '@/components/GithubBager';
 
 export default function Header() {
     return (
@@ -15,14 +14,10 @@ export default function Header() {
                     </Link>
                 </div>
 
-                <div className="flex items-center gap-1">
-                    <div className="flex gap-3">
-                        <GithubBager />
+                <div className="flex items-center gap-2">
+                    <ThemeToggle />
 
-                        <div className="my-1 border-l border-depth-3" />
-
-                        <ThemeToggle />
-                    </div>
+                    <div className="h-6 border-l border-depth-3" />
 
                     <Link
                         href="/canvas"
