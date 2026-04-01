@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { TelegramIcon } from '@/components/icons/TelegramIcon';
+import { GithubIcon } from '@/components/icons/GithubIcon';
 import { DiscordIcon } from '@/components/icons/DiscordIcon';
 
 export default function Footer() {
@@ -17,8 +17,8 @@ export default function Footer() {
             </div>
 
             <div className="flex items-center gap-2 text-gray">
-                <Link href="https://t.me/denisdd1" target="_blank">
-                    <TelegramIcon size={20} />
+                <Link href="https://github.com/rediski/Knotter" target="_blank">
+                    <GithubIcon size={20} />
                 </Link>
 
                 <Link href="https://discord.gg/QhxB5hHe8y" target="_blank">
