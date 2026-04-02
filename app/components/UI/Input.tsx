@@ -5,7 +5,7 @@ import { LucideIcon } from 'lucide-react';
 
 const MAX_INPUT_LENGTH = 36;
 
-interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'maxLength'> {
+interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
     value: string;
     onChange: (value: string) => void;
     icon?: LucideIcon;
@@ -16,6 +16,7 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChan
     allowDecimal?: boolean;
     decimalPlaces?: number;
     name?: string;
+    maxLength?: number;
 }
 
 export const Input = memo(function Input({
@@ -29,6 +30,7 @@ export const Input = memo(function Input({
     allowDecimal = true,
     decimalPlaces = 4,
     name = 'untitled',
+    maxLength = MAX_INPUT_LENGTH,
     ...props
 }: InputProps) {
     const [isFocused, setIsFocused] = useState(false);
@@ -42,7 +44,14 @@ export const Input = memo(function Input({
 
     const validateAndFormat = useCallback(
         (input: string): string => {
-            if (type !== 'number') return input;
+            if (type !== 'number') {
+                const limit = maxLength ?? MAX_INPUT_LENGTH;
+                if (limit && input.length > limit) {
+                    input = input.slice(0, limit);
+                }
+                return input;
+            }
+
             if (input === '') return '';
             if (input === '-') return allowNegative ? '-' : '';
 
@@ -91,13 +100,14 @@ export const Input = memo(function Input({
                 }
             }
 
-            if (MAX_INPUT_LENGTH && result.length > MAX_INPUT_LENGTH) {
-                result = result.slice(0, MAX_INPUT_LENGTH);
+            const limit = maxLength ?? MAX_INPUT_LENGTH;
+            if (limit && result.length > limit) {
+                result = result.slice(0, limit);
             }
 
             return result;
         },
-        [type, allowNegative, allowDecimal, decimalPlaces],
+        [type, allowNegative, allowDecimal, decimalPlaces, maxLength],
     );
 
     const handleChange = useCallback(
