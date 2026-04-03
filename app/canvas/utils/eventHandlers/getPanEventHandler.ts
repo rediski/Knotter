@@ -4,16 +4,18 @@ import { useCanvasRefsStore } from '@/canvas/store/useCanvasRefsStore';
 export function getPanEventHandler() {
     const isPanning = useCanvasRefsStore.getState().isPanning;
     const lastMouseRef = useCanvasRefsStore.getState().lastMouseRef;
+    const isSpacePressed = useCanvasRefsStore.getState().isSpacePressed;
 
     const handleMouseDown = (e: MouseEvent) => {
-        if (e.button !== 1) return;
+        const isMiddleButton = e.button === 1;
+        const isLeftButtonWithSpace = e.button === 0 && isSpacePressed.current;
+
+        if (!isMiddleButton && !isLeftButtonWithSpace) return;
 
         e.preventDefault();
 
         isPanning.current = true;
         lastMouseRef.current = { x: e.clientX, y: e.clientY };
-
-        document.body.style.cursor = 'grabbing';
     };
 
     const handleMouseMove = (e: MouseEvent) => {
