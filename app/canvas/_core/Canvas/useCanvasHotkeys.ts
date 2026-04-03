@@ -41,7 +41,7 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
 
             const isCtrl = e.ctrlKey || e.metaKey;
             const isShift = e.shiftKey;
-            const isSpacebar = e.code === 'Space';
+            const isEnter = e.code === 'Enter';
 
             if (keysPressed.has(key)) return;
 
@@ -108,7 +108,7 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
                 return toggleMap[key]();
             }
 
-            if (isSpacebar) {
+            if (isEnter) {
                 const itemsState = useItemsStore.getState();
 
                 const items = itemsState.items;
