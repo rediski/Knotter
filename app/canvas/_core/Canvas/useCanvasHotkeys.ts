@@ -22,9 +22,6 @@ import { getSelectedNodesIds } from '@/canvas/utils/nodes/getSelectedNodes';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>) {
-    const items = useItemsStore((state) => state.items);
-    const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
-
     const toggleGrid = useCanvasStore((state) => state.toggleShowGrid);
     const toggleAxes = useCanvasStore((state) => state.toggleShowAxes);
 
@@ -66,22 +63,22 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
 
             if (isCtrl && !isShift) {
                 const ctrlMap: Record<string, () => void> = {
-                    a: () => selectAllNodes(),
-                    ф: () => selectAllNodes(),
-                    e: () => selectAllEdges(),
-                    у: () => selectAllEdges(),
+                    a: selectAllNodes,
+                    ф: selectAllNodes,
+                    e: selectAllEdges,
+                    у: selectAllEdges,
                     c: () => {
-                        const store = useItemsStore.getState();
-                        copySelectedItems(store.items, store.selectedItemIds);
+                        const itemsState = useItemsStore.getState();
+                        copySelectedItems(itemsState.items, itemsState.selectedItemIds);
                     },
                     с: () => {
-                        const store = useItemsStore.getState();
-                        copySelectedItems(store.items, store.selectedItemIds);
+                        const itemsState = useItemsStore.getState();
+                        copySelectedItems(itemsState.items, itemsState.selectedItemIds);
                     },
-                    v: () => pasteClipboardItems(),
-                    м: () => pasteClipboardItems(),
-                    z: () => undo(),
-                    я: () => undo(),
+                    v: pasteClipboardItems,
+                    м: pasteClipboardItems,
+                    z: undo,
+                    я: undo,
                 };
 
                 if (ctrlMap[key]) {
@@ -112,7 +109,18 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             }
 
             if (isSpacebar) {
-                openTabs(getSelectedNodesIds({ items, selectedItemIds }));
+                const itemsState = useItemsStore.getState();
+
+                const items = itemsState.items;
+                const selectedItemIds = itemsState.selectedItemIds;
+
+                openTabs(
+                    getSelectedNodesIds({
+                        items,
+                        selectedItemIds,
+                    }),
+                );
+
                 return;
             }
 
