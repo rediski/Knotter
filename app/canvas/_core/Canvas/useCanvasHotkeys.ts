@@ -138,8 +138,21 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             if (isSpacebar) {
                 const refsState = useCanvasRefsStore.getState();
                 refsState.isSpacePressed.current = true;
-                document.body.style.cursor = 'grab';
+                updateCursor();
                 return;
+            }
+        };
+
+        const updateCursor = () => {
+            const refsState = useCanvasRefsStore.getState();
+            const isSpacePressed = refsState.isSpacePressed.current;
+
+            if (isSpacePressed) {
+                document.body.style.cursor = 'grab';
+            }
+
+            if (!isSpacePressed) {
+                document.body.style.cursor = '';
             }
         };
 
@@ -170,7 +183,7 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             const shouldStopDragging = isMiddleMouseButton || isLeftMouseButtonWithSpace;
 
             if (shouldStopDragging) {
-                document.body.style.cursor = 'grab';
+                updateCursor();
             }
         };
 
@@ -180,7 +193,7 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             if (e.code === 'Space') {
                 const refsState = useCanvasRefsStore.getState();
                 refsState.isSpacePressed.current = false;
-                document.body.style.cursor = '';
+                updateCursor();
             }
         };
 
