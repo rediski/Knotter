@@ -3,6 +3,7 @@
 import { useEffect, RefObject } from 'react';
 
 import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useCanvasRefsStore } from '@/canvas/store/useCanvasRefsStore';
 
 import { undo, redo } from '@/canvas/utils/history/historyManager';
 
@@ -31,7 +32,7 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
 
         const keysPressed = new Set<string>();
 
-        const onKeyDown = (e: KeyboardEvent) => {
+        const handleKeyDown = (e: KeyboardEvent) => {
             if (e.repeat) return;
 
             const key = e.key.toLowerCase();
@@ -41,6 +42,7 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
 
             const isCtrl = e.ctrlKey || e.metaKey;
             const isShift = e.shiftKey;
+            const isSpacebar = e.code === 'Space';
             const isEnter = e.code === 'Enter';
 
             if (keysPressed.has(key)) return;
@@ -132,18 +134,71 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             if (key === 'delete') {
                 return deleteSelectedItems();
             }
+
+            if (isSpacebar) {
+                const refsState = useCanvasRefsStore.getState();
+                refsState.isSpacePressed.current = true;
+                document.body.style.cursor = 'grab';
+                return;
+            }
         };
 
-        const onKeyUp = (e: KeyboardEvent) => {
+        const handleMouseDown = (e: MouseEvent) => {
+            const refsState = useCanvasRefsStore.getState();
+
+            const isMiddleMouseButton = e.button === 1;
+            const isLeftMouseButton = e.button === 0;
+            const isSpacePressed = refsState.isSpacePressed.current;
+            const isLeftMouseButtonWithSpace = isLeftMouseButton && isSpacePressed;
+
+            const shouldDragCanvas = isMiddleMouseButton || isLeftMouseButtonWithSpace;
+
+            if (shouldDragCanvas) {
+                e.preventDefault();
+                document.body.style.cursor = 'grabbing';
+            }
+        };
+
+        const handleMouseUp = (e: MouseEvent) => {
+            const refsState = useCanvasRefsStore.getState();
+
+            const isMiddleMouseButton = e.button === 1;
+            const isLeftMouseButton = e.button === 0;
+            const isSpacePressed = refsState.isSpacePressed.current;
+            const isLeftMouseButtonWithSpace = isLeftMouseButton && isSpacePressed;
+
+            const shouldStopDragging = isMiddleMouseButton || isLeftMouseButtonWithSpace;
+
+            if (shouldStopDragging) {
+                document.body.style.cursor = 'grab';
+            }
+        };
+
+        const handleKeyUp = (e: KeyboardEvent) => {
             keysPressed.delete(e.key.toLowerCase());
+
+            if (e.code === 'Space') {
+                const refsState = useCanvasRefsStore.getState();
+                refsState.isSpacePressed.current = false;
+                document.body.style.cursor = '';
+            }
         };
 
-        window.addEventListener('keydown', onKeyDown);
-        window.addEventListener('keyup', onKeyUp);
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+
+        canvas.addEventListener('mousedown', handleMouseDown);
+        canvas.addEventListener('mouseup', handleMouseUp);
+
+        window.addEventListener('mouseup', handleMouseUp);
 
         return () => {
-            window.removeEventListener('keydown', onKeyDown);
-            window.removeEventListener('keyup', onKeyUp);
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+            canvas.removeEventListener('mousedown', handleMouseDown);
+            canvas.removeEventListener('mouseup', handleMouseUp);
+            window.removeEventListener('mouseup', handleMouseUp);
+            document.body.style.cursor = '';
         };
     }, [canvasRef]);
 }
