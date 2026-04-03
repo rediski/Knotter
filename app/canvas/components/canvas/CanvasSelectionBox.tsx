@@ -2,6 +2,7 @@
 
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useCanvasRefsStore } from '@/canvas/store/useCanvasRefsStore';
 
 interface SelectionBoxProps {
     containerRef: React.RefObject<HTMLDivElement | null>;
@@ -11,10 +12,13 @@ export function SelectionBox({ containerRef }: SelectionBoxProps) {
     const offset = useCanvasStore((state) => state.offset);
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
     const invertY = useCanvasStore((state) => state.invertY);
+
     const selectionStart = useItemsStore((state) => state.selectionStart);
     const selectionEnd = useItemsStore((state) => state.selectionEnd);
 
-    if (!selectionStart || !selectionEnd) return null;
+    const isSpacePressed = useCanvasRefsStore((state) => state.isSpacePressed).current;
+
+    if (!selectionStart || !selectionEnd || isSpacePressed) return null;
 
     const width = Math.abs(selectionEnd.x - selectionStart.x) * zoomLevel;
     const height = Math.abs(selectionEnd.y - selectionStart.y) * zoomLevel;
