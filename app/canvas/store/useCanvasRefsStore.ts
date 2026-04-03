@@ -7,6 +7,7 @@ type CanvasRefsStore = {
     lastMouseRef: { current: Position | null };
     isDragging: { current: boolean };
     isPanning: { current: boolean };
+    isSpacePressed: { current: boolean };
     initialNodePositions: { current: Map<string, Position> };
 };
 
@@ -16,5 +17,6 @@ export const useCanvasRefsStore = create<CanvasRefsStore>(() => ({
     lastMouseRef: { current: null },
     isDragging: { current: false },
     isPanning: { current: false },
+    isSpacePressed: { current: false },
     initialNodePositions: { current: new Map() },
 }));
