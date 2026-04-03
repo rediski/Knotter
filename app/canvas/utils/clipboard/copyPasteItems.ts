@@ -35,7 +35,7 @@ function updateEdges(item: CanvasItem, idMapping: Map<string, string>): CanvasIt
     };
 }
 
-export function pasteClipboardItems(insertionGap = NODE_MOVE_MAX_STEP) {
+export function pasteClipboardItems() {
     const clipboardState = useClipboardStore.getState();
     const itemsState = useItemsStore.getState();
 
@@ -55,8 +55,8 @@ export function pasteClipboardItems(insertionGap = NODE_MOVE_MAX_STEP) {
 
         clone.id = newId;
         clone.position = {
-            x: clone.position.x + insertionGap,
-            y: clone.position.y + insertionGap,
+            x: clone.position.x + NODE_MOVE_MAX_STEP,
+            y: clone.position.y + NODE_MOVE_MAX_STEP,
         };
 
         return updateEdges(clone, newIds);
