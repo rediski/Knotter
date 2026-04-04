@@ -168,7 +168,7 @@ export default function CanvasPage() {
                                 ))}
                             </div>
 
-                            {isCanvasMode ? <Canvas /> : <NodeContent />}
+                            {isCanvasMode || openedNodesData.length === 0 ? <Canvas /> : <NodeContent />}
                         </div>
                     </div>
 
