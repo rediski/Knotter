@@ -22,107 +22,97 @@ import { openTabs } from '@/canvas/utils/canvas/openTabs';
 import { getSelectedNodesIds } from '@/canvas/utils/nodes/getSelectedNodes';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
-export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>) {
-    const toggleGrid = useCanvasStore((state) => state.toggleShowGrid);
-    const toggleAxes = useCanvasStore((state) => state.toggleShowAxes);
+const CTRL_SHIFT_MAP: Record<string, () => void> = {
+    a: selectAllItems,
+    ф: selectAllItems,
+    z: redo,
+    я: redo,
+};
 
+const CTRL_MAP: Record<string, () => void> = {
+    a: selectAllNodes,
+    ф: selectAllNodes,
+    e: selectAllEdges,
+    у: selectAllEdges,
+    c: () => {
+        const { items, selectedItemIds } = useItemsStore.getState();
+        copySelectedItems(items, selectedItemIds);
+    },
+    с: () => {
+        const { items, selectedItemIds } = useItemsStore.getState();
+        copySelectedItems(items, selectedItemIds);
+    },
+    v: pasteClipboardItems,
+    м: pasteClipboardItems,
+    z: undo,
+    я: undo,
+};
+
+const TOGGLE_MAP: Record<string, () => void> = {
+    t: toggleTooltipMode,
+    е: toggleTooltipMode,
+    m: toggleMagnetMode,
+    ь: toggleMagnetMode,
+    g: () => useCanvasStore.getState().toggleShowGrid(),
+    п: () => useCanvasStore.getState().toggleShowGrid(),
+    a: () => useCanvasStore.getState().toggleShowAxes(),
+    ф: () => useCanvasStore.getState().toggleShowAxes(),
+};
+
+const updateCursor = () => {
+    const isSpacePressed = useCanvasRefsStore.getState().isSpacePressed.current;
+    document.body.style.cursor = isSpacePressed ? 'grab' : '';
+};
+
+export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>) {
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        const keysPressed = new Set<string>();
-
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.repeat) return;
 
-            const key = e.key.toLowerCase();
             const target = e.target as HTMLElement;
 
             if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) return;
 
+            const key = e.key.toLowerCase();
             const isCtrl = e.ctrlKey || e.metaKey;
             const isShift = e.shiftKey;
-            const isSpacebar = e.code === 'Space';
-            const isEnter = e.code === 'Enter';
 
-            if (keysPressed.has(key)) return;
-
-            keysPressed.add(key);
-
-            if (isCtrl && isShift) {
-                const ctrlShiftMap: Record<string, () => void> = {
-                    a: () => selectAllItems(),
-                    ф: () => selectAllItems(),
-                    z: () => redo(),
-                    я: () => redo(),
-                };
-
-                if (ctrlShiftMap[key]) {
-                    e.preventDefault();
-                    return ctrlShiftMap[key]();
-                }
-            }
-
-            if (isCtrl && !isShift) {
-                const ctrlMap: Record<string, () => void> = {
-                    a: selectAllNodes,
-                    ф: selectAllNodes,
-                    e: selectAllEdges,
-                    у: selectAllEdges,
-                    c: () => {
-                        const itemsState = useItemsStore.getState();
-                        copySelectedItems(itemsState.items, itemsState.selectedItemIds);
-                    },
-                    с: () => {
-                        const itemsState = useItemsStore.getState();
-                        copySelectedItems(itemsState.items, itemsState.selectedItemIds);
-                    },
-                    v: pasteClipboardItems,
-                    м: pasteClipboardItems,
-                    z: undo,
-                    я: undo,
-                };
-
-                if (ctrlMap[key]) {
-                    e.preventDefault();
-                    return ctrlMap[key]();
-                }
-            }
-
-            if (isShift && !isCtrl) {
-                if (key === 'a' || key === 'ф') return createNode();
-                if (key === 'e' || key === 'у') return initEdge();
-            }
-
-            const toggleMap: Record<string, () => void> = {
-                t: toggleTooltipMode,
-                е: toggleTooltipMode,
-                m: toggleMagnetMode,
-                ь: toggleMagnetMode,
-                g: toggleGrid,
-                п: toggleGrid,
-                a: toggleAxes,
-                ф: toggleAxes,
-            };
-
-            if (!isCtrl && !isShift && toggleMap[key]) {
+            if (isCtrl && isShift && CTRL_SHIFT_MAP[key]) {
                 e.preventDefault();
-                return toggleMap[key]();
+                CTRL_SHIFT_MAP[key]();
+                return;
             }
 
-            if (isEnter) {
-                const itemsState = useItemsStore.getState();
+            if (isCtrl && !isShift && CTRL_MAP[key]) {
+                e.preventDefault();
+                CTRL_MAP[key]();
+                return;
+            }
 
-                const items = itemsState.items;
-                const selectedItemIds = itemsState.selectedItemIds;
+            if (isShift && !isCtrl && (key === 'a' || key === 'ф')) {
+                e.preventDefault();
+                createNode();
+                return;
+            }
 
-                openTabs(
-                    getSelectedNodesIds({
-                        items,
-                        selectedItemIds,
-                    }),
-                );
+            if (isShift && !isCtrl && (key === 'e' || key === 'у')) {
+                e.preventDefault();
+                initEdge();
+                return;
+            }
 
+            if (!isCtrl && !isShift && TOGGLE_MAP[key]) {
+                e.preventDefault();
+                TOGGLE_MAP[key]();
+                return;
+            }
+
+            if (e.code === 'Enter') {
+                const { items, selectedItemIds } = useItemsStore.getState();
+                openTabs(getSelectedNodesIds({ items, selectedItemIds }));
                 return;
             }
 
@@ -132,39 +122,29 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             }
 
             if (key === 'delete') {
-                return deleteSelectedItems();
+                deleteSelectedItems();
+                return;
             }
 
-            if (isSpacebar) {
-                const refsState = useCanvasRefsStore.getState();
-                refsState.isSpacePressed.current = true;
+            if (e.code === 'Space') {
+                useCanvasRefsStore.getState().isSpacePressed.current = true;
+
                 updateCursor();
                 return;
             }
         };
 
-        const updateCursor = () => {
-            const refsState = useCanvasRefsStore.getState();
-            const isSpacePressed = refsState.isSpacePressed.current;
+        const handleKeyUp = (e: KeyboardEvent) => {
+            if (e.code === 'Space') {
+                useCanvasRefsStore.getState().isSpacePressed.current = false;
 
-            if (isSpacePressed) {
-                document.body.style.cursor = 'grab';
-            }
-
-            if (!isSpacePressed) {
-                document.body.style.cursor = '';
+                updateCursor();
             }
         };
 
         const handleMouseDown = (e: MouseEvent) => {
-            const refsState = useCanvasRefsStore.getState();
-
-            const isMiddleMouseButton = e.button === 1;
-            const isLeftMouseButton = e.button === 0;
-            const isSpacePressed = refsState.isSpacePressed.current;
-            const isLeftMouseButtonWithSpace = isLeftMouseButton && isSpacePressed;
-
-            const shouldDragCanvas = isMiddleMouseButton || isLeftMouseButtonWithSpace;
+            const isSpacePressed = useCanvasRefsStore.getState().isSpacePressed.current;
+            const shouldDragCanvas = e.button === 1 || (e.button === 0 && isSpacePressed);
 
             if (shouldDragCanvas) {
                 e.preventDefault();
@@ -173,45 +153,31 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
         };
 
         const handleMouseUp = (e: MouseEvent) => {
-            const refsState = useCanvasRefsStore.getState();
-
-            const isMiddleMouseButton = e.button === 1;
-            const isLeftMouseButton = e.button === 0;
-            const isSpacePressed = refsState.isSpacePressed.current;
-            const isLeftMouseButtonWithSpace = isLeftMouseButton && isSpacePressed;
-
-            const shouldStopDragging = isMiddleMouseButton || isLeftMouseButtonWithSpace;
+            const isSpacePressed = useCanvasRefsStore.getState().isSpacePressed.current;
+            const shouldStopDragging = e.button === 1 || (e.button === 0 && isSpacePressed);
 
             if (shouldStopDragging) {
                 updateCursor();
             }
         };
 
-        const handleKeyUp = (e: KeyboardEvent) => {
-            keysPressed.delete(e.key.toLowerCase());
-
-            if (e.code === 'Space') {
-                const refsState = useCanvasRefsStore.getState();
-                refsState.isSpacePressed.current = false;
-                updateCursor();
-            }
-        };
-
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
-
-        canvas.addEventListener('mousedown', handleMouseDown);
-        canvas.addEventListener('mouseup', handleMouseUp);
-
+        window.addEventListener('mousedown', handleMouseDown);
         window.addEventListener('mouseup', handleMouseUp);
 
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
-            canvas.removeEventListener('mousedown', handleMouseDown);
-            canvas.removeEventListener('mouseup', handleMouseUp);
+            window.removeEventListener('mousedown', handleMouseDown);
             window.removeEventListener('mouseup', handleMouseUp);
             document.body.style.cursor = '';
+
+            const refsState = useCanvasRefsStore.getState();
+
+            if (refsState.isSpacePressed?.current) {
+                refsState.isSpacePressed.current = false;
+            }
         };
     }, [canvasRef]);
 }
