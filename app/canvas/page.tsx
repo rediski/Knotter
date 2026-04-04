@@ -14,11 +14,7 @@ import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { useMobileDetection } from '@/hooks/useMobileDetection';
 
-import { LoaderCircle, Frown, LandPlot, Box, X, type LucideIcon } from 'lucide-react';
-
-export interface EditorModeOption {
-    icon: LucideIcon;
-}
+import { LoaderCircle, Frown, LandPlot, Box, X } from 'lucide-react';
 
 export default function CanvasPage() {
     const items = useItemsStore((state) => state.items);
