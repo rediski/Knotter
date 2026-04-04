@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { EmptyState } from '@/components/UI/EmptyState';
 import { CodeBlock } from '@/components/UI/CodeBlock';
 
-import { getSelectedItem } from '@/canvas/utils/items/getSelectedItems';
+import { getSelectedItems } from '@/canvas/utils/items/getSelectedItems';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { ArrowDownToLine, Copy, Check, type LucideIcon } from 'lucide-react';
@@ -30,15 +30,15 @@ export const Details = () => {
     const items = useItemsStore((state) => state.items);
     const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
 
-    const selectedItem = getSelectedItem({ items, selectedItemIds });
+    const selectedItems = getSelectedItems({ items, selectedItemIds });
 
     const getItemData = () => {
-        if (!selectedItem) return null;
-        return JSON.stringify(selectedItem, null, 2);
+        if (!selectedItems) return null;
+        return JSON.stringify(selectedItems, null, 2);
     };
 
     const handleSave = () => {
-        if (!selectedItem) return;
+        if (!selectedItems) return;
 
         const blob = new Blob([getItemData()!], { type: 'application/json' });
 
@@ -53,7 +53,7 @@ export const Details = () => {
     };
 
     const handleCopy = async () => {
-        if (!selectedItem) return;
+        if (!selectedItems) return;
 
         try {
             await navigator.clipboard.writeText(getItemData()!);
@@ -64,7 +64,11 @@ export const Details = () => {
         }
     };
 
-    if (selectedItem === null) {
+    if (items.length === 0) {
+        return <EmptyState message="Создайте хотя бы один элемент" />;
+    }
+
+    if (selectedItems.length === 0) {
         return <EmptyState message="Необходимо выбрать один из элементов" />;
     }
 
@@ -76,7 +80,7 @@ export const Details = () => {
                 <ActionButton onClick={handleSave} icon={ArrowDownToLine} />
             </div>
 
-            <CodeBlock data={selectedItem} />
+            <CodeBlock data={selectedItems} />
         </div>
     );
 };
