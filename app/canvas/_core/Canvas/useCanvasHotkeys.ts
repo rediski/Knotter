@@ -76,9 +76,17 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
 
             if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) return;
 
+            const selection = window.getSelection();
+            const hasSelectedText = selection && selection.toString().length > 0;
+
             const key = e.key.toLowerCase();
             const isCtrl = e.ctrlKey || e.metaKey;
             const isShift = e.shiftKey;
+            const isCopyPaste = key === 'c' || key === 'с' || key === 'v' || key === 'м';
+
+            if (hasSelectedText && isCtrl && isCopyPaste) {
+                return;
+            }
 
             if (isCtrl && isShift && CTRL_SHIFT_MAP[key]) {
                 e.preventDefault();
