@@ -3,9 +3,10 @@ import type { Metadata } from 'next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-import { Diamond } from 'lucide-react';
-import { CodeBlock } from './components/UI/CodeBlock';
+import { CodeBlock } from '@/components/UI/CodeBlock';
 import { panelIcons, type PanelType } from '@/canvas/_core/_/sidebarPanel';
+
+import { Diamond } from 'lucide-react';
 
 export const metadata: Metadata = {
     title: 'Knotter',
