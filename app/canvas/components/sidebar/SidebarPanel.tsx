@@ -6,7 +6,7 @@ import { Clipboard } from '@/canvas/components/sidebar/Clipboard';
 import { Details } from '@/canvas/components/sidebar/Details';
 import { Hierarchy } from '@/canvas/components/sidebar/Hierarchy';
 import { Inspector } from '@/canvas/components/sidebar/Inspector';
-import { Parameters } from '@/canvas/components/sidebar/Parameters';
+
 import { History } from '@/canvas/components/sidebar/History';
 
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
@@ -116,8 +116,6 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                         return <History />;
                     case 'inspector':
                         return <Inspector panelId={panel.id} />;
-                    case 'parameters':
-                        return <Parameters panelId={panel.id} />;
                     default:
                         return <EmptyState message="Выберите тип панели" />;
                 }
