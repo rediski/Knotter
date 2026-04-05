@@ -4,7 +4,8 @@ import { memo } from 'react';
 import { Parameter } from '@/canvas/_core/_/parameter';
 import { isStructure } from '@/canvas/_core/_/parameter.type-guards';
 
-import { CreateParameterForm } from '@/canvas/components/sidebar/CreateParameterForm';
+import { CreateParameterForm } from '@/canvas/_core/Node/CreateParameterForm';
+
 import { EditableName } from '@/components/UI/EditableName';
 import { EmptyState } from '@/components/UI/EmptyState';
 
