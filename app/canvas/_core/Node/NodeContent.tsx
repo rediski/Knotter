@@ -57,10 +57,30 @@ export default function NodeContent() {
 
     return (
         <div className="flex gap-1 w-full overflow-y-auto overflow-x-hidden">
+            {Icon && (
+                <div
+                    className={`flex items-center justify-center bg-depth-1 w-full max-h-64 max-w-64 min-w-64 aspect-square rounded-lg border border-depth-3 overflow-hidden`}
+                    style={{
+                        backgroundImage: `
+                        linear-gradient(to right, var(--grid-color-1) 1px, transparent 1px),
+                        linear-gradient(to bottom, var(--grid-color-1) 1px, transparent 1px)
+                    `,
+                        backgroundSize: '64px 64px',
+                        backgroundPosition: `-1.5px -1.5px`,
+                        backgroundRepeat: 'repeat',
+                    }}
+                >
+                    <Icon
+                        size={64}
+                        className="flex items-center justify-center fill-depth-1"
+                        strokeWidth={openedNode.shapeType === 'point' ? 2 : 1.5}
+                    />
+                </div>
+            )}
+
             <div className="flex flex-col gap-1 max-w-2xl min-w-sm w-full h-fit p-1 bg-depth-1 border border-depth-3 rounded-md text-sm">
                 <div className="flex flex-col gap-1 border border-depth-3 bg-depth-2 rounded-md px-3 py-1">
                     <div className="flex items-center gap-2">
-                        {Icon && <Icon size={18} className="text-text-accent" />}
                         <h2 className="wrap-break-word text-base">{openedNode.name || '-'}</h2>
                     </div>
 
