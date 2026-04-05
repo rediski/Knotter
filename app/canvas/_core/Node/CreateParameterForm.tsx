@@ -30,7 +30,7 @@ export const CreateParameterForm = ({ depth = 2, parentStructureId }: { depth?: 
                 value={parameterName}
                 onChange={setParameterName}
                 placeholder="Имя переменной"
-                className={`bg-depth-${depth} border border-depth-${depth + 1}`}
+                className={`bg-depth-${depth} border border-depth-${depth < 3 ? 3 : depth + 1}`}
                 max={16}
             />
 
@@ -42,7 +42,7 @@ export const CreateParameterForm = ({ depth = 2, parentStructureId }: { depth?: 
                         <button
                             key={parameter.type}
                             onClick={() => setParameterType(parameter.type)}
-                            className={`px-3 py-2 w-full flex items-center gap-2 text-left bg-depth-${depth + 1} hover:bg-depth-${depth + 2} rounded-md cursor-pointer`}
+                            className={`px-3 py-2 w-full flex items-center gap-2 text-left bg-depth-${depth + 1} hover:bg-depth-${depth + 2} border border-depth-${depth < 3 ? 3 : depth + 1} rounded-md cursor-pointer`}
                         >
                             <Icon size={16} className="min-w-4" />
 
@@ -55,8 +55,8 @@ export const CreateParameterForm = ({ depth = 2, parentStructureId }: { depth?: 
             <button
                 onClick={handleCreateParameter}
                 className={`
-                        flex items-center justify-center max-w-8 w-full h-8 rounded-md cursor-pointer border border-depth-3
-                        ${parameterName.length === 0 ? `bg-depth-${depth} text-foreground/50` : `bg-depth-${depth} hover:bg-depth-${depth + 1} active:bg-depth-${depth + 2} text-foreground`} 
+                        flex items-center justify-center max-w-8 w-full h-8 rounded-md cursor-pointer border 
+                        border-depth-${depth < 3 ? 3 : depth + 1} ${parameterName.length === 0 ? `bg-depth-${depth} text-foreground/50` : `bg-depth-${depth} hover:bg-depth-${depth + 1} active:bg-depth-${depth + 2} text-foreground`} 
                     `}
                 disabled={parameterName.length === 0}
             >

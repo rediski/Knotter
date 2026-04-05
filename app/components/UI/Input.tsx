@@ -225,7 +225,7 @@ export const Input = memo(function Input({
             />
 
             {Icon && (
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray">
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray pointer-events-none">
                     <Icon size={iconSize} />
                 </div>
             )}
