@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
-import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 type DragPosition = 'top' | 'bottom' | null;
 
@@ -11,11 +10,13 @@ interface useDragAndDropProps {
 }
 
 export function useDragAndDrop({ itemId, onDrop }: useDragAndDropProps) {
-    const dragRef = useRef<HTMLDivElement | null>(null);
-    const dropRef = useRef<HTMLLIElement | null>(null);
+    const dragRef = useRef<HTMLElement | null>(null);
+    const dropRef = useRef<HTMLElement | null>(null);
 
     const [isDragOver, setIsDragOver] = useState(false);
     const [dragPosition, setDragPosition] = useState<DragPosition>(null);
+
+    const dragPositionRef = useRef<DragPosition>(null);
 
     useEffect(() => {
         const el = dragRef.current;
@@ -42,41 +43,33 @@ export function useDragAndDrop({ itemId, onDrop }: useDragAndDropProps) {
             const offset = e.clientY - rect.top;
             const pos: DragPosition = offset < rect.height / 2 ? 'top' : 'bottom';
 
+            dragPositionRef.current = pos;
             setDragPosition(pos);
             setIsDragOver(true);
         };
 
-        const handleDragLeave = () => {
+        const handleDragLeave = (e: DragEvent) => {
+            e.preventDefault();
+            dragPositionRef.current = null;
             setIsDragOver(false);
             setDragPosition(null);
         };
 
         const handleDrop = (e: DragEvent) => {
             e.preventDefault();
-            setIsDragOver(false);
 
             const draggedId = e.dataTransfer?.getData('text/plain');
+
+            const currentPosition = dragPositionRef.current;
+
+            setIsDragOver(false);
+            setDragPosition(null);
+            dragPositionRef.current = null;
+
             if (!draggedId || draggedId === itemId) return;
 
-            const position = dragPosition;
-            setDragPosition(null);
-
             if (onDrop) {
-                onDrop(draggedId, itemId, position);
-            } else {
-                const prev = useItemsStore.getState().items;
-                const fromIndex = prev.findIndex((i) => i.id === draggedId);
-                const toIndex = prev.findIndex((i) => i.id === itemId);
-
-                if (fromIndex === -1 || toIndex === -1) return;
-
-                const next = [...prev];
-                const [moved] = next.splice(fromIndex, 1);
-
-                const insertIndex = position === 'top' ? toIndex : toIndex + 1;
-                next.splice(insertIndex, 0, moved);
-
-                useItemsStore.getState().setItems(next);
+                onDrop(draggedId, itemId, currentPosition);
             }
         };
 
@@ -89,7 +82,7 @@ export function useDragAndDrop({ itemId, onDrop }: useDragAndDropProps) {
             el.removeEventListener('dragleave', handleDragLeave);
             el.removeEventListener('drop', handleDrop);
         };
-    }, [itemId, dragPosition, onDrop]);
+    }, [itemId, onDrop]);
 
     return {
         dragRef,
