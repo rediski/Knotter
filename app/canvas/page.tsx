@@ -50,7 +50,6 @@ export default function CanvasPage() {
 
     const switchToCanvas = () => {
         setSelectedTabId(null);
-        setSelectedItemIds([]);
     };
 
     const getOpenedNodesData = () => {
@@ -74,10 +73,10 @@ export default function CanvasPage() {
                 <div className="flex flex-1 min-h-0 overflow-hidden m-1">
                     <div className="flex-1 min-w-0 relative">
                         <div className="flex flex-col gap-1 h-full">
-                            <div className="flex items-center gap-1 shrink-0">
+                            <div className="flex items-center gap-1 shrink-0 mb-1">
                                 <div
                                     className={`
-                                        flex items-center gap-2 w-full px-3 h-8 border rounded-md text-sm cursor-pointer select-none
+                                        flex items-center gap-2 w-fit min-w-64 px-3 h-8 border rounded-md text-sm cursor-pointer select-none 
                                         ${isCanvasMode ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
                                     `}
                                     onClick={switchToCanvas}
@@ -96,7 +95,7 @@ export default function CanvasPage() {
                                     <div
                                         key={node.id}
                                         className={`
-                                            flex items-center justify-between w-full px-3 h-8 border rounded-md cursor-pointer group select-none
+                                            flex items-center justify-between w-fit min-w-64 px-3 h-8 border rounded-md cursor-pointer group select-none
                                             ${selectedTabId === node.id ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
                                         `}
                                         onClick={() => switchToNodeTab(node.id)}
