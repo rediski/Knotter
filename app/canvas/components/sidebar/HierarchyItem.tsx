@@ -20,7 +20,7 @@ interface HierarchyItemProps {
 export const HierarchyItem = memo(function HierarchyItem({ canvasItem }: HierarchyItemProps) {
     const { handleSelect, handleKeyDown, handleNameChange, handleNodeDoubleClick } = useHierarchyItem(canvasItem);
 
-    const { dragRef, dropRef, isDragOver, dragPosition } = useDragAndDrop({
+    const { dragRef, dropRef, isDragOver, dragPosition } = useDragAndDrop<HTMLDivElement, HTMLLIElement>({
         itemId: canvasItem.id,
     });
 

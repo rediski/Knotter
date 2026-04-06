@@ -9,9 +9,12 @@ interface useDragAndDropProps {
     onDrop?: (draggedId: string, targetId: string, position: DragPosition) => void;
 }
 
-export function useDragAndDrop({ itemId, onDrop }: useDragAndDropProps) {
-    const dragRef = useRef<HTMLElement | null>(null);
-    const dropRef = useRef<HTMLElement | null>(null);
+export function useDragAndDrop<T extends HTMLElement = HTMLElement, U extends HTMLElement = HTMLElement>({
+    itemId,
+    onDrop,
+}: useDragAndDropProps) {
+    const dragRef = useRef<T | null>(null);
+    const dropRef = useRef<U | null>(null);
 
     const [isDragOver, setIsDragOver] = useState(false);
     const [dragPosition, setDragPosition] = useState<DragPosition>(null);
