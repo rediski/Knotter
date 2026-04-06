@@ -1,11 +1,14 @@
 'use client';
 
+import Link from 'next/link';
+
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 import Canvas from '@/canvas/_core/Canvas';
 import NodeContent from '@/canvas/_core/Node/NodeContent';
 
 import { MobileFallback } from '@/canvas/components/canvas/MobileFallback';
 import { ToastProvider } from '@/components/UI/Toast';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { CanvasSidebar } from '@/canvas/components/canvas/CanvasSidebar';
 
 import { useCanvasStore } from '@/canvas/store/useCanvasStore';
@@ -14,6 +17,8 @@ import { useItemsStore } from '@/canvas/store/useItemsStore';
 import { useMobileDetection } from '@/hooks/useMobileDetection';
 
 import { LandPlot, Box, X } from 'lucide-react';
+
+import { Home } from 'lucide-react';
 
 export default function CanvasPage() {
     const items = useItemsStore((state) => state.items);
@@ -72,8 +77,19 @@ export default function CanvasPage() {
             <div className="flex flex-col h-screen w-screen bg-background">
                 <div className="flex flex-1 min-h-0 overflow-hidden m-1">
                     <div className="flex-1 min-w-0 relative">
-                        <div className="flex flex-col gap-1 h-full">
-                            <div className="flex items-center gap-1 shrink-0 mb-1">
+                        <div className="flex flex-col gap-2 h-full">
+                            <div className="flex items-center gap-1 shrink-0">
+                                <div className="flex w-fit items-center gap-1">
+                                    <Link
+                                        href="/"
+                                        className=" flex items-center justify-center p-2 rounded-md h-8 w-8 cursor-pointer bg-depth-2 hover:bg-depth-3 border border-depth-3"
+                                    >
+                                        <Home size={16} />
+                                    </Link>
+
+                                    <ThemeToggle />
+                                </div>
+
                                 <div
                                     className={`
                                         flex items-center gap-2 w-fit min-w-64 px-3 h-8 border rounded-md text-sm cursor-pointer select-none 
