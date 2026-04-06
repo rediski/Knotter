@@ -15,6 +15,7 @@ import { CreateParameterForm } from '@/canvas/_core/Node/CreateParameterForm';
 import { LocalParameter } from '@/canvas/_core/Node/LocalParameter';
 
 import { getFilteredParameters } from '@/canvas/utils/parameters/getFilteredParameters';
+import { reorderArray } from '@/canvas/utils/canvas/reorderArray';
 
 import { Search } from 'lucide-react';
 
@@ -42,21 +43,15 @@ export default function NodeContent() {
 
     const handleReorder = useCallback(
         (draggedId: string, targetId: string, position: 'top' | 'bottom' | null) => {
-            const fromIndex = nodeParameters.findIndex((p) => p.id === draggedId);
-            const toIndex = nodeParameters.findIndex((p) => p.id === targetId);
+            const updatedParameters = reorderArray(nodeParameters, draggedId, targetId, position);
 
-            if (fromIndex === -1 || toIndex === -1) return;
-
-            const updatedParameters = [...nodeParameters];
-            const [movedParameter] = updatedParameters.splice(fromIndex, 1);
-            const insertIndex = position === 'top' ? toIndex : toIndex + 1;
-
-            updatedParameters.splice(insertIndex, 0, movedParameter);
+            if (updatedParameters === nodeParameters) return;
 
             const updatedItems = items.map((item) => {
                 if (item.kind === 'node' && item.id === node.id) {
                     return { ...item, parameters: updatedParameters };
                 }
+
                 return item;
             });
 
@@ -117,6 +112,7 @@ export default function NodeContent() {
                     )}
                 </div>
             </div>
+
             <div className="flex flex-col gap-1 flex-1">
                 <div className="flex flex-col gap-1 p-1 bg-depth-1 border border-depth-3 rounded-md">
                     <Input
