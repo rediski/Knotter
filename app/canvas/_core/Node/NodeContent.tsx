@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import type { Node } from '@/canvas/_core/_/canvas.types';
 import { NODE_SHAPES } from '@/canvas/_core/_/nodeShapeType';
@@ -15,50 +15,28 @@ import { CreateParameterForm } from '@/canvas/_core/Node/CreateParameterForm';
 import { LocalParameter } from '@/canvas/_core/Node/LocalParameter';
 
 import { getFilteredParameters } from '@/canvas/utils/parameters/getFilteredParameters';
-import { reorderArray } from '@/canvas/utils/canvas/reorderArray';
 
 import { Search } from 'lucide-react';
 
 export default function NodeContent() {
     const items = useItemsStore((state) => state.items);
+    const parameters = useItemsStore((state) => state.parameters);
+
     const selectedTabId = useCanvasStore((state) => state.selectedTabId);
 
     const node = items.find((item) => item.id === selectedTabId && item.kind === 'node');
 
     if (node?.kind !== 'node') return null;
 
-    const parameters = useItemsStore((state) => state.parameters);
-    const setItems = useItemsStore((state) => state.setItems);
-
     const currentNode = items.find((item) => item.kind === 'node' && item.id === node.id) as Node | undefined;
 
     const nodeParameters = currentNode?.parameters ?? [];
-    const nodeParametersIds = nodeParameters.map((parameter) => parameter.id);
 
     const [filterText, setFilterText] = useState('');
-
     const filteredParameters = useMemo(() => getFilteredParameters(parameters, filterText), [parameters, filterText]);
+
     const shapeInfo = NODE_SHAPES[node.shapeType as keyof typeof NODE_SHAPES];
     const Icon = shapeInfo?.icon;
-
-    const handleReorder = useCallback(
-        (draggedId: string, targetId: string, position: 'top' | 'bottom' | null) => {
-            const updatedParameters = reorderArray(nodeParameters, draggedId, targetId, position);
-
-            if (updatedParameters === nodeParameters) return;
-
-            const updatedItems = items.map((item) => {
-                if (item.kind === 'node' && item.id === node.id) {
-                    return { ...item, parameters: updatedParameters };
-                }
-
-                return item;
-            });
-
-            setItems(updatedItems);
-        },
-        [nodeParameters, node.id, items, setItems],
-    );
 
     return (
         <div className="flex gap-1 w-full overflow-y-auto overflow-x-hidden">
@@ -94,13 +72,7 @@ export default function NodeContent() {
                     {nodeParameters.length > 0 && (
                         <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1">
                             {nodeParameters.map((parameter) => (
-                                <LocalParameter
-                                    key={parameter.id}
-                                    parameter={parameter}
-                                    nodeId={node.id}
-                                    nodeParametersIds={nodeParametersIds}
-                                    onReorder={handleReorder}
-                                />
+                                <LocalParameter key={parameter.id} parameter={parameter} nodeId={node.id} />
                             ))}
                         </div>
                     )}
