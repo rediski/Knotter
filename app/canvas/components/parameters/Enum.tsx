@@ -37,6 +37,13 @@ export const Enum = memo(function Enum({ parameter }: { parameter: Parameter }) 
             </div>
 
             <div className="flex flex-col gap-1">
+                <div
+                    className="flex items-center justify-center mr-6 gap-2 px-3 py-1 bg-depth-3 hover:bg-depth-4 active:bg-depth-5 border border-depth-4 rounded-md cursor-pointer"
+                    onClick={handleAddEnumOption}
+                >
+                    <PlusIcon size={16} /> Добавить опцию
+                </div>
+
                 {parameter.data.options.map((option, index) => (
                     <div key={index} className="flex gap-2 items-center rounded-md">
                         <Input
@@ -52,12 +59,6 @@ export const Enum = memo(function Enum({ parameter }: { parameter: Parameter }) 
                         </button>
                     </div>
                 ))}
-                <div
-                    className="flex m-auto items-center gap-2 px-3 py-1 bg-depth-3 hover:bg-depth-4 border border-depth-4 rounded-md cursor-pointer"
-                    onClick={handleAddEnumOption}
-                >
-                    <PlusIcon size={16} /> Добавить опцию
-                </div>
             </div>
         </div>
     );
