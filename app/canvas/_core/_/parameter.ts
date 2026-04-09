@@ -1,5 +1,5 @@
 export type ParameterTypeMap = {
-    number: { value: number; min?: number; max?: number };
+    number: number;
     string: string;
     boolean: boolean;
     enum: { value: string | null; options: string[] };
