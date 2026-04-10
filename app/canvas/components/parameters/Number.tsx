@@ -14,69 +14,38 @@ import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
-import { Hash, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 export const Number = memo(function Number({ parameter }: { parameter: Parameter }) {
-    const { handleUpdateMinValue, handleUpdateMaxValue } = useNumberParameter({
+    const { handleUpdateValue } = useNumberParameter({
         parameter,
         updateParameter,
     });
 
-    if (!parameter) return;
-    if (!isNumber(parameter)) return;
+    if (!isNumber(parameter)) return null;
 
     return (
         <div className="flex flex-col justify-center gap-2 px-3 py-1 text-sm bg-depth-2 border border-depth-3 rounded-md">
             <div className="flex items-center gap-2 h-8">
-                <Hash size={16} className="min-w-4" />
+                <div className="min-w-2 h-2 bg-json-number rounded-full" />
 
                 <EditableName
                     name={parameter.name}
                     onChange={(newName) => updateParameterName(parameter.id, newName)}
-                    className="w-full"
+                    className="w-full text-json-number"
+                />
+
+                <Input
+                    value={String(parameter.data ?? '')}
+                    onChange={handleUpdateValue}
+                    className="bg-depth-3 border border-depth-4"
+                    type="number"
+                    placeholder="Введите значение"
                 />
 
                 <button onClick={() => removeParameter(parameter.id)} className="ml-auto text-gray cursor-pointer">
                     <X size={16} />
                 </button>
-            </div>
-
-            <div className="flex items-center gap-1">
-                <div className="flex flex-col gap-1 w-full">
-                    <div
-                        className={`
-                            flex items-center gap-2
-                            ${!parameter.data.min && 'opacity-50'}
-                        `}
-                    >
-                        <p className="truncate w-full">Минимальное значение</p>
-
-                        <Input
-                            value={parameter.data.min?.toString() ?? ''}
-                            onChange={handleUpdateMinValue}
-                            className="bg-depth-3 border border-depth-4"
-                            type="number"
-                            placeholder="Не задано"
-                        />
-                    </div>
-
-                    <div
-                        className={`
-                            flex items-center gap-2
-                            ${!parameter.data.max && 'opacity-50'}
-                        `}
-                    >
-                        <p className="truncate w-full">Максимальное значение</p>
-
-                        <Input
-                            value={parameter.data.max?.toString() ?? ''}
-                            onChange={handleUpdateMaxValue}
-                            className="bg-depth-3 border border-depth-4"
-                            type="number"
-                            placeholder="Не задано"
-                        />
-                    </div>
-                </div>
             </div>
         </div>
     );
