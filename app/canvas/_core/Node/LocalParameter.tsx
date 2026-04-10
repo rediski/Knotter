@@ -49,15 +49,8 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
             const paramData = parameter.data as ParameterTypeMap['number'];
             let clampedValue = numValue;
 
-            if (paramData.min !== undefined) {
-                clampedValue = Math.max(clampedValue, paramData.min);
-            }
-            if (paramData.max !== undefined) {
-                clampedValue = Math.min(clampedValue, paramData.max);
-            }
-
             updateNodeParameter(nodeId, parameter.id, {
-                data: { ...paramData, value: clampedValue },
+                data: clampedValue,
             });
         },
         [parameter, nodeId],
@@ -104,9 +97,7 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                             <p className="truncate">{parameter.name}</p>
                         </div>
                         <Input
-                            min={parameter.data.min}
-                            max={parameter.data.max}
-                            value={parameter.data.value.toString()}
+                            value={parameter.data.toString()}
                             type="number"
                             className="bg-depth-3 border border-depth-4 hover:bg-depth-4"
                             onChange={handleNumberChange}
