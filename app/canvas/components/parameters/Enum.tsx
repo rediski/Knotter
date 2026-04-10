@@ -13,7 +13,7 @@ import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
 import { useEnum } from '@/canvas/components/parameters/useEnum';
 
-import { List, PlusIcon, X } from 'lucide-react';
+import { PlusIcon, X } from 'lucide-react';
 
 export const Enum = memo(function Enum({ parameter }: { parameter: Parameter }) {
     const { handleAddEnumOption, handleRemoveEnumOption, handleUpdateEnumOption } = useEnum({ parameter });
@@ -23,12 +23,12 @@ export const Enum = memo(function Enum({ parameter }: { parameter: Parameter }) 
     return (
         <div className="flex flex-col justify-center gap-2 px-3 py-1 text-sm bg-depth-2 border border-depth-3 rounded-md">
             <div className="flex items-center gap-2 h-8">
-                <List size={16} className="min-w-4" />
+                <div className="w-2 h-2 bg-json-brackets rounded-full" />
 
                 <EditableName
                     name={parameter.name}
                     onChange={(newName) => updateParameterName(parameter.id, newName)}
-                    className="w-full"
+                    className="w-full text-json-brackets"
                 />
 
                 <button onClick={() => removeParameter(parameter.id)} className="ml-auto text-gray cursor-pointer">
@@ -51,7 +51,7 @@ export const Enum = memo(function Enum({ parameter }: { parameter: Parameter }) 
                             onChange={(val) => handleUpdateEnumOption(index, val)}
                             className="border bg-depth-3 border-depth-4"
                             max={16}
-                            placeholder="Введите значение..."
+                            placeholder="Введите значение"
                         />
 
                         <button onClick={() => handleRemoveEnumOption(index)} className="text-gray cursor-pointer">

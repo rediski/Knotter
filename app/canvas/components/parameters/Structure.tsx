@@ -17,7 +17,7 @@ import { Enum } from '@/canvas/components/parameters/Enum';
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
-import { Folder, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 const parameterComponents = {
     number: Number,
@@ -41,12 +41,12 @@ export const Structure = memo(function Structure({ parameter }: { parameter: Par
     return (
         <div className="flex flex-col gap-1 px-3 py-1 bg-depth-2 text-sm rounded-md">
             <div className="flex items-center gap-2 h-8">
-                <Folder size={16} className="min-w-4" />
+                <div className="w-2 h-2 bg-json-null rounded-full" />
 
                 <EditableName
                     name={parameter.name}
                     onChange={(newName) => updateParameterName(parameter.id, newName)}
-                    className="w-full"
+                    className="w-full text-json-null"
                 />
 
                 <button onClick={() => removeParameter(parameter.id)} className="ml-auto text-gray cursor-pointer">
