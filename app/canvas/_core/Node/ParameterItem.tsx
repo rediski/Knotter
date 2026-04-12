@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, type Ref } from 'react';
+import { memo, useCallback, type MouseEvent } from 'react';
 
 import type { Parameter } from '@/canvas/_core/_/parameter';
 
@@ -9,9 +9,6 @@ import { String } from '@/canvas/components/parameters/String';
 import { Boolean } from '@/canvas/components/parameters/Boolean';
 import { Enum } from '@/canvas/components/parameters/Enum';
 import { Structure } from '@/canvas/components/parameters/Structure';
-
-import { useItemsStore } from '@/canvas/store/useItemsStore';
-import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 
 const parameterComponents = {
     number: Number,
@@ -23,38 +20,13 @@ const parameterComponents = {
 
 type ParameterType = keyof typeof parameterComponents;
 
-export const ParameterItem = memo(function ParameterItem({ parameter }: { parameter: Parameter }) {
-    const reorderParameter = (draggedId: string, targetId: string, position: 'top' | 'bottom' | null) => {
-        const parameters = useItemsStore.getState().parameters;
+interface ParameterItemProps {
+    parameter: Parameter;
+    isSelected?: boolean;
+    onSelect?: (id: string, ctrlKey: boolean, shiftKey: boolean) => void;
+}
 
-        const fromIndex = parameters.findIndex((p) => p.id === draggedId);
-        const toIndex = parameters.findIndex((p) => p.id === targetId);
-
-        if (fromIndex === -1 || toIndex === -1) return;
-
-        const updatedParameters = [...parameters];
-        const [movedParameter] = updatedParameters.splice(fromIndex, 1);
-
-        let insertIndex = position === 'top' ? toIndex : toIndex + 1;
-
-        if (fromIndex < toIndex && position === 'bottom') {
-            insertIndex = toIndex;
-        }
-
-        updatedParameters.splice(insertIndex, 0, movedParameter);
-        useItemsStore.getState().setParameters(updatedParameters);
-    };
-
-    const { dragRef, dropRef, isDragOver, dragPosition } = useDragAndDrop({
-        itemId: parameter.id,
-        onDrop: reorderParameter,
-    });
-
-    const handleDragStart = (e: React.DragEvent) => {
-        e.dataTransfer.setData('text/plain', parameter.id);
-        e.dataTransfer.effectAllowed = 'move';
-    };
-
+export const ParameterItem = memo(function ParameterItem({ parameter, isSelected = false, onSelect }: ParameterItemProps) {
     const Component = parameterComponents[parameter.type as ParameterType];
 
     if (!Component) {
@@ -62,16 +34,25 @@ export const ParameterItem = memo(function ParameterItem({ parameter }: { parame
         return null;
     }
 
-    return (
-        <div ref={dropRef as Ref<HTMLDivElement>} className="relative cursor-grab">
-            {isDragOver && dragPosition === 'top' && <div className="absolute top-0 left-0 right-0 h-0.5 bg-bg-accent" />}
-            {isDragOver && dragPosition === 'bottom' && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-bg-accent" />
-            )}
+    const handleClick = useCallback(
+        (e: MouseEvent) => {
+            e.stopPropagation();
+            if (onSelect) {
+                onSelect(parameter.id, e.ctrlKey || e.metaKey, e.shiftKey);
+            }
+        },
+        [parameter.id, onSelect],
+    );
 
-            <div ref={dragRef as Ref<HTMLDivElement>} draggable onDragStart={handleDragStart}>
-                <Component parameter={parameter} />
-            </div>
+    return (
+        <div
+            onClick={handleClick}
+            className={`
+                flex gap-2 px-3 py-1 text-sm border rounded-md items-center group cursor-pointer select-none
+                ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-2 border-depth-3 hover:border-bg-accent/10'}
+            `}
+        >
+            <Component parameter={parameter} isSelected={isSelected} />
         </div>
     );
 });
