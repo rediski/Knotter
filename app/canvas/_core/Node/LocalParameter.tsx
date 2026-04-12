@@ -62,7 +62,7 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
     );
 
     return (
-        <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1 cursor-grab">
+        <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
             {isNumber(parameter) && (
                 <>
                     <div className="flex items-center gap-2 w-full truncate">
@@ -84,6 +84,7 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                         <ParameterIcon size={16} />
                         <p className="truncate">{parameter.name}</p>
                     </div>
+
                     <Input
                         value={parameter.data}
                         placeholder="Введите значение"
@@ -94,7 +95,7 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
             )}
 
             {isBoolean(parameter) && (
-                <label className="flex items-center justify-between w-full gap-1 select-none cursor-pointer">
+                <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-2 truncate">
                         <ParameterIcon size={16} />
                         <span className="truncate">{parameter.name}</span>
@@ -108,7 +109,7 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                             `}
                         onChange={handleBooleanChange}
                     />
-                </label>
+                </div>
             )}
 
             {isEnum(parameter) && (
