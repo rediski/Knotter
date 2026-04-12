@@ -9,20 +9,19 @@ import { Input } from '@/components/UI/Input';
 import { EditableName } from '@/components/UI/EditableName';
 
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
-import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 
 import { useEnum } from '@/canvas/components/parameters/useEnum';
 
 import { PlusIcon, X } from 'lucide-react';
 
-export const Enum = memo(function Enum({ parameter }: { parameter: Parameter }) {
+export const Enum = memo(function Enum({ parameter, isSelected }: { parameter: Parameter; isSelected: boolean }) {
     const { handleAddEnumOption, handleRemoveEnumOption, handleUpdateEnumOption } = useEnum({ parameter });
 
     if (!isEnum(parameter)) return null;
 
     return (
-        <div className="flex flex-col justify-center gap-2 px-3 py-1 text-sm bg-depth-2 border border-depth-3 rounded-md">
-            <div className="flex items-center gap-2 h-8">
+        <div className="flex gap-6 w-full">
+            <div className="flex items-center gap-2 h-8 w-full flex-1">
                 <div className="w-2 h-2 bg-json-brackets rounded-full" />
 
                 <EditableName
@@ -30,31 +29,36 @@ export const Enum = memo(function Enum({ parameter }: { parameter: Parameter }) 
                     onChange={(newName) => updateParameterName(parameter.id, newName)}
                     className="w-full text-json-brackets"
                 />
-
-                <button onClick={() => removeParameter(parameter.id)} className="ml-auto text-gray cursor-pointer">
-                    <X size={16} />
-                </button>
             </div>
 
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-1 w-full flex-1">
                 <div
-                    className="flex items-center justify-center mr-6 gap-2 px-3 py-1 bg-depth-3 hover:bg-depth-4 active:bg-depth-5 border border-depth-4 rounded-md cursor-pointer"
                     onClick={handleAddEnumOption}
+                    className={`
+                        flex items-center justify-center gap-2 px-3 py-1 border rounded-md cursor-pointer
+                        ${isSelected ? 'bg-bg-accent/10 hover:bg-bg-accent/15 active:bg-bg-accent/20 border-bg-accent/10' : 'bg-depth-3 hover:bg-depth-4 active:bg-depth-5 border-depth-4'}
+                    `}
                 >
                     <PlusIcon size={16} /> Добавить опцию
                 </div>
 
                 {parameter.data.options.map((option, index) => (
-                    <div key={index} className="flex gap-2 items-center rounded-md">
+                    <div key={index} className="flex gap-2 items-center rounded-md relative">
                         <Input
                             value={option}
                             onChange={(val) => handleUpdateEnumOption(index, val)}
-                            className="border bg-depth-3 border-depth-4"
+                            className={`
+                                border 
+                                ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'}
+                            `}
                             max={16}
                             placeholder="Введите значение"
                         />
 
-                        <button onClick={() => handleRemoveEnumOption(index)} className="text-gray cursor-pointer">
+                        <button
+                            onClick={() => handleRemoveEnumOption(index)}
+                            className="text-gray cursor-pointer absolute right-3"
+                        >
                             <X size={16} />
                         </button>
                     </div>
