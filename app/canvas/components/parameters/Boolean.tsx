@@ -9,40 +9,36 @@ import { EditableName } from '@/components/UI/EditableName';
 import { Checkbox } from '@/components/UI/Checkbox';
 
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
-import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
 import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
+import { useBooleanParameter } from './useBoolean';
 
-import { X } from 'lucide-react';
+export const Boolean = memo(function Boolean({ parameter, isSelected }: { parameter: Parameter; isSelected: boolean }) {
+    if (!parameter) return;
+    if (!isBoolean(parameter)) return;
 
-export const Boolean = memo(function Boolean({ parameter }: { parameter: Parameter }) {
-    if (!parameter || !isBoolean(parameter)) {
-        return null;
-    }
-
-    const handleUpdateValue = (checked: boolean) => {
-        updateParameter(parameter.id, {
-            ...parameter,
-            data: checked,
-        });
-    };
+    const { handleUpdateValue } = useBooleanParameter({
+        parameter,
+        updateParameter,
+    });
 
     return (
-        <div className="flex flex-col justify-center gap-2 px-3 py-1 text-sm bg-depth-2 border border-depth-3 rounded-md">
-            <div className="flex items-center gap-2 h-8">
-                <div className="w-2 h-2 bg-json-boolean rounded-full" />
+        <div className="flex items-center gap-2 h-8 w-full">
+            <div className="w-2 h-2 bg-json-boolean rounded-full" />
 
-                <EditableName
-                    name={parameter.name}
-                    onChange={(newName) => updateParameterName(parameter.id, newName)}
-                    className="w-full text-json-boolean"
-                />
+            <EditableName
+                name={parameter.name}
+                onChange={(newName) => updateParameterName(parameter.id, newName)}
+                className="w-full text-json-boolean"
+            />
 
-                <Checkbox checked={parameter.data} onChange={handleUpdateValue} />
-
-                <button onClick={() => removeParameter(parameter.id)} className="ml-auto text-gray cursor-pointer">
-                    <X size={16} />
-                </button>
-            </div>
+            <Checkbox
+                checked={parameter.data}
+                onChange={handleUpdateValue}
+                className={`
+                    border 
+                    ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'}
+                `}
+            />
         </div>
     );
 });

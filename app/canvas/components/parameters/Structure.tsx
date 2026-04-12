@@ -28,18 +28,18 @@ const parameterComponents = {
 
 type ParameterType = keyof typeof parameterComponents;
 
-export const Structure = memo(function Structure({ parameter }: { parameter: Parameter }) {
+export const Structure = memo(function Structure({ parameter, isSelected }: { parameter: Parameter; isSelected: boolean }) {
     if (!isStructure(parameter)) return null;
 
     const renderChildParameter = (childParameter: Parameter) => {
         const Component = parameterComponents[childParameter.type as ParameterType];
-        return <Component key={childParameter.id} parameter={childParameter} />;
+        return <Component key={childParameter.id} parameter={childParameter} isSelected={isSelected} />;
     };
 
     const supportedParameters = parameter.data.filter((p) => p.type in parameterComponents);
 
     return (
-        <div className="flex flex-col gap-1 px-3 py-1 bg-depth-2 text-sm rounded-md">
+        <div className="flex flex-col gap-1 w-full">
             <div className="flex items-center gap-2 h-8">
                 <div className="w-2 h-2 bg-json-null rounded-full" />
 

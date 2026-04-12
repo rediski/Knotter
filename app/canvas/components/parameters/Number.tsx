@@ -13,7 +13,7 @@ import { useNumberParameter } from '@/canvas/components/parameters/useNumber';
 import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 
-export const Number = memo(function Number({ parameter }: { parameter: Parameter }) {
+export const Number = memo(function Number({ parameter, isSelected }: { parameter: Parameter; isSelected: boolean }) {
     const { handleUpdateValue } = useNumberParameter({
         parameter,
         updateParameter,
@@ -34,7 +34,9 @@ export const Number = memo(function Number({ parameter }: { parameter: Parameter
             <Input
                 value={String(parameter.data ?? '')}
                 onChange={handleUpdateValue}
-                className="bg-depth-3 border border-depth-4"
+                className={`
+                    border ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'} 
+                `}
                 type="number"
                 placeholder="Введите значение"
             />
