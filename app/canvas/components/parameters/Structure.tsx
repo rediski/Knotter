@@ -15,9 +15,6 @@ import { Boolean } from '@/canvas/components/parameters/Boolean';
 import { Enum } from '@/canvas/components/parameters/Enum';
 
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
-import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
-
-import { X } from 'lucide-react';
 
 const parameterComponents = {
     number: Number,
@@ -48,10 +45,6 @@ export const Structure = memo(function Structure({ parameter, isSelected }: { pa
                     onChange={(newName) => updateParameterName(parameter.id, newName)}
                     className="w-full text-json-null"
                 />
-
-                <button onClick={() => removeParameter(parameter.id)} className="ml-auto text-gray cursor-pointer">
-                    <X size={16} />
-                </button>
             </div>
 
             <div className="flex flex-col gap-1">
