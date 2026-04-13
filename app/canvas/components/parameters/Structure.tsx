@@ -15,6 +15,9 @@ import { Boolean } from '@/canvas/components/parameters/Boolean';
 import { Enum } from '@/canvas/components/parameters/Enum';
 
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
+import { removeParameter } from '@/canvas/utils/parameters/removeParameter';
+
+import { X } from 'lucide-react';
 
 const parameterComponents = {
     number: Number,
@@ -28,9 +31,25 @@ type ParameterType = keyof typeof parameterComponents;
 export const Structure = memo(function Structure({ parameter, isSelected }: { parameter: Parameter; isSelected: boolean }) {
     if (!isStructure(parameter)) return null;
 
+    const handleDelete = (e: React.MouseEvent, parameterId: string) => {
+        e.stopPropagation();
+        removeParameter(parameterId);
+    };
+
     const renderChildParameter = (childParameter: Parameter) => {
         const Component = parameterComponents[childParameter.type as ParameterType];
-        return <Component key={childParameter.id} parameter={childParameter} isSelected={isSelected} />;
+        return (
+            <div key={childParameter.id} className="relative">
+                <Component parameter={childParameter} isSelected={isSelected} />
+
+                <button
+                    onClick={(e) => handleDelete(e, childParameter.id)}
+                    className="absolute right-4 top-4 -translate-y-1/2 focus:outline-none text-gray cursor-pointer"
+                >
+                    <X size={16} />
+                </button>
+            </div>
+        );
     };
 
     const supportedParameters = parameter.data.filter((p) => p.type in parameterComponents);
