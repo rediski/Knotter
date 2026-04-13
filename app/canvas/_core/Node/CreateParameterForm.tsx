@@ -9,7 +9,12 @@ import { getParameterIcon } from '@/canvas/utils/nodes/getParameterIcon';
 
 import { Plus } from 'lucide-react';
 
-export const CreateParameterForm = ({ depth = 2, parentStructureId }: { depth?: number; parentStructureId?: string }) => {
+interface CreateParameterFormProps {
+    depth: number;
+    parentStructureId?: string;
+}
+
+export const CreateParameterForm = ({ depth = 2, parentStructureId }: CreateParameterFormProps) => {
     const [parameterName, setParameterName] = useState<string>('');
     const [parameterType, setParameterType] = useState<ParameterType>('number');
 
@@ -30,8 +35,11 @@ export const CreateParameterForm = ({ depth = 2, parentStructureId }: { depth?: 
                 value={parameterName}
                 onChange={setParameterName}
                 placeholder="Имя переменной"
-                className={`bg-depth-${depth} border border-depth-${depth < 3 ? 3 : depth + 1}`}
                 max={16}
+                className={`
+                    border
+                border-depth-${depth < 3 ? 3 : depth + 1} bg-depth-${depth}
+                `}
             />
 
             <DropdownAbsolute title={foundParameterType.label} icon={getParameterIcon(parameterType)} depth={depth}>
