@@ -244,7 +244,7 @@ export default function NodeContent() {
                         />
                     </div>
 
-                    <CreateParameterForm depth={2} />
+                    <CreateParameterForm />
                 </div>
 
                 <div className="flex flex-col flex-1 w-full h-fit overflow-y-auto bg-depth-1 border border-depth-3 rounded-md">
