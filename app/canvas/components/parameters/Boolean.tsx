@@ -23,7 +23,7 @@ export const Boolean = memo(function Boolean({ parameter, isSelected }: { parame
 
     return (
         <div className="flex items-center gap-2 h-8 w-full">
-            <div className="w-2 h-2 bg-json-boolean rounded-full" />
+            <div className="min-w-2 h-2 bg-json-boolean rounded-full" />
 
             <EditableName
                 name={parameter.name}
@@ -31,14 +31,16 @@ export const Boolean = memo(function Boolean({ parameter, isSelected }: { parame
                 className="w-full text-json-boolean"
             />
 
-            <Checkbox
-                checked={parameter.data}
-                onChange={handleUpdateValue}
-                className={`
-                    border 
-                    ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'}
-                `}
-            />
+            <div className="w-full">
+                <Checkbox
+                    checked={parameter.data}
+                    onChange={handleUpdateValue}
+                    className={`
+                        border 
+                        ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'}
+                    `}
+                />
+            </div>
         </div>
     );
 });
