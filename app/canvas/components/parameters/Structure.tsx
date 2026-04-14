@@ -4,8 +4,6 @@ import { memo } from 'react';
 import { Parameter } from '@/canvas/_core/_/parameter';
 import { isStructure } from '@/canvas/_core/_/parameter.type-guards';
 
-import { CreateParameterForm } from '@/canvas/_core/Node/CreateParameterForm';
-
 import { EditableName } from '@/components/UI/EditableName';
 import { EmptyState } from '@/components/UI/EmptyState';
 
@@ -44,7 +42,7 @@ export const Structure = memo(function Structure({ parameter, isSelected }: { pa
 
                 <button
                     onClick={(e) => handleDelete(e, childParameter.id)}
-                    className="absolute right-4 top-4 -translate-y-1/2 focus:outline-none text-gray cursor-pointer"
+                    className="absolute right-3 top-4 -translate-y-1/2 focus:outline-none text-gray cursor-pointer"
                 >
                     <X size={16} />
                 </button>
@@ -66,16 +64,12 @@ export const Structure = memo(function Structure({ parameter, isSelected }: { pa
                 />
             </div>
 
-            <div className="flex flex-col gap-1">
-                <CreateParameterForm depth={3} parentStructureId={parameter.id} />
-
-                <div className="flex flex-col gap-1 py-2">
-                    {supportedParameters.length === 0 ? (
-                        <EmptyState message="Параметры не найдены" />
-                    ) : (
-                        supportedParameters.map(renderChildParameter)
-                    )}
-                </div>
+            <div className="flex flex-col gap-1 py-2">
+                {supportedParameters.length === 0 ? (
+                    <EmptyState message="Параметры не найдены" />
+                ) : (
+                    supportedParameters.map(renderChildParameter)
+                )}
             </div>
         </div>
     );
