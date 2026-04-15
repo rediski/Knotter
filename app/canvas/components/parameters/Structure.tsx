@@ -64,7 +64,7 @@ export const Structure = memo(function Structure({ parameter, isSelected }: { pa
                 />
             </div>
 
-            <div className="flex flex-col gap-1 py-2">
+            <div className="flex flex-col gap-1 py-2 ml-4">
                 {supportedParameters.length === 0 ? (
                     <EmptyState message="Параметры не найдены" />
                 ) : (
