@@ -49,7 +49,7 @@ export const ParameterItem = memo(function ParameterItem({ parameter, isSelected
             onClick={handleClick}
             className={`
                 flex gap-2 px-3 py-1 text-sm border rounded-md items-center group cursor-pointer select-none
-                ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-2 border-depth-3 hover:border-bg-accent/10'}
+                ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-2 border-depth-3'}
             `}
         >
             <Component parameter={parameter} isSelected={isSelected} />
