@@ -7,7 +7,7 @@ import { isNumber, isString, isBoolean, isEnum, isStructure } from '@/canvas/_co
 
 import { Input } from '@/components/UI/Input';
 import { Checkbox } from '@/components/UI/Checkbox';
-import { Select } from '@/components/UI/Select';
+import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 
 import { getParameterIcon } from '@/canvas/utils/nodes/getParameterIcon';
 import { updateNodeParameter } from '@/canvas/utils/parameters/updateNodeParameter';
@@ -51,15 +51,18 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
     );
 
     const handleEnumChange = useCallback(
-        (newValue: string | null) => {
-            if (newValue === null) return;
-            const paramData = parameter.data as ParameterTypeMap['enum'];
+        (newValue: string) => {
             updateNodeParameter(nodeId, parameter.id, {
-                data: { ...paramData, value: newValue },
+                data: { value: newValue, options: (parameter.data as ParameterTypeMap['enum']).options },
             });
         },
         [parameter, nodeId],
     );
+
+    const getCurrentEnumValue = useCallback(() => {
+        const paramData = parameter.data as ParameterTypeMap['enum'];
+        return paramData.value || paramData.options?.[0];
+    }, [parameter.data]);
 
     return (
         <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
@@ -119,12 +122,26 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                         <p className="truncate">{parameter.name}</p>
                     </div>
 
-                    <Select
-                        value={parameter.data.value}
-                        options={parameter.data.options}
-                        depth={3}
-                        onChange={handleEnumChange}
-                    />
+                    <div className="w-full">
+                        <DropdownAbsolute title={getCurrentEnumValue()} depth={3} align="right">
+                            {(parameter.data as ParameterTypeMap['enum']).options.map((option) => (
+                                <button
+                                    key={option}
+                                    onClick={() => handleEnumChange(option)}
+                                    className={`
+                                        w-full text-left px-3 py-1.5 rounded-md border cursor-pointer
+                                        ${
+                                            option === (parameter.data as ParameterTypeMap['enum']).value
+                                                ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
+                                                : 'bg-depth-4 hover:bg-depth-5 border-depth-5'
+                                        }
+                                    `}
+                                >
+                                    {option}
+                                </button>
+                            ))}
+                        </DropdownAbsolute>
+                    </div>
                 </>
             )}
 
