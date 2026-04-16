@@ -50,7 +50,7 @@ export const DropdownAbsolute = memo(function DropdownAbsolute({
     );
 
     return (
-        <div ref={dropdownRef} className="relative w-fit">
+        <div ref={dropdownRef} className="relative">
             <button
                 onClick={toggle}
                 className={`flex justify-between items-center gap-1 px-3 py-1 h-8 w-full border text-sm rounded-md truncate cursor-pointer
@@ -74,7 +74,7 @@ export const DropdownAbsolute = memo(function DropdownAbsolute({
             {isOpen && (
                 <div
                     className={`
-                        absolute top-full flex flex-col gap-1 w-50 text-sm shadow rounded-md mt-1 p-1 z-50 border
+                        absolute top-full flex flex-col gap-1 w-full min-w-50 text-sm shadow rounded-md mt-1 p-1 z-50 border
                         bg-depth-${depth} border-depth-${depth < 3 ? 3 : depth + 1} 
                         ${align === 'right' ? 'right-0' : 'left-0'}
                     `}
