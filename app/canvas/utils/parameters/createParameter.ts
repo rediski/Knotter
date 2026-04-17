@@ -8,10 +8,6 @@ import { v4 as uuid } from 'uuid';
 
 export const createParameter = (name: string, type: ParameterType): Parameter => {
     const itemsState = useItemsStore.getState();
-
-    const parameters = itemsState.parameters;
-    const setParameters = itemsState.setParameters;
-
     const newParameter: Parameter = {
         id: uuid(),
         name,
@@ -19,37 +15,53 @@ export const createParameter = (name: string, type: ParameterType): Parameter =>
         data: parameterInitialValue(type),
     } as Parameter;
 
-    setParameters([...parameters, newParameter]);
+    itemsState.setParameters([...itemsState.parameters, newParameter]);
 
     return newParameter;
 };
 
-export const createStructureParameter = (name: string, type: ParameterType, parentStructureId: string): Parameter => {
+export const createParameterInStructure = (
+    name: string,
+    type: ParameterType,
+    parentStructureId: string,
+): Parameter | null => {
     const itemsState = useItemsStore.getState();
-    const parameters = itemsState.parameters;
-    const setParameters = itemsState.setParameters;
+    let createdParameter: Parameter | null = null;
 
-    const parentStructure = parameters.find((p) => p.id === parentStructureId);
+    const findAndAddToStructure = (parameters: Parameter[]): Parameter[] => {
+        return parameters.map((param) => {
+            if (param.id === parentStructureId && isStructure(param)) {
+                createdParameter = {
+                    id: uuid(),
+                    name,
+                    type,
+                    data: parameterInitialValue(type),
+                } as Parameter;
 
-    if (!parentStructure || !isStructure(parentStructure)) {
-        throw new Error('Родительская структура не найдена или имеет неверный тип');
-    }
+                return {
+                    ...param,
+                    data: [...param.data, createdParameter],
+                };
+            }
 
-    const newParameter: Parameter = {
-        id: uuid(),
-        name,
-        type,
-        data: parameterInitialValue(type),
-    } as Parameter;
+            if (isStructure(param)) {
+                return {
+                    ...param,
+                    data: findAndAddToStructure(param.data),
+                };
+            }
 
-    const updatedParentStructure: Parameter<'structure'> = {
-        ...parentStructure,
-        data: [...parentStructure.data, newParameter],
+            return param;
+        });
     };
 
-    const updatedParameters = parameters.map((p) => (p.id === parentStructureId ? updatedParentStructure : p));
+    const updatedParameters = findAndAddToStructure(itemsState.parameters);
 
-    setParameters(updatedParameters);
+    if (!createdParameter) {
+        console.error(`Структура с id "${parentStructureId}" не найдена`);
+        return null;
+    }
 
-    return newParameter;
+    itemsState.setParameters(updatedParameters);
+    return createdParameter;
 };
