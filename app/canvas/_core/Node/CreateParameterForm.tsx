@@ -5,7 +5,7 @@ import { useItemsStore } from '@/canvas/store/useItemsStore';
 import { Input } from '@/components/UI/Input';
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 
-import { createParameter, createStructureParameter } from '@/canvas/utils/parameters/createParameter';
+import { createParameter, createParameterInStructure } from '@/canvas/utils/parameters/createParameter';
 import { getParameterIcon } from '@/canvas/utils/nodes/getParameterIcon';
 
 import { Plus, FolderTree, Globe } from 'lucide-react';
@@ -30,7 +30,7 @@ export const CreateParameterForm = () => {
 
     const handleCreateParameter = () => {
         if (selectedStructureId && structures.some((structure) => structure.id === selectedStructureId)) {
-            createStructureParameter(parameterName, parameterType, selectedStructureId);
+            createParameterInStructure(parameterName, parameterType, selectedStructureId);
         } else {
             createParameter(parameterName, parameterType);
         }
