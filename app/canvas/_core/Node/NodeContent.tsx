@@ -3,6 +3,9 @@
 import { useMemo, useState, useCallback, type MouseEvent } from 'react';
 
 import type { Node } from '@/canvas/_core/_/canvas.types';
+import type { Parameter } from '@/canvas/_core/_/parameter';
+
+import { isStructure } from '@/canvas/_core/_/parameter.type-guards';
 import { NODE_SHAPES } from '@/canvas/_core/_/nodeShapeType';
 import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
@@ -52,10 +55,59 @@ export default function NodeContent() {
     const shapeInfo = NODE_SHAPES[node.shapeType as keyof typeof NODE_SHAPES];
     const Icon = shapeInfo?.icon;
 
+    const getFlattenedParameterIds = useCallback((params: Parameter[], parametersMap: Map<string, Parameter>): string[] => {
+        const ids: string[] = [];
+
+        for (const param of params) {
+            ids.push(param.id);
+            if (isStructure(param)) {
+                const children = param.data
+                    .map((id) => parametersMap.get(id))
+                    .filter((p): p is Parameter => p !== undefined);
+                const childIds = getFlattenedParameterIds(children, parametersMap);
+                ids.push(...childIds);
+            }
+        }
+
+        return ids;
+    }, []);
+
+    const reorderParameters = useCallback((newOrderIds: string[], parametersMap: Map<string, Parameter>): Parameter[] => {
+        const result: Parameter[] = [];
+        const remainingIds = new Set(newOrderIds);
+
+        for (const id of newOrderIds) {
+            const param = parametersMap.get(id);
+            if (!param) continue;
+
+            if (isStructure(param)) {
+                const childIds = param.data.filter((childId) => remainingIds.has(childId));
+
+                const reorderedChildren = reorderParameters(childIds, parametersMap);
+
+                result.push({
+                    ...param,
+                    data: reorderedChildren.map((c) => c.id),
+                });
+
+                childIds.forEach((id) => remainingIds.delete(id));
+            } else {
+                result.push(param);
+            }
+
+            remainingIds.delete(id);
+        }
+
+        return result;
+    }, []);
+
     const getRangeSelection = useCallback(
         (currentId: string, lastSelectedId: string): Set<string> => {
-            const currentIndex = filteredParameters.findIndex((parameter) => parameter.id === currentId);
-            const lastIndex = filteredParameters.findIndex((parameter) => parameter.id === lastSelectedId);
+            const parametersMap = new Map(parameters.map((p) => [p.id, p]));
+            const flatIds = getFlattenedParameterIds(parameters, parametersMap);
+
+            const currentIndex = flatIds.findIndex((id) => id === currentId);
+            const lastIndex = flatIds.findIndex((id) => id === lastSelectedId);
 
             if (currentIndex === -1 || lastIndex === -1) {
                 return new Set();
@@ -66,12 +118,12 @@ export default function NodeContent() {
             const newSet = new Set<string>();
 
             for (let i = start; i <= end; i++) {
-                newSet.add(filteredParameters[i].id);
+                newSet.add(flatIds[i]);
             }
 
             return newSet;
         },
-        [filteredParameters],
+        [parameters, getFlattenedParameterIds],
     );
 
     const handleSelectParameter = useCallback(
@@ -105,27 +157,52 @@ export default function NodeContent() {
             e.stopPropagation();
             if (selectedParameters.size === 0) return;
 
-            const selectedSet = new Set(selectedParameters);
+            const selectedParam = Array.from(selectedParameters)[0];
+            const currentParam = parameters.find((p) => p.id === selectedParam);
 
-            const selectedIndices = parameters
-                .map((p, idx) => ({ id: p.id, idx }))
-                .filter(({ id }) => selectedSet.has(id))
-                .map(({ idx }) => idx)
-                .sort((a, b) => a - b);
+            if (!currentParam) return;
 
-            if (selectedIndices[0] === 0) return;
+            let siblingsIds: string[];
 
-            const newParameters = [...parameters];
+            if (currentParam.parentId) {
+                const parent = parameters.find((p) => p.id === currentParam.parentId);
 
-            for (const index of selectedIndices) {
-                if (index > 0) {
-                    [newParameters[index - 1], newParameters[index]] = [newParameters[index], newParameters[index - 1]];
-                }
+                if (!parent || !isStructure(parent)) return;
+                siblingsIds = parent.data;
+            } else {
+                siblingsIds = filteredParameters.map((p) => p.id);
             }
 
-            setParameters(newParameters);
+            const currentIndex = siblingsIds.findIndex((id) => id === selectedParam);
+            if (currentIndex <= 0) return;
+
+            const newSiblingsIds = [...siblingsIds];
+            [newSiblingsIds[currentIndex - 1], newSiblingsIds[currentIndex]] = [
+                newSiblingsIds[currentIndex],
+                newSiblingsIds[currentIndex - 1],
+            ];
+
+            if (currentParam.parentId) {
+                const updatedParameters = parameters.map((param) => {
+                    if (param.id === currentParam.parentId && isStructure(param)) {
+                        return {
+                            ...param,
+                            data: newSiblingsIds,
+                        };
+                    }
+                    return param;
+                });
+
+                setParameters(updatedParameters);
+            } else {
+                const otherParams = parameters.filter((p) => p.parentId !== null);
+                const newRootParams = newSiblingsIds
+                    .map((id) => parameters.find((p) => p.id === id))
+                    .filter((p): p is Parameter => p !== undefined);
+                setParameters([...newRootParams, ...otherParams]);
+            }
         },
-        [selectedParameters, parameters, setParameters],
+        [selectedParameters, parameters, setParameters, filteredParameters],
     );
 
     const handleMoveDown = useCallback(
@@ -133,27 +210,50 @@ export default function NodeContent() {
             e.stopPropagation();
             if (selectedParameters.size === 0) return;
 
-            const selectedSet = new Set(selectedParameters);
+            const selectedParam = Array.from(selectedParameters)[0];
+            const currentParam = parameters.find((p) => p.id === selectedParam);
+            if (!currentParam) return;
 
-            const selectedIndices = parameters
-                .map((p, idx) => ({ id: p.id, idx }))
-                .filter(({ id }) => selectedSet.has(id))
-                .map(({ idx }) => idx)
-                .sort((a, b) => b - a);
+            let siblingsIds: string[];
 
-            if (selectedIndices[0] === parameters.length - 1) return;
-
-            const newParameters = [...parameters];
-
-            for (const index of selectedIndices) {
-                if (index < parameters.length - 1) {
-                    [newParameters[index], newParameters[index + 1]] = [newParameters[index + 1], newParameters[index]];
-                }
+            if (currentParam.parentId) {
+                const parent = parameters.find((p) => p.id === currentParam.parentId);
+                if (!parent || !isStructure(parent)) return;
+                siblingsIds = parent.data;
+            } else {
+                siblingsIds = filteredParameters.map((p) => p.id);
             }
 
-            setParameters(newParameters);
+            const currentIndex = siblingsIds.findIndex((id) => id === selectedParam);
+            if (currentIndex === siblingsIds.length - 1) return;
+
+            const newSiblingsIds = [...siblingsIds];
+
+            [newSiblingsIds[currentIndex], newSiblingsIds[currentIndex + 1]] = [
+                newSiblingsIds[currentIndex + 1],
+                newSiblingsIds[currentIndex],
+            ];
+
+            if (currentParam.parentId) {
+                const updatedParameters = parameters.map((param) => {
+                    if (param.id === currentParam.parentId && isStructure(param)) {
+                        return {
+                            ...param,
+                            data: newSiblingsIds,
+                        };
+                    }
+                    return param;
+                });
+                setParameters(updatedParameters);
+            } else {
+                const otherParams = parameters.filter((p) => p.parentId !== null);
+                const newRootParams = newSiblingsIds
+                    .map((id) => parameters.find((p) => p.id === id))
+                    .filter((p): p is Parameter => p !== undefined);
+                setParameters([...newRootParams, ...otherParams]);
+            }
         },
-        [selectedParameters, parameters, setParameters],
+        [selectedParameters, parameters, setParameters, filteredParameters],
     );
 
     const handleDeleteSelected = useCallback(
@@ -161,8 +261,37 @@ export default function NodeContent() {
             e.stopPropagation();
             if (selectedParameters.size === 0) return;
 
-            const newParameters = parameters.filter((p) => !selectedParameters.has(p.id));
-            setParameters(newParameters);
+            const parametersMap = new Map(parameters.map((p) => [p.id, p]));
+
+            const getIdsToDelete = (ids: Set<string>): Set<string> => {
+                const toDelete = new Set(ids);
+
+                for (const id of ids) {
+                    const param = parametersMap.get(id);
+                    if (param && isStructure(param)) {
+                        const childIds = getIdsToDelete(new Set(param.data));
+                        childIds.forEach((childId) => toDelete.add(childId));
+                    }
+                }
+
+                return toDelete;
+            };
+
+            const idsToDelete = getIdsToDelete(selectedParameters);
+
+            const newParameters = parameters.filter((p) => !idsToDelete.has(p.id));
+
+            const cleanedParameters = newParameters.map((param) => {
+                if (isStructure(param)) {
+                    return {
+                        ...param,
+                        data: param.data.filter((id) => !idsToDelete.has(id)),
+                    };
+                }
+                return param;
+            });
+
+            setParameters(cleanedParameters);
             setSelectedParameters(new Set());
         },
         [selectedParameters, parameters, setParameters],
