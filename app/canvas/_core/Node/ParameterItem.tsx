@@ -22,11 +22,11 @@ type ParameterType = keyof typeof parameterComponents;
 
 interface ParameterItemProps {
     parameter: Parameter;
-    isSelected?: boolean;
-    onSelect?: (id: string, ctrlKey: boolean, shiftKey: boolean) => void;
+    selectedIds: Set<string>;
+    onSelect: (id: string, ctrlKey: boolean, shiftKey: boolean) => void;
 }
 
-export const ParameterItem = memo(function ParameterItem({ parameter, isSelected = false, onSelect }: ParameterItemProps) {
+export const ParameterItem = memo(function ParameterItem({ parameter, selectedIds, onSelect }: ParameterItemProps) {
     const Component = parameterComponents[parameter.type as ParameterType];
 
     if (!Component) {
@@ -34,12 +34,12 @@ export const ParameterItem = memo(function ParameterItem({ parameter, isSelected
         return null;
     }
 
+    const isSelected = selectedIds.has(parameter.id);
+
     const handleClick = useCallback(
         (e: MouseEvent) => {
             e.stopPropagation();
-            if (onSelect) {
-                onSelect(parameter.id, e.ctrlKey || e.metaKey, e.shiftKey);
-            }
+            onSelect(parameter.id, e.ctrlKey || e.metaKey, e.shiftKey);
         },
         [parameter.id, onSelect],
     );
@@ -52,7 +52,7 @@ export const ParameterItem = memo(function ParameterItem({ parameter, isSelected
                 ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-2 border-depth-3'}
             `}
         >
-            <Component parameter={parameter} isSelected={isSelected} />
+            <Component parameter={parameter} isSelected={isSelected} selectedIds={selectedIds} onSelect={onSelect} />
         </div>
     );
 });

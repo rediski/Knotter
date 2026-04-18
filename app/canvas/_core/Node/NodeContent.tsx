@@ -93,7 +93,7 @@ export default function NodeContent() {
 
             setSelectedParameters(new Set([id]));
         },
-        [filteredParameters, selectedParameters, getRangeSelection],
+        [selectedParameters, getRangeSelection],
     );
 
     const handleClearSelection = useCallback(() => {
@@ -292,7 +292,7 @@ export default function NodeContent() {
                                 <ParameterItem
                                     key={parameter.id}
                                     parameter={parameter}
-                                    isSelected={selectedParameters.has(parameter.id)}
+                                    selectedIds={selectedParameters}
                                     onSelect={handleSelectParameter}
                                 />
                             ))}

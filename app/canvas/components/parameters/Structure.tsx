@@ -10,13 +10,21 @@ import { ParameterItem } from '@/canvas/_core/Node/ParameterItem';
 
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 
-export const Structure = memo(function Structure({ parameter, isSelected }: { parameter: Parameter; isSelected: boolean }) {
+interface StructureProps {
+    parameter: Parameter;
+    isSelected: boolean;
+    selectedIds: Set<string>;
+    onSelect: (id: string, ctrlKey: boolean, shiftKey: boolean) => void;
+}
+
+export const Structure = memo(function Structure({ parameter, isSelected, selectedIds, onSelect }: StructureProps) {
     if (!isStructure(parameter)) return null;
 
     return (
         <div className="flex flex-col gap-1 w-full">
             <div className="flex items-center gap-2 h-8">
                 <div className="w-2 h-2 bg-json-null rounded-full" />
+
                 <EditableName
                     name={parameter.name}
                     onChange={(newName) => updateParameterName(parameter.id, newName)}
@@ -29,7 +37,12 @@ export const Structure = memo(function Structure({ parameter, isSelected }: { pa
                     <EmptyState message="Параметры не найдены" />
                 ) : (
                     parameter.data.map((childParameter) => (
-                        <ParameterItem key={childParameter.id} parameter={childParameter} isSelected={isSelected} />
+                        <ParameterItem
+                            key={childParameter.id}
+                            parameter={childParameter}
+                            selectedIds={selectedIds}
+                            onSelect={onSelect}
+                        />
                     ))
                 )}
             </div>
