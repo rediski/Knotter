@@ -3,7 +3,7 @@ export type ParameterTypeMap = {
     string: string;
     boolean: boolean;
     enum: { value: string | null; options: string[] };
-    structure: Parameter[];
+    structure: string[];
 };
 
 export type ParameterType = keyof ParameterTypeMap;
@@ -13,6 +13,7 @@ export type Parameter<T extends ParameterType = ParameterType> = {
     name: string;
     type: T;
     data: ParameterTypeMap[T];
+    parentId: string | null;
 };
 
 export const parameterTypes: { type: ParameterType; label: string }[] = [
