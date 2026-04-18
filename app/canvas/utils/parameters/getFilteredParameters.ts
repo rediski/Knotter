@@ -1,13 +1,21 @@
 import type { Parameter } from '@/canvas/_core/_/parameter';
+import { isStructure } from '@/canvas/_core/_/parameter.type-guards';
 
 export const getFilteredParameters = (parameters: Parameter[], filterText?: string) => {
-    if (!filterText) return parameters;
+    const childIds = new Set<string>();
 
-    const searchText = filterText.toLowerCase();
+    for (const param of parameters) {
+        if (isStructure(param)) {
+            param.data.forEach((id) => childIds.add(id));
+        }
+    }
 
-    const filteredParameters = parameters.filter((parameter) => {
-        return parameter.name.toLowerCase().includes(searchText) || parameter.type.toLowerCase().includes(searchText);
-    });
+    let rootParameters = parameters.filter((param) => !childIds.has(param.id));
 
-    return filteredParameters;
+    if (filterText && filterText.trim()) {
+        const searchText = filterText.toLowerCase();
+        rootParameters = rootParameters.filter((parameter) => parameter.name.toLowerCase().includes(searchText));
+    }
+
+    return rootParameters;
 };
