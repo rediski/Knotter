@@ -13,6 +13,7 @@ import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 import { Input } from '@/components/UI/Input';
 import { EmptyState } from '@/components/UI/EmptyState';
 import { PanelContextMenu } from '@/canvas/components/sidebar/PanelContextMenu';
+import { Parameters } from '@/canvas/components/sidebar/Parameters';
 
 import { useSidebarPanel } from '@/canvas/components/sidebar/useSidebarPanel';
 import { usePanelContextMenu } from '@/canvas/components/sidebar/usePanelContextMenu';
@@ -116,6 +117,8 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                         return <History />;
                     case 'inspector':
                         return <Inspector panelId={panel.id} />;
+                    case 'parameters':
+                        return <Parameters />;
                     default:
                         return <EmptyState message="Выберите тип панели" />;
                 }
