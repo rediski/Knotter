@@ -36,7 +36,6 @@ export const String = memo(function String({ parameter, isSelected }: { paramete
                 value={parameter.data}
                 onChange={handleUpdateValue}
                 className={`border ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'}`}
-                type="number"
                 placeholder="Введите значение"
             />
         </div>
