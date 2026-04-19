@@ -1,21 +1,5 @@
 import { useItemsStore } from '@/canvas/store/useItemsStore';
-import { Parameter } from '@/canvas/_core/_/parameter';
 import { isStructure } from '@/canvas/_core/_/parameter.type-guards';
-
-const removeParameterFromStructure = (parameters: Parameter[], targetId: string): Parameter[] => {
-    return parameters
-        .filter((param) => param.id !== targetId)
-        .map((param) => {
-            if (isStructure(param)) {
-                return {
-                    ...param,
-                    data: removeParameterFromStructure(param.data, targetId),
-                };
-            }
-
-            return param;
-        });
-};
 
 export const removeParameter = (parameterId: string) => {
     const itemsState = useItemsStore.getState();
@@ -23,6 +7,33 @@ export const removeParameter = (parameterId: string) => {
     const parameters = itemsState.parameters;
     const setParameters = itemsState.setParameters;
 
-    const updatedParameters = removeParameterFromStructure(parameters, parameterId);
-    setParameters(updatedParameters);
+    const idsToDelete = new Set<string>();
+
+    const collectIds = (id: string) => {
+        if (idsToDelete.has(id)) return;
+
+        idsToDelete.add(id);
+
+        const parameter = parameters.find((parameter) => parameter.id === id);
+
+        if (parameter && isStructure(parameter)) {
+            parameter.data.forEach((childId) => collectIds(childId));
+        }
+    };
+
+    collectIds(parameterId);
+
+    const newParameters = parameters.filter((parameter) => !idsToDelete.has(parameter.id));
+
+    const cleanedParameters = newParameters.map((parameter) => {
+        if (isStructure(parameter)) {
+            return {
+                ...parameter,
+                data: parameter.data.filter((id) => !idsToDelete.has(id)),
+            };
+        }
+        return parameter;
+    });
+
+    setParameters(cleanedParameters);
 };
