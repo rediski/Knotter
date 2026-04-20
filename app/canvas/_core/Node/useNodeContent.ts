@@ -25,16 +25,17 @@ const toggleParameterSelection = (prevSet: Set<string>, id: string): Set<string>
 
 const getFlattenedParameterIds = (parameters: Parameter[], parametersMap: Map<string, Parameter>): string[] => {
     const ids: string[] = [];
+    const stack = [...parameters];
 
-    for (const parameter of parameters) {
+    while (stack.length) {
+        const parameter = stack.pop()!;
         ids.push(parameter.id);
 
         if (isStructure(parameter)) {
-            const children = parameter.data
-                .map((id) => parametersMap.get(id))
-                .filter((parameter): parameter is Parameter => parameter !== undefined);
-            const childIds = getFlattenedParameterIds(children, parametersMap);
-            ids.push(...childIds);
+            for (const id of parameter.data) {
+                const child = parametersMap.get(id);
+                if (child) stack.push(child);
+            }
         }
     }
 
@@ -72,24 +73,30 @@ const updateSiblingsOrder = (
         return;
     }
 
-    const otherParams = parameters.filter((parameter) => parameter.parentId !== null);
+    const otherParameters = parameters.filter((parameter) => parameter.parentId !== null);
 
-    const newRootParams = newSiblingsIds
+    const newRootParameters = newSiblingsIds
         .map((id) => parameters.find((parameter) => parameter.id === id))
         .filter((parameter): parameter is Parameter => parameter !== undefined);
 
-    setParameters([...newRootParams, ...otherParams]);
+    setParameters([...newRootParameters, ...otherParameters]);
 };
 
 const getIdsToDelete = (ids: Set<string>, parametersMap: Map<string, Parameter>): Set<string> => {
     const toDelete = new Set(ids);
+    const stack = Array.from(ids);
 
-    for (const id of ids) {
-        const parameter = parametersMap.get(id);
+    while (stack.length) {
+        const currentId = stack.pop()!;
+        const parameter = parametersMap.get(currentId);
 
         if (parameter && isStructure(parameter)) {
-            const childIds = getIdsToDelete(new Set(parameter.data), parametersMap);
-            childIds.forEach((childId) => toDelete.add(childId));
+            for (const childId of parameter.data) {
+                if (!toDelete.has(childId)) {
+                    toDelete.add(childId);
+                    stack.push(childId);
+                }
+            }
         }
     }
 
@@ -138,7 +145,7 @@ export const useNodeContent = () => {
     const shapeInfo = node ? NODE_SHAPES[node.shapeType as keyof typeof NODE_SHAPES] : undefined;
     const Icon = shapeInfo?.icon;
 
-    const handleSelectParameter = (id: string, ctrlKey: boolean, shiftKey: boolean) => {
+    const selectParameters = (id: string, ctrlKey: boolean, shiftKey: boolean) => {
         if (ctrlKey) {
             setSelectedParameters((prev) => toggleParameterSelection(prev, id));
             return;
@@ -158,44 +165,66 @@ export const useNodeContent = () => {
         setSelectedParameters(new Set([id]));
     };
 
-    const handleClearSelection = () => {
+    const clearSelection = () => {
         setSelectedParameters(new Set());
     };
 
-    const moveParameter = (direction: 'up' | 'down') => {
+    const moveSelectedParameters = (direction: 'up' | 'down') => {
         if (selectedParameters.size === 0) return;
 
-        const selectedParameter = Array.from(selectedParameters)[0];
-        const currentParameter = parameters.find((p) => p.id === selectedParameter);
-        if (!currentParameter) return;
+        const selectedIds = Array.from(selectedParameters);
+        const selectedParametersList = selectedIds
+            .map((id) => parameters.find((parameter) => parameter.id === id))
+            .filter((parameter): parameter is Parameter => parameter !== undefined);
 
-        const siblingsIds = getSiblingsIds(parameters, currentParameter, filteredParameters);
+        if (selectedParametersList.length === 0) return;
+
+        const firstParameter = selectedParametersList[0];
+        const siblingsIds = getSiblingsIds(parameters, firstParameter, filteredParameters);
         if (siblingsIds.length === 0) return;
 
-        const currentIndex = siblingsIds.findIndex((id) => id === selectedParameter);
+        const selectedIndices = selectedIds
+            .map((id) => siblingsIds.findIndex((siblingId) => siblingId === id))
+            .filter((index) => index !== -1)
+            .sort((a, b) => a - b);
 
-        if (direction === 'up' && currentIndex <= 0) return;
-        if (direction === 'down' && currentIndex === siblingsIds.length - 1) return;
+        if (selectedIndices.length === 0) return;
+
+        if (direction === 'up' && selectedIndices[0] <= 0) return;
+        if (direction === 'down' && selectedIndices[selectedIndices.length - 1] === siblingsIds.length - 1) return;
 
         const newSiblingsIds = [...siblingsIds];
-        const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
 
-        [newSiblingsIds[currentIndex], newSiblingsIds[newIndex]] = [newSiblingsIds[newIndex], newSiblingsIds[currentIndex]];
+        if (direction === 'up') {
+            const firstIndex = selectedIndices[0];
+            const movedElement = newSiblingsIds[firstIndex - 1];
 
-        updateSiblingsOrder(parameters, currentParameter, newSiblingsIds, setParameters);
+            newSiblingsIds.splice(firstIndex - 1, 1);
+            newSiblingsIds.splice(selectedIndices[selectedIndices.length - 1], 0, movedElement);
+        }
+
+        if (direction === 'down') {
+            const lastIndex = selectedIndices[selectedIndices.length - 1];
+            const movedElement = newSiblingsIds[lastIndex + 1];
+
+            newSiblingsIds.splice(lastIndex + 1, 1);
+            newSiblingsIds.splice(selectedIndices[0], 0, movedElement);
+        }
+
+        updateSiblingsOrder(parameters, firstParameter, newSiblingsIds, setParameters);
     };
 
-    const handleMoveUp = (e: MouseEvent) => {
+    const moveSelectedParametersUp = (e: MouseEvent) => {
         e.stopPropagation();
-        moveParameter('up');
+        moveSelectedParameters('up');
     };
 
-    const handleMoveDown = (e: MouseEvent) => {
+    const moveSelectedParametersDown = (e: MouseEvent) => {
         e.stopPropagation();
-        moveParameter('down');
+        moveSelectedParameters('down');
     };
 
-    const handleDeleteSelected = (e: MouseEvent) => {
+    const deleteSelectedParameters = (e: MouseEvent) => {
         e.stopPropagation();
 
         if (selectedParameters.size === 0) return;
@@ -220,13 +249,13 @@ export const useNodeContent = () => {
         setSelectedParameters(new Set());
     };
 
-    const handleAddSelectedToNode = (e: MouseEvent) => {
+    const addParametersToNode = (e: MouseEvent) => {
         e.stopPropagation();
         if (!node || selectedParameters.size === 0) return;
 
-        const selectedParams = parameters.filter((parameter) => selectedParameters.has(parameter.id));
+        const selectedParametersList = parameters.filter((parameter) => selectedParameters.has(parameter.id));
 
-        selectedParams.forEach((parameter) => {
+        selectedParametersList.forEach((parameter) => {
             addParameterToNode(node.id, parameter.id);
         });
 
@@ -247,11 +276,11 @@ export const useNodeContent = () => {
 
         setFilterText,
 
-        handleSelectParameter,
-        handleClearSelection,
-        handleMoveUp,
-        handleMoveDown,
-        handleDeleteSelected,
-        handleAddSelectedToNode,
+        selectParameters,
+        clearSelection,
+        moveSelectedParametersUp,
+        moveSelectedParametersDown,
+        deleteSelectedParameters,
+        addParametersToNode,
     };
 };

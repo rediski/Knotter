@@ -18,19 +18,21 @@ export default function NodeContent() {
         selectedParameters,
         hasSelection,
         Icon,
+
         setFilterText,
-        handleSelectParameter,
-        handleClearSelection,
-        handleMoveUp,
-        handleMoveDown,
-        handleDeleteSelected,
-        handleAddSelectedToNode,
+
+        selectParameters,
+        clearSelection,
+        moveSelectedParametersUp,
+        moveSelectedParametersDown,
+        deleteSelectedParameters,
+        addParametersToNode,
     } = useNodeContent();
 
     if (!node) return null;
 
     return (
-        <div className="flex gap-1 w-full overflow-y-auto overflow-x-hidden" onClick={handleClearSelection}>
+        <div className="flex gap-1 w-full overflow-y-auto overflow-x-hidden" onClick={clearSelection}>
             <div className="flex flex-1 gap-1">
                 <div className="flex flex-col gap-1">
                     <div
@@ -95,7 +97,7 @@ export default function NodeContent() {
                 <div className="flex flex-col flex-1 w-full h-fit overflow-y-auto bg-depth-1 border border-depth-3 rounded-md">
                     <div className="flex gap-1 sticky top-0 bg-depth-1 z-20 p-1 border-b border-depth-3">
                         <button
-                            onClick={handleAddSelectedToNode}
+                            onClick={addParametersToNode}
                             disabled={!hasSelection}
                             className="flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 disabled:opacity-30 cursor-pointer"
                         >
@@ -103,7 +105,7 @@ export default function NodeContent() {
                         </button>
 
                         <button
-                            onClick={handleMoveUp}
+                            onClick={moveSelectedParametersUp}
                             disabled={!hasSelection}
                             className="flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 disabled:opacity-30 cursor-pointer"
                         >
@@ -111,7 +113,7 @@ export default function NodeContent() {
                         </button>
 
                         <button
-                            onClick={handleMoveDown}
+                            onClick={moveSelectedParametersDown}
                             disabled={!hasSelection}
                             className="flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 disabled:opacity-30 cursor-pointer"
                         >
@@ -119,7 +121,7 @@ export default function NodeContent() {
                         </button>
 
                         <button
-                            onClick={handleDeleteSelected}
+                            onClick={deleteSelectedParameters}
                             disabled={!hasSelection}
                             className="flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 disabled:opacity-30 cursor-pointer"
                         >
@@ -134,7 +136,7 @@ export default function NodeContent() {
                                     key={parameter.id}
                                     parameter={parameter}
                                     selectedIds={selectedParameters}
-                                    onSelect={handleSelectParameter}
+                                    onSelect={selectParameters}
                                 />
                             ))}
                         </div>
