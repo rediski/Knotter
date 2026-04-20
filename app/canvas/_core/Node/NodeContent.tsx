@@ -31,6 +31,29 @@ export default function NodeContent() {
 
     if (!node) return null;
 
+    const actionButtons = [
+        {
+            onClick: addParametersToNode,
+            icon: Plus,
+            iconProps: { size: 16, strokeWidth: 3 },
+        },
+        {
+            onClick: moveSelectedParametersUp,
+            icon: ArrowBigUp,
+            iconProps: { size: 16, fill: 'var(--foreground)', stroke: 'var(--foreground)' },
+        },
+        {
+            onClick: moveSelectedParametersDown,
+            icon: ArrowBigDown,
+            iconProps: { size: 16, fill: 'var(--foreground)', stroke: 'var(--foreground)' },
+        },
+        {
+            onClick: deleteSelectedParameters,
+            icon: X,
+            iconProps: { size: 16, strokeWidth: 3 },
+        },
+    ];
+
     return (
         <div className="flex gap-1 w-full overflow-y-auto h-full overflow-x-hidden" onClick={clearSelection}>
             <div className="flex flex-1 gap-1">
@@ -81,52 +104,28 @@ export default function NodeContent() {
 
             <div className="flex flex-col gap-1 flex-1">
                 <div className="flex flex-col gap-1 p-1 bg-depth-1 border border-depth-3 rounded-md">
-                    <div className="flex gap-1">
-                        <Input
-                            value={filterText}
-                            onChange={setFilterText}
-                            icon={Search}
-                            placeholder="Фильтр..."
-                            className="bg-depth-2 border border-depth-3 flex-1"
-                        />
-                    </div>
-
+                    <Input
+                        value={filterText}
+                        onChange={setFilterText}
+                        icon={Search}
+                        placeholder="Фильтр..."
+                        className="bg-depth-2 border border-depth-3 flex-1"
+                    />
                     <CreateParameterForm />
                 </div>
 
                 <div className="flex flex-col flex-1 w-full overflow-y-auto bg-depth-1 border border-depth-3 rounded-md">
                     <div className="flex gap-1 sticky top-0 bg-depth-1 z-20 p-1 border-b border-depth-3">
-                        <button
-                            onClick={addParametersToNode}
-                            disabled={!hasSelection}
-                            className="flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 disabled:opacity-30 cursor-pointer"
-                        >
-                            <Plus size={16} strokeWidth={3} />
-                        </button>
-
-                        <button
-                            onClick={moveSelectedParametersUp}
-                            disabled={!hasSelection}
-                            className="flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 disabled:opacity-30 cursor-pointer"
-                        >
-                            <ArrowBigUp size={16} fill="var(--foreground)" stroke="var(--foreground)" />
-                        </button>
-
-                        <button
-                            onClick={moveSelectedParametersDown}
-                            disabled={!hasSelection}
-                            className="flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 disabled:opacity-30 cursor-pointer"
-                        >
-                            <ArrowBigDown size={16} fill="var(--foreground)" stroke="var(--foreground)" />
-                        </button>
-
-                        <button
-                            onClick={deleteSelectedParameters}
-                            disabled={!hasSelection}
-                            className="flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 disabled:opacity-30 cursor-pointer"
-                        >
-                            <X size={16} strokeWidth={3} />
-                        </button>
+                        {actionButtons.map((button, index) => (
+                            <button
+                                key={index}
+                                onClick={button.onClick}
+                                disabled={!hasSelection}
+                                className="flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 disabled:opacity-30 cursor-pointer"
+                            >
+                                <button.icon {...button.iconProps} />
+                            </button>
+                        ))}
                     </div>
 
                     {filteredParameters.length > 0 && (
