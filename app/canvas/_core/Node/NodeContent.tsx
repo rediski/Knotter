@@ -32,7 +32,7 @@ export default function NodeContent() {
     if (!node) return null;
 
     return (
-        <div className="flex gap-1 w-full overflow-y-auto overflow-x-hidden" onClick={clearSelection}>
+        <div className="flex gap-1 w-full overflow-y-auto h-full overflow-x-hidden" onClick={clearSelection}>
             <div className="flex flex-1 gap-1">
                 <div className="flex flex-col gap-1">
                     <div
@@ -64,7 +64,7 @@ export default function NodeContent() {
 
                 <div className="flex flex-col w-full min-w-xl gap-1 text-sm">
                     {nodeParameters.length > 0 && (
-                        <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1">
+                        <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 h-full">
                             {nodeParameters.map((parameter) => (
                                 <LocalParameter key={parameter.id} parameter={parameter} nodeId={node.id} />
                             ))}
@@ -94,7 +94,7 @@ export default function NodeContent() {
                     <CreateParameterForm />
                 </div>
 
-                <div className="flex flex-col flex-1 w-full h-fit overflow-y-auto bg-depth-1 border border-depth-3 rounded-md">
+                <div className="flex flex-col flex-1 w-full overflow-y-auto bg-depth-1 border border-depth-3 rounded-md">
                     <div className="flex gap-1 sticky top-0 bg-depth-1 z-20 p-1 border-b border-depth-3">
                         <button
                             onClick={addParametersToNode}
