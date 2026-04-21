@@ -4,13 +4,13 @@ import { isStructure } from '@/canvas/_core/_/parameter.type-guards';
 export const getFilteredParameters = (parameters: Parameter[], filterText?: string) => {
     const childIds = new Set<string>();
 
-    for (const param of parameters) {
-        if (isStructure(param)) {
-            param.data.forEach((id) => childIds.add(id));
+    for (const parameter of parameters) {
+        if (isStructure(parameter)) {
+            parameter.value.forEach((id) => childIds.add(id));
         }
     }
 
-    let rootParameters = parameters.filter((param) => !childIds.has(param.id));
+    let rootParameters = parameters.filter((parameter) => !childIds.has(parameter.id));
 
     if (filterText && filterText.trim()) {
         const searchText = filterText.toLowerCase();

@@ -13,7 +13,7 @@ export const createParameter = (name: string, type: ParameterType): Parameter =>
         id: uuid(),
         name,
         type,
-        data: parameterInitialValue(type),
+        value: parameterInitialValue(type),
         parentId: null,
     } as Parameter;
 
@@ -33,7 +33,7 @@ export const createParameterInStructure = (
         id: uuid(),
         name,
         type,
-        data: parameterInitialValue(type),
+        value: parameterInitialValue(type),
         parentId: parentStructureId,
     } as Parameter;
 
@@ -41,7 +41,7 @@ export const createParameterInStructure = (
         if (parameter.id === parentStructureId && isStructure(parameter)) {
             return {
                 ...parameter,
-                data: [...parameter.data, newParameter.id],
+                value: [...parameter.value, newParameter.id],
             };
         }
 

@@ -9,7 +9,7 @@ interface useNumberParameterProps {
 export const useNumberParameter = ({ parameter, updateParameter }: useNumberParameterProps) => {
     if (!parameter || !isNumber(parameter)) {
         return {
-            handleUpdateValue: () => {},
+            updateDefaultValue: () => {},
         };
     }
 
@@ -19,16 +19,16 @@ export const useNumberParameter = ({ parameter, updateParameter }: useNumberPara
         return isNaN(num) ? undefined : num;
     };
 
-    const handleUpdateValue = (value: string) => {
+    const updateDefaultValue = (value: string) => {
         const numValue = parseNumber(value) ?? 0;
 
         updateParameter(parameter.id, {
             ...parameter,
-            data: numValue,
+            defaultValue: numValue,
         });
     };
 
     return {
-        handleUpdateValue,
+        updateDefaultValue,
     };
 };

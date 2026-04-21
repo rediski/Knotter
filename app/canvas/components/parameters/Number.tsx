@@ -14,7 +14,7 @@ import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 
 export const Number = memo(function Number({ parameter, isSelected }: { parameter: Parameter; isSelected: boolean }) {
-    const { handleUpdateValue } = useNumberParameter({
+    const { updateDefaultValue } = useNumberParameter({
         parameter,
         updateParameter,
     });
@@ -32,8 +32,8 @@ export const Number = memo(function Number({ parameter, isSelected }: { paramete
             />
 
             <Input
-                value={String(parameter.data ?? '')}
-                onChange={handleUpdateValue}
+                value={String(parameter.value ?? '')}
+                onChange={updateDefaultValue}
                 className={`
                     border ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'} 
                 `}

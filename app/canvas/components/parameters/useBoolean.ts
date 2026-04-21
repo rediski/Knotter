@@ -6,14 +6,13 @@ interface useBooleanParameterProps {
 }
 
 export const useBooleanParameter = ({ parameter, updateParameter }: useBooleanParameterProps) => {
-    const handleUpdateValue = (checked: boolean) => {
+    const updateDefaultValue = (checked: boolean) => {
         updateParameter(parameter.id, {
-            ...parameter,
-            data: checked,
+            defaultValue: checked,
         });
     };
 
     return {
-        handleUpdateValue,
+        updateDefaultValue,
     };
 };

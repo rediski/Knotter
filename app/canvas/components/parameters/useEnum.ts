@@ -1,72 +1,86 @@
-import { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
+import { Parameter } from '@/canvas/_core/_/parameter';
 import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { isEnum } from '@/canvas/_core/_/parameter.type-guards';
 
 export const useEnum = ({ parameter }: { parameter: Parameter | undefined }) => {
-    const handleAddEnumOption = () => {
+    const addEnumOption = () => {
         if (!parameter) return;
         if (!isEnum(parameter)) return;
 
-        const thisParameterData = parameter.data as ParameterTypeMap['enum'];
-        const ordinalNumber = thisParameterData.options.length + 1;
+        let parameterDefaultValue = parameter.defaultValue;
+
+        if (!parameterDefaultValue || !parameterDefaultValue.options) {
+            parameterDefaultValue = { value: null, options: [] };
+        }
+
+        const ordinalNumber = parameterDefaultValue.options.length + 1;
 
         let newValue = `Опция ${ordinalNumber}`;
         let counter = 1;
 
-        while (thisParameterData.options.includes(newValue)) {
+        while (parameterDefaultValue.options.includes(newValue)) {
             newValue = `Опция ${ordinalNumber} (${counter})`;
             counter++;
         }
 
         updateParameter(parameter.id, {
             ...parameter,
-            data: {
-                ...thisParameterData,
-                options: [...thisParameterData.options, newValue],
+            defaultValue: {
+                ...parameterDefaultValue,
+                options: [...parameterDefaultValue.options, newValue],
             },
         });
     };
 
-    const handleRemoveEnumOption = (index: number) => {
+    const removeEnumOption = (index: number) => {
         if (!parameter) return;
         if (!isEnum(parameter)) return;
 
-        const thisParameterData = parameter.data as ParameterTypeMap['enum'];
-        const updatedOptions = thisParameterData.options.filter((_, i) => i !== index);
+        let parameterDefaultValue = parameter.defaultValue;
+
+        if (!parameterDefaultValue || !parameterDefaultValue.options) {
+            parameterDefaultValue = { value: null, options: [] };
+        }
+
+        const updatedOptions = parameterDefaultValue.options.filter((_, i) => i !== index);
 
         updateParameter(parameter.id, {
             ...parameter,
-            data: {
-                ...thisParameterData,
+            defaultValue: {
+                ...parameterDefaultValue,
                 options: updatedOptions,
             },
         });
     };
 
-    const handleUpdateEnumOption = (index: number, newValue: string) => {
+    const updateEnumOption = (index: number, newValue: string) => {
         if (!parameter) return;
         if (!isEnum(parameter)) return;
 
-        const thisParameterData = parameter.data as ParameterTypeMap['enum'];
+        let parameterDefaultValue = parameter.defaultValue;
 
-        if (thisParameterData.options.some((option, i) => i !== index && option === newValue)) {
+        if (!parameterDefaultValue || !parameterDefaultValue.options) {
+            parameterDefaultValue = { value: null, options: [] };
+        }
+
+        if (parameterDefaultValue.options.some((option, i) => i !== index && option === newValue)) {
             return;
         }
 
-        const updatedOptions = thisParameterData.options.map((option, i) => (i === index ? newValue : option));
+        const updatedOptions = parameterDefaultValue.options.map((option, i) => (i === index ? newValue : option));
 
         updateParameter(parameter.id, {
             ...parameter,
-            data: {
-                ...thisParameterData,
+            defaultValue: {
+                ...parameterDefaultValue,
                 options: updatedOptions,
             },
         });
     };
 
     return {
-        handleAddEnumOption,
-        handleRemoveEnumOption,
-        handleUpdateEnumOption,
+        addEnumOption,
+        removeEnumOption,
+        updateEnumOption,
     };
 };

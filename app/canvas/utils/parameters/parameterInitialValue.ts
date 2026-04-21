@@ -8,6 +8,6 @@ const INITIAL_PARAMETER_VALUES = {
     structure: [] satisfies ParameterTypeMap['structure'],
 } as const;
 
-export function parameterInitialValue(type: ParameterType): Parameter['data'] {
+export function parameterInitialValue(type: ParameterType): Parameter['value'] {
     return INITIAL_PARAMETER_VALUES[type];
 }

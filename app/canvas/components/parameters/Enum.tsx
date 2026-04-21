@@ -15,9 +15,11 @@ import { useEnum } from '@/canvas/components/parameters/useEnum';
 import { PlusIcon, X } from 'lucide-react';
 
 export const Enum = memo(function Enum({ parameter, isSelected }: { parameter: Parameter; isSelected: boolean }) {
-    const { handleAddEnumOption, handleRemoveEnumOption, handleUpdateEnumOption } = useEnum({ parameter });
+    const { addEnumOption, removeEnumOption, updateEnumOption } = useEnum({ parameter });
 
     if (!isEnum(parameter)) return null;
+
+    const options = parameter.defaultValue?.options || [];
 
     return (
         <div className="flex gap-6 w-full">
@@ -33,7 +35,7 @@ export const Enum = memo(function Enum({ parameter, isSelected }: { parameter: P
 
             <div className="flex flex-col gap-1 w-full flex-1">
                 <div
-                    onClick={handleAddEnumOption}
+                    onClick={addEnumOption}
                     className={`
                         flex items-center justify-center gap-2 px-3 py-1 border rounded-md cursor-pointer
                         ${isSelected ? 'bg-bg-accent/10 hover:bg-bg-accent/15 active:bg-bg-accent/20 border-bg-accent/10' : 'bg-depth-3 hover:bg-depth-4 active:bg-depth-5 border-depth-4'}
@@ -42,11 +44,11 @@ export const Enum = memo(function Enum({ parameter, isSelected }: { parameter: P
                     <PlusIcon size={16} /> Добавить опцию
                 </div>
 
-                {parameter.data.options.map((option, index) => (
+                {options.map((option, index) => (
                     <div key={index} className="flex gap-2 items-center rounded-md relative">
                         <Input
                             value={option}
-                            onChange={(val) => handleUpdateEnumOption(index, val)}
+                            onChange={(value) => updateEnumOption(index, value)}
                             className={`
                                 border 
                                 ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'}
@@ -56,7 +58,7 @@ export const Enum = memo(function Enum({ parameter, isSelected }: { parameter: P
                         />
 
                         <button
-                            onClick={() => handleRemoveEnumOption(index)}
+                            onClick={() => removeEnumOption(index)}
                             className="text-gray cursor-pointer absolute right-3"
                         >
                             <X size={16} />

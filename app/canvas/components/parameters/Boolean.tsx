@@ -16,7 +16,7 @@ export const Boolean = memo(function Boolean({ parameter, isSelected }: { parame
     if (!parameter) return;
     if (!isBoolean(parameter)) return;
 
-    const { handleUpdateValue } = useBooleanParameter({
+    const { updateDefaultValue } = useBooleanParameter({
         parameter,
         updateParameter,
     });
@@ -33,8 +33,8 @@ export const Boolean = memo(function Boolean({ parameter, isSelected }: { parame
 
             <div className="w-full">
                 <Checkbox
-                    checked={parameter.data}
-                    onChange={handleUpdateValue}
+                    checked={parameter.defaultValue}
+                    onChange={updateDefaultValue}
                     className={`
                         border 
                         ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'}

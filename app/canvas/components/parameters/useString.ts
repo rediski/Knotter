@@ -14,7 +14,7 @@ export const useStringParameter = ({ parameter, updateParameter }: useStringPara
     const handleUpdateValue = (value: string) => {
         updateParameter(parameter.id, {
             ...parameter,
-            data: value,
+            value: value,
         });
     };
 

@@ -33,7 +33,7 @@ export const String = memo(function String({ parameter, isSelected }: { paramete
             />
 
             <Input
-                value={parameter.data}
+                value={parameter.value}
                 onChange={handleUpdateValue}
                 className={`border ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'}`}
                 placeholder="Введите значение"

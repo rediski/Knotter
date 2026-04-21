@@ -17,7 +17,7 @@ export const removeParameter = (parameterId: string) => {
         const parameter = parameters.find((parameter) => parameter.id === id);
 
         if (parameter && isStructure(parameter)) {
-            parameter.data.forEach((childId) => collectIds(childId));
+            parameter.value.forEach((childId) => collectIds(childId));
         }
     };
 
@@ -29,7 +29,7 @@ export const removeParameter = (parameterId: string) => {
         if (isStructure(parameter)) {
             return {
                 ...parameter,
-                data: parameter.data.filter((id) => !idsToDelete.has(id)),
+                value: parameter.value.filter((id) => !idsToDelete.has(id)),
             };
         }
         return parameter;
