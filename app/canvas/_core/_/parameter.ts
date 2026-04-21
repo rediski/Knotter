@@ -12,7 +12,8 @@ export type Parameter<T extends ParameterType = ParameterType> = {
     id: string;
     name: string;
     type: T;
-    data: ParameterTypeMap[T];
+    value: ParameterTypeMap[T];
+    defaultValue: ParameterTypeMap[T];
     parentId: string | null;
 };
 
