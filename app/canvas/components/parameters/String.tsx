@@ -14,13 +14,13 @@ import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 
 export const String = memo(function String({ parameter, isSelected }: { parameter: Parameter; isSelected: boolean }) {
-    const { handleUpdateValue } = useStringParameter({
+    const { updateDefaultValue } = useStringParameter({
         parameter,
         updateParameter,
     });
 
-    if (!parameter) return;
-    if (!isString(parameter)) return;
+    if (!parameter) return null;
+    if (!isString(parameter)) return null;
 
     return (
         <div className="flex items-center gap-2 h-8 w-full">
@@ -33,8 +33,8 @@ export const String = memo(function String({ parameter, isSelected }: { paramete
             />
 
             <Input
-                value={parameter.value}
-                onChange={handleUpdateValue}
+                value={parameter.defaultValue}
+                onChange={updateDefaultValue}
                 className={`border ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'}`}
                 placeholder="Введите значение"
             />

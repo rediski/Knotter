@@ -13,8 +13,8 @@ import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { useBooleanParameter } from './useBoolean';
 
 export const Boolean = memo(function Boolean({ parameter, isSelected }: { parameter: Parameter; isSelected: boolean }) {
-    if (!parameter) return;
-    if (!isBoolean(parameter)) return;
+    if (!parameter) return null;
+    if (!isBoolean(parameter)) return null;
 
     const { updateDefaultValue } = useBooleanParameter({
         parameter,
