@@ -2,7 +2,7 @@ export type ParameterTypeMap = {
     number: number;
     string: string;
     boolean: boolean;
-    enum: { value: string | null; options: string[] };
+    enum: { selected: string | null; options: string[] };
     structure: string[];
 };
 
@@ -13,9 +13,8 @@ export type Parameter<T extends ParameterType = ParameterType> = {
     name: string;
     type: T;
     value: ParameterTypeMap[T];
-    defaultValue: ParameterTypeMap[T];
     parentId: string | null;
-};
+} & (T extends 'enum' ? {} : { defaultValue: ParameterTypeMap[T] });
 
 export const parameterTypes: { type: ParameterType; label: string }[] = [
     { type: 'number', label: 'Число' },
