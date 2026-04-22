@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import { Parameter } from '@/canvas/_core/_/parameter';
+import { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
 import { isEnum } from '@/canvas/_core/_/parameter.type-guards';
 
 import { Input } from '@/components/UI/Input';
@@ -19,7 +19,8 @@ export const Enum = memo(function Enum({ parameter, isSelected }: { parameter: P
 
     if (!isEnum(parameter)) return null;
 
-    const options = parameter.defaultValue?.options || [];
+    const value = parameter.value as ParameterTypeMap['enum'];
+    const options = value?.options || [];
 
     return (
         <div className="flex gap-6 w-full">
@@ -44,7 +45,7 @@ export const Enum = memo(function Enum({ parameter, isSelected }: { parameter: P
                     <PlusIcon size={16} /> Добавить опцию
                 </div>
 
-                {options.map((option, index) => (
+                {options.map((option: string, index: number) => (
                     <div key={index} className="flex gap-2 items-center rounded-md relative">
                         <Input
                             value={option}
