@@ -4,7 +4,7 @@ const INITIAL_PARAMETER_VALUES = {
     number: 0 satisfies ParameterTypeMap['number'],
     string: '' satisfies ParameterTypeMap['string'],
     boolean: false satisfies ParameterTypeMap['boolean'],
-    enum: { value: null, options: [] } satisfies ParameterTypeMap['enum'],
+    enum: { selected: null, options: [] } satisfies ParameterTypeMap['enum'],
     structure: [] satisfies ParameterTypeMap['structure'],
 } as const;
 
