@@ -40,7 +40,7 @@ export const Structure = memo(function Structure({ parameter, selectedIds, onSel
                 />
             </div>
 
-            <div className="flex flex-col gap-1 py-2 ml-4">
+            <div className="flex flex-col gap-1 bg-depth-1 p-1 rounded-md border-dashed border border-depth-3">
                 {parameterData.length === 0 ? (
                     <EmptyState message="Параметры не найдены" />
                 ) : (
