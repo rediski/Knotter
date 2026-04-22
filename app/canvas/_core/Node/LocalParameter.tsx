@@ -51,9 +51,13 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
     );
 
     const handleEnumChange = useCallback(
-        (newValue: string) => {
+        (selected: string) => {
+            const currentValue = parameter.value as ParameterTypeMap['enum'];
             updateNodeParameter(nodeId, parameter.id, {
-                value: { value: newValue, options: (parameter.value as ParameterTypeMap['enum']).options },
+                value: {
+                    ...currentValue,
+                    selected,
+                },
             });
         },
         [parameter, nodeId],
@@ -61,7 +65,7 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
 
     const getCurrentEnumValue = useCallback(() => {
         const paramData = parameter.value as ParameterTypeMap['enum'];
-        return paramData.value || paramData.options?.[0];
+        return paramData.selected || paramData.options?.[0];
     }, [parameter.value]);
 
     return (
@@ -132,7 +136,7 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                                     className={`
                                         w-full text-left px-3 py-1.5 rounded-md border cursor-pointer
                                         ${
-                                            option === (parameter.value as ParameterTypeMap['enum']).value
+                                            option === (parameter.value as ParameterTypeMap['enum']).selected
                                                 ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
                                                 : 'bg-depth-4 hover:bg-depth-5 border-depth-5'
                                         }
