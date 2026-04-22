@@ -1,5 +1,4 @@
 import { useItemsStore } from '@/canvas/store/useItemsStore';
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 
 export interface SelectCanvasItemEvent {
     ctrlKey: boolean;
