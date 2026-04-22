@@ -8,17 +8,16 @@ interface useStringParameterProps {
 
 export const useStringParameter = ({ parameter, updateParameter }: useStringParameterProps) => {
     if (!parameter || !isString(parameter)) {
-        return { handleUpdateValue: () => {} };
+        return { updateDefaultValue: () => {} };
     }
 
-    const handleUpdateValue = (value: string) => {
+    const updateDefaultValue = (value: string) => {
         updateParameter(parameter.id, {
-            ...parameter,
-            value: value,
+            defaultValue: value,
         });
     };
 
     return {
-        handleUpdateValue,
+        updateDefaultValue,
     };
 };

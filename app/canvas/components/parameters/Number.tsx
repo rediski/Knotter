@@ -32,7 +32,7 @@ export const Number = memo(function Number({ parameter, isSelected }: { paramete
             />
 
             <Input
-                value={String(parameter.value ?? '')}
+                value={String(parameter.defaultValue ?? '')}
                 onChange={updateDefaultValue}
                 className={`
                     border ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'} 
