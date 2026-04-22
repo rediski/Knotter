@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 
 import type { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
 import { isNumber, isString, isBoolean, isEnum, isStructure } from '@/canvas/_core/_/parameter.type-guards';
@@ -11,98 +11,85 @@ import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 
 import { getParameterIcon } from '@/canvas/utils/nodes/getParameterIcon';
 import { updateNodeParameter } from '@/canvas/utils/parameters/updateNodeParameter';
-import { removeParameterFromSelectedNode } from '@/canvas/utils/parameters/removeParameterFromSelectedNode';
+import { unassignParameter } from '@/canvas/utils/parameters/unassignParameter';
 
 import { X } from 'lucide-react';
 
 export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }: { parameter: Parameter; nodeId: string }) {
     const ParameterIcon = getParameterIcon(parameter.type);
 
-    const handleRemove = useCallback(() => {
-        removeParameterFromSelectedNode(parameter.id);
-    }, [parameter.id]);
-
-    const handleNumberChange = useCallback(
-        (newValue: string | null) => {
+    if (isNumber(parameter)) {
+        const handleNumberChange = (newValue: string | null) => {
             if (newValue === null) return;
+
             const numValue = parseFloat(newValue);
+
             if (isNaN(numValue)) return;
 
-            updateNodeParameter(nodeId, parameter.id, {
-                value: numValue,
-            });
-        },
-        [parameter, nodeId],
-    );
+            updateNodeParameter(nodeId, parameter.id, { value: numValue });
+        };
 
-    const handleStringChange = useCallback(
-        (newValue: string | null) => {
+        return (
+            <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
+                <div className="flex items-center gap-2 w-full truncate">
+                    <ParameterIcon size={16} />
+                    <p className="truncate">{parameter.name}</p>
+                </div>
+
+                <Input
+                    value={parameter.value.toString()}
+                    type="number"
+                    className="bg-depth-3 border border-depth-4 hover:bg-depth-4"
+                    onChange={handleNumberChange}
+                />
+
+                <button
+                    onClick={() => unassignParameter(parameter.id)}
+                    className="cursor-pointer text-gray hover:text-white min-w-4"
+                >
+                    <X size={16} />
+                </button>
+            </div>
+        );
+    }
+
+    if (isString(parameter)) {
+        const handleStringChange = (newValue: string | null) => {
             if (newValue === null) return;
             updateNodeParameter(nodeId, parameter.id, { value: newValue });
-        },
-        [parameter, nodeId],
-    );
+        };
 
-    const handleBooleanChange = useCallback(
-        (checked: boolean) => {
+        return (
+            <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
+                <div className="flex items-center gap-2 w-full truncate">
+                    <ParameterIcon size={16} />
+                    <p className="truncate">{parameter.name}</p>
+                </div>
+
+                <Input
+                    value={parameter.value}
+                    placeholder="Введите значение"
+                    className="bg-depth-3 hover:bg-depth-4 border border-depth-4"
+                    onChange={handleStringChange}
+                />
+
+                <button
+                    onClick={() => unassignParameter(parameter.id)}
+                    className="cursor-pointer text-gray hover:text-white min-w-4"
+                >
+                    <X size={16} />
+                </button>
+            </div>
+        );
+    }
+
+    if (isBoolean(parameter)) {
+        const handleBooleanChange = (checked: boolean) => {
             updateNodeParameter(nodeId, parameter.id, { value: checked });
-        },
-        [parameter, nodeId],
-    );
+        };
 
-    const handleEnumChange = useCallback(
-        (selected: string) => {
-            const currentValue = parameter.value as ParameterTypeMap['enum'];
-            updateNodeParameter(nodeId, parameter.id, {
-                value: {
-                    ...currentValue,
-                    selected,
-                },
-            });
-        },
-        [parameter, nodeId],
-    );
-
-    const getCurrentEnumValue = useCallback(() => {
-        const paramData = parameter.value as ParameterTypeMap['enum'];
-        return paramData.selected || paramData.options?.[0];
-    }, [parameter.value]);
-
-    return (
-        <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
-            {isNumber(parameter) && (
-                <>
-                    <div className="flex items-center gap-2 w-full truncate">
-                        <ParameterIcon size={16} />
-                        <p className="truncate">{parameter.name}</p>
-                    </div>
-
-                    <Input
-                        value={parameter.value.toString()}
-                        type="number"
-                        className="bg-depth-3 border border-depth-4 hover:bg-depth-4"
-                        onChange={handleNumberChange}
-                    />
-                </>
-            )}
-
-            {isString(parameter) && (
-                <>
-                    <div className="flex items-center gap-2 w-full truncate">
-                        <ParameterIcon size={16} />
-                        <p className="truncate">{parameter.name}</p>
-                    </div>
-
-                    <Input
-                        value={parameter.value}
-                        placeholder="Введите значение"
-                        className="bg-depth-3 hover:bg-depth-4 border border-depth-4"
-                        onChange={handleStringChange}
-                    />
-                </>
-            )}
-
-            {isBoolean(parameter) && (
+        return (
+            <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
                 <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-2 truncate">
                         <ParameterIcon size={16} />
@@ -112,61 +99,96 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                     <Checkbox
                         checked={parameter.value}
                         className={`
-                                bg-depth-3 border border-depth-4
-                                ${parameter.value === true ? 'hover:bg-bg-accent' : 'hover:bg-depth-4'}
-                            `}
+                            bg-depth-3 border border-depth-4
+                            ${parameter.value === true ? 'hover:bg-bg-accent' : 'hover:bg-depth-4'}
+                        `}
                         onChange={handleBooleanChange}
                     />
                 </div>
-            )}
 
-            {isEnum(parameter) && (
-                <>
-                    <div className="flex items-center gap-2 w-full truncate">
-                        <ParameterIcon size={16} />
-                        <p className="truncate">{parameter.name}</p>
-                    </div>
+                <button
+                    onClick={() => unassignParameter(parameter.id)}
+                    className="cursor-pointer text-gray hover:text-white min-w-4"
+                >
+                    <X size={16} />
+                </button>
+            </div>
+        );
+    }
 
-                    <div className="w-full">
-                        <DropdownAbsolute title={getCurrentEnumValue()} depth={3} align="right">
-                            {(parameter.value as ParameterTypeMap['enum']).options.map((option) => (
-                                <button
-                                    key={option}
-                                    onClick={() => handleEnumChange(option)}
-                                    className={`
-                                        w-full text-left px-3 py-1.5 rounded-md border cursor-pointer
-                                        ${
-                                            option === (parameter.value as ParameterTypeMap['enum']).selected
-                                                ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
-                                                : 'bg-depth-4 hover:bg-depth-5 border-depth-5'
-                                        }
-                                    `}
-                                >
-                                    {option}
-                                </button>
-                            ))}
-                        </DropdownAbsolute>
-                    </div>
-                </>
-            )}
+    if (isEnum(parameter)) {
+        const getCurrentEnumValue = () => {
+            const paramData = parameter.value as ParameterTypeMap['enum'];
+            return paramData.selected || paramData.options?.[0];
+        };
 
-            {isStructure(parameter) && (
-                <>
-                    <div className="flex items-center gap-2 truncate w-full">
-                        <ParameterIcon size={16} className="text-icon-secondary shrink-0" />
-                        <p className="truncate w-full">{parameter.name}</p>
-                    </div>
+        const handleEnumChange = (selected: string) => {
+            const currentValue = parameter.value as ParameterTypeMap['enum'];
+            updateNodeParameter(nodeId, parameter.id, {
+                value: {
+                    ...currentValue,
+                    selected,
+                },
+            });
+        };
 
-                    <p className="flex items-center w-full h-8">В разработке...</p>
-                </>
-            )}
+        return (
+            <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
+                <div className="flex items-center gap-2 w-full truncate">
+                    <ParameterIcon size={16} />
+                    <p className="truncate">{parameter.name}</p>
+                </div>
 
-            <button
-                onClick={handleRemove}
-                className="cursor-pointer text-gray-400 hover:text-white transition-colors min-w-4"
-            >
-                <X size={16} />
-            </button>
-        </div>
-    );
+                <div className="w-full">
+                    <DropdownAbsolute title={getCurrentEnumValue()} depth={3} align="right">
+                        {(parameter.value as ParameterTypeMap['enum']).options.map((option) => (
+                            <button
+                                key={option}
+                                onClick={() => handleEnumChange(option)}
+                                className={`
+                                    w-full text-left px-3 py-1.5 rounded-md border cursor-pointer
+                                    ${
+                                        option === (parameter.value as ParameterTypeMap['enum']).selected
+                                            ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
+                                            : 'bg-depth-4 hover:bg-depth-5 border-depth-5'
+                                    }
+                                `}
+                            >
+                                {option}
+                            </button>
+                        ))}
+                    </DropdownAbsolute>
+                </div>
+
+                <button
+                    onClick={() => unassignParameter(parameter.id)}
+                    className="cursor-pointer text-gray hover:text-white min-w-4"
+                >
+                    <X size={16} />
+                </button>
+            </div>
+        );
+    }
+
+    if (isStructure(parameter)) {
+        return (
+            <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
+                <div className="flex items-center gap-2 truncate w-full">
+                    <ParameterIcon size={16} className="text-icon-secondary shrink-0" />
+                    <p className="truncate w-full">{parameter.name}</p>
+                </div>
+
+                <p className="flex items-center w-full h-8">В разработке...</p>
+
+                <button
+                    onClick={() => unassignParameter(parameter.id)}
+                    className="cursor-pointer text-gray hover:text-white min-w-4"
+                >
+                    <X size={16} />
+                </button>
+            </div>
+        );
+    }
+
+    return null;
 });
