@@ -1,7 +1,7 @@
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 import { getSelectedNode } from '@/canvas/utils/nodes/getSelectedNodes';
 
-export const removeParameterFromSelectedNode = (parameterId: string) => {
+export const unassignParameter = (parameterId: string) => {
     const itemsState = useItemsStore.getState();
 
     const items = itemsState.items;
