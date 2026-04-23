@@ -129,10 +129,12 @@ export const useNodeContent = () => {
     const items = useItemsStore((state) => state.items);
     const parameters = useItemsStore((state) => state.parameters);
     const setParameters = useItemsStore((state) => state.setParameters);
+    const selectedParameters = useItemsStore((state) => state.selectedParameters);
+    const setSelectedParameters = useItemsStore((state) => state.setSelectedParameters);
+
     const selectedTabId = useCanvasStore((state) => state.selectedTabId);
 
     const [filterText, setFilterText] = useState('');
-    const [selectedParameters, setSelectedParameters] = useState<Set<string>>(new Set());
 
     const node = useMemo(
         () => items.find((item): item is Node => item.id === selectedTabId && item.kind === 'node'),
@@ -145,9 +147,26 @@ export const useNodeContent = () => {
     const shapeInfo = node ? NODE_SHAPES[node.shapeType as keyof typeof NODE_SHAPES] : undefined;
     const Icon = shapeInfo?.icon;
 
+    const hasSelectedParameters = selectedParameters.size > 0;
+
+    const hasAddableSelectedParameters = useMemo(() => {
+        if (selectedParameters.size === 0) return false;
+
+        const parametersMap = new Map(parameters.map((parameter) => [parameter.id, parameter]));
+        const existingNodeParameterIds = new Set(node?.parameters.map((p) => p.id) ?? []);
+
+        return Array.from(selectedParameters).some((selectedId) => {
+            const parameter = parametersMap.get(selectedId);
+            const isRootParameter = parameter?.parentId === null;
+            const isNotAlreadyInNode = !existingNodeParameterIds.has(selectedId);
+
+            return isRootParameter && isNotAlreadyInNode;
+        });
+    }, [selectedParameters, parameters, node]);
+
     const selectParameters = (id: string, ctrlKey: boolean, shiftKey: boolean) => {
         if (ctrlKey) {
-            setSelectedParameters((prev) => toggleParameterSelection(prev, id));
+            setSelectedParameters(toggleParameterSelection(selectedParameters, id));
             return;
         }
 
@@ -253,7 +272,16 @@ export const useNodeContent = () => {
         e.stopPropagation();
         if (!node || selectedParameters.size === 0) return;
 
-        const selectedParametersList = parameters.filter((parameter) => selectedParameters.has(parameter.id));
+        const existingNodeParameterIds = new Set(node.parameters.map((parameter) => parameter.id));
+
+        const selectedParametersList = parameters.filter(
+            (parameter) =>
+                selectedParameters.has(parameter.id) &&
+                parameter.parentId === null &&
+                !existingNodeParameterIds.has(parameter.id),
+        );
+
+        if (selectedParametersList.length === 0) return;
 
         selectedParametersList.forEach((parameter) => {
             addParameterToNode(node.id, parameter.id);
@@ -262,8 +290,6 @@ export const useNodeContent = () => {
         setSelectedParameters(new Set());
     };
 
-    const hasSelection = selectedParameters.size > 0;
-
     return {
         node,
         nodeParameters,
@@ -271,7 +297,8 @@ export const useNodeContent = () => {
         parameters,
         filterText,
         selectedParameters,
-        hasSelection,
+        hasSelectedParameters,
+        hasAddableSelectedParameters,
         Icon,
 
         setFilterText,
