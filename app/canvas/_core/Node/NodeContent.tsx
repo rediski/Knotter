@@ -16,7 +16,8 @@ export default function NodeContent() {
         parameters,
         filterText,
         selectedParameters,
-        hasSelection,
+        hasSelectedParameters,
+        hasAddableSelectedParameters,
         Icon,
 
         setFilterText,
@@ -36,21 +37,25 @@ export default function NodeContent() {
             onClick: addParametersToNode,
             icon: Plus,
             iconProps: { size: 16, strokeWidth: 3 },
+            disabled: !hasAddableSelectedParameters,
         },
         {
             onClick: moveSelectedParametersUp,
             icon: ArrowBigUp,
             iconProps: { size: 16, fill: 'var(--foreground)', stroke: 'var(--foreground)' },
+            disabled: !hasSelectedParameters,
         },
         {
             onClick: moveSelectedParametersDown,
             icon: ArrowBigDown,
             iconProps: { size: 16, fill: 'var(--foreground)', stroke: 'var(--foreground)' },
+            disabled: !hasSelectedParameters,
         },
         {
             onClick: deleteSelectedParameters,
             icon: X,
             iconProps: { size: 16, strokeWidth: 3 },
+            disabled: !hasSelectedParameters,
         },
     ];
 
@@ -120,8 +125,8 @@ export default function NodeContent() {
                             <button
                                 key={index}
                                 onClick={button.onClick}
-                                disabled={!hasSelection}
-                                className="flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 disabled:opacity-30 cursor-pointer"
+                                disabled={button.disabled}
+                                className="flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
                             >
                                 <button.icon {...button.iconProps} />
                             </button>
