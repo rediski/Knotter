@@ -15,6 +15,8 @@ export const addParameterToNode = (nodeId: string, parameterId: string) => {
 
     if (!node || !parameter) return;
 
+    if (parameter.parentId !== null) return;
+
     const parameterExists = node.parameters?.some((param) => param.id === parameterId);
 
     if (parameterExists) return;
