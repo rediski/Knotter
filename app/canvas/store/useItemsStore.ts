@@ -27,6 +27,9 @@ export interface ItemsState {
 
     selectionEnd: Position | null;
     setSelectionEnd: (pos: Position | null) => void;
+
+    selectedParameters: Set<string>;
+    setSelectedParameters: (selectedParameters: Set<string>) => void;
 }
 
 export const useItemsStore = create<ItemsState>()(
@@ -55,6 +58,9 @@ export const useItemsStore = create<ItemsState>()(
 
             selectionEnd: null,
             setSelectionEnd: (pos) => set({ selectionEnd: pos }),
+
+            selectedParameters: new Set<string>(),
+            setSelectedParameters: (selectedParameters) => set({ selectedParameters }),
         }),
         {
             name: 'items-storage',
