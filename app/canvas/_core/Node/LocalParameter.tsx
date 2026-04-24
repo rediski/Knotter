@@ -37,7 +37,7 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                 </div>
 
                 <Input
-                    value={parameter.value.toString()}
+                    value={parameter.value?.toString() ?? '0'}
                     type="number"
                     className="bg-depth-3 border border-depth-4 hover:bg-depth-4"
                     onChange={handleNumberChange}
@@ -59,6 +59,9 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
             updateNodeParameter(nodeId, parameter.id, { value: newValue });
         };
 
+        // Безопасное получение значения
+        const value = parameter.value ?? '';
+
         return (
             <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
                 <div className="flex items-center gap-2 w-full truncate">
@@ -67,7 +70,7 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                 </div>
 
                 <Input
-                    value={parameter.value}
+                    value={value}
                     placeholder="Введите значение"
                     className="bg-depth-3 hover:bg-depth-4 border border-depth-4"
                     onChange={handleStringChange}
@@ -88,6 +91,9 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
             updateNodeParameter(nodeId, parameter.id, { value: checked });
         };
 
+        // Безопасное получение значения
+        const value = parameter.value ?? false;
+
         return (
             <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
                 <div className="flex items-center justify-between w-full">
@@ -97,10 +103,10 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                     </div>
 
                     <Checkbox
-                        checked={parameter.value}
+                        checked={value}
                         className={`
                             bg-depth-3 border border-depth-4
-                            ${parameter.value === true ? 'hover:bg-bg-accent' : 'hover:bg-depth-4'}
+                            ${value === true ? 'hover:bg-bg-accent' : 'hover:bg-depth-4'}
                         `}
                         onChange={handleBooleanChange}
                     />
@@ -117,13 +123,14 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
     }
 
     if (isEnum(parameter)) {
+        const enumValue = parameter.value as ParameterTypeMap['enum'];
+
         const getCurrentEnumValue = () => {
-            const paramData = parameter.value as ParameterTypeMap['enum'];
-            return paramData.selected || paramData.options?.[0];
+            return enumValue?.selected || enumValue?.options?.[0] || '';
         };
 
         const handleEnumChange = (selected: string) => {
-            const currentValue = parameter.value as ParameterTypeMap['enum'];
+            const currentValue = enumValue || { options: [], selected: '' };
             updateNodeParameter(nodeId, parameter.id, {
                 value: {
                     ...currentValue,
@@ -131,6 +138,9 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                 },
             });
         };
+
+        // Безопасная проверка options
+        const options = enumValue?.options || [];
 
         return (
             <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
@@ -141,14 +151,14 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
 
                 <div className="w-full">
                     <DropdownAbsolute title={getCurrentEnumValue()} depth={3} align="right">
-                        {(parameter.value as ParameterTypeMap['enum']).options.map((option) => (
+                        {options.map((option) => (
                             <button
                                 key={option}
                                 onClick={() => handleEnumChange(option)}
                                 className={`
                                     w-full text-left px-3 py-1.5 rounded-md border cursor-pointer
                                     ${
-                                        option === (parameter.value as ParameterTypeMap['enum']).selected
+                                        option === enumValue?.selected
                                             ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
                                             : 'bg-depth-4 hover:bg-depth-5 border-depth-5'
                                     }
