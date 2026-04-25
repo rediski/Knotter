@@ -1,12 +1,16 @@
 'use client';
 
+import { NODE_SHAPES } from '@/canvas/_core/_/nodeShapeType';
+import { ParameterItem } from '@/canvas/_core/Node/ParameterItem';
+
 import { Input } from '@/components/UI/Input';
 import { EmptyState } from '@/components/UI/EmptyState';
-import { ParameterItem } from '@/canvas/_core/Node/ParameterItem';
 import { CreateParameterForm } from '@/canvas/_core/Node/CreateParameterForm';
 import { LocalParameter } from '@/canvas/_core/Node/LocalParameter';
-import { Search, ArrowBigUp, ArrowBigDown, Plus, X } from 'lucide-react';
+
 import { useNodeContent } from '@/canvas/_core/Node/useNodeContent';
+
+import { Search, ArrowBigUp, ArrowBigDown, Plus, X } from 'lucide-react';
 
 export default function NodeContent() {
     const {
@@ -16,9 +20,6 @@ export default function NodeContent() {
         parameters,
         filterText,
         selectedParameters,
-        hasSelectedParameters,
-        hasAddableSelectedParameters,
-        Icon,
 
         setFilterText,
 
@@ -37,27 +38,25 @@ export default function NodeContent() {
             onClick: addParametersToNode,
             icon: Plus,
             iconProps: { size: 16, strokeWidth: 3 },
-            disabled: !hasAddableSelectedParameters,
         },
         {
             onClick: moveSelectedParametersUp,
             icon: ArrowBigUp,
             iconProps: { size: 16, fill: 'var(--foreground)', stroke: 'var(--foreground)' },
-            disabled: !hasSelectedParameters,
         },
         {
             onClick: moveSelectedParametersDown,
             icon: ArrowBigDown,
             iconProps: { size: 16, fill: 'var(--foreground)', stroke: 'var(--foreground)' },
-            disabled: !hasSelectedParameters,
         },
         {
             onClick: deleteSelectedParameters,
             icon: X,
             iconProps: { size: 16, strokeWidth: 3 },
-            disabled: !hasSelectedParameters,
         },
     ];
+
+    const Icon = NODE_SHAPES[node.shapeType].icon;
 
     return (
         <div className="flex gap-1 w-full overflow-y-auto h-full overflow-x-hidden" onClick={clearSelection}>
@@ -125,7 +124,7 @@ export default function NodeContent() {
                             <button
                                 key={index}
                                 onClick={button.onClick}
-                                disabled={button.disabled}
+                                disabled={selectedParameters.size === 0}
                                 className="flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
                             >
                                 <button.icon {...button.iconProps} />
