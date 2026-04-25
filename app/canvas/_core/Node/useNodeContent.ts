@@ -4,24 +4,12 @@ import type { Node } from '@/canvas/_core/_/canvas.types';
 import type { Parameter } from '@/canvas/_core/_/parameter';
 
 import { isStructure } from '@/canvas/_core/_/parameter.type-guards';
-import { NODE_SHAPES } from '@/canvas/_core/_/nodeShapeType';
 
 import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { getFilteredParameters } from '@/canvas/utils/parameters/getFilteredParameters';
 import { addParameterToNode } from '@/canvas/utils/parameters/addParameterToNode';
-
-const toggleParameterSelection = (prevSet: Set<string>, id: string): Set<string> => {
-    const newSet = new Set(prevSet);
-    const wasDeleted = newSet.delete(id);
-
-    if (!wasDeleted) {
-        newSet.add(id);
-    }
-
-    return newSet;
-};
 
 const getFlattenedParameterIds = (parameters: Parameter[], parametersMap: Map<string, Parameter>): string[] => {
     const ids: string[] = [];
@@ -40,6 +28,28 @@ const getFlattenedParameterIds = (parameters: Parameter[], parametersMap: Map<st
     }
 
     return ids;
+};
+
+const getRangeSelection = (parameters: Parameter[], currentId: string, lastSelectedId: string): Set<string> => {
+    const parametersMap = new Map(parameters.map((parameter) => [parameter.id, parameter]));
+    const flatIds = getFlattenedParameterIds(parameters, parametersMap);
+
+    const currentIndex = flatIds.findIndex((id) => id === currentId);
+    const lastIndex = flatIds.findIndex((id) => id === lastSelectedId);
+
+    if (currentIndex === -1 || lastIndex === -1) {
+        return new Set();
+    }
+
+    const start = Math.min(currentIndex, lastIndex);
+    const end = Math.max(currentIndex, lastIndex);
+    const newSet = new Set<string>();
+
+    for (let i = start; i <= end; i++) {
+        newSet.add(flatIds[i]);
+    }
+
+    return newSet;
 };
 
 const getSiblingsIds = (parameters: Parameter[], currentParameter: Parameter, filteredParameters: Parameter[]): string[] => {
@@ -103,28 +113,6 @@ const getIdsToDelete = (ids: Set<string>, parametersMap: Map<string, Parameter>)
     return toDelete;
 };
 
-const getRangeSelection = (parameters: Parameter[], currentId: string, lastSelectedId: string): Set<string> => {
-    const parametersMap = new Map(parameters.map((parameter) => [parameter.id, parameter]));
-    const flatIds = getFlattenedParameterIds(parameters, parametersMap);
-
-    const currentIndex = flatIds.findIndex((id) => id === currentId);
-    const lastIndex = flatIds.findIndex((id) => id === lastSelectedId);
-
-    if (currentIndex === -1 || lastIndex === -1) {
-        return new Set();
-    }
-
-    const start = Math.min(currentIndex, lastIndex);
-    const end = Math.max(currentIndex, lastIndex);
-    const newSet = new Set<string>();
-
-    for (let i = start; i <= end; i++) {
-        newSet.add(flatIds[i]);
-    }
-
-    return newSet;
-};
-
 export const useNodeContent = () => {
     const items = useItemsStore((state) => state.items);
     const parameters = useItemsStore((state) => state.parameters);
@@ -144,38 +132,25 @@ export const useNodeContent = () => {
     const nodeParameters = node?.parameters ?? [];
     const filteredParameters = useMemo(() => getFilteredParameters(parameters, filterText), [parameters, filterText]);
 
-    const shapeInfo = node ? NODE_SHAPES[node.shapeType as keyof typeof NODE_SHAPES] : undefined;
-    const Icon = shapeInfo?.icon;
-
-    const hasSelectedParameters = selectedParameters.size > 0;
-
-    const hasAddableSelectedParameters = useMemo(() => {
-        if (selectedParameters.size === 0) return false;
-
-        const parametersMap = new Map(parameters.map((parameter) => [parameter.id, parameter]));
-        const existingNodeParameterIds = new Set(node?.parameters.map((p) => p.id) ?? []);
-
-        return Array.from(selectedParameters).some((selectedId) => {
-            const parameter = parametersMap.get(selectedId);
-            const isRootParameter = parameter?.parentId === null;
-            const isNotAlreadyInNode = !existingNodeParameterIds.has(selectedId);
-
-            return isRootParameter && isNotAlreadyInNode;
-        });
-    }, [selectedParameters, parameters, node]);
-
     const selectParameters = (id: string, ctrlKey: boolean, shiftKey: boolean) => {
         if (ctrlKey) {
-            setSelectedParameters(toggleParameterSelection(selectedParameters, id));
+            const newSet = new Set(selectedParameters);
+            const wasDeleted = newSet.delete(id);
+
+            if (!wasDeleted) {
+                newSet.add(id);
+            }
+
+            setSelectedParameters(newSet);
             return;
         }
 
         if (shiftKey && selectedParameters.size > 0) {
             const lastSelectedId = Array.from(selectedParameters)[selectedParameters.size - 1];
-            const newSet = getRangeSelection(parameters, id, lastSelectedId);
+            const rangeSet = getRangeSelection(parameters, id, lastSelectedId);
 
-            if (newSet.size > 0) {
-                setSelectedParameters(newSet);
+            if (rangeSet.size > 0) {
+                setSelectedParameters(rangeSet);
             }
 
             return;
@@ -297,9 +272,6 @@ export const useNodeContent = () => {
         parameters,
         filterText,
         selectedParameters,
-        hasSelectedParameters,
-        hasAddableSelectedParameters,
-        Icon,
 
         setFilterText,
 
