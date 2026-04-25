@@ -59,9 +59,6 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
             updateNodeParameter(nodeId, parameter.id, { value: newValue });
         };
 
-        // Безопасное получение значения
-        const value = parameter.value ?? '';
-
         return (
             <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
                 <div className="flex items-center gap-2 w-full truncate">
@@ -70,7 +67,7 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                 </div>
 
                 <Input
-                    value={value}
+                    value={parameter.value ?? ''}
                     placeholder="Введите значение"
                     className="bg-depth-3 hover:bg-depth-4 border border-depth-4"
                     onChange={handleStringChange}
@@ -91,9 +88,6 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
             updateNodeParameter(nodeId, parameter.id, { value: checked });
         };
 
-        // Безопасное получение значения
-        const value = parameter.value ?? false;
-
         return (
             <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
                 <div className="flex items-center justify-between w-full">
@@ -103,10 +97,10 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                     </div>
 
                     <Checkbox
-                        checked={value}
+                        checked={parameter.value ?? false}
                         className={`
                             bg-depth-3 border border-depth-4
-                            ${value === true ? 'hover:bg-bg-accent' : 'hover:bg-depth-4'}
+                            ${parameter.value === true ? 'hover:bg-bg-accent' : 'hover:bg-depth-4'}
                         `}
                         onChange={handleBooleanChange}
                     />
@@ -139,9 +133,6 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
             });
         };
 
-        // Безопасная проверка options
-        const options = enumValue?.options || [];
-
         return (
             <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
                 <div className="flex items-center gap-2 w-full truncate">
@@ -151,11 +142,12 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
 
                 <div className="w-full">
                     <DropdownAbsolute title={getCurrentEnumValue()} depth={3} align="right">
-                        {options.map((option) => (
-                            <button
-                                key={option}
-                                onClick={() => handleEnumChange(option)}
-                                className={`
+                        {enumValue?.options ||
+                            [].map((option) => (
+                                <button
+                                    key={option}
+                                    onClick={() => handleEnumChange(option)}
+                                    className={`
                                     w-full text-left px-3 py-1.5 rounded-md border cursor-pointer
                                     ${
                                         option === enumValue?.selected
@@ -163,10 +155,10 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                                             : 'bg-depth-4 hover:bg-depth-5 border-depth-5'
                                     }
                                 `}
-                            >
-                                {option}
-                            </button>
-                        ))}
+                                >
+                                    {option}
+                                </button>
+                            ))}
                     </DropdownAbsolute>
                 </div>
 
