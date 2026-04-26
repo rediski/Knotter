@@ -20,7 +20,7 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChan
 }
 
 export const Input = memo(function Input({
-    value,
+    value = '',
     onChange,
     icon: Icon,
     iconSize = 16,

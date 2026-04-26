@@ -9,7 +9,12 @@ interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onC
     className?: string;
 }
 
-export const Checkbox = memo(function Checkbox({ checked, onChange, className = 'bg-depth-4', ...props }: CheckboxProps) {
+export const Checkbox = memo(function Checkbox({
+    checked = false,
+    onChange,
+    className = 'bg-depth-4',
+    ...props
+}: CheckboxProps) {
     const handleChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             onChange(e.target.checked);
