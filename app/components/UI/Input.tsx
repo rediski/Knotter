@@ -15,7 +15,6 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChan
     allowNegative?: boolean;
     allowDecimal?: boolean;
     decimalPlaces?: number;
-    name?: string;
     maxLength?: number;
 }
 
@@ -29,7 +28,6 @@ export const Input = memo(function Input({
     allowNegative = true,
     allowDecimal = true,
     decimalPlaces = 4,
-    name = 'untitled',
     maxLength = MAX_INPUT_LENGTH,
     ...props
 }: InputProps) {
@@ -220,7 +218,6 @@ export const Input = memo(function Input({
                     ${hasIcon && 'pr-8'}
                     ${className}
                 `}
-                name={name}
                 {...props}
             />
 
