@@ -38,13 +38,19 @@ export const String = memo(function String({
                 name={parameter.name}
                 onChange={(newName) => updateParameterName(parameter.id, newName)}
                 className="w-full text-json-string"
+                disabled={hasParameterInNode}
             />
 
             <Input
                 value={parameter.defaultValue}
                 onChange={updateDefaultValue}
-                className={`border ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'}`}
                 placeholder="Введите значение"
+                disabled={hasParameterInNode}
+                className={`
+                    border 
+                    ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'}
+                    ${hasParameterInNode && 'cursor-not-allowed opacity-50'}
+                `}
             />
         </div>
     );

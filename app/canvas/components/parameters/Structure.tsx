@@ -38,6 +38,7 @@ export const Structure = memo(function Structure({ parameter, selectedIds, onSel
                     name={parameter.name}
                     onChange={(newName) => updateParameterName(parameter.id, newName)}
                     className="w-full text-json-null"
+                    disabled={hasParameterInNode}
                 />
             </div>
 

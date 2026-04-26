@@ -8,9 +8,10 @@ import { isBoolean } from '@/canvas/_core/_/parameter.type-guards';
 import { EditableName } from '@/components/UI/EditableName';
 import { Checkbox } from '@/components/UI/Checkbox';
 
+import { useBooleanParameter } from '@/canvas/components/parameters/useBoolean';
+
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
-import { useBooleanParameter } from './useBoolean';
 
 export const Boolean = memo(function Boolean({
     parameter,
@@ -37,14 +38,17 @@ export const Boolean = memo(function Boolean({
                 name={parameter.name}
                 onChange={(newName) => updateParameterName(parameter.id, newName)}
                 className="w-full text-json-boolean"
+                disabled={hasParameterInNode}
             />
 
-            <div className="w-full">
+            <div className={`w-full ${hasParameterInNode && 'opacity-50'}`}>
                 <Checkbox
                     checked={parameter.defaultValue}
                     onChange={updateDefaultValue}
+                    disabled={hasParameterInNode}
                     className={`
-                        border 
+                        border
+                        ${hasParameterInNode && 'cursor-not-allowed'}
                         ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'}
                     `}
                 />

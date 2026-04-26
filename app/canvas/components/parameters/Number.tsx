@@ -37,16 +37,20 @@ export const Number = memo(function Number({
                 name={parameter.name}
                 onChange={(newName) => updateParameterName(parameter.id, newName)}
                 className="w-full text-json-number"
+                disabled={hasParameterInNode}
             />
 
             <Input
                 value={String(parameter.defaultValue ?? '')}
                 onChange={updateDefaultValue}
-                className={`
-                    border ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'} 
-                `}
                 type="number"
                 placeholder="Введите значение"
+                disabled={hasParameterInNode}
+                className={`
+                    border 
+                    ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'} 
+                    ${hasParameterInNode && 'cursor-not-allowed opacity-50'}
+                `}
             />
         </div>
     );

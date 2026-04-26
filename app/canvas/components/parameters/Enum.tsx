@@ -39,36 +39,53 @@ export const Enum = memo(function Enum({
                     name={parameter.name}
                     onChange={(newName) => updateParameterName(parameter.id, newName)}
                     className="w-full text-json-brackets"
+                    disabled={hasParameterInNode}
                 />
             </div>
 
             <div className="flex flex-col gap-1 w-full flex-1">
-                <div
+                <button
                     onClick={addEnumOption}
+                    disabled={hasParameterInNode}
                     className={`
-                        flex items-center justify-center gap-2 px-3 py-1 border rounded-md cursor-pointer
-                        ${isSelected ? 'bg-bg-accent/10 hover:bg-bg-accent/15 active:bg-bg-accent/20 border-bg-accent/10' : 'bg-depth-3 hover:bg-depth-4 active:bg-depth-5 border-depth-4'}
+                        flex items-center justify-center gap-2 px-3 py-1 border rounded-md              
+                        ${!hasParameterInNode && !isSelected && 'hover:bg-depth-4 active:bg-depth-4 bg-depth-3 border-depth-4 cursor-pointer'}
+                        ${!hasParameterInNode && isSelected && 'hover:bg-bg-accent/15 active:bg-bg-accent/20 bg-bg-accent/10 border-bg-accent/10 cursor-pointer'}
+                        ${hasParameterInNode && !isSelected && 'opacity-50 cursor-not-allowed bg-depth-3 border-depth-4'}
+                        ${hasParameterInNode && isSelected && 'opacity-50 cursor-not-allowed bg-bg-accent/10 border-bg-accent/10'}           
                     `}
                 >
                     <PlusIcon size={16} /> Добавить опцию
-                </div>
+                </button>
 
                 {options.map((option: string, index: number) => (
-                    <div key={index} className="flex gap-2 items-center rounded-md relative">
+                    <div
+                        key={index}
+                        className={`
+                            flex gap-2 items-center rounded-md relative
+                            ${hasParameterInNode && 'opacity-50'}
+                        `}
+                    >
                         <Input
                             value={option}
                             onChange={(value) => updateEnumOption(index, value)}
+                            max={16}
+                            disabled={hasParameterInNode}
+                            placeholder="Введите значение"
                             className={`
-                                border 
+                                border
+                                ${hasParameterInNode ? 'cursor-not-allowed' : 'cursor-text'}
                                 ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-3 border-depth-4'}
                             `}
-                            max={16}
-                            placeholder="Введите значение"
                         />
 
                         <button
                             onClick={() => removeEnumOption(index)}
-                            className="text-gray cursor-pointer absolute right-3"
+                            className={`
+                                text-gray absolute right-3
+                                ${hasParameterInNode ? 'cursor-not-allowed' : 'cursor-pointer'}
+                            `}
+                            disabled={hasParameterInNode}
                         >
                             <X size={16} />
                         </button>
