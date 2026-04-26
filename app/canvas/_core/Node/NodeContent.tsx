@@ -58,6 +58,11 @@ export default function NodeContent() {
 
     const Icon = NODE_SHAPES[node.shapeType].icon;
 
+    const hasParameterInNode = (parameterId: string): boolean => {
+        if (!node) return false;
+        return node.parameters.some((param) => param.id === parameterId);
+    };
+
     return (
         <div className="flex gap-1 w-full overflow-y-auto h-full overflow-x-hidden" onClick={clearSelection}>
             <div className="flex flex-1 gap-1">
@@ -140,6 +145,7 @@ export default function NodeContent() {
                                     parameter={parameter}
                                     selectedIds={selectedParameters}
                                     onSelect={selectParameters}
+                                    hasParameterInNode={hasParameterInNode(parameter.id)}
                                 />
                             ))}
                         </div>

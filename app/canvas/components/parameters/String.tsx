@@ -13,7 +13,15 @@ import { useStringParameter } from '@/canvas/components/parameters/useString';
 import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 
-export const String = memo(function String({ parameter, isSelected }: { parameter: Parameter; isSelected: boolean }) {
+export const String = memo(function String({
+    parameter,
+    isSelected,
+    hasParameterInNode,
+}: {
+    parameter: Parameter;
+    isSelected: boolean;
+    hasParameterInNode: boolean;
+}) {
     const { updateDefaultValue } = useStringParameter({
         parameter,
         updateParameter,
@@ -24,7 +32,7 @@ export const String = memo(function String({ parameter, isSelected }: { paramete
 
     return (
         <div className="flex items-center gap-2 h-8 w-full">
-            <div className="min-w-2 h-2 bg-json-string rounded-full" />
+            {!hasParameterInNode && <div className="min-w-2 h-2 bg-json-string rounded-full" />}
 
             <EditableName
                 name={parameter.name}

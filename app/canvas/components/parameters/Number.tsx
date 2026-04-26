@@ -13,7 +13,15 @@ import { useNumberParameter } from '@/canvas/components/parameters/useNumber';
 import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 
-export const Number = memo(function Number({ parameter, isSelected }: { parameter: Parameter; isSelected: boolean }) {
+export const Number = memo(function Number({
+    parameter,
+    isSelected,
+    hasParameterInNode,
+}: {
+    parameter: Parameter;
+    isSelected: boolean;
+    hasParameterInNode: boolean;
+}) {
     const { updateDefaultValue } = useNumberParameter({
         parameter,
         updateParameter,
@@ -23,7 +31,7 @@ export const Number = memo(function Number({ parameter, isSelected }: { paramete
 
     return (
         <div className="flex items-center gap-2 h-8 w-full">
-            <div className="min-w-2 h-2 bg-json-number rounded-full" />
+            {!hasParameterInNode && <div className="min-w-2 h-2 bg-json-number rounded-full" />}
 
             <EditableName
                 name={parameter.name}

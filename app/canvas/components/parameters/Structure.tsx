@@ -15,9 +15,10 @@ interface StructureProps {
     parameter: Parameter;
     selectedIds: Set<string>;
     onSelect: (id: string, ctrlKey: boolean, shiftKey: boolean) => void;
+    hasParameterInNode: boolean;
 }
 
-export const Structure = memo(function Structure({ parameter, selectedIds, onSelect }: StructureProps) {
+export const Structure = memo(function Structure({ parameter, selectedIds, onSelect, hasParameterInNode }: StructureProps) {
     const parameters = useItemsStore((state) => state.parameters);
 
     if (!isStructure(parameter)) return null;
@@ -31,7 +32,7 @@ export const Structure = memo(function Structure({ parameter, selectedIds, onSel
     return (
         <div className="flex flex-col gap-1 w-full">
             <div className="flex items-center gap-2 h-8">
-                <div className="w-2 h-2 bg-json-null rounded-full" />
+                {!hasParameterInNode && <div className="w-2 h-2 bg-json-null rounded-full" />}
 
                 <EditableName
                     name={parameter.name}
@@ -50,6 +51,7 @@ export const Structure = memo(function Structure({ parameter, selectedIds, onSel
                             parameter={childParameter}
                             selectedIds={selectedIds}
                             onSelect={onSelect}
+                            hasParameterInNode={hasParameterInNode}
                         />
                     ))
                 )}

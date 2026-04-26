@@ -24,9 +24,15 @@ interface ParameterItemProps {
     parameter: Parameter;
     selectedIds: Set<string>;
     onSelect: (id: string, ctrlKey: boolean, shiftKey: boolean) => void;
+    hasParameterInNode: boolean;
 }
 
-export const ParameterItem = memo(function ParameterItem({ parameter, selectedIds, onSelect }: ParameterItemProps) {
+export const ParameterItem = memo(function ParameterItem({
+    parameter,
+    selectedIds,
+    onSelect,
+    hasParameterInNode,
+}: ParameterItemProps) {
     const Component = parameterComponents[parameter.type as ParameterType];
 
     if (!Component) {
@@ -52,7 +58,13 @@ export const ParameterItem = memo(function ParameterItem({ parameter, selectedId
                 ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-2 border-depth-3'}
             `}
         >
-            <Component parameter={parameter} isSelected={isSelected} selectedIds={selectedIds} onSelect={onSelect} />
+            <Component
+                parameter={parameter}
+                isSelected={isSelected}
+                selectedIds={selectedIds}
+                onSelect={onSelect}
+                hasParameterInNode={hasParameterInNode}
+            />
         </div>
     );
 });

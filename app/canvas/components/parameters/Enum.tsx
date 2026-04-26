@@ -14,7 +14,15 @@ import { useEnum } from '@/canvas/components/parameters/useEnum';
 
 import { PlusIcon, X } from 'lucide-react';
 
-export const Enum = memo(function Enum({ parameter, isSelected }: { parameter: Parameter; isSelected: boolean }) {
+export const Enum = memo(function Enum({
+    parameter,
+    isSelected,
+    hasParameterInNode,
+}: {
+    parameter: Parameter;
+    isSelected: boolean;
+    hasParameterInNode: boolean;
+}) {
     const { addEnumOption, removeEnumOption, updateEnumOption } = useEnum({ parameter });
 
     if (!isEnum(parameter)) return null;
@@ -25,7 +33,7 @@ export const Enum = memo(function Enum({ parameter, isSelected }: { parameter: P
     return (
         <div className="flex gap-6 w-full">
             <div className="flex items-center gap-2 h-8 w-full flex-1">
-                <div className="w-2 h-2 bg-json-brackets rounded-full" />
+                {!hasParameterInNode && <div className="w-2 h-2 bg-json-brackets rounded-full" />}
 
                 <EditableName
                     name={parameter.name}

@@ -12,7 +12,15 @@ import { updateParameterName } from '@/canvas/utils/parameters/updateParameterNa
 import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { useBooleanParameter } from './useBoolean';
 
-export const Boolean = memo(function Boolean({ parameter, isSelected }: { parameter: Parameter; isSelected: boolean }) {
+export const Boolean = memo(function Boolean({
+    parameter,
+    isSelected,
+    hasParameterInNode,
+}: {
+    parameter: Parameter;
+    isSelected: boolean;
+    hasParameterInNode: boolean;
+}) {
     if (!parameter) return null;
     if (!isBoolean(parameter)) return null;
 
@@ -23,7 +31,7 @@ export const Boolean = memo(function Boolean({ parameter, isSelected }: { parame
 
     return (
         <div className="flex items-center gap-2 h-8 w-full">
-            <div className="min-w-2 h-2 bg-json-boolean rounded-full" />
+            {!hasParameterInNode && <div className="min-w-2 h-2 bg-json-boolean rounded-full" />}
 
             <EditableName
                 name={parameter.name}
