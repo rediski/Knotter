@@ -142,12 +142,11 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
 
                 <div className="w-full">
                     <DropdownAbsolute title={getCurrentEnumValue()} depth={3} align="right">
-                        {enumValue?.options ||
-                            [].map((option) => (
-                                <button
-                                    key={option}
-                                    onClick={() => handleEnumChange(option)}
-                                    className={`
+                        {enumValue?.options.map((option) => (
+                            <button
+                                key={option}
+                                onClick={() => handleEnumChange(option)}
+                                className={`
                                     w-full text-left px-3 py-1.5 rounded-md border cursor-pointer
                                     ${
                                         option === enumValue?.selected
@@ -155,10 +154,10 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                                             : 'bg-depth-4 hover:bg-depth-5 border-depth-5'
                                     }
                                 `}
-                                >
-                                    {option}
-                                </button>
-                            ))}
+                            >
+                                {option}
+                            </button>
+                        ))}
                     </DropdownAbsolute>
                 </div>
 
