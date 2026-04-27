@@ -8,14 +8,14 @@ import { EmptyState } from '@/components/UI/EmptyState';
 import { CreateParameterForm } from '@/canvas/_core/Node/CreateParameterForm';
 import { LocalParameter } from '@/canvas/_core/Node/LocalParameter';
 
+import { getOpenedNode } from '@/canvas/utils/nodes/getOpenedNode';
+import { addSelectedParametersToNode } from '@/canvas/utils/nodes/addSelectedParametersToNode';
 import { useNodeContent } from '@/canvas/_core/Node/useNodeContent';
 
 import { Search, ArrowBigUp, ArrowBigDown, Plus, X } from 'lucide-react';
 
 export default function NodeContent() {
     const {
-        node,
-        nodeParameters,
         filteredParameters,
         parameters,
         filterText,
@@ -28,14 +28,11 @@ export default function NodeContent() {
         moveSelectedParametersUp,
         moveSelectedParametersDown,
         deleteSelectedParameters,
-        addParametersToNode,
     } = useNodeContent();
-
-    if (!node) return null;
 
     const actionButtons = [
         {
-            onClick: addParametersToNode,
+            onClick: addSelectedParametersToNode,
             icon: Plus,
             iconProps: { size: 16, strokeWidth: 3 },
         },
@@ -56,11 +53,15 @@ export default function NodeContent() {
         },
     ];
 
-    const Icon = NODE_SHAPES[node.shapeType].icon;
+    const openedNode = getOpenedNode();
+
+    if (!openedNode) return null;
+
+    const Icon = NODE_SHAPES[openedNode.shapeType].icon;
 
     const hasParameterInNode = (parameterId: string): boolean => {
-        if (!node) return false;
-        return node.parameters.some((param) => param.id === parameterId);
+        if (!openedNode) return false;
+        return openedNode.parameters.some((param) => param.id === parameterId);
     };
 
     return (
@@ -83,27 +84,27 @@ export default function NodeContent() {
                             <Icon
                                 size={64}
                                 className="flex items-center justify-center fill-depth-1"
-                                strokeWidth={node.shapeType === 'point' ? 2 : 1.5}
+                                strokeWidth={openedNode.shapeType === 'point' ? 2 : 1.5}
                             />
                         )}
                     </div>
 
                     <div className="flex flex-col max-w-64 h-fit bg-depth-1 border border-depth-3 rounded-md text-sm px-3 py-1">
-                        <h2 className="wrap-break-word text-base">{node.name || '...'}</h2>
-                        <p className="wrap-break-word text-gray text-sm">{node.description || '...'}</p>
+                        <h2 className="wrap-break-word text-base">{openedNode.name || '...'}</h2>
+                        <p className="wrap-break-word text-gray text-sm">{openedNode.description || '...'}</p>
                     </div>
                 </div>
 
                 <div className="flex flex-col w-full min-w-xl gap-1 text-sm">
-                    {nodeParameters.length > 0 && (
+                    {openedNode.parameters.length > 0 && (
                         <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 h-full">
-                            {nodeParameters.map((parameter) => (
-                                <LocalParameter key={parameter.id} parameter={parameter} nodeId={node.id} />
+                            {openedNode.parameters.map((parameter) => (
+                                <LocalParameter key={parameter.id} parameter={parameter} nodeId={openedNode.id} />
                             ))}
                         </div>
                     )}
 
-                    {nodeParameters.length === 0 && (
+                    {openedNode.parameters.length === 0 && (
                         <div className="flex items-center justify-center h-full p-4 bg-depth-1 border border-depth-3 rounded-md">
                             <p className="text-sm text-gray">Нет добавленных параметров</p>
                         </div>
