@@ -1,15 +1,12 @@
 import { useMemo, useState, type MouseEvent } from 'react';
 
-import type { Node } from '@/canvas/_core/_/canvas.types';
 import type { Parameter } from '@/canvas/_core/_/parameter';
 
 import { isStructure } from '@/canvas/_core/_/parameter.type-guards';
 
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { getFilteredParameters } from '@/canvas/utils/parameters/getFilteredParameters';
-import { addParameterToNode } from '@/canvas/utils/parameters/addParameterToNode';
 
 const getFlattenedParameterIds = (parameters: Parameter[], parametersMap: Map<string, Parameter>): string[] => {
     const ids: string[] = [];
@@ -114,22 +111,13 @@ const getIdsToDelete = (ids: Set<string>, parametersMap: Map<string, Parameter>)
 };
 
 export const useNodeContent = () => {
-    const items = useItemsStore((state) => state.items);
     const parameters = useItemsStore((state) => state.parameters);
     const setParameters = useItemsStore((state) => state.setParameters);
     const selectedParameters = useItemsStore((state) => state.selectedParameters);
     const setSelectedParameters = useItemsStore((state) => state.setSelectedParameters);
 
-    const selectedTabId = useCanvasStore((state) => state.selectedTabId);
-
     const [filterText, setFilterText] = useState('');
 
-    const node = useMemo(
-        () => items.find((item): item is Node => item.id === selectedTabId && item.kind === 'node'),
-        [items, selectedTabId],
-    );
-
-    const nodeParameters = node?.parameters ?? [];
     const filteredParameters = useMemo(() => getFilteredParameters(parameters, filterText), [parameters, filterText]);
 
     const selectParameters = (id: string, ctrlKey: boolean, shiftKey: boolean) => {
@@ -243,31 +231,7 @@ export const useNodeContent = () => {
         setSelectedParameters(new Set());
     };
 
-    const addParametersToNode = (e: MouseEvent) => {
-        e.stopPropagation();
-        if (!node || selectedParameters.size === 0) return;
-
-        const existingNodeParameterIds = new Set(node.parameters.map((parameter) => parameter.id));
-
-        const selectedParametersList = parameters.filter(
-            (parameter) =>
-                selectedParameters.has(parameter.id) &&
-                parameter.parentId === null &&
-                !existingNodeParameterIds.has(parameter.id),
-        );
-
-        if (selectedParametersList.length === 0) return;
-
-        selectedParametersList.forEach((parameter) => {
-            addParameterToNode(node.id, parameter.id);
-        });
-
-        setSelectedParameters(new Set());
-    };
-
     return {
-        node,
-        nodeParameters,
         filteredParameters,
         parameters,
         filterText,
@@ -280,6 +244,5 @@ export const useNodeContent = () => {
         moveSelectedParametersUp,
         moveSelectedParametersDown,
         deleteSelectedParameters,
-        addParametersToNode,
     };
 };
