@@ -10,6 +10,7 @@ import { LocalParameter } from '@/canvas/_core/Node/LocalParameter';
 
 import { getOpenedNode } from '@/canvas/utils/nodes/getOpenedNode';
 import { addSelectedParametersToNode } from '@/canvas/utils/nodes/addSelectedParametersToNode';
+import { hasParameterInNode } from '@/canvas/utils/nodes/hasParameterInNode';
 import { useNodeContent } from '@/canvas/_core/Node/useNodeContent';
 
 import { Search, ArrowBigUp, ArrowBigDown, Plus, X } from 'lucide-react';
@@ -58,11 +59,6 @@ export default function NodeContent() {
     if (!openedNode) return null;
 
     const Icon = NODE_SHAPES[openedNode.shapeType].icon;
-
-    const hasParameterInNode = (parameterId: string): boolean => {
-        if (!openedNode) return false;
-        return openedNode.parameters.some((param) => param.id === parameterId);
-    };
 
     return (
         <div className="flex gap-1 w-full overflow-y-auto h-full overflow-x-hidden" onClick={clearSelection}>
