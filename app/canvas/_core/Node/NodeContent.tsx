@@ -39,7 +39,12 @@ export default function NodeContent() {
     const selectedIds = Array.from(selectedParameters);
     const hasSelectedParameters = selectedIds.length > 0;
 
-    const canAddOrDeleteSelected = hasSelectedParameters && selectedIds.some((id) => !hasParameterInNode(id));
+    const selectedParametersList = parameters.filter((parameter) => selectedParameters.has(parameter.id));
+
+    const hasNotAddedParameters = selectedIds.some((id) => !hasParameterInNode(id));
+    const hasRootParameters = selectedParametersList.some((parameter) => parameter.parentId === null);
+
+    const canAddOrDeleteSelected = hasSelectedParameters && hasNotAddedParameters && hasRootParameters;
 
     const actionButtons = [
         {
