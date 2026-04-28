@@ -9,6 +9,8 @@ import { Input } from '@/components/UI/Input';
 import { Checkbox } from '@/components/UI/Checkbox';
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 
+import { useItemsStore } from '@/canvas/store/useItemsStore';
+
 import { getParameterIcon } from '@/canvas/utils/nodes/getParameterIcon';
 import { updateNodeParameter } from '@/canvas/utils/parameters/updateNodeParameter';
 import { unassignParameter } from '@/canvas/utils/parameters/unassignParameter';
@@ -43,12 +45,14 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                     onChange={handleNumberChange}
                 />
 
-                <button
-                    onClick={() => unassignParameter(parameter.id)}
-                    className="cursor-pointer text-gray hover:text-white min-w-4"
-                >
-                    <X size={16} />
-                </button>
+                {parameter.parentId === null && (
+                    <button
+                        onClick={() => unassignParameter(parameter.id)}
+                        className="cursor-pointer text-gray hover:text-white min-w-4"
+                    >
+                        <X size={16} />
+                    </button>
+                )}
             </div>
         );
     }
@@ -73,12 +77,14 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                     onChange={handleStringChange}
                 />
 
-                <button
-                    onClick={() => unassignParameter(parameter.id)}
-                    className="cursor-pointer text-gray hover:text-white min-w-4"
-                >
-                    <X size={16} />
-                </button>
+                {parameter.parentId === null && (
+                    <button
+                        onClick={() => unassignParameter(parameter.id)}
+                        className="cursor-pointer text-gray hover:text-white min-w-4"
+                    >
+                        <X size={16} />
+                    </button>
+                )}
             </div>
         );
     }
@@ -106,12 +112,14 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                     />
                 </div>
 
-                <button
-                    onClick={() => unassignParameter(parameter.id)}
-                    className="cursor-pointer text-gray hover:text-white min-w-4"
-                >
-                    <X size={16} />
-                </button>
+                {parameter.parentId === null && (
+                    <button
+                        onClick={() => unassignParameter(parameter.id)}
+                        className="cursor-pointer text-gray hover:text-white min-w-4"
+                    >
+                        <X size={16} />
+                    </button>
+                )}
             </div>
         );
     }
@@ -161,32 +169,52 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                     </DropdownAbsolute>
                 </div>
 
-                <button
-                    onClick={() => unassignParameter(parameter.id)}
-                    className="cursor-pointer text-gray hover:text-white min-w-4"
-                >
-                    <X size={16} />
-                </button>
+                {parameter.parentId === null && (
+                    <button
+                        onClick={() => unassignParameter(parameter.id)}
+                        className="cursor-pointer text-gray hover:text-white min-w-4"
+                    >
+                        <X size={16} />
+                    </button>
+                )}
             </div>
         );
     }
 
     if (isStructure(parameter)) {
+        const structureValue = parameter.value as string[];
+
+        const parameters = useItemsStore((state) => state.parameters);
+
+        const childParameters = structureValue
+            .map((id) => parameters.find((parameter) => parameter.id === id))
+            .filter((parameter): parameter is Parameter => parameter !== undefined);
+
         return (
-            <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
-                <div className="flex items-center gap-2 truncate w-full">
-                    <ParameterIcon size={16} className="text-icon-secondary shrink-0" />
-                    <p className="truncate w-full">{parameter.name}</p>
+            <div className="flex flex-col gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-2">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 truncate">
+                        <ParameterIcon size={16} className="text-icon-secondary shrink-0" />
+                        <p className="truncate">{parameter.name}</p>
+                    </div>
+
+                    <button
+                        onClick={() => unassignParameter(parameter.id)}
+                        className="cursor-pointer text-gray hover:text-white min-w-4"
+                    >
+                        <X size={16} />
+                    </button>
                 </div>
 
-                <p className="flex items-center w-full h-8">В разработке...</p>
-
-                <button
-                    onClick={() => unassignParameter(parameter.id)}
-                    className="cursor-pointer text-gray hover:text-white min-w-4"
-                >
-                    <X size={16} />
-                </button>
+                <div className="flex flex-col gap-1 border-depth-4 p-1 bg-depth-1 rounded-md border border-dashed">
+                    {childParameters.length === 0 ? (
+                        <p className="flex items-center justify-center p-2 text-gray">Нет вложенных параметров</p>
+                    ) : (
+                        childParameters.map((childParameter) => (
+                            <LocalParameter key={childParameter.id} parameter={childParameter} nodeId={nodeId} />
+                        ))
+                    )}
+                </div>
             </div>
         );
     }
