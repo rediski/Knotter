@@ -31,34 +31,42 @@ export default function NodeContent() {
         deleteSelectedParameters,
     } = useNodeContent();
 
+    const openedNode = getOpenedNode();
+    if (!openedNode) return null;
+
+    const Icon = NODE_SHAPES[openedNode.shapeType].icon;
+
+    const selectedIds = Array.from(selectedParameters);
+    const hasSelectedParameters = selectedIds.length > 0;
+
+    const canAddOrDeleteSelected = hasSelectedParameters && selectedIds.some((id) => !hasParameterInNode(id));
+
     const actionButtons = [
         {
             onClick: addSelectedParametersToNode,
             icon: Plus,
             iconProps: { size: 16, strokeWidth: 3 },
+            disabled: !canAddOrDeleteSelected,
         },
         {
             onClick: moveSelectedParametersUp,
             icon: ArrowBigUp,
             iconProps: { size: 16, fill: 'var(--foreground)', stroke: 'var(--foreground)' },
+            disabled: !hasSelectedParameters,
         },
         {
             onClick: moveSelectedParametersDown,
             icon: ArrowBigDown,
             iconProps: { size: 16, fill: 'var(--foreground)', stroke: 'var(--foreground)' },
+            disabled: !hasSelectedParameters,
         },
         {
             onClick: deleteSelectedParameters,
             icon: X,
             iconProps: { size: 16, strokeWidth: 3 },
+            disabled: !canAddOrDeleteSelected,
         },
     ];
-
-    const openedNode = getOpenedNode();
-
-    if (!openedNode) return null;
-
-    const Icon = NODE_SHAPES[openedNode.shapeType].icon;
 
     return (
         <div className="flex gap-1 w-full overflow-y-auto h-full overflow-x-hidden" onClick={clearSelection}>
@@ -126,7 +134,7 @@ export default function NodeContent() {
                             <button
                                 key={index}
                                 onClick={button.onClick}
-                                disabled={selectedParameters.size === 0}
+                                disabled={button.disabled}
                                 className="flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
                             >
                                 <button.icon {...button.iconProps} />
