@@ -198,12 +198,14 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                         <p className="truncate">{parameter.name}</p>
                     </div>
 
-                    <button
-                        onClick={() => unassignParameter(parameter.id)}
-                        className="cursor-pointer text-gray hover:text-white min-w-4"
-                    >
-                        <X size={16} />
-                    </button>
+                    {parameter.parentId === null && (
+                        <button
+                            onClick={() => unassignParameter(parameter.id)}
+                            className="cursor-pointer text-gray hover:text-white min-w-4"
+                        >
+                            <X size={16} />
+                        </button>
+                    )}
                 </div>
 
                 <div className="flex flex-col gap-1 border-depth-4 p-1 bg-depth-1 rounded-md border border-dashed">
