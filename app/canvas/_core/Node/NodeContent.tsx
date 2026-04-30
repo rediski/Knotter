@@ -75,22 +75,22 @@ export default function NodeContent() {
 
     return (
         <div className="flex gap-1 w-full overflow-y-auto h-full overflow-x-hidden" onClick={clearSelection}>
-            <div className="flex flex-col max-w-6xl w-full">
+            <div className="flex flex-col max-w-5xl w-full">
                 <div
                     className="relative grid bg-depth-1 w-full h-full aspect-square rounded-lg border border-depth-3 overflow-hidden"
                     style={{
-                        gridTemplateColumns: 'repeat(9, 128px)',
+                        gridTemplateColumns: 'repeat(8, 128px)',
                         gridTemplateRows: 'repeat(10, 128px)',
                         backgroundImage: `
-            linear-gradient(to right, var(--grid-color-1) 1px, transparent 1px),
-            linear-gradient(to bottom, var(--grid-color-1) 1px, transparent 1px)
-        `,
+                            linear-gradient(to right, var(--grid-color-1) 1px, transparent 1px),
+                            linear-gradient(to bottom, var(--grid-color-1) 1px, transparent 1px)
+                        `,
                         backgroundSize: '128px 128px',
-                        backgroundPosition: '-64px -64px',
+                        backgroundPosition: '-0.5px -15.5px',
                         backgroundRepeat: 'repeat',
                     }}
                 >
-                    <div className="flex items-center justify-center gap-12 col-start-6 col-end-8 row-start-4 row-end-5 justify-self-center self-center">
+                    <div className="flex flex-col items-center justify-center gap-4 col-start-3 col-end-7 row-start-4 row-end-5 justify-self-center min-w-md self-center">
                         {Icon && (
                             <Icon
                                 size={96}
@@ -99,9 +99,9 @@ export default function NodeContent() {
                             />
                         )}
 
-                        <div className="flex flex-col w-full min-w-xl gap-1 text-sm">
+                        <div className="flex flex-col w-full gap-1 text-sm">
                             {openedNode.parameters.length > 0 && (
-                                <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 h-fit max-w-md w-full shadow">
+                                <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 h-fit w-full shadow">
                                     {openedNode.parameters.map((parameter) => (
                                         <LocalParameter key={parameter.id} parameter={parameter} nodeId={openedNode.id} />
                                     ))}
@@ -123,7 +123,7 @@ export default function NodeContent() {
                             {openedNode.name || '...'}
                         </h2>
 
-                        <p className="wrap-break-word text-gray text-base w-fit flex-1 max-w-lg h-fit max-h-54.5 bg-depth-2 border border-depth-3 rounded-md px-3 py-1 overflow-y-auto">
+                        <p className="wrap-break-word text-gray text-base w-fit flex-1 max-w-lg min-w-xs h-fit max-h-54.5 bg-depth-2 border border-depth-3 rounded-md px-3 py-1 overflow-y-auto">
                             {openedNode.description || '...'}
                         </p>
                     </div>
