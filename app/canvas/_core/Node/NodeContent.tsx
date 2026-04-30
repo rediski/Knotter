@@ -74,59 +74,49 @@ export default function NodeContent() {
     ];
 
     return (
-        <div className="flex gap-1 w-full overflow-y-auto h-full overflow-x-hidden" onClick={clearSelection}>
-            <div className="flex flex-col max-w-5xl w-full">
-                <div
-                    className="relative grid bg-depth-1 w-full h-full aspect-square rounded-lg border border-depth-3 overflow-hidden"
-                    style={{
-                        gridTemplateColumns: 'repeat(8, 128px)',
-                        gridTemplateRows: 'repeat(10, 128px)',
-                        backgroundImage: `
+        <div className="flex gap-1  overflow-y-auto w-full h-full overflow-x-hidden" onClick={clearSelection}>
+            <div
+                className="relative flex items-center justify-center bg-depth-1 max-w-3xl min-w-3xl w-full h-full  rounded-lg border border-depth-3 overflow-hidden"
+                style={{
+                    backgroundImage: `
                             linear-gradient(to right, var(--grid-color-1) 1px, transparent 1px),
                             linear-gradient(to bottom, var(--grid-color-1) 1px, transparent 1px)
                         `,
-                        backgroundSize: '128px 128px',
-                        backgroundPosition: '-0.5px -15.5px',
-                        backgroundRepeat: 'repeat',
-                    }}
-                >
-                    <div className="flex flex-col items-center justify-center gap-4 col-start-3 col-end-7 row-start-4 row-end-5 justify-self-center min-w-md self-center">
-                        {Icon && (
-                            <Icon
-                                size={96}
-                                className="fill-depth-1"
-                                strokeWidth={openedNode.shapeType === 'point' ? 2 : 1.5}
-                            />
+                    backgroundSize: '128px 128px',
+                }}
+            >
+                <div className="flex flex-col items-center justify-center gap-4 min-w-md">
+                    {Icon && (
+                        <Icon size={96} className="fill-depth-1" strokeWidth={openedNode.shapeType === 'point' ? 2 : 1.5} />
+                    )}
+
+                    <div className="flex flex-col w-full gap-1 text-sm">
+                        {openedNode.parameters.length > 0 && (
+                            <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 h-fit w-full shadow">
+                                {openedNode.parameters.map((parameter) => (
+                                    <LocalParameter key={parameter.id} parameter={parameter} nodeId={openedNode.id} />
+                                ))}
+                            </div>
                         )}
 
-                        <div className="flex flex-col w-full gap-1 text-sm">
-                            {openedNode.parameters.length > 0 && (
-                                <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 h-fit w-full shadow">
-                                    {openedNode.parameters.map((parameter) => (
-                                        <LocalParameter key={parameter.id} parameter={parameter} nodeId={openedNode.id} />
-                                    ))}
+                        {openedNode.parameters.length === 0 && (
+                            <div className="flex items-center justify-center h-fit bg-depth-1 border border-depth-3 rounded-md">
+                                <div className="text-sm text-gray bg-depth-2 w-full h-full p-4 m-1 rounded-md border border-depth-3 text-center">
+                                    Нет добавленных параметров
                                 </div>
-                            )}
-
-                            {openedNode.parameters.length === 0 && (
-                                <div className="flex items-center justify-center h-fit bg-depth-1 border border-depth-3 rounded-md">
-                                    <div className="text-sm text-gray bg-depth-2 w-full h-full p-4 m-1 rounded-md border border-depth-3 text-center">
-                                        Нет добавленных параметров
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
                     </div>
+                </div>
 
-                    <div className="absolute bottom-4 left-4 flex flex-col gap-1 ">
-                        <h2 className="wrap-break-word text-base w-fit h-fit bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
-                            {openedNode.name || '...'}
-                        </h2>
+                <div className="absolute bottom-4 left-4 flex flex-col gap-1 ">
+                    <h2 className="wrap-break-word text-base w-fit h-fit bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
+                        {openedNode.name || '...'}
+                    </h2>
 
-                        <p className="wrap-break-word text-gray text-base w-fit flex-1 max-w-lg min-w-xs h-fit max-h-54.5 bg-depth-2 border border-depth-3 rounded-md px-3 py-1 overflow-y-auto">
-                            {openedNode.description || '...'}
-                        </p>
-                    </div>
+                    <p className="wrap-break-word text-gray text-base w-fit flex-1 max-w-lg min-w-xs h-fit max-h-54.5 bg-depth-2 border border-depth-3 rounded-md px-3 py-1 overflow-y-auto">
+                        {openedNode.description || '...'}
+                    </p>
                 </div>
             </div>
 
