@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSidebarStore } from '@/canvas/store/useSidebarStore';
 
-const MIN_WIDTH = 320;
+const MIN_WIDTH = 0;
 
 export function useSidebarResize() {
     const setSidebarWidth = useSidebarStore((state) => state.setSidebarWidth);
