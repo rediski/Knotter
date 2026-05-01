@@ -79,15 +79,19 @@ export default function NodeContent() {
                 className="relative flex items-center justify-center bg-depth-1 max-w-3xl min-w-3xl w-full h-full  rounded-lg border border-depth-3 overflow-hidden"
                 style={{
                     backgroundImage: `
-                            linear-gradient(to right, var(--grid-color-1) 1px, transparent 1px),
-                            linear-gradient(to bottom, var(--grid-color-1) 1px, transparent 1px)
-                        `,
+                        linear-gradient(to right, var(--grid-color-1) 1px, transparent 1px),
+                        linear-gradient(to bottom, var(--grid-color-1) 1px, transparent 1px)
+                    `,
                     backgroundSize: '128px 128px',
                 }}
             >
                 <div className="flex flex-col items-center justify-center gap-4 min-w-md">
                     {Icon && (
-                        <Icon size={96} className="fill-depth-1" strokeWidth={openedNode.shapeType === 'point' ? 2 : 1.5} />
+                        <Icon
+                            size={96}
+                            className="fill-depth-1 -mt-43 ml-0.5"
+                            strokeWidth={openedNode.shapeType === 'point' ? 2 : 1.5}
+                        />
                     )}
 
                     <div className="flex flex-col w-full gap-1 text-sm">
