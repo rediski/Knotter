@@ -74,9 +74,9 @@ export default function NodeContent() {
     ];
 
     return (
-        <div className="flex gap-1  overflow-y-auto w-full h-full overflow-x-hidden" onClick={clearSelection}>
+        <div className="flex gap-1 w-full h-full" onClick={clearSelection}>
             <div
-                className="relative flex items-center justify-center bg-depth-1 max-w-3xl min-w-3xl w-full h-full  rounded-lg border border-depth-3 overflow-hidden"
+                className="bg-depth-1 max-w-3xl min-w-3xl w-full rounded-lg border border-depth-3 overflow-hidden"
                 style={{
                     backgroundImage: `
                         linear-gradient(to right, var(--grid-color-1) 1px, transparent 1px),
@@ -85,35 +85,39 @@ export default function NodeContent() {
                     backgroundSize: '128px 128px',
                 }}
             >
-                <div className="flex flex-col items-center justify-center gap-4 min-w-md">
-                    {Icon && (
-                        <Icon
-                            size={96}
-                            className="fill-depth-1 -mt-43 ml-0.5"
-                            strokeWidth={openedNode.shapeType === 'point' ? 2 : 1.5}
-                        />
-                    )}
-
-                    <div className="flex flex-col w-full gap-1 text-sm">
-                        {openedNode.parameters.length > 0 && (
-                            <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 h-fit w-full shadow">
-                                {openedNode.parameters.map((parameter) => (
-                                    <LocalParameter key={parameter.id} parameter={parameter} nodeId={openedNode.id} />
-                                ))}
-                            </div>
+                <div className="relative pt-84 flex flex-col items-center gap-4 min-w-md w-full h-fit overflow-y-auto">
+                    <div className="ml-px flex items-center justify-center shrink-0">
+                        {Icon && (
+                            <Icon
+                                size={96}
+                                className="fill-depth-1"
+                                strokeWidth={openedNode.shapeType === 'point' ? 2 : 1.5}
+                            />
                         )}
+                    </div>
 
-                        {openedNode.parameters.length === 0 && (
-                            <div className="flex items-center justify-center h-fit bg-depth-1 border border-depth-3 rounded-md">
-                                <div className="text-sm text-gray bg-depth-2 w-full h-full p-4 m-1 rounded-md border border-depth-3 text-center">
-                                    Нет добавленных параметров
+                    <div className="flex-1 w-full max-w-md">
+                        <div className="flex flex-col gap-1 text-sm w-full">
+                            {openedNode.parameters.length > 0 && (
+                                <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 w-full max-h-105 overflow-y-auto shadow">
+                                    {openedNode.parameters.map((parameter) => (
+                                        <LocalParameter key={parameter.id} parameter={parameter} nodeId={openedNode.id} />
+                                    ))}
                                 </div>
-                            </div>
-                        )}
+                            )}
+
+                            {openedNode.parameters.length === 0 && (
+                                <div className="flex items-center justify-center bg-depth-1 border border-depth-3 rounded-md">
+                                    <div className="text-sm text-gray bg-depth-2 w-full p-4 m-1 rounded-md border border-depth-3 text-center">
+                                        Нет добавленных параметров
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
 
-                <div className="absolute bottom-4 left-4 flex flex-col gap-1 ">
+                <div className="absolute bottom-4 left-4 flex flex-col gap-1">
                     <h2 className="wrap-break-word text-base w-fit h-fit bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
                         {openedNode.name || '...'}
                     </h2>
@@ -124,7 +128,7 @@ export default function NodeContent() {
                 </div>
             </div>
 
-            <div className="flex flex-col gap-1 flex-1">
+            <div className="flex flex-col gap-1 flex-1 overflow-y-auto max-h-[calc(100vh-8px-32px-4px)]">
                 <div className="flex flex-col gap-1 p-1 bg-depth-1 border border-depth-3 rounded-md">
                     <Input
                         value={filterText}
