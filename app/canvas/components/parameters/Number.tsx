@@ -41,7 +41,7 @@ export const Number = memo(function Number({
             />
 
             <Input
-                value={String(parameter.defaultValue ?? '')}
+                value={String(parameter.defaultValue)}
                 onChange={updateDefaultValue}
                 type="number"
                 placeholder="Введите значение"
