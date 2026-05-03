@@ -1,21 +1,25 @@
 'use client';
 
+import { useParams } from 'next/navigation';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 import { NODE_SHAPES } from '@/canvas/_core/_/nodeShapeType';
-import { ParameterItem } from '@/canvas/_core/Node/ParameterItem';
-
+import { ParameterItem } from './ParameterItem';
 import { Input } from '@/components/UI/Input';
 import { EmptyState } from '@/components/UI/EmptyState';
-import { CreateParameterForm } from '@/canvas/_core/Node/CreateParameterForm';
-import { LocalParameter } from '@/canvas/_core/Node/LocalParameter';
-
-import { getOpenedNode } from '@/canvas/utils/nodes/getOpenedNode';
+import { CreateParameterForm } from './CreateParameterForm';
+import { LocalParameter } from './LocalParameter';
 import { addSelectedParametersToNode } from '@/canvas/utils/nodes/addSelectedParametersToNode';
 import { hasParameterInNode } from '@/canvas/utils/nodes/hasParameterInNode';
-import { useNodeContent } from '@/canvas/_core/Node/useNodeContent';
-
+import { useNodeContent } from './useNodeContent';
 import { Search, ArrowBigUp, ArrowBigDown, Plus, X } from 'lucide-react';
 
-export default function NodeContent() {
+export default function NodePage() {
+    const params = useParams();
+    const nodeId = params.node as string;
+
+    const items = useItemsStore((state) => state.items);
+    const openedNode = items.find((item) => item.id === nodeId && item.kind === 'node');
+
     const {
         filteredParameters,
         parameters,
@@ -31,24 +35,24 @@ export default function NodeContent() {
         deleteSelectedParameters,
     } = useNodeContent();
 
-    const openedNode = getOpenedNode();
     if (!openedNode) return null;
 
-    const Icon = NODE_SHAPES[openedNode.shapeType].icon;
+    const Icon = NODE_SHAPES[openedNode.shapeType]?.icon;
+    if (!Icon) return null;
 
     const selectedIds = Array.from(selectedParameters);
     const hasSelectedParameters = selectedIds.length > 0;
 
     const selectedParametersList = parameters.filter((parameter) => selectedParameters.has(parameter.id));
 
-    const hasNotAddedParameters = selectedIds.some((id) => !hasParameterInNode(id));
+    const hasNotAddedParameters = selectedIds.some((id) => !hasParameterInNode(id, nodeId));
     const hasRootParameters = selectedParametersList.some((parameter) => parameter.parentId === null);
 
     const canAddOrDeleteSelected = hasSelectedParameters && hasNotAddedParameters && hasRootParameters;
 
     const actionButtons = [
         {
-            onClick: addSelectedParametersToNode,
+            onClick: () => addSelectedParametersToNode(nodeId),
             icon: Plus,
             iconProps: { size: 16, strokeWidth: 3 },
             disabled: !canAddOrDeleteSelected,
@@ -162,7 +166,7 @@ export default function NodeContent() {
                                     parameter={parameter}
                                     selectedIds={selectedParameters}
                                     onSelect={selectParameters}
-                                    hasParameterInNode={hasParameterInNode(parameter.id)}
+                                    hasParameterInNode={hasParameterInNode(parameter.id, nodeId)}
                                 />
                             ))}
                         </div>
