@@ -31,9 +31,6 @@ export interface CanvasState {
 
     // ---
 
-    selectedTabId: string | null;
-    setSelectedTabId: (nodeId: string | null) => void;
-
     openedTabIds: string[];
     setOpenedTabIds: (nodeIds: string[]) => void;
 }
@@ -64,10 +61,6 @@ export const useCanvasStore = create<CanvasState>()(
             showAxes: false,
             toggleShowAxes: () => set((s) => ({ showAxes: !s.showAxes })),
 
-            // ---
-            selectedTabId: null,
-            setSelectedTabId: (selectedTabId) => set({ selectedTabId }),
-
             openedTabIds: [],
             setOpenedTabIds: (openedTabIds) => set({ openedTabIds }),
         }),
@@ -83,7 +76,6 @@ export const useCanvasStore = create<CanvasState>()(
                 showGrid: state.showGrid,
                 showAxes: state.showAxes,
 
-                selectedTabId: state.selectedTabId,
                 openedTabIds: state.openedTabIds,
             }),
         },
