@@ -1,11 +1,117 @@
-import { ReactNode } from 'react';
+'use client';
 
-export const metadata = {
-    title: 'Knotter',
-    description:
-        'Knotter - это нодовый редактор для работы с данными, распространяемый под лицензией GPL-3.0, которая гарантирует, что любые производные работы и модификации останутся столь же свободными и открытыми.',
-};
+import { ReactNode } from 'react';
+import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
+
+import { ThemeToggle } from '@/components/ThemeToggle';
+import { CanvasSidebar } from '@/canvas/components/canvas/CanvasSidebar';
+
+import { useCanvasStore } from '@/canvas/store/useCanvasStore';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
+
+import { Home, LandPlot, Box, X } from 'lucide-react';
+import type { Node } from '@/canvas/_core/_/canvas.types';
 
 export default function CanvasLayout({ children }: { children: ReactNode }) {
-    return <div translate="no">{children}</div>;
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const items = useItemsStore((state) => state.items);
+    const openedTabIds = useCanvasStore((state) => state.openedTabIds);
+    const setOpenedTabIds = useCanvasStore((state) => state.setOpenedTabIds);
+
+    const isOnCanvas = pathname === '/canvas/';
+
+    const closeNodeTab = (nodeId: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+
+        const newOpenedNodeIds = openedTabIds.filter((id) => id !== nodeId);
+        setOpenedTabIds(newOpenedNodeIds);
+
+        if (pathname === `/canvas/${nodeId}`) {
+            if (newOpenedNodeIds.length > 0) {
+                router.push(`/canvas/${newOpenedNodeIds[newOpenedNodeIds.length - 1]}`);
+            } else {
+                router.push('/canvas');
+            }
+        }
+    };
+
+    const getOpenedNodesData = (): Node[] => {
+        return openedTabIds
+            .map((nodeId) => items.find((item): item is Node => item.id === nodeId && item.kind === 'node'))
+            .filter((node): node is Node => node !== undefined);
+    };
+
+    const openedNodesData = getOpenedNodesData();
+
+    return (
+        <div className="flex flex-col h-screen w-screen bg-background" translate="no">
+            <div className="flex flex-1 min-h-0 overflow-hidden m-1">
+                <div className="flex-1 min-w-0 relative">
+                    <div className="flex flex-col gap-1 h-full">
+                        <div className="flex items-center gap-1 shrink-0">
+                            <div className="flex w-fit items-center gap-1">
+                                <Link
+                                    href="/"
+                                    className="flex items-center justify-center p-2 rounded-md h-8 w-8 cursor-pointer bg-depth-2 hover:bg-depth-3 border border-depth-3"
+                                >
+                                    <Home size={16} />
+                                </Link>
+                                <ThemeToggle />
+                            </div>
+
+                            <div
+                                className={`
+                                    flex items-center gap-2 w-fit min-w-64 px-3 h-8 border rounded-md text-sm cursor-pointer select-none 
+                                    ${isOnCanvas ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
+                                `}
+                                onClick={() => router.push('/canvas')}
+                            >
+                                <LandPlot size={16} className="min-w-4" />
+                                <div className={`border-l h-5 ${isOnCanvas ? 'border-bg-accent/10' : 'border-depth-4'}`} />
+                                Холст
+                            </div>
+
+                            {openedNodesData.map((node) => (
+                                <div
+                                    key={node.id}
+                                    className={`
+                                        flex items-center justify-between w-fit min-w-64 px-3 h-8 border rounded-md cursor-pointer group select-none
+                                        ${pathname === `/canvas/${node.id}/` ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-1 hover:bg-depth-2 border-depth-3 text-foreground'}
+                                    `}
+                                    onClick={() => router.push(`/canvas/${node.id}`)}
+                                >
+                                    <div className="flex items-center">
+                                        <Box size={16} className="min-w-4 shrink-0" />
+                                        <div
+                                            className={`border-l h-5 mx-2 ${pathname === `/canvas/${node.id}` ? 'border-bg-accent/10' : 'border-depth-4'}`}
+                                        />
+                                        <span className="truncate text-sm">{node.name}</span>
+                                    </div>
+
+                                    <button
+                                        className={`
+                                            opacity-0 group-hover:opacity-100 rounded p-0.5 transition-opacity cursor-pointer
+                                            ${pathname === `/canvas/${node.id}/` ? 'hover:bg-bg-accent/10' : 'hover:bg-depth-3'}
+                                        `}
+                                        onClick={(e) => closeNodeTab(node.id, e)}
+                                    >
+                                        <X size={16} />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+
+                        {children}
+                    </div>
+                </div>
+
+                <div className="flex h-full items-stretch">
+                    <CanvasSidebar />
+                </div>
+            </div>
+        </div>
+    );
 }
