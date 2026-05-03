@@ -7,7 +7,7 @@ import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { EditableName } from '@/components/UI/EditableName';
 import { EmptyState } from '@/components/UI/EmptyState';
-import { ParameterItem } from '@/canvas/_core/Node/ParameterItem';
+import { ParameterItem } from '@/canvas/[node]/ParameterItem';
 
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 
