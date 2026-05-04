@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useEffect, type RefObject } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { NODE_SIZE } from '@/canvas/_core/_/canvas.constants';
 
@@ -10,13 +11,14 @@ import { EdgeRenderer } from '@/canvas/_core/Node/EdgeRenderer';
 import { NodeRenderer } from '@/canvas/_core/Node/NodeRenderer';
 import { NodeTooltip } from '@/canvas/_core/Node/NodeTooltip';
 
-import { getNodes } from '@/canvas/utils/nodes/getNodes';
-
-import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
-import { openTabs } from '@/canvas/utils/canvas/openTabs';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
+import { getNodes } from '@/canvas/utils/nodes/getNodes';
+import { getScreenCoords } from '@/canvas/utils/canvas/getScreenCoords';
+import { openNodeTab } from '@/canvas/utils/nodes/openNodeTab';
+
 export const Node = ({ containerRef }: { containerRef: RefObject<HTMLDivElement | null> }) => {
+    const router = useRouter();
     const nodeRef = useRef<HTMLDivElement>(null);
 
     const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -38,7 +40,7 @@ export const Node = ({ containerRef }: { containerRef: RefObject<HTMLDivElement 
             clearTimeout(clickTimeoutRef.current);
             clickTimeoutRef.current = null;
 
-            openTabs(nodeId);
+            openNodeTab(nodeId, router);
             return;
         }
 
