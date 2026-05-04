@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, RefObject } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { useCanvasRefsStore } from '@/canvas/store/useCanvasRefsStore';
@@ -18,7 +19,7 @@ import { createNode } from '@/canvas/utils/nodes/createNode';
 
 import { initEdge } from '@/canvas/utils/edges/initEdge';
 import { clearSelection } from '@/canvas/utils/canvas/сlearSelection';
-import { openTabs } from '@/canvas/utils/canvas/openTabs';
+import { openNodeTab } from '@/canvas/utils/nodes/openNodeTab';
 import { getSelectedNodesIds } from '@/canvas/utils/nodes/getSelectedNodes';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
@@ -65,6 +66,8 @@ const updateCursor = () => {
 };
 
 export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>) {
+    const router = useRouter();
+
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -120,7 +123,12 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
 
             if (e.code === 'Enter') {
                 const { items, selectedItemIds } = useItemsStore.getState();
-                openTabs(getSelectedNodesIds({ items, selectedItemIds }));
+                const selectedNodesIds = getSelectedNodesIds({ items, selectedItemIds });
+
+                if (selectedNodesIds.length > 0) {
+                    openNodeTab(selectedNodesIds[0], router);
+                }
+
                 return;
             }
 

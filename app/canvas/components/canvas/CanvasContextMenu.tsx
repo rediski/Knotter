@@ -1,11 +1,12 @@
 'use client';
 
 import { useRef, memo } from 'react';
+import { useRouter } from 'next/navigation';
+
 import { ContextMenu } from '@/components/UI/ContextMenu';
 import { ContextMenuItem } from '@/components/UI/ContextMenuItem';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { selectAllItems } from '@/canvas/utils/items/selectAllItems';
@@ -18,7 +19,7 @@ import { selectAllNodes } from '@/canvas/utils/nodes/selectAllNodes';
 import { createNode } from '@/canvas/utils/nodes/createNode';
 import { initEdge } from '@/canvas/utils/edges/initEdge';
 
-import { openTabs } from '@/canvas/utils/canvas/openTabs';
+import { openNodeTab } from '@/canvas/utils/nodes/openNodeTab';
 import { getSelectedNodesIds } from '@/canvas/utils/nodes/getSelectedNodes';
 
 type CanvasContextMenuProps = {
@@ -28,6 +29,7 @@ type CanvasContextMenuProps = {
 };
 
 export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, position, closeMenu }: CanvasContextMenuProps) {
+    const router = useRouter();
     const menuRef = useRef<HTMLDivElement | null>(null);
 
     const items = useItemsStore((state) => state.items);
@@ -36,6 +38,16 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
     const nodes = getNodes(items);
 
     useClickOutside(menuRef, closeMenu);
+
+    const handleOpenTab = () => {
+        const selectedNodesIds = getSelectedNodesIds({ items, selectedItemIds });
+
+        if (selectedNodesIds.length > 0) {
+            openNodeTab(selectedNodesIds[0], router);
+        }
+
+        closeMenu();
+    };
 
     return (
         <ContextMenu isOpen={isOpen} position={position} ref={menuRef}>
@@ -110,16 +122,8 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
                 Создать
             </ContextMenuItem>
 
-            <ContextMenuItem
-                key="open-tab"
-                onClick={() => {
-                    openTabs(getSelectedNodesIds({ items, selectedItemIds }));
-                    closeMenu();
-                }}
-                disabled={useItemsStore.getState().selectedItemIds.length === 0}
-                shortcut="Space"
-            >
-                Открыть вкладку
+            <ContextMenuItem key="open-tab" onClick={handleOpenTab} disabled={selectedItemIds.length === 0} shortcut="Enter">
+                Открыть
             </ContextMenuItem>
 
             <hr className="border-b-0 border-depth-6 my-1" />

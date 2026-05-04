@@ -1,22 +1,21 @@
 'use client';
 
 import { useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 
 import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
 
-import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { selectItems } from '@/canvas/utils/items/selectItems';
 import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
+import { openNodeTab } from '@/canvas/utils/nodes/openNodeTab';
 
 export function useHierarchyItem(canvasItem: CanvasItem) {
+    const router = useRouter();
+
     const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
     const setSelectedIds = useItemsStore((state) => state.setSelectedItemIds);
     const setItems = useItemsStore((state) => state.setItems);
-
-    const openedTabIds = useCanvasStore((state) => state.openedTabIds);
-    const setOpenedTabIds = useCanvasStore((state) => state.setOpenedTabIds);
-    const setSelectedTabId = useCanvasStore((state) => state.setSelectedTabId);
 
     const handleSelect = useCallback(
         (e: React.MouseEvent<HTMLLIElement>) => {
@@ -53,13 +52,8 @@ export function useHierarchyItem(canvasItem: CanvasItem) {
     const handleNodeDoubleClick = useCallback(() => {
         if (canvasItem.kind !== 'node') return;
 
-        if (!openedTabIds.includes(canvasItem.id)) {
-            setOpenedTabIds([...openedTabIds, canvasItem.id]);
-        }
-
-        setSelectedTabId(canvasItem.id);
-        setSelectedIds([canvasItem.id]);
-    }, [canvasItem.id, canvasItem.kind, openedTabIds, setOpenedTabIds, setSelectedTabId, setSelectedIds]);
+        openNodeTab(canvasItem.id, router);
+    }, [canvasItem.id, canvasItem.kind, router]);
 
     return {
         handleSelect,
