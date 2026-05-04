@@ -2,7 +2,7 @@ import type { Node } from '@/canvas/_core/_/canvas.types';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
-import { addToHistory } from '@/canvas/utils/history/historyManager'; // Добавить импорт
+import { addToHistory } from '@/canvas/utils/history/historyManager';
 
 export function deleteSelectedItems() {
     const itemsState = useItemsStore.getState();
