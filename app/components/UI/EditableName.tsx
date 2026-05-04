@@ -71,7 +71,7 @@ export const EditableName = memo(function EditableName({
                 className={`
                     block text-sm text-left overflow-hidden text-ellipsis whitespace-nowrap tabular-nums 
                     ${isSelected ? 'text-text-accent' : 'text-foreground'} 
-                    ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-text'} 
+                    ${disabled && 'opacity-50 cursor-not-allowed'} 
                     ${className}
                 `}
                 style={{ minWidth: 0 }}
