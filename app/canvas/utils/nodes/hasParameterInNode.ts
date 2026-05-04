@@ -1,10 +1,11 @@
-import { getOpenedNode } from '@/canvas/utils/nodes/getOpenedNode';
+import { getNodeById } from '@/canvas/utils/nodes/getNodeById';
 
-export const hasParameterInNode = (parameterId: string): boolean => {
-    const openedNode = getOpenedNode();
-    if (!openedNode) return false;
+export const hasParameterInNode = (parameterId: string, nodeId: string): boolean => {
+    const node = getNodeById(nodeId);
 
-    const hasParameterInNode = openedNode.parameters.some((parameter) => parameter.id === parameterId);
+    if (!node) return false;
+
+    const hasParameterInNode = node.parameters.some((parameter) => parameter.id === parameterId);
 
     return hasParameterInNode;
 };
