@@ -1,8 +1,8 @@
 import type { Parameter, ParameterType, ParameterTypeMap } from '@/canvas/_core/_/parameter';
-import { Node } from '@/canvas/_core/_/canvas.types';
+import type { Node } from '@/canvas/_core/_/canvas.types';
 
 import { useItemsStore } from '@/canvas/store/useItemsStore';
-import { getOpenedNode } from '@/canvas/utils/nodes/getOpenedNode';
+import { getNodeById } from '@/canvas/utils/nodes/getNodeById';
 
 const addParameterToNode = (nodeId: string, parameterId: string) => {
     const itemsStore = useItemsStore.getState();
@@ -59,17 +59,17 @@ const addParameterToNode = (nodeId: string, parameterId: string) => {
     setItems(updatedItems);
 };
 
-export const addSelectedParametersToNode = () => {
-    const openedNode = getOpenedNode();
+export const addSelectedParametersToNode = (nodeId: string) => {
+    const node = getNodeById(nodeId);
     const itemsState = useItemsStore.getState();
 
     const parameters = itemsState.parameters;
     const selectedParameters = itemsState.selectedParameters;
     const setSelectedParameters = itemsState.setSelectedParameters;
 
-    if (!openedNode || selectedParameters.size === 0) return;
+    if (!node || selectedParameters.size === 0) return;
 
-    const existingNodeParameterIds = new Set(openedNode.parameters.map((parameter) => parameter.id));
+    const existingNodeParameterIds = new Set(node.parameters.map((parameter) => parameter.id));
 
     const selectedParametersList = parameters.filter(
         (parameter) =>
@@ -81,7 +81,7 @@ export const addSelectedParametersToNode = () => {
     if (selectedParametersList.length === 0) return;
 
     selectedParametersList.forEach((parameter) => {
-        addParameterToNode(openedNode.id, parameter.id);
+        addParameterToNode(node.id, parameter.id);
     });
 
     setSelectedParameters(new Set());
