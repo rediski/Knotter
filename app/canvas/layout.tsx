@@ -29,13 +29,10 @@ export default function CanvasLayout({ children }: { children: ReactNode }) {
         const newOpenedNodeIds = openedTabIds.filter((id) => id !== nodeId);
         setOpenedTabIds(newOpenedNodeIds);
 
-        if (pathname === `/canvas/${nodeId}`) {
-            if (newOpenedNodeIds.length > 0) {
-                router.push(`/canvas/${newOpenedNodeIds[newOpenedNodeIds.length - 1]}`);
-            } else {
-                router.push('/canvas');
-            }
-        }
+        if (pathname !== `/canvas/${nodeId}/`) return;
+
+        const lastTabId = newOpenedNodeIds[newOpenedNodeIds.length - 1];
+        router.push(lastTabId ? `/canvas/${lastTabId}/` : '/canvas/');
     };
 
     const getOpenedNodesData = (): Node[] => {
