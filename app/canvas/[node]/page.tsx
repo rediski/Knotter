@@ -1,16 +1,23 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { useItemsStore } from '@/canvas/store/useItemsStore';
+
 import { NODE_SHAPES } from '@/canvas/_core/_/nodeShapeType';
-import { ParameterItem } from './ParameterItem';
+
+import { ParameterItem } from '@/canvas/[node]/ParameterItem';
+import { LocalParameter } from '@/canvas/[node]/LocalParameter';
+import { CreateParameterForm } from '@/canvas/[node]/CreateParameterForm';
+
+import { useNodeContent } from '@/canvas/[node]/useNodeContent';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
+
 import { Input } from '@/components/UI/Input';
 import { EmptyState } from '@/components/UI/EmptyState';
-import { CreateParameterForm } from './CreateParameterForm';
-import { LocalParameter } from './LocalParameter';
+
 import { addSelectedParametersToNode } from '@/canvas/utils/nodes/addSelectedParametersToNode';
 import { hasParameterInNode } from '@/canvas/utils/nodes/hasParameterInNode';
-import { useNodeContent } from './useNodeContent';
+
 import { Search, ArrowBigUp, ArrowBigDown, Plus, X } from 'lucide-react';
 
 export default function NodePage() {
@@ -19,6 +26,12 @@ export default function NodePage() {
 
     const items = useItemsStore((state) => state.items);
     const openedNode = items.find((item) => item.id === nodeId && item.kind === 'node');
+
+    useEffect(() => {
+        if (openedNode?.name) {
+            document.title = openedNode.name;
+        }
+    }, [openedNode?.name]);
 
     const {
         filteredParameters,
