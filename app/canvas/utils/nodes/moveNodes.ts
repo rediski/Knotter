@@ -4,21 +4,25 @@ import { useCanvasStore } from '@/canvas/store/useCanvasStore';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { snapPosition } from '@/canvas/utils/items/getSnappedPosition';
+import { getNodes } from '@/canvas/utils/nodes/getNodes';
+
 import { NODE_MOVE_MIN_STEP, NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 
-export function moveItems(dragDelta: Position, initialPositions: Map<string, Position>): CanvasItem[] {
+export function moveNodes(dragDelta: Position, initialPositions: Map<string, Position>): CanvasItem[] {
     const itemsState = useItemsStore.getState();
+    const canvasState = useCanvasStore.getState();
 
     const selectedItemIds = itemsState.selectedItemIds;
     const items = itemsState.items;
+    const nodes = getNodes(items);
 
-    const isMagnet = useCanvasStore.getState().isMagnet;
+    const isMagnet = canvasState.isMagnet;
 
     const { x: dx, y: dy } = dragDelta;
 
     let changed = false;
 
-    const updatedItems = items.map((item) => {
+    const updatedNodes = nodes.map((item) => {
         if (!selectedItemIds.includes(item.id)) return item;
 
         const initialPos = initialPositions.get(item.id);
@@ -42,5 +46,5 @@ export function moveItems(dragDelta: Position, initialPositions: Map<string, Pos
         return { ...item, position: newPosition };
     });
 
-    return changed ? updatedItems : items;
+    return changed ? updatedNodes : items;
 }
