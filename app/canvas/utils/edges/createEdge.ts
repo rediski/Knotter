@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import type { Node } from '@/canvas/_core/_/canvas.types';
+import type { Node, Edge } from '@/canvas/_core/_/canvas.types';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { canAddItem } from '@/canvas/utils/items/canAddItems';
@@ -31,15 +31,15 @@ export function createEdge(clickedNodeId: string) {
             return item;
         }
 
+        const newEdge: Omit<Edge, 'from'> = {
+            id: uuid(),
+            to: clickedNodeId,
+            kind: 'edge',
+        };
+
         updatedNode = {
             ...item,
-            edges: [
-                ...item.edges,
-                {
-                    id: uuid(),
-                    to: clickedNodeId,
-                },
-            ],
+            edges: [...item.edges, newEdge],
         };
 
         return updatedNode;
@@ -52,7 +52,6 @@ export function createEdge(clickedNodeId: string) {
         });
     }
 
-    setItems(newItems);
-
+    setItems(newItems as Node[]);
     setTempEdge(null);
 }
