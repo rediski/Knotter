@@ -1,18 +1,6 @@
-import type { CanvasItem, Edge } from '@/canvas/_core/_/canvas.types';
+import type { CanvasItem, Edge, Node } from '@/canvas/_core/_/canvas.types';
 
-export const getEdges = (items: CanvasItem[]): Edge[] => {
-    const edges: Edge[] = [];
-
-    for (const item of items) {
-        if (item.kind !== 'node') continue;
-
-        for (const edge of item.edges) {
-            edges.push({
-                ...edge,
-                from: item.id,
-            });
-        }
-    }
-
-    return edges;
-};
+export const getEdges = (items: CanvasItem[]): Edge[] =>
+    items
+        .filter((item): item is Node => item.kind === 'node')
+        .flatMap((node) => node.edges.map((edge) => ({ ...edge, from: node.id })));
