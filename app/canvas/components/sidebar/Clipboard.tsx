@@ -7,13 +7,15 @@ export const Clipboard = () => {
     return (
         <div className="flex flex-col gap-1 m-1 text-sm h-full">
             {clipboard.length !== 0 ? (
-                clipboard.map((item) => {
+                clipboard.map((node) => {
+                    if (node.kind !== 'node') return null;
+
                     return (
                         <div
-                            key={item.id}
+                            key={node.id}
                             className="flex items-center px-3 py-1 bg-depth-2 border border-depth-3 rounded-md h-9"
                         >
-                            {item.name}
+                            {node.name}
                         </div>
                     );
                 })

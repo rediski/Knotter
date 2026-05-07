@@ -9,7 +9,8 @@ import { findCanvasUnderCursor } from '@/canvas/utils/canvas/findCanvasUnderCurs
 
 import { updateHoveredNodeId } from '@/canvas/utils/nodes/updateHoveredNodeId';
 
-import { moveItems } from '@/canvas/utils/items/moveItems';
+import { moveNodes } from '@/canvas/utils/nodes/moveNodes';
+import { getSelectedNodes } from '@/canvas/utils/nodes/getSelectedNodes';
 import { getMousePosition } from '@/canvas/utils/canvas/getMousePosition';
 import { handleClickOnItem } from '@/canvas/utils/items/handleClickOnItem';
 
@@ -82,7 +83,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             const dx = mousePos.x - dragStartMouse.current.x;
             const dy = mousePos.y - dragStartMouse.current.y;
 
-            setItems(moveItems({ x: dx, y: dy }, initialNodePositions.current));
+            setItems(moveNodes({ x: dx, y: dy }, initialNodePositions.current));
         },
         [canvasRef],
     );
@@ -95,17 +96,19 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
         const items = itemsState.items;
         const selectedItemIds = itemsState.selectedItemIds;
 
-        const movedItems = items.filter((item) => selectedItemIds.includes(item.id));
+        const selectedNodes = getSelectedNodes({ items, selectedItemIds });
 
-        const changedItems = movedItems.filter((item) => {
-            const initialPos = initialNodePositions.current.get(item.id);
-            return initialPos && (initialPos.x !== item.position.x || initialPos.y !== item.position.y);
+        const changedNodes = selectedNodes.filter((node) => {
+            if (node.kind !== 'node') return null;
+
+            const initialPos = initialNodePositions.current.get(node.id);
+            return initialPos && (initialPos.x !== node.position.x || initialPos.y !== node.position.y);
         });
 
-        if (changedItems.length > 0) {
+        if (changedNodes.length > 0) {
             addToHistory({
                 type: 'MOVE_ITEMS',
-                items: structuredClone(changedItems),
+                items: structuredClone(changedNodes),
             });
         }
 

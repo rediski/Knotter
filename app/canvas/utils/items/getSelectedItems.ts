@@ -8,9 +8,11 @@ export const getSelectedItems = ({ items, selectedItemIds }: SelectedItemsParams
     return selectedItems;
 };
 
-export function getSelectedItemsPositions({ items, selectedItemIds }: SelectedItemsParams): Map<string, Position> {
+export function getSelectedNodesPositions({ items, selectedItemIds }: SelectedItemsParams): Map<string, Position> {
     const selectedItems = getSelectedItems({ items, selectedItemIds });
-    const positions = new Map(selectedItems.map((item) => [item.id, { ...item.position }]));
+    const positions = new Map(
+        selectedItems.filter((item) => item.kind === 'node').map((item) => [item.id, { ...item.position }]),
+    );
 
     return positions;
 }

@@ -15,6 +15,7 @@ import { useItemsStore } from '@/canvas/store/useItemsStore';
 import { Input } from '@/components/UI/Input';
 import { EmptyState } from '@/components/UI/EmptyState';
 
+import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { addSelectedParametersToNode } from '@/canvas/utils/nodes/addSelectedParametersToNode';
 import { hasParameterInNode } from '@/canvas/utils/nodes/hasParameterInNode';
 
@@ -25,7 +26,9 @@ export default function NodePage() {
     const nodeId = params.node as string;
 
     const items = useItemsStore((state) => state.items);
-    const openedNode = items.find((item) => item.id === nodeId && item.kind === 'node');
+    const nodes = getNodes(items);
+
+    const openedNode = nodes.find((item) => item.id === nodeId && item.kind === 'node');
 
     useEffect(() => {
         if (openedNode?.name) {

@@ -1,14 +1,15 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 
-import type { Position } from '@/canvas/_core/_/canvas.types';
+import type { Node, Position } from '@/canvas/_core/_/canvas.types';
 
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
-import { moveItems } from '@/canvas/utils/items/moveItems';
+import { moveNodes } from '@/canvas/utils/nodes/moveNodes';
 import { getSelectedItem } from '@/canvas/utils/items/getSelectedItems';
 import { getSelectedNode } from '@/canvas/utils/nodes/getSelectedNodes';
+import { getNodes } from '@/canvas/utils/nodes/getNodes';
 
 export function useInspector() {
     const items = useItemsStore((state) => state.items);
@@ -16,23 +17,25 @@ export function useInspector() {
     const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
 
     const selectedItem = getSelectedItem({ items, selectedItemIds });
-    const selectedNode = getSelectedNode({ items, selectedItemIds });
+    const selectedNode = getSelectedNode({ items, selectedItemIds }) as Node | null;
 
     const shapeType = selectedNode?.shapeType ?? null;
-    const positionX = selectedNode?.position?.x ?? 0;
-    const positionY = selectedNode?.position?.y ?? 0;
+    const positionX = selectedNode?.position.x ?? 0;
+    const positionY = selectedNode?.position.y ?? 0;
+
+    const nodes = getNodes(items);
 
     const initialPositions = useMemo(() => {
         const map = new Map<string, Position>();
 
-        if (!selectedItem) return map;
+        if (!selectedNode) return map;
 
         if (selectedItemIds.length > 0) {
-            items.forEach((item) => {
-                if (selectedItemIds.includes(item.id)) {
-                    map.set(item.id, {
-                        x: item.position.x,
-                        y: item.position.y,
+            nodes.forEach((node) => {
+                if (selectedItemIds.includes(node.id)) {
+                    map.set(node.id, {
+                        x: node.position.x,
+                        y: node.position.y,
                     });
                 }
             });
@@ -40,63 +43,58 @@ export function useInspector() {
             return map;
         }
 
-        map.set(selectedItem.id, {
-            x: selectedItem.position.x,
-            y: selectedItem.position.y,
+        map.set(selectedNode.id, {
+            x: selectedNode.position.x,
+            y: selectedNode.position.y,
         });
 
         return map;
-    }, [selectedItem, selectedItemIds, items]);
+    }, [selectedNode, selectedItemIds, nodes]);
 
-    const changeItemsPosition = useCallback(
-        (axis: 'x' | 'y', value: number) => {
-            const updatedInitialPositions = new Map(initialPositions);
+    const getUpdatedPositions = () => {
+        const updated = new Map(initialPositions);
 
-            if (updatedInitialPositions.size === 0 && selectedItem) {
-                items.forEach((item) => {
-                    if (selectedItemIds.includes(item.id) || item.id === selectedItem.id) {
-                        updatedInitialPositions.set(item.id, {
-                            x: item.position.x,
-                            y: item.position.y,
-                        });
-                    }
-                });
-            }
+        if (updated.size === 0 && selectedNode) {
+            nodes.forEach((node) => {
+                if (selectedItemIds.includes(node.id) || node.id === selectedNode.id) {
+                    updated.set(node.id, {
+                        x: node.position.x,
+                        y: node.position.y,
+                    });
+                }
+            });
+        }
 
-            const dragDelta = {
-                x: axis === 'x' ? value - positionX : 0,
-                y: axis === 'y' ? value - positionY : 0,
-            };
+        return updated;
+    };
 
-            const updatedItems = moveItems(dragDelta, updatedInitialPositions);
-            setItems(updatedItems);
-        },
-        [selectedItem, positionX, positionY, initialPositions, items, selectedItemIds, setItems],
-    );
+    const changeNodesPosition = (axis: 'x' | 'y', value: number) => {
+        if (!selectedNode) return;
 
-    const changeItemName = useCallback(
-        (newName: string) => {
-            if (!selectedItem) return;
+        const updatedInitialPositions = getUpdatedPositions();
 
-            const updatedItems = items.map((item) => (item.id === selectedItem.id ? { ...item, name: newName } : item));
+        const dragDelta = {
+            x: axis === 'x' ? value - positionX : 0,
+            y: axis === 'y' ? value - positionY : 0,
+        };
 
-            setItems(updatedItems);
-        },
-        [selectedItem, items, setItems],
-    );
+        const updatedNodes = moveNodes(dragDelta, updatedInitialPositions);
+        setItems(updatedNodes);
+    };
 
-    const changeItemDescription = useCallback(
-        (newDesc: string) => {
-            if (!selectedItem) return;
+    const changeNodeName = (newName: string) => {
+        if (!selectedNode) return;
+        const updatedNodes = nodes.map((node) => (node.id === selectedNode?.id ? { ...node, name: newName } : node));
 
-            const updatedItems = items.map((item) =>
-                item.id === selectedItem.id ? { ...item, description: newDesc } : item,
-            );
+        setItems(updatedNodes);
+    };
 
-            setItems(updatedItems);
-        },
-        [selectedItem, items, setItems],
-    );
+    const changeNodeDescription = (newDesc: string) => {
+        if (!selectedNode) return;
+        const updatedNodes = nodes.map((node) => (node.id === selectedNode?.id ? { ...node, description: newDesc } : node));
+
+        setItems(updatedNodes);
+    };
 
     return {
         shapeType,
@@ -106,8 +104,8 @@ export function useInspector() {
         selectedItem,
         selectedNode,
 
-        changeItemName,
-        changeItemDescription,
-        changeItemsPosition,
+        changeNodeName,
+        changeNodeDescription,
+        changeNodesPosition,
     };
 }

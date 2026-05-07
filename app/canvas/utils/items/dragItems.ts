@@ -3,7 +3,7 @@ import type { RefObject } from 'react';
 import { useCanvasRefsStore } from '@/canvas/store/useCanvasRefsStore';
 
 import { getMousePosition } from '@/canvas/utils/canvas/getMousePosition';
-import { getSelectedItemsPositions } from '@/canvas/utils/items/getSelectedItems';
+import { getSelectedNodesPositions } from '@/canvas/utils/items/getSelectedItems';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 export function startDragging(e: MouseEvent, canvasRef: RefObject<HTMLCanvasElement | null>) {
@@ -24,7 +24,7 @@ export function startDragging(e: MouseEvent, canvasRef: RefObject<HTMLCanvasElem
     const items = itemsState.items;
     const selectedItemIds = itemsState.selectedItemIds;
 
-    initialNodePositions.current = getSelectedItemsPositions({ items, selectedItemIds });
+    initialNodePositions.current = getSelectedNodesPositions({ items, selectedItemIds });
     isDragging.current = false;
 }
 

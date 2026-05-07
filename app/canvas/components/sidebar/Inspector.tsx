@@ -2,12 +2,14 @@
 
 import { memo } from 'react';
 
-import { useInspector } from '@/canvas/components/sidebar/useInspector';
+import type { Edge } from '@/canvas/_core/_/canvas.types';
 
 import { EmptyState } from '@/components/UI/EmptyState';
 import { Input } from '@/components/UI/Input';
 import { Textarea } from '@/components/UI/Textarea';
 
+import { useInspector } from '@/canvas/components/sidebar/useInspector';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
 import { useSidebarStore } from '@/canvas/store/useSidebarStore';
 import { useDropdownStore } from '@/canvas/store/useDropdownStore';
 
@@ -22,7 +24,6 @@ import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
 import { deleteSelectedItemsById } from '@/canvas/utils/items/deleteSelectedItems';
 
 import { Box, Link2Icon, X } from 'lucide-react';
-import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 const FIELD_TITLES = {
     NAME: 'Название',
@@ -41,9 +42,9 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
         selectedItem,
         selectedNode,
 
-        changeItemName,
-        changeItemDescription,
-        changeItemsPosition,
+        changeNodeName,
+        changeNodeDescription,
+        changeNodesPosition,
     } = useInspector();
 
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
@@ -56,13 +57,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     const incomingEdges = getIncomingEdges(items, selectedNode?.id);
     const outgoingEdges = getOutgoingEdges(items, selectedNode?.id);
 
-    const nodeParameters = selectedNode?.parameters;
-
-    const handleEdgeClick = (edgeId: string) => {
-        setSelectedEdgeIds([edgeId]);
-    };
-
-    const renderEdgeList = (edges: any[], title: string, dropdownId: number) => {
+    const renderEdgeList = (edges: Edge[], title: string, dropdownId: number) => {
         if (edges.length === 0) return null;
 
         return (
@@ -74,7 +69,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                         return (
                             <div
                                 key={edge.id}
-                                onClick={() => handleEdgeClick(edge.id)}
+                                onClick={() => setSelectedEdgeIds([edge.id])}
                                 className={`
                                     flex items-center gap-2 text-sm px-3 py-2 rounded-md cursor-pointer group
                                     ${isSelected ? 'bg-bg-accent/10 border border-bg-accent/10 text-text-accent' : 'bg-depth-3 hover:bg-depth-4 border border-depth-4 text-contrast'}
@@ -105,7 +100,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
         );
     };
 
-    if (!selectedItem || !nodeParameters) {
+    if (!selectedItem) {
         return <EmptyState message="Необходимо выбрать один из элементов" />;
     }
 
@@ -133,11 +128,11 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
 
     return (
         <div className="flex flex-col overflow-y-auto p-1 gap-1">
-            {showName && (
+            {showName && selectedItem.kind === 'node' && (
                 <div className="flex flex-col gap-1">
                     <Input
                         value={selectedItem.name}
-                        onChange={changeItemName}
+                        onChange={changeNodeName}
                         placeholder={FIELD_TITLES.NAME}
                         icon={Box}
                         className="bg-depth-2 border border-depth-3"
@@ -149,7 +144,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                 <div className="flex flex-col gap-1">
                     <Textarea
                         value={selectedItem.description}
-                        onChange={changeItemDescription}
+                        onChange={changeNodeDescription}
                         placeholder={FIELD_TITLES.DESCRIPTION}
                         className="border border-depth-3"
                     />
@@ -176,7 +171,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                             <PositionInputs
                                 positionX={positionX}
                                 positionY={positionY}
-                                changeItemsPosition={changeItemsPosition}
+                                changeItemsPosition={changeNodesPosition}
                             />
                         </Dropdown>
                     )}

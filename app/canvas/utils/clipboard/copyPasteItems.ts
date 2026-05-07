@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
+import type { CanvasItem, Edge } from '@/canvas/_core/_/canvas.types';
 import { NODE_MOVE_MAX_STEP } from '@/canvas/_core/_/canvas.constants';
 
 import { useItemsStore } from '@/canvas/store/useItemsStore';
@@ -10,7 +10,6 @@ import { addToHistory } from '@/canvas/utils/history/historyManager';
 
 export function copySelectedItems(items: CanvasItem[], selectedIds: string[]) {
     const setClipboard = useClipboardStore.getState().setClipboard;
-
     const snapshot = items.filter((item) => selectedIds.includes(item.id)).map((item) => structuredClone(item));
 
     setClipboard(snapshot);
@@ -19,20 +18,16 @@ export function copySelectedItems(items: CanvasItem[], selectedIds: string[]) {
 function generateNewIds(items: CanvasItem[]): Map<string, string> {
     const map = new Map<string, string>();
     items.forEach((item) => map.set(item.id, uuid()));
+
     return map;
 }
 
-function updateEdges(item: CanvasItem, idMapping: Map<string, string>): CanvasItem {
-    if (!item.edges?.length) return item;
-
-    return {
-        ...item,
-        edges: item.edges.map((edge) => ({
-            ...edge,
-            id: uuid(),
-            to: idMapping.get(edge.to) || edge.to,
-        })),
-    };
+function updateEdges(edges: Omit<Edge, 'from'>[], idMapping: Map<string, string>): Omit<Edge, 'from'>[] {
+    return edges.map((edge) => ({
+        ...edge,
+        id: uuid(),
+        to: idMapping.get(edge.to) || edge.to,
+    }));
 }
 
 export function pasteClipboardItems() {
@@ -51,15 +46,22 @@ export function pasteClipboardItems() {
 
     const newItems: CanvasItem[] = clipboard.map((item) => {
         const newId = newIds.get(item.id)!;
-        const clone = structuredClone(item);
+        const clone = structuredClone(item) as CanvasItem;
 
         clone.id = newId;
-        clone.position = {
-            x: clone.position.x + NODE_MOVE_MAX_STEP,
-            y: clone.position.y + NODE_MOVE_MAX_STEP,
-        };
 
-        return updateEdges(clone, newIds);
+        if (clone.kind === 'node') {
+            clone.position = {
+                x: clone.position.x + NODE_MOVE_MAX_STEP,
+                y: clone.position.y + NODE_MOVE_MAX_STEP,
+            };
+
+            if (clone.edges?.length) {
+                clone.edges = updateEdges(clone.edges, newIds);
+            }
+        }
+
+        return clone;
     });
 
     addToHistory({

@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import type { CanvasItem } from '@/canvas/_core/_/canvas.types';
+import type { CanvasItem, Node } from '@/canvas/_core/_/canvas.types';
 
 import { EditableName } from '@/components/UI/EditableName';
 
@@ -13,20 +13,15 @@ import { useHierarchyItem } from '@/canvas/components/sidebar/useHierarchyItem';
 
 import { Box } from 'lucide-react';
 
-interface HierarchyItemProps {
-    canvasItem: CanvasItem;
-}
-
-export const HierarchyItem = memo(function HierarchyItem({ canvasItem }: HierarchyItemProps) {
-    const { handleSelect, handleKeyDown, handleNameChange, handleNodeDoubleClick } = useHierarchyItem(canvasItem);
+export const HierarchyItem = memo(function HierarchyItem({ filteredNode }: { filteredNode: Node }) {
+    const { handleSelect, handleKeyDown, handleNameChange, handleNodeDoubleClick } = useHierarchyItem(filteredNode);
 
     const { dragRef, dropRef, isDragOver, dragPosition } = useDragAndDrop<HTMLDivElement, HTMLLIElement>({
-        itemId: canvasItem.id,
+        itemId: filteredNode.id,
     });
 
     const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
-
-    const isSelected = selectedItemIds.includes(canvasItem.id);
+    const isSelected = selectedItemIds.includes(filteredNode.id);
 
     return (
         <li
@@ -58,7 +53,7 @@ export const HierarchyItem = memo(function HierarchyItem({ canvasItem }: Hierarc
 
                         <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/10' : 'border-depth-4'}`} />
 
-                        <EditableName name={canvasItem.name} isSelected={isSelected} onChange={handleNameChange} />
+                        <EditableName name={filteredNode.name} isSelected={isSelected} onChange={handleNameChange} />
                     </div>
                 </button>
             </div>
