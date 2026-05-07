@@ -18,12 +18,13 @@ import { Dropdown } from '@/components/UI/Dropdown';
 import { ShapeButtons } from '@/canvas/components/sidebar/ShapeButtons';
 import { PositionInputs } from '@/canvas/components/sidebar/PositionInputs';
 
+import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getIncomingEdges } from '@/canvas/utils/edges/getIncomingEdges';
 import { getOutgoingEdges } from '@/canvas/utils/edges/getOutgoingEdges';
 import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
 import { deleteSelectedItemsById } from '@/canvas/utils/items/deleteSelectedItems';
 
-import { Box, Link2Icon, X } from 'lucide-react';
+import { Box, Link2Icon, X, ArrowRight } from 'lucide-react';
 
 const FIELD_TITLES = {
     NAME: 'Название',
@@ -50,6 +51,8 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
 
     const items = useItemsStore((state) => state.items);
+    const nodes = getNodes(items);
+
     const selectedEdgeIds = useItemsStore((state) => state.selectedEdgeIds);
     const setSelectedEdgeIds = useItemsStore((state) => state.setSelectedEdgeIds);
     const filterText = useSidebarStore((state) => (panelId ? state.filterText[panelId] : ''));
@@ -57,7 +60,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     const incomingEdges = getIncomingEdges(items, selectedNode?.id);
     const outgoingEdges = getOutgoingEdges(items, selectedNode?.id);
 
-    const renderEdgeList = (edges: Edge[], title: string, dropdownId: number) => {
+    const renderEdgeList = (edges: Edge[], title: string, dropdownId: number, isIncoming: boolean) => {
         if (edges.length === 0) return null;
 
         return (
@@ -65,6 +68,9 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                 <div className="flex flex-col gap-1">
                     {edges.map((edge) => {
                         const isSelected = selectedEdgeIds.includes(edge.id);
+
+                        const connectedNodeId = isIncoming ? edge.from : edge.to;
+                        const connectedNodeName = nodes.find((node) => node.id === connectedNodeId)?.name;
 
                         return (
                             <div
@@ -79,14 +85,29 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
 
                                 <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/20' : 'border-depth-5'}`} />
 
-                                <div className="w-full">{edge.id}</div>
+                                <div className="flex items-center gap-1.5 flex-1">
+                                    {isIncoming ? (
+                                        <>
+                                            <span className="font-medium">{connectedNodeName}</span>
+                                            <ArrowRight size={14} className="text-text-muted" />
+                                            <span className="text-text-muted">{selectedNode?.name}</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span className="font-medium">{selectedNode?.name}</span>
+                                            <ArrowRight size={14} className="text-text-muted" />
+                                            <span className="text-text-muted">{connectedNodeName}</span>
+                                        </>
+                                    )}
+                                </div>
 
                                 <button
                                     className={`
                                         opacity-0 group-hover:opacity-100 rounded p-0.5 transition-opacity cursor-pointer
                                         ${isSelected ? 'hover:bg-bg-accent/10' : 'hover:bg-depth-5 '}
                                     `}
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.stopPropagation();
                                         deleteSelectedItemsById(edge.id);
                                     }}
                                 >
@@ -176,8 +197,8 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                         </Dropdown>
                     )}
 
-                    {showEdgeFrom && renderEdgeList(incomingEdges, FIELD_TITLES.EDGE_FROM, 3)}
-                    {showEdgeTo && renderEdgeList(outgoingEdges, FIELD_TITLES.EDGE_TO, 4)}
+                    {showEdgeFrom && renderEdgeList(incomingEdges, FIELD_TITLES.EDGE_FROM, 3, true)}
+                    {showEdgeTo && renderEdgeList(outgoingEdges, FIELD_TITLES.EDGE_TO, 4, false)}
                 </>
             )}
         </div>
