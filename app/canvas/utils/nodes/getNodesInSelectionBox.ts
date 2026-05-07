@@ -1,6 +1,6 @@
-import type { CanvasItem, Position } from '@/canvas/_core/_/canvas.types';
+import type { Node, Position } from '@/canvas/_core/_/canvas.types';
 
-export function getItemsInSelectionBox(items: CanvasItem[], selectionStart: Position, selectionEnd: Position): string[] {
+export function getNodesInSelectionBox(nodes: Node[], selectionStart: Position, selectionEnd: Position): string[] {
     const left = Math.min(selectionStart.x, selectionEnd.x);
     const right = Math.max(selectionStart.x, selectionEnd.x);
     const top = Math.min(selectionStart.y, selectionEnd.y);
@@ -8,14 +8,14 @@ export function getItemsInSelectionBox(items: CanvasItem[], selectionStart: Posi
 
     const bounds = { left, right, top, bottom };
 
-    return items
-        .filter((item) => {
-            const { x, y } = item.position;
+    return nodes
+        .filter((node) => {
+            const { x, y } = node.position;
 
             const insideX = x >= bounds.left && x <= bounds.right;
             const insideY = y >= bounds.top && y <= bounds.bottom;
 
             return insideX && insideY;
         })
-        .map((item) => item.id);
+        .map((node) => node.id);
 }
