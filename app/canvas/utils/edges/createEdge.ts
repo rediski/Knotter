@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import type { Node, Edge } from '@/canvas/_core/_/canvas.types';
+import type { Edge } from '@/canvas/_core/_/canvas.types';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { canAddItem } from '@/canvas/utils/items/canAddItems';
@@ -21,37 +21,20 @@ export function createEdge(clickedNodeId: string) {
         return null;
     }
 
-    let updatedNode: Node | null = null;
+    const newEdge: Edge = {
+        id: uuid(),
+        from: tempEdge,
+        to: clickedNodeId,
+        kind: 'edge',
+    };
 
-    const newItems = items.map((item) => {
-        if (item.kind !== 'node') return item;
-        if (item.id !== tempEdge) return item;
+    const newItems = [...items, newEdge];
 
-        if (item.edges.some((edge) => edge.to === clickedNodeId)) {
-            return item;
-        }
-
-        const newEdge: Omit<Edge, 'from'> = {
-            id: uuid(),
-            to: clickedNodeId,
-            kind: 'edge',
-        };
-
-        updatedNode = {
-            ...item,
-            edges: [...item.edges, newEdge],
-        };
-
-        return updatedNode;
+    addToHistory({
+        type: 'ADD_ITEMS',
+        items: [structuredClone(newEdge)],
     });
 
-    if (updatedNode) {
-        addToHistory({
-            type: 'UPDATE_ITEMS',
-            items: [structuredClone(updatedNode)],
-        });
-    }
-
-    setItems(newItems as Node[]);
+    setItems(newItems);
     setTempEdge(null);
 }

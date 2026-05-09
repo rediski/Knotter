@@ -37,7 +37,6 @@ export function createNode(): Node | null {
         kind: 'node',
         shapeType: 'point',
         position: { x, y },
-        edges: [],
         parameters: [],
     };
 

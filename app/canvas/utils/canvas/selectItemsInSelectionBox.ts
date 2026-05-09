@@ -12,13 +12,8 @@ export function selectItemsInSelectionBox(start: Position, end: Position) {
     const nodes = getNodes(items);
 
     const setSelectedItemIds = itemsState.setSelectedItemIds;
-    const setSelectedEdgeIds = itemsState.setSelectedEdgeIds;
 
     const nodesInSelectionBox = getNodesInSelectionBox(nodes, start, end);
 
     setSelectedItemIds(nodesInSelectionBox);
-
-    if (nodesInSelectionBox.length === 0) {
-        setSelectedEdgeIds([]);
-    }
 }

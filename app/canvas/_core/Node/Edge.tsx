@@ -9,9 +9,9 @@ import { type Edge as EdgeType } from '@/canvas/_core/_/canvas.types';
 export const Edge = ({ edge, containerRef }: { edge: EdgeType; containerRef: RefObject<HTMLDivElement | null> }) => {
     const items = useItemsStore((state) => state.items);
     const zoomLevel = useCanvasStore((state) => state.zoomLevel);
-    const selectedEdgeIds = useItemsStore((state) => state.selectedEdgeIds);
+    const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
 
-    const isSelected = selectedEdgeIds.includes(edge.id);
+    const isSelected = selectedItemIds.includes(edge.id);
 
     const nodes = getNodes(items);
     const fromNode = nodes.find((node) => node.id === edge.from);

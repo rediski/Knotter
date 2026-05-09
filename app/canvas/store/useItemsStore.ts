@@ -13,9 +13,6 @@ export interface ItemsState {
     selectedItemIds: string[];
     setSelectedItemIds: (ids: string[]) => void;
 
-    selectedEdgeIds: string[];
-    setSelectedEdgeIds: (ids: string[]) => void;
-
     hoveredNodeId: string | null;
     setHoveredNodeId: (id: string | null) => void;
 
@@ -44,9 +41,6 @@ export const useItemsStore = create<ItemsState>()(
             selectedItemIds: [],
             setSelectedItemIds: (ids) => set({ selectedItemIds: ids }),
 
-            selectedEdgeIds: [],
-            setSelectedEdgeIds: (ids) => set({ selectedEdgeIds: ids }),
-
             hoveredNodeId: null,
             setHoveredNodeId: (hoveredNodeId) => set({ hoveredNodeId }),
 
@@ -68,7 +62,6 @@ export const useItemsStore = create<ItemsState>()(
                 items: state.items,
                 parameters: state.parameters,
                 selectedItemIds: state.selectedItemIds,
-                selectedEdgeIds: state.selectedEdgeIds,
             }),
         },
     ),

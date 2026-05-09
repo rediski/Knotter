@@ -10,10 +10,7 @@ export function handleClickOnItem(e: MouseEvent, isCanvasUnderCursor: boolean) {
     const itemsState = useItemsStore.getState();
 
     const selectedItemIds = itemsState.selectedItemIds;
-    const selectedEdgeIds = itemsState.selectedEdgeIds;
-
     const setSelectedItemIds = itemsState.setSelectedItemIds;
-    const setSelectedEdgeIds = itemsState.setSelectedEdgeIds;
 
     const point = { x: e.clientX, y: e.clientY };
     const isMultiSelect = e.ctrlKey || e.metaKey || e.shiftKey;
@@ -23,31 +20,25 @@ export function handleClickOnItem(e: MouseEvent, isCanvasUnderCursor: boolean) {
 
     if (edgeIdUnderCursor) {
         if (isMultiSelect) {
-            if (selectedEdgeIds.includes(edgeIdUnderCursor)) {
-                setSelectedEdgeIds(selectedEdgeIds.filter((id) => id !== edgeIdUnderCursor));
+            if (selectedItemIds.includes(edgeIdUnderCursor)) {
+                setSelectedItemIds(selectedItemIds.filter((id) => id !== edgeIdUnderCursor));
                 return;
             }
 
-            setSelectedEdgeIds([...selectedEdgeIds, edgeIdUnderCursor]);
+            setSelectedItemIds([...selectedItemIds, edgeIdUnderCursor]);
             return;
         }
 
-        setSelectedEdgeIds([edgeIdUnderCursor]);
-        setSelectedItemIds([]);
+        setSelectedItemIds([edgeIdUnderCursor]);
         return;
     }
 
     if (!nodeIdUnderCursor) {
         if (!isMultiSelect && isCanvasUnderCursor) {
             setSelectedItemIds([]);
-            setSelectedEdgeIds([]);
         }
 
         return;
-    }
-
-    if (!isMultiSelect && selectedEdgeIds.length > 0) {
-        setSelectedEdgeIds([]);
     }
 
     if (!selectedItemIds.includes(nodeIdUnderCursor)) {
@@ -55,7 +46,7 @@ export function handleClickOnItem(e: MouseEvent, isCanvasUnderCursor: boolean) {
         setSelectedItemIds(newSelectedIds);
     }
 
-    if (nodeIdUnderCursor) {
+    if (nodeIdUnderCursor && itemsState.tempEdge) {
         createEdge(nodeIdUnderCursor);
     }
 }

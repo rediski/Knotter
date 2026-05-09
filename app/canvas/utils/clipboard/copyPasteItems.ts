@@ -55,10 +55,6 @@ export function pasteClipboardItems() {
                 x: clone.position.x + NODE_MOVE_MAX_STEP,
                 y: clone.position.y + NODE_MOVE_MAX_STEP,
             };
-
-            if (clone.edges?.length) {
-                clone.edges = updateEdges(clone.edges, newIds);
-            }
         }
 
         return clone;

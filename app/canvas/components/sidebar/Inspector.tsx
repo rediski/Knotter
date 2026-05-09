@@ -51,10 +51,10 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
 
     const items = useItemsStore((state) => state.items);
+    const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
+    const setSelectedItemIds = useItemsStore((state) => state.setSelectedItemIds);
     const nodes = getNodes(items);
 
-    const selectedEdgeIds = useItemsStore((state) => state.selectedEdgeIds);
-    const setSelectedEdgeIds = useItemsStore((state) => state.setSelectedEdgeIds);
     const filterText = useSidebarStore((state) => (panelId ? state.filterText[panelId] : ''));
 
     const incomingEdges = getIncomingEdges(items, selectedNode?.id);
@@ -67,7 +67,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
             <Dropdown title={title} isOpen={isDropdownOpen(dropdownId)} onToggle={() => toggleDropdown(dropdownId)}>
                 <div className="flex flex-col gap-1">
                     {edges.map((edge) => {
-                        const isSelected = selectedEdgeIds.includes(edge.id);
+                        const isSelected = selectedItemIds.includes(edge.id);
 
                         const connectedNodeId = isIncoming ? edge.from : edge.to;
                         const connectedNodeName = nodes.find((node) => node.id === connectedNodeId)?.name;
@@ -75,7 +75,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                         return (
                             <div
                                 key={edge.id}
-                                onClick={() => setSelectedEdgeIds([edge.id])}
+                                onClick={() => setSelectedItemIds([edge.id])}
                                 className={`
                                     flex items-center gap-2 text-sm px-3 py-2 rounded-md cursor-pointer group
                                     ${isSelected ? 'bg-bg-accent/10 border border-bg-accent/10 text-text-accent' : 'bg-depth-3 hover:bg-depth-4 border border-depth-4 text-contrast'}
