@@ -29,11 +29,10 @@ export const CreateParameterForm = () => {
     if (!foundParameterType) return;
 
     const handleCreateParameter = () => {
-        if (selectedStructureId && structures.some((structure) => structure.id === selectedStructureId)) {
-            createParameterInStructure(parameterName, parameterType, selectedStructureId);
-        } else {
-            createParameter(parameterName, parameterType);
-        }
+        const isStructure = selectedStructureId && structures.some((structure) => structure.id === selectedStructureId);
+
+        if (isStructure) createParameterInStructure(parameterName, parameterType, selectedStructureId);
+        if (!isStructure) createParameter(parameterName, parameterType);
 
         setParameterName('');
         setSelectedStructureId(null);
