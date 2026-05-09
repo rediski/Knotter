@@ -19,13 +19,6 @@ export function restoreCanvasFromHistory(actions: CanvasAction[]) {
             case 'DELETE_ITEMS':
                 canvasItems = canvasItems.filter((item) => !action.ids.includes(item.id));
                 break;
-
-            case 'UPDATE_ITEMS':
-                canvasItems = canvasItems.map((item) => {
-                    const updatedItem = action.items.find((updated) => updated.id === item.id);
-                    return updatedItem ? updatedItem : item;
-                });
-                break;
         }
     }
 
