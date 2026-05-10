@@ -120,8 +120,12 @@ export default function NodePage() {
                         <div className="flex flex-col gap-1 text-sm w-full">
                             {openedNode.parameters.length > 0 && (
                                 <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 w-full max-h-105 overflow-y-auto shadow">
-                                    {openedNode.parameters.map((parameter) => (
-                                        <LocalParameter key={parameter.id} parameter={parameter} nodeId={openedNode.id} />
+                                    {openedNode.parameters.map((nodeParameter) => (
+                                        <LocalParameter
+                                            key={nodeParameter.id}
+                                            nodeParameter={nodeParameter}
+                                            nodeId={openedNode.id}
+                                        />
                                     ))}
                                 </div>
                             )}

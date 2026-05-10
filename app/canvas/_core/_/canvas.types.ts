@@ -1,5 +1,5 @@
 import type { NodeShapeType } from '@/canvas/_core/_/nodeShapeType';
-import { Parameter } from '@/canvas/_core/_/parameter';
+import { NodeParameter } from '@/canvas/_core/_/parameter';
 
 export type Position = { x: number; y: number };
 
@@ -21,5 +21,5 @@ export interface Node {
     kind: 'node';
     shapeType: NodeShapeType;
     position: Position;
-    parameters: Parameter[];
+    parameters: NodeParameter[];
 }

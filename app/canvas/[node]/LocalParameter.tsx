@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import type { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
+import type { Parameter, NodeParameter } from '@/canvas/_core/_/parameter';
 import { isNumber, isString, isBoolean, isEnum, isStructure } from '@/canvas/_core/_/parameter.type-guards';
 
 import { Input } from '@/components/UI/Input';
@@ -17,10 +17,17 @@ import { unassignParameter } from '@/canvas/utils/parameters/unassignParameter';
 
 import { X } from 'lucide-react';
 
-export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }: { parameter: Parameter; nodeId: string }) {
-    const ParameterIcon = getParameterIcon(parameter.type);
+export const LocalParameter = memo(function LocalParameter({
+    nodeParameter,
+    nodeId,
+}: {
+    nodeParameter: NodeParameter;
+    nodeId: string;
+}) {
+    const ParameterIcon = getParameterIcon(nodeParameter.type);
+    const parameters = useItemsStore((state) => state.parameters);
 
-    if (isNumber(parameter)) {
+    if (isNumber(nodeParameter)) {
         const handleNumberChange = (newValue: string | null) => {
             if (newValue === null) return;
 
@@ -28,26 +35,26 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
 
             if (isNaN(numValue)) return;
 
-            updateNodeParameter(nodeId, parameter.id, { value: numValue });
+            updateNodeParameter(nodeId, nodeParameter.id, numValue);
         };
 
         return (
             <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
                 <div className="flex items-center gap-2 w-full truncate">
                     <ParameterIcon size={16} />
-                    <p className="truncate">{parameter.name}</p>
+                    <p className="truncate">{nodeParameter.name}</p>
                 </div>
 
                 <Input
-                    value={parameter.value?.toString() ?? '0'}
+                    value={nodeParameter.value?.toString() ?? '0'}
                     type="number"
                     className="bg-depth-3 border border-depth-4 hover:bg-depth-4"
                     onChange={handleNumberChange}
                 />
 
-                {parameter.parentId === null && (
+                {nodeParameter.parentId === null && (
                     <button
-                        onClick={() => unassignParameter(parameter.id)}
+                        onClick={() => unassignParameter(nodeParameter.id)}
                         className="cursor-pointer text-gray hover:text-white min-w-4"
                     >
                         <X size={16} />
@@ -57,29 +64,29 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
         );
     }
 
-    if (isString(parameter)) {
+    if (isString(nodeParameter)) {
         const handleStringChange = (newValue: string | null) => {
             if (newValue === null) return;
-            updateNodeParameter(nodeId, parameter.id, { value: newValue });
+            updateNodeParameter(nodeId, nodeParameter.id, newValue);
         };
 
         return (
             <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
                 <div className="flex items-center gap-2 w-full truncate">
                     <ParameterIcon size={16} />
-                    <p className="truncate">{parameter.name}</p>
+                    <p className="truncate">{nodeParameter.name}</p>
                 </div>
 
                 <Input
-                    value={parameter.value ?? ''}
+                    value={(nodeParameter.value as string) ?? ''}
                     placeholder="Введите значение"
                     className="bg-depth-3 hover:bg-depth-4 border border-depth-4"
                     onChange={handleStringChange}
                 />
 
-                {parameter.parentId === null && (
+                {nodeParameter.parentId === null && (
                     <button
-                        onClick={() => unassignParameter(parameter.id)}
+                        onClick={() => unassignParameter(nodeParameter.id)}
                         className="cursor-pointer text-gray hover:text-white min-w-4"
                     >
                         <X size={16} />
@@ -89,9 +96,9 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
         );
     }
 
-    if (isBoolean(parameter)) {
+    if (isBoolean(nodeParameter)) {
         const handleBooleanChange = (checked: boolean) => {
-            updateNodeParameter(nodeId, parameter.id, { value: checked });
+            updateNodeParameter(nodeId, nodeParameter.id, checked);
         };
 
         return (
@@ -99,22 +106,22 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                 <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-2 truncate">
                         <ParameterIcon size={16} />
-                        <span className="truncate">{parameter.name}</span>
+                        <span className="truncate">{nodeParameter.name}</span>
                     </div>
 
                     <Checkbox
-                        checked={parameter.value ?? false}
+                        checked={(nodeParameter.value as boolean) ?? false}
                         className={`
                             bg-depth-3 border border-depth-4
-                            ${parameter.value === true ? 'hover:bg-bg-accent' : 'hover:bg-depth-4'}
+                            ${nodeParameter.value === true ? 'hover:bg-bg-accent' : 'hover:bg-depth-4'}
                         `}
                         onChange={handleBooleanChange}
                     />
                 </div>
 
-                {parameter.parentId === null && (
+                {nodeParameter.parentId === null && (
                     <button
-                        onClick={() => unassignParameter(parameter.id)}
+                        onClick={() => unassignParameter(nodeParameter.id)}
                         className="cursor-pointer text-gray hover:text-white min-w-4"
                     >
                         <X size={16} />
@@ -124,44 +131,41 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
         );
     }
 
-    if (isEnum(parameter)) {
-        const enumValue = parameter.value as ParameterTypeMap['enum'];
+    if (isEnum(nodeParameter)) {
+        const selectedValue = nodeParameter.value as string | null;
+
+        const globalParameter = parameters.find((p) => p.id === nodeParameter.id);
+        const options = (globalParameter?.defaultValue as string[]) || [];
 
         const getCurrentEnumValue = () => {
-            return enumValue?.selected || enumValue?.options?.[0] || '';
+            return selectedValue || options[0] || '';
         };
 
         const handleEnumChange = (selected: string) => {
-            const currentValue = enumValue || { options: [], selected: '' };
-            updateNodeParameter(nodeId, parameter.id, {
-                value: {
-                    ...currentValue,
-                    selected,
-                },
-            });
+            updateNodeParameter(nodeId, nodeParameter.id, selected);
         };
 
         return (
             <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
                 <div className="flex items-center gap-2 w-full truncate">
                     <ParameterIcon size={16} />
-                    <p className="truncate">{parameter.name}</p>
+                    <p className="truncate">{nodeParameter.name}</p>
                 </div>
 
                 <div className="w-full">
                     <DropdownAbsolute title={getCurrentEnumValue()} depth={3} align="right">
-                        {enumValue?.options.map((option) => (
+                        {options.map((option) => (
                             <button
                                 key={option}
                                 onClick={() => handleEnumChange(option)}
                                 className={`
-                                    w-full text-left px-3 py-1.5 rounded-md border cursor-pointer
-                                    ${
-                                        option === enumValue?.selected
-                                            ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
-                                            : 'bg-depth-4 hover:bg-depth-5 border-depth-5'
-                                    }
-                                `}
+                                w-full text-left px-3 py-1.5 rounded-md border cursor-pointer
+                                ${
+                                    option === selectedValue
+                                        ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
+                                        : 'bg-depth-4 hover:bg-depth-5 border-depth-5'
+                                }
+                            `}
                             >
                                 {option}
                             </button>
@@ -169,9 +173,9 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                     </DropdownAbsolute>
                 </div>
 
-                {parameter.parentId === null && (
+                {nodeParameter.parentId === null && (
                     <button
-                        onClick={() => unassignParameter(parameter.id)}
+                        onClick={() => unassignParameter(nodeParameter.id)}
                         className="cursor-pointer text-gray hover:text-white min-w-4"
                     >
                         <X size={16} />
@@ -181,26 +185,31 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
         );
     }
 
-    if (isStructure(parameter)) {
-        const structureValue = parameter.value as string[];
-
-        const parameters = useItemsStore((state) => state.parameters);
+    if (isStructure(nodeParameter)) {
+        const structureValue = nodeParameter.value as string[];
 
         const childParameters = structureValue
             .map((id) => parameters.find((parameter) => parameter.id === id))
-            .filter((parameter): parameter is Parameter => parameter !== undefined);
+            .filter((parameter): parameter is Parameter => parameter !== undefined)
+            .map((nodeParameter) => ({
+                id: nodeParameter.id,
+                name: nodeParameter.name,
+                type: nodeParameter.type,
+                parentId: nodeParameter.parentId,
+                value: nodeParameter.defaultValue,
+            })) as NodeParameter[];
 
         return (
             <div className="flex flex-col gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-2">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 truncate">
                         <ParameterIcon size={16} className="text-icon-secondary shrink-0" />
-                        <p className="truncate">{parameter.name}</p>
+                        <p className="truncate">{nodeParameter.name}</p>
                     </div>
 
-                    {parameter.parentId === null && (
+                    {nodeParameter.parentId === null && (
                         <button
-                            onClick={() => unassignParameter(parameter.id)}
+                            onClick={() => unassignParameter(nodeParameter.id)}
                             className="cursor-pointer text-gray hover:text-white min-w-4"
                         >
                             <X size={16} />
@@ -213,7 +222,7 @@ export const LocalParameter = memo(function LocalParameter({ parameter, nodeId }
                         <p className="flex items-center justify-center p-2 text-gray">Нет вложенных параметров</p>
                     ) : (
                         childParameters.map((childParameter) => (
-                            <LocalParameter key={childParameter.id} parameter={childParameter} nodeId={nodeId} />
+                            <LocalParameter key={childParameter.id} nodeParameter={childParameter} nodeId={nodeId} />
                         ))
                     )}
                 </div>
