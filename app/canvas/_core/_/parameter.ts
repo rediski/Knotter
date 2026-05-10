@@ -1,20 +1,36 @@
-export type ParameterTypeMap = {
+export type ParameterType = 'number' | 'string' | 'boolean' | 'enum' | 'structure';
+
+export type ParameterDefaultValue = {
     number: number;
     string: string;
     boolean: boolean;
-    enum: { selected: string | null; options: string[] };
+    enum: string[];
     structure: string[];
 };
 
-export type ParameterType = keyof ParameterTypeMap;
+export type NodeParameterValue = {
+    number: number;
+    string: string;
+    boolean: boolean;
+    enum: string | null;
+    structure: string[];
+};
 
 export type Parameter<T extends ParameterType = ParameterType> = {
     id: string;
     name: string;
     type: T;
-    value: ParameterTypeMap[T];
+    defaultValue: ParameterDefaultValue[T];
     parentId: string | null;
-} & (T extends 'enum' ? {} : { defaultValue: ParameterTypeMap[T] });
+};
+
+export type NodeParameter<T extends ParameterType = ParameterType> = {
+    id: string;
+    name: string;
+    type: T;
+    parentId: string | null;
+    value: NodeParameterValue[T];
+};
 
 export const parameterTypes: { type: ParameterType; label: string }[] = [
     { type: 'number', label: 'Число' },

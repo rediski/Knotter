@@ -1,7 +1,7 @@
-import type { Parameter, ParameterType, ParameterTypeMap } from '@/canvas/_core/_/parameter';
+import type { Parameter, NodeParameter, ParameterType } from '@/canvas/_core/_/parameter';
 
 const createTypeGuard = <T extends ParameterType>(type: T) => {
-    return (parameter: Parameter): parameter is Parameter<T> => {
+    return (parameter: Parameter | NodeParameter): parameter is Parameter<T> | NodeParameter<T> => {
         return parameter.type === type;
     };
 };

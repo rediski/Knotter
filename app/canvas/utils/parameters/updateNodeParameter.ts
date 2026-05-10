@@ -1,10 +1,13 @@
-import type { Parameter } from '@/canvas/_core/_/parameter';
+import type { NodeParameterValue } from '@/canvas/_core/_/parameter';
 import type { Node } from '@/canvas/_core/_/canvas.types';
 
 import { useItemsStore } from '@/canvas/store/useItemsStore';
-import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 
-export const updateNodeParameter = (nodeId: string, parameterId: string, updates: Partial<Parameter>) => {
+export const updateNodeParameter = <T extends keyof NodeParameterValue>(
+    nodeId: string,
+    parameterId: string,
+    value: NodeParameterValue[T],
+) => {
     const items = useItemsStore.getState().items;
     const setItems = useItemsStore.getState().setItems;
 
@@ -13,10 +16,8 @@ export const updateNodeParameter = (nodeId: string, parameterId: string, updates
 
     const currentNode = items[nodeIndex] as Node;
 
-    updateParameter(parameterId, updates);
-
     const updatedNodeParameters = currentNode.parameters.map((param) =>
-        param.id === parameterId ? { ...param, ...updates } : param,
+        param.id === parameterId ? { ...param, value } : param,
     );
 
     const updatedNode: Node = {
