@@ -1,8 +1,9 @@
-import type { Parameter, ParameterType, ParameterTypeMap } from '@/canvas/_core/_/parameter';
 import type { Node } from '@/canvas/_core/_/canvas.types';
+import { NodeParameter } from '@/canvas/_core/_/parameter';
 
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 import { getNodeById } from '@/canvas/utils/nodes/getNodeById';
+import { getNodeParameterInitialValue } from '@/canvas/utils/parameters/parameterInitialValue';
 
 const addParameterToNode = (nodeId: string, parameterId: string) => {
     const itemsStore = useItemsStore.getState();
@@ -18,32 +19,14 @@ const addParameterToNode = (nodeId: string, parameterId: string) => {
 
     if (parameter.parentId !== null) return;
 
-    const parameterExists = node.parameters?.some((param) => param.id === parameterId);
+    if (node.parameters?.some((param) => param.id === parameterId)) return;
 
-    if (parameterExists) return;
-
-    let value: ParameterTypeMap[ParameterType];
-
-    if (parameter.type === 'enum') {
-        const enumValue = parameter.value as { selected: string | null; options: string[] };
-        value = {
-            selected: enumValue.options[0] || null,
-            options: enumValue.options,
-        };
-    }
-
-    if (parameter.type !== 'enum' && parameter.type !== 'structure') {
-        const paramWithDefault = parameter as Parameter & { defaultValue: ParameterTypeMap[typeof parameter.type] };
-        value = paramWithDefault.defaultValue;
-    }
-
-    if (parameter.type === 'structure') {
-        value = parameter.value;
-    }
-
-    const nodeParameter: Parameter = {
-        ...parameter,
-        value: value!,
+    const nodeParameter: NodeParameter = {
+        id: parameter.id,
+        name: parameter.name,
+        type: parameter.type,
+        parentId: parameter.parentId,
+        value: getNodeParameterInitialValue(parameter.type, parameter.defaultValue),
     };
 
     const updatedItems = items.map((item) => {
