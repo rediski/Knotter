@@ -8,7 +8,7 @@ import { isBoolean } from '@/canvas/_core/_/parameter.type-guards';
 import { EditableName } from '@/components/UI/EditableName';
 import { Checkbox } from '@/components/UI/Checkbox';
 
-import { useBooleanParameter } from '@/canvas/components/parameters/useBoolean';
+import { useBooleanParameter } from '@/canvas/[node]/parameters/useBoolean';
 
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 import { updateParameter } from '@/canvas/utils/parameters/updateParameter';

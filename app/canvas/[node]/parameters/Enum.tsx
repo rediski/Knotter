@@ -10,7 +10,7 @@ import { EditableName } from '@/components/UI/EditableName';
 
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';
 
-import { useEnum } from '@/canvas/components/parameters/useEnum';
+import { useEnum } from '@/canvas/[node]/parameters/useEnum';
 
 import { PlusIcon, X } from 'lucide-react';
 
