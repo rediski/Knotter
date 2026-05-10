@@ -2,7 +2,8 @@
 
 import { memo } from 'react';
 
-import type { Parameter, NodeParameter } from '@/canvas/_core/_/parameter';
+import type { Node } from '@/canvas/_core/_/canvas.types';
+import type { NodeParameter } from '@/canvas/_core/_/parameter';
 import { isNumber, isString, isBoolean, isEnum, isStructure } from '@/canvas/_core/_/parameter.type-guards';
 
 import { Input } from '@/components/UI/Input';
@@ -20,12 +21,21 @@ import { X } from 'lucide-react';
 export const LocalParameter = memo(function LocalParameter({
     nodeParameter,
     nodeId,
+    isChild = false,
 }: {
     nodeParameter: NodeParameter;
     nodeId: string;
+    isChild?: boolean;
 }) {
+    if (!isChild && nodeParameter.parentId !== null) {
+        return null;
+    }
+
     const ParameterIcon = getParameterIcon(nodeParameter.type);
     const parameters = useItemsStore((state) => state.parameters);
+    const items = useItemsStore((state) => state.items);
+
+    const showDeleteButton = !isChild;
 
     if (isNumber(nodeParameter)) {
         const handleNumberChange = (newValue: string | null) => {
@@ -52,7 +62,7 @@ export const LocalParameter = memo(function LocalParameter({
                     onChange={handleNumberChange}
                 />
 
-                {nodeParameter.parentId === null && (
+                {showDeleteButton && (
                     <button
                         onClick={() => unassignParameter(nodeParameter.id)}
                         className="cursor-pointer text-gray hover:text-white min-w-4"
@@ -84,7 +94,7 @@ export const LocalParameter = memo(function LocalParameter({
                     onChange={handleStringChange}
                 />
 
-                {nodeParameter.parentId === null && (
+                {showDeleteButton && (
                     <button
                         onClick={() => unassignParameter(nodeParameter.id)}
                         className="cursor-pointer text-gray hover:text-white min-w-4"
@@ -119,7 +129,7 @@ export const LocalParameter = memo(function LocalParameter({
                     />
                 </div>
 
-                {nodeParameter.parentId === null && (
+                {showDeleteButton && (
                     <button
                         onClick={() => unassignParameter(nodeParameter.id)}
                         className="cursor-pointer text-gray hover:text-white min-w-4"
@@ -173,7 +183,7 @@ export const LocalParameter = memo(function LocalParameter({
                     </DropdownAbsolute>
                 </div>
 
-                {nodeParameter.parentId === null && (
+                {showDeleteButton && (
                     <button
                         onClick={() => unassignParameter(nodeParameter.id)}
                         className="cursor-pointer text-gray hover:text-white min-w-4"
@@ -188,16 +198,14 @@ export const LocalParameter = memo(function LocalParameter({
     if (isStructure(nodeParameter)) {
         const structureValue = nodeParameter.value as string[];
 
+        const currentNode = items.find((item) => item.kind === 'node' && item.id === nodeId) as Node | undefined;
+        if (!currentNode) return null;
+
+        const nodeParameters = currentNode.parameters || [];
+
         const childParameters = structureValue
-            .map((id) => parameters.find((parameter) => parameter.id === id))
-            .filter((parameter): parameter is Parameter => parameter !== undefined)
-            .map((nodeParameter) => ({
-                id: nodeParameter.id,
-                name: nodeParameter.name,
-                type: nodeParameter.type,
-                parentId: nodeParameter.parentId,
-                value: nodeParameter.defaultValue,
-            })) as NodeParameter[];
+            .map((id) => nodeParameters.find((nodeParameter) => nodeParameter.id === id))
+            .filter((nodeParameter): nodeParameter is NodeParameter => nodeParameter !== undefined);
 
         return (
             <div className="flex flex-col gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-2">
@@ -207,7 +215,7 @@ export const LocalParameter = memo(function LocalParameter({
                         <p className="truncate">{nodeParameter.name}</p>
                     </div>
 
-                    {nodeParameter.parentId === null && (
+                    {showDeleteButton && (
                         <button
                             onClick={() => unassignParameter(nodeParameter.id)}
                             className="cursor-pointer text-gray hover:text-white min-w-4"
@@ -222,7 +230,12 @@ export const LocalParameter = memo(function LocalParameter({
                         <p className="flex items-center justify-center p-2 text-gray">Нет вложенных параметров</p>
                     ) : (
                         childParameters.map((childParameter) => (
-                            <LocalParameter key={childParameter.id} nodeParameter={childParameter} nodeId={nodeId} />
+                            <LocalParameter
+                                key={childParameter.id}
+                                nodeParameter={childParameter}
+                                nodeId={nodeId}
+                                isChild={true}
+                            />
                         ))
                     )}
                 </div>
