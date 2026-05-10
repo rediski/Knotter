@@ -6,7 +6,7 @@ export const getFilteredParameters = (parameters: Parameter[], filterText?: stri
 
     for (const parameter of parameters) {
         if (isStructure(parameter)) {
-            parameter.value.forEach((id) => childIds.add(id));
+            parameter.defaultValue.forEach((id) => childIds.add(id));
         }
     }
 

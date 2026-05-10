@@ -24,10 +24,10 @@ export const Structure = memo(function Structure({ parameter, selectedIds, onSel
     if (!isStructure(parameter)) return null;
 
     const parameterData = useMemo(() => {
-        return parameter.value
+        return parameter.defaultValue
             .map((id) => parameters.find((pararmeter) => pararmeter.id === id))
             .filter((pararmeter): pararmeter is Parameter => pararmeter !== undefined);
-    }, [parameter.value, parameters]);
+    }, [parameter.defaultValue, parameters]);
 
     return (
         <div className="flex flex-col gap-1 w-full">

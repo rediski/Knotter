@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import { Parameter, ParameterTypeMap } from '@/canvas/_core/_/parameter';
+import { Parameter, ParameterDefaultValue } from '@/canvas/_core/_/parameter';
 import { isEnum } from '@/canvas/_core/_/parameter.type-guards';
 
 import { Input } from '@/components/UI/Input';
@@ -27,8 +27,7 @@ export const Enum = memo(function Enum({
 
     if (!isEnum(parameter)) return null;
 
-    const value = parameter.value as ParameterTypeMap['enum'];
-    const options = value?.options || [];
+    const options = parameter.defaultValue as ParameterDefaultValue['enum'];
 
     return (
         <div className="flex gap-6 w-full">

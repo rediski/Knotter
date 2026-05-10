@@ -17,7 +17,7 @@ const getFlattenedParameterIds = (parameters: Parameter[], parametersMap: Map<st
         ids.push(parameter.id);
 
         if (isStructure(parameter)) {
-            for (const id of parameter.value) {
+            for (const id of parameter.defaultValue) {
                 const child = parametersMap.get(id);
                 if (child) stack.push(child);
             }
@@ -55,7 +55,7 @@ const getSiblingsIds = (parameters: Parameter[], currentParameter: Parameter, fi
 
         if (!parent || !isStructure(parent)) return [];
 
-        return parent.value;
+        return parent.defaultValue;
     }
 
     return filteredParameters.map((parameter) => parameter.id);
@@ -70,7 +70,7 @@ const updateSiblingsOrder = (
     if (currentParameter.parentId) {
         const updatedParameters = parameters.map((parameter) => {
             if (parameter.id === currentParameter.parentId && isStructure(parameter)) {
-                return { ...parameter, value: newSiblingsIds };
+                return { ...parameter, defaultValue: newSiblingsIds };
             }
 
             return parameter;
@@ -98,7 +98,7 @@ const getIdsToDelete = (ids: Set<string>, parametersMap: Map<string, Parameter>)
         const parameter = parametersMap.get(currentId);
 
         if (parameter && isStructure(parameter)) {
-            for (const childId of parameter.value) {
+            for (const childId of parameter.defaultValue) {
                 if (!toDelete.has(childId)) {
                     toDelete.add(childId);
                     stack.push(childId);
@@ -220,7 +220,7 @@ export const useNodeContent = () => {
             if (isStructure(parameter)) {
                 return {
                     ...parameter,
-                    value: parameter.value.filter((id) => !idsToDelete.has(id)),
+                    defaultValue: parameter.defaultValue.filter((id: string) => !idsToDelete.has(id)),
                 };
             }
 

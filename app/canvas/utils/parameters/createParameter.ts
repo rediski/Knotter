@@ -9,14 +9,11 @@ import { v4 as uuid } from 'uuid';
 export const createParameter = (name: string, type: ParameterType): Parameter => {
     const itemsState = useItemsStore.getState();
 
-    const initialValue = parameterInitialValue(type);
-
     const newParameter: Parameter = {
         id: uuid(),
         name,
         type,
-        value: initialValue,
-        defaultValue: initialValue,
+        defaultValue: parameterInitialValue(type),
         parentId: null,
     } as Parameter;
 
@@ -32,14 +29,11 @@ export const createParameterInStructure = (
 ): Parameter | null => {
     const itemsState = useItemsStore.getState();
 
-    const initialValue = parameterInitialValue(type);
-
     const newParameter: Parameter = {
         id: uuid(),
         name,
         type,
-        value: initialValue,
-        defaultValue: initialValue,
+        defaultValue: parameterInitialValue(type),
         parentId: parentStructureId,
     } as Parameter;
 
@@ -47,7 +41,7 @@ export const createParameterInStructure = (
         if (parameter.id === parentStructureId && isStructure(parameter)) {
             return {
                 ...parameter,
-                value: [...parameter.value, newParameter.id],
+                defaultValue: [...parameter.defaultValue, newParameter.id],
             };
         }
 
