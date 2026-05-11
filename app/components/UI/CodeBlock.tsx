@@ -82,7 +82,7 @@ const ActionButton = ({ onClick, icon: Icon, label, isSuccess = false }: ActionB
     <button
         onClick={onClick}
         className={`
-                flex items-center gap-2 px-3 py-2 rounded-md hover:bg-depth-4/80 active:bg-depth-5 cursor-pointer
+                flex items-center gap-2 px-3 py-2 rounded-md hover:bg-depth-4/80 active:bg-depth-5 cursor-pointer select-none
                 ${isSuccess ? 'text-green' : 'text-contrast'}
             `}
     >
