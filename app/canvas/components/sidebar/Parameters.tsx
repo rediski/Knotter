@@ -10,7 +10,7 @@ export const Parameters = () => {
     }
 
     return (
-        <div className="relative m-1 p-4 bg-depth-2 border border-depth-3 rounded-md overflow-y-auto">
+        <div className="relative m-1 bg-depth-2 border border-depth-3 rounded-md overflow-y-auto">
             <CodeBlock data={parameters} />
         </div>
     );

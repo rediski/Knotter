@@ -26,7 +26,7 @@ export const CanvasSidebar = memo(function Sidebar() {
             <div
                 onMouseDown={startSidebarResize}
                 className={`
-                    w-2 cursor-ew-resize flex items-center justify-center gap-px shrink-0 hover:bg-bg-accent/15 active:bg-bg-accent/30 group backdrop-blur-sm self-stretch
+                    w-2 cursor-ew-resize flex items-center justify-center gap-px shrink-0 hover:bg-bg-accent/15 active:bg-bg-accent/30 group
                     ${isResizingSidebar ? 'bg-bg-accent/30' : 'bg-background'}
                 `}
             >
