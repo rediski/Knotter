@@ -1,5 +1,8 @@
 'use client';
 
+import { ArrowDownToLine, Copy, Check, type LucideIcon } from 'lucide-react';
+import { useState } from 'react';
+
 type Primitive = string | number | boolean | null | undefined;
 type AnyObject = { [key: string]: any } | any[] | Primitive;
 
@@ -68,12 +71,81 @@ interface CodeBlockProps<T = AnyObject> {
     data: T | null | undefined;
 }
 
+interface ActionButtonProps {
+    onClick: () => void;
+    icon: LucideIcon;
+    label: string;
+    isSuccess?: boolean;
+}
+
+const ActionButton = ({ onClick, icon: Icon, label, isSuccess = false }: ActionButtonProps) => (
+    <button
+        onClick={onClick}
+        className={`
+                flex items-center gap-2 px-3 py-2 rounded-md hover:bg-depth-4/80 active:bg-depth-5 cursor-pointer
+                ${isSuccess ? 'text-green' : 'text-contrast'}
+            `}
+    >
+        {label} <Icon size={16} />
+    </button>
+);
+
 export function CodeBlock<T = AnyObject>({ data }: CodeBlockProps<T>) {
     if (!data) return <span className="text-json-null">Нет данных</span>;
 
+    const [isCopied, setIsCopied] = useState(false);
+
+    const getItemData = () => {
+        if (!data) return null;
+        return JSON.stringify(data, null, 2);
+    };
+
+    const handleSave = () => {
+        if (!data) return;
+
+        const blob = new Blob([getItemData()!], { type: 'application/json' });
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+
+        link.href = url;
+        link.download = 'selected-item.json';
+        link.click();
+
+        URL.revokeObjectURL(url);
+    };
+
+    const handleCopy = async () => {
+        if (!data) return;
+
+        try {
+            await navigator.clipboard.writeText(getItemData()!);
+            setIsCopied(true);
+            setTimeout(() => setIsCopied(false), 2000);
+        } catch (err) {
+            console.error('Ошибка при копировании:', err);
+        }
+    };
+
     return (
-        <div className="font-mono text-sm leading-5 select-text">
-            <Json value={data} />
+        <div className="text-sm leading-5 select-text relative">
+            <div className="sticky top-1 z-10 h-0 m-1">
+                <div className="absolute right-0 top-0 flex gap-2 translate-y-1 w-full">
+                    <div className="flex ml-auto mr-1 gap-1 bg-depth-3/50 backdrop-blur-xs border border-depth-4 rounded-lg p-1 w-fit">
+                        <ActionButton
+                            onClick={handleCopy}
+                            icon={isCopied ? Check : Copy}
+                            isSuccess={isCopied}
+                            label="Копировать"
+                        />
+                        <ActionButton onClick={handleSave} icon={ArrowDownToLine} label="Сохранить" />
+                    </div>
+                </div>
+            </div>
+
+            <div className="p-4 font-mono">
+                <Json value={data} />
+            </div>
         </div>
     );
 }

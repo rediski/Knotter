@@ -5,26 +5,6 @@ import { CodeBlock } from '@/components/UI/CodeBlock';
 import { getSelectedItems } from '@/canvas/utils/items/getSelectedItems';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
-import { ArrowDownToLine, Copy, Check, type LucideIcon } from 'lucide-react';
-
-interface ActionButtonProps {
-    onClick: () => void;
-    icon: LucideIcon;
-    isSuccess?: boolean;
-}
-
-const ActionButton = ({ onClick, icon: Icon, isSuccess = false }: ActionButtonProps) => (
-    <button
-        onClick={onClick}
-        className={`
-                p-2 rounded-md shadow bg-depth-3 hover:bg-depth-4 active:bg-depth-5 cursor-pointer  
-                ${isSuccess ? 'text-green' : 'text-contrast'}
-            `}
-    >
-        <Icon size={16} />
-    </button>
-);
-
 export const Details = () => {
     const [isCopied, setIsCopied] = useState(false);
     const items = useItemsStore((state) => state.items);
@@ -37,33 +17,6 @@ export const Details = () => {
         return JSON.stringify(selectedItems, null, 2);
     };
 
-    const handleSave = () => {
-        if (!selectedItems) return;
-
-        const blob = new Blob([getItemData()!], { type: 'application/json' });
-
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-
-        link.href = url;
-        link.download = 'selected-item.json';
-        link.click();
-
-        URL.revokeObjectURL(url);
-    };
-
-    const handleCopy = async () => {
-        if (!selectedItems) return;
-
-        try {
-            await navigator.clipboard.writeText(getItemData()!);
-            setIsCopied(true);
-            setTimeout(() => setIsCopied(false), 2000);
-        } catch (err) {
-            console.error('Ошибка при копировании:', err);
-        }
-    };
-
     if (items.length === 0) {
         return <EmptyState message="Создайте хотя бы один элемент" />;
     }
@@ -73,13 +26,7 @@ export const Details = () => {
     }
 
     return (
-        <div className="relative m-1 p-4 bg-depth-2 border border-depth-3 rounded-md overflow-y-auto">
-            <div className="absolute right-2 top-2 flex gap-2">
-                <ActionButton onClick={handleCopy} icon={isCopied ? Check : Copy} isSuccess={isCopied} />
-
-                <ActionButton onClick={handleSave} icon={ArrowDownToLine} />
-            </div>
-
+        <div className="relative m-1 bg-depth-2 border border-depth-3 rounded-md overflow-y-auto">
             <CodeBlock data={selectedItems} />
         </div>
     );
