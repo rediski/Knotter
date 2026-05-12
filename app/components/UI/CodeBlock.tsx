@@ -82,11 +82,11 @@ const ActionButton = ({ onClick, icon: Icon, label, isSuccess = false }: ActionB
     <button
         onClick={onClick}
         className={`
-                flex items-center gap-2 px-3 py-2 rounded-md hover:bg-depth-4/80 active:bg-depth-5 cursor-pointer select-none
+                flex items-center gap-2 px-3 py-1.25 rounded-md hover:bg-depth-4/80 active:bg-depth-5 cursor-pointer select-none bg-depth-3 border border-depth-4 
                 ${isSuccess ? 'text-green' : 'text-contrast'}
             `}
     >
-        {label} <Icon size={16} />
+        <Icon size={16} /> {label}
     </button>
 );
 
@@ -131,7 +131,7 @@ export function CodeBlock<T = AnyObject>({ data }: CodeBlockProps<T>) {
         <div className="text-sm leading-5 select-text relative">
             <div className="sticky top-1 z-10 h-0 m-1">
                 <div className="absolute right-0 top-0 flex gap-2 translate-y-1 w-full">
-                    <div className="flex ml-auto mr-1 gap-1 bg-depth-3/50 backdrop-blur-xs border border-depth-4 rounded-lg p-1 w-fit">
+                    <div className="flex ml-auto mr-1 gap-1 w-fit">
                         <ActionButton
                             onClick={handleCopy}
                             icon={isCopied ? Check : Copy}
