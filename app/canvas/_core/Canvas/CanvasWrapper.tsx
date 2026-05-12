@@ -2,7 +2,7 @@
 
 import type { Node } from '@/canvas/_core/_/canvas.types';
 
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
@@ -26,6 +26,23 @@ export function CanvasWrapper({ children }: { children: ReactNode }) {
     const setOpenedTabIds = useCanvasStore((state) => state.setOpenedTabIds);
 
     const isOnCanvas = pathname === '/canvas/';
+
+    useEffect(() => {
+        const match = pathname.match(/^\/canvas\/([^/]+)\/?$/);
+        const currentNodeId = match?.[1];
+
+        if (!currentNodeId) return;
+
+        const nodeStillExists = items.some((item): item is Node => item.id === currentNodeId && item.kind === 'node');
+
+        if (!nodeStillExists) {
+            if (openedTabIds.includes(currentNodeId)) {
+                setOpenedTabIds(openedTabIds.filter((id) => id !== currentNodeId));
+            }
+
+            router.push('/canvas/');
+        }
+    }, [items, pathname, router, openedTabIds, setOpenedTabIds]);
 
     const closeNodeTab = (nodeId: string, e: React.MouseEvent) => {
         e.stopPropagation();
