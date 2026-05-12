@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import { NODE_SHAPES } from '@/canvas/_core/_/nodeShapeType';
 
 import { ParameterItem } from '@/canvas/[node]/ParameterItem';
-import { LocalParameter } from '@/canvas/[node]/LocalParameter';
+import { NodeParameters } from '@/canvas/[node]/NodeParameters';
 import { CreateParameterForm } from '@/canvas/[node]/CreateParameterForm';
 
 import { useNodeContent } from '@/canvas/[node]/useNodeContent';
@@ -121,7 +121,7 @@ export default function NodePage() {
                             {openedNode.parameters.length > 0 && (
                                 <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 w-full max-h-105 overflow-y-auto shadow">
                                     {openedNode.parameters.map((nodeParameter) => (
-                                        <LocalParameter
+                                        <NodeParameters
                                             key={nodeParameter.id}
                                             nodeParameter={nodeParameter}
                                             nodeId={openedNode.id}

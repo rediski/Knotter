@@ -18,7 +18,7 @@ import { unassignParameter } from '@/canvas/utils/parameters/unassignParameter';
 
 import { X } from 'lucide-react';
 
-export const LocalParameter = memo(function LocalParameter({
+export const NodeParameters = memo(function NodeParameters({
     nodeParameter,
     nodeId,
     isChild = false,
@@ -230,7 +230,7 @@ export const LocalParameter = memo(function LocalParameter({
                         <p className="flex items-center justify-center p-2 text-gray">Нет вложенных параметров</p>
                     ) : (
                         childParameters.map((childParameter) => (
-                            <LocalParameter
+                            <NodeParameters
                                 key={childParameter.id}
                                 nodeParameter={childParameter}
                                 nodeId={nodeId}
