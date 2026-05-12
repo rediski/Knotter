@@ -57,21 +57,21 @@ export default function NodePage() {
     if (!Icon) return null;
 
     const selectedIds = Array.from(selectedParameters);
-    const hasSelectedParameters = selectedIds.length > 0;
-
     const selectedParametersList = parameters.filter((parameter) => selectedParameters.has(parameter.id));
 
+    const hasSelectedParameters = selectedIds.length > 0;
     const hasNotAddedParameters = selectedIds.some((id) => !hasParameterInNode(id, nodeId));
     const hasRootParameters = selectedParametersList.some((parameter) => parameter.parentId === null);
 
-    const canAddOrDeleteSelected = hasSelectedParameters && hasNotAddedParameters && hasRootParameters;
+    const canAddSelected = hasSelectedParameters && hasNotAddedParameters && hasRootParameters;
+    const canDeleteSelected = hasSelectedParameters && hasNotAddedParameters;
 
     const actionButtons = [
         {
             onClick: () => addSelectedParametersToNode(nodeId),
             icon: Plus,
             iconProps: { size: 16, strokeWidth: 3 },
-            disabled: !canAddOrDeleteSelected,
+            disabled: !canAddSelected,
         },
         {
             onClick: moveSelectedParametersUp,
@@ -89,7 +89,7 @@ export default function NodePage() {
             onClick: deleteSelectedParameters,
             icon: X,
             iconProps: { size: 16, strokeWidth: 3 },
-            disabled: !canAddOrDeleteSelected,
+            disabled: !canDeleteSelected,
         },
     ];
 
