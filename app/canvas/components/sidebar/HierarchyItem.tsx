@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 
-import type { CanvasItem, Node } from '@/canvas/_core/_/canvas.types';
+import type { Node } from '@/canvas/_core/_/canvas.types';
 
 import { EditableName } from '@/components/UI/EditableName';
 
@@ -13,7 +13,7 @@ import { useHierarchyItem } from '@/canvas/components/sidebar/useHierarchyItem';
 
 import { Box } from 'lucide-react';
 
-export const HierarchyItem = memo(function HierarchyItem({ filteredNode }: { filteredNode: Node }) {
+export const HierarchyItem = memo(function HierarchyItem({ filteredNode, index }: { filteredNode: Node; index: number }) {
     const { handleSelect, handleKeyDown, handleNameChange, handleNodeDoubleClick } = useHierarchyItem(filteredNode);
 
     const { dragRef, dropRef, isDragOver, dragPosition } = useDragAndDrop<HTMLDivElement, HTMLLIElement>({
@@ -22,6 +22,8 @@ export const HierarchyItem = memo(function HierarchyItem({ filteredNode }: { fil
 
     const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
     const isSelected = selectedItemIds.includes(filteredNode.id);
+
+    const orderNumber = index + 1;
 
     return (
         <li
@@ -54,6 +56,8 @@ export const HierarchyItem = memo(function HierarchyItem({ filteredNode }: { fil
                         <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/10' : 'border-depth-4'}`} />
 
                         <EditableName name={filteredNode.name} isSelected={isSelected} onChange={handleNameChange} />
+
+                        <span className="ml-auto text-xs text-gray tabular-nums">#{orderNumber}</span>
                     </div>
                 </button>
             </div>

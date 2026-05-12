@@ -21,8 +21,8 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
         <ul className="flex flex-col gap-1 p-1 overflow-y-auto h-full" onClick={deselect}>
             {filteredNodes.length !== 0 && (
                 <Fragment>
-                    {filteredNodes.map((filteredNode) => (
-                        <HierarchyItem key={filteredNode.id} filteredNode={filteredNode} />
+                    {filteredNodes.map((filteredNode, index) => (
+                        <HierarchyItem key={filteredNode.id} filteredNode={filteredNode} index={index} />
                     ))}
                 </Fragment>
             )}
