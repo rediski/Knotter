@@ -148,7 +148,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     }
 
     return (
-        <div className="flex flex-col overflow-y-auto p-1 gap-1">
+        <div className="flex flex-col overflow-y-auto m-1 gap-1">
             {showName && selectedItem.kind === 'node' && (
                 <div className="flex flex-col gap-1">
                     <Input
