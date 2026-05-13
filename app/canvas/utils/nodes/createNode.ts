@@ -31,11 +31,12 @@ export function createNode(): Node | null {
     );
 
     const node: Node = {
+        kind: 'node',
         id: uuidv4(),
         name,
         description: '',
-        kind: 'node',
         shapeType: 'point',
+        color: 'var(--foreground)',
         position: { x, y },
         parameters: [],
     };
