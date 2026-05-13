@@ -10,6 +10,7 @@ import { moveNodes } from '@/canvas/utils/nodes/moveNodes';
 import { getSelectedItem } from '@/canvas/utils/items/getSelectedItems';
 import { getSelectedNode } from '@/canvas/utils/nodes/getSelectedNodes';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
+import { getEdges } from '@/canvas/utils/edges/getEdges';
 
 export function useInspector() {
     const items = useItemsStore((state) => state.items);
@@ -19,11 +20,8 @@ export function useInspector() {
     const selectedItem = getSelectedItem({ items, selectedItemIds });
     const selectedNode = getSelectedNode({ items, selectedItemIds }) as Node | null;
 
-    const shapeType = selectedNode?.shapeType ?? null;
-    const positionX = selectedNode?.position.x ?? 0;
-    const positionY = selectedNode?.position.y ?? 0;
-
     const nodes = getNodes(items);
+    const edges = getEdges(items);
 
     const initialPositions = useMemo(() => {
         const map = new Map<string, Position>();
@@ -74,38 +72,51 @@ export function useInspector() {
         const updatedInitialPositions = getUpdatedPositions();
 
         const dragDelta = {
-            x: axis === 'x' ? value - positionX : 0,
-            y: axis === 'y' ? value - positionY : 0,
+            x: axis === 'x' ? value - selectedNode.position.x : 0,
+            y: axis === 'y' ? value - selectedNode.position.y : 0,
         };
 
         const updatedNodes = moveNodes(dragDelta, updatedInitialPositions);
-        setItems(updatedNodes);
+
+        const updatedItems = [...updatedNodes, ...edges];
+        setItems(updatedItems);
     };
 
     const changeNodeName = (newName: string) => {
         if (!selectedNode) return;
         const updatedNodes = nodes.map((node) => (node.id === selectedNode?.id ? { ...node, name: newName } : node));
 
-        setItems(updatedNodes);
+        const updatedItems = [...updatedNodes, ...edges];
+        setItems(updatedItems);
     };
 
     const changeNodeDescription = (newDesc: string) => {
         if (!selectedNode) return;
         const updatedNodes = nodes.map((node) => (node.id === selectedNode?.id ? { ...node, description: newDesc } : node));
 
-        setItems(updatedNodes);
+        const updatedItems = [...updatedNodes, ...edges];
+        setItems(updatedItems);
+    };
+
+    const changeNodeColor = (newColor: string) => {
+        if (!selectedNode) return;
+        const updatedNodes = nodes.map((node) => (node.id === selectedNode.id ? { ...node, color: newColor } : node));
+
+        const updatedItems = [...updatedNodes, ...edges];
+        setItems(updatedItems);
     };
 
     return {
-        shapeType,
-        positionX,
-        positionY,
-        initialPositions,
+        shapeType: selectedNode?.shapeType ?? null,
+        positionX: selectedNode?.position.x ?? 0,
+        positionY: selectedNode?.position.y ?? 0,
+
         selectedItem,
         selectedNode,
 
         changeNodeName,
         changeNodeDescription,
         changeNodesPosition,
+        changeNodeColor,
     };
 }
