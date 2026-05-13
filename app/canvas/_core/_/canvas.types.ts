@@ -8,18 +8,19 @@ export type CanvasItem = Node | Edge;
 export type TooltipMode = 'always' | 'hover' | 'never';
 
 export interface Edge {
+    kind: 'edge';
     id: string;
     from: string;
     to: string;
-    kind: 'edge';
 }
 
 export interface Node {
+    kind: 'node';
     id: string;
     name: string;
     description: string;
-    kind: 'node';
     shapeType: NodeShapeType;
+    color: string;
     position: Position;
     parameters: NodeParameter[];
 }
