@@ -15,6 +15,7 @@ import { useDropdownStore } from '@/canvas/store/useDropdownStore';
 
 import { Dropdown } from '@/components/UI/Dropdown';
 
+import { ColorPicker } from '@/canvas/components/sidebar/ColorPicker';
 import { ShapeButtons } from '@/canvas/components/sidebar/ShapeButtons';
 import { PositionInputs } from '@/canvas/components/sidebar/PositionInputs';
 
@@ -30,6 +31,7 @@ const FIELD_TITLES = {
     NAME: 'Название',
     DESCRIPTION: 'Описание',
     SHAPE: 'Форма',
+    COLOR: 'Цвет',
     TRANSFORM: 'Трансформация',
     EDGE_FROM: 'Входящие связи',
     EDGE_TO: 'Исходящие связи',
@@ -40,12 +42,14 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
         shapeType,
         positionX,
         positionY,
+
         selectedItem,
         selectedNode,
 
         changeNodeName,
         changeNodeDescription,
         changeNodesPosition,
+        changeNodeColor,
     } = useInspector();
 
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
@@ -133,11 +137,13 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     const showName = shouldShowField(FIELD_TITLES.NAME);
     const showDescription = shouldShowField(FIELD_TITLES.DESCRIPTION);
     const showShape = shouldShowField(FIELD_TITLES.SHAPE);
+    const showColor = shouldShowField(FIELD_TITLES.COLOR);
     const showPosition = shouldShowField(FIELD_TITLES.TRANSFORM);
     const showEdgeFrom = shouldShowField(FIELD_TITLES.EDGE_FROM);
     const showEdgeTo = shouldShowField(FIELD_TITLES.EDGE_TO);
 
-    const hasVisibleFields = showName || showDescription || showShape || showPosition || showEdgeFrom || showEdgeTo;
+    const hasVisibleFields =
+        showName || showDescription || showShape || showColor || showPosition || showEdgeFrom || showEdgeTo;
 
     if (filterText && !hasVisibleFields) {
         return (
@@ -174,6 +180,16 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
 
             {selectedItem.kind === 'node' && (
                 <>
+                    {showColor && selectedItem.kind === 'node' && (
+                        <Dropdown
+                            title={FIELD_TITLES.COLOR}
+                            isOpen={isDropdownOpen(1.5)}
+                            onToggle={() => toggleDropdown(1.5)}
+                        >
+                            <ColorPicker color={selectedItem.color} onColorChange={changeNodeColor} />
+                        </Dropdown>
+                    )}
+
                     {showShape && (
                         <Dropdown title={FIELD_TITLES.SHAPE} isOpen={isDropdownOpen(1)} onToggle={() => toggleDropdown(1)}>
                             <ShapeButtons
