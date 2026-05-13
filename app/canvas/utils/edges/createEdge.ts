@@ -22,10 +22,10 @@ export function createEdge(clickedNodeId: string) {
     }
 
     const newEdge: Edge = {
+        kind: 'edge',
         id: uuid(),
         from: tempEdge,
         to: clickedNodeId,
-        kind: 'edge',
     };
 
     const newItems = [...items, newEdge];
