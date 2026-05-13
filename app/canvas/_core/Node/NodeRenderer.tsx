@@ -26,8 +26,9 @@ export function NodeRenderer({ node }: { node: Node }) {
             <Icon
                 className={`w-max fill-depth-1 hover:cursor-move active:cursor-grabbing 
                     ${isPoint ? 'stroke-[2px]' : 'stroke-[1.5px]'} 
-                    ${hasDuplicatePosition ? 'text-red' : isSelected ? 'text-bg-accent' : 'text-foreground'}
+                    ${hasDuplicatePosition ? 'text-red' : isSelected ? 'text-bg-accent' : ''}
                 `}
+                style={{ color: node.color }}
                 width={NODE_SIZE}
                 height={NODE_SIZE}
             />
