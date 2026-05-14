@@ -98,14 +98,6 @@ export function useInspector() {
         setItems(updatedItems);
     };
 
-    const changeNodeColor = (newColor: string) => {
-        if (!selectedNode) return;
-        const updatedNodes = nodes.map((node) => (node.id === selectedNode.id ? { ...node, color: newColor } : node));
-
-        const updatedItems = [...updatedNodes, ...edges];
-        setItems(updatedItems);
-    };
-
     return {
         shapeType: selectedNode?.shapeType ?? null,
         positionX: selectedNode?.position.x ?? 0,
@@ -117,6 +109,5 @@ export function useInspector() {
         changeNodeName,
         changeNodeDescription,
         changeNodesPosition,
-        changeNodeColor,
     };
 }

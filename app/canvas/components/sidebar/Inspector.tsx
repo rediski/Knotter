@@ -22,6 +22,7 @@ import { PositionInputs } from '@/canvas/components/sidebar/PositionInputs';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getIncomingEdges } from '@/canvas/utils/edges/getIncomingEdges';
 import { getOutgoingEdges } from '@/canvas/utils/edges/getOutgoingEdges';
+import { changeColor } from '@/canvas/utils/nodes/changeColor';
 import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
 import { deleteSelectedItemsById } from '@/canvas/utils/items/deleteSelectedItems';
 
@@ -49,7 +50,6 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
         changeNodeName,
         changeNodeDescription,
         changeNodesPosition,
-        changeNodeColor,
     } = useInspector();
 
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
@@ -186,7 +186,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                             isOpen={isDropdownOpen(1.5)}
                             onToggle={() => toggleDropdown(1.5)}
                         >
-                            <ColorPicker color={selectedItem.color} onColorChange={changeNodeColor} />
+                            <ColorPicker color={selectedItem.color} onColorChange={(newColor) => changeColor(newColor)} />
                         </Dropdown>
                     )}
 
