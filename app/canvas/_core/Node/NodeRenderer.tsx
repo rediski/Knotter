@@ -23,14 +23,22 @@ export function NodeRenderer({ node }: { node: Node }) {
 
     return (
         <div className="relative w-full h-full flex items-center justify-center">
+            {(isSelected || hasDuplicatePosition) && (
+                <div
+                    className={`
+                        absolute flex items-center justify-center z-[-1] border-2 border-dashed border-bg-accent rounded-xs p-5.5 
+                        ${hasDuplicatePosition ? 'border-red' : ''}
+                    `}
+                />
+            )}
+
             <Icon
-                className={`w-max fill-depth-1 hover:cursor-move active:cursor-grabbing 
+                className={`
+                    w-max fill-depth-1 hover:cursor-move active:cursor-grabbing 
                     ${isPoint ? 'stroke-[2px]' : 'stroke-[1.5px]'} 
-                    ${hasDuplicatePosition ? 'text-red' : isSelected ? 'text-bg-accent' : ''}
                 `}
                 style={{ color: node.color }}
-                width={NODE_SIZE}
-                height={NODE_SIZE}
+                size={NODE_SIZE}
             />
         </div>
     );
