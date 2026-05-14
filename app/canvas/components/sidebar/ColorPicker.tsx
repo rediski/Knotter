@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { Ban } from 'lucide-react';
 
 interface ColorPickerProps {
     color: string;
@@ -8,8 +9,6 @@ interface ColorPickerProps {
 }
 
 const PRESET_COLORS = [
-    '#ededed',
-    '#171717',
     '#846358',
     '#0c8599',
     '#1971c2',
@@ -32,29 +31,29 @@ export const ColorPicker = memo(function ColorPicker({ color, onColorChange }: C
                 <button
                     onClick={() => onColorChange('var(--foreground)')}
                     className={`
-                        w-8 h-8 rounded-md cursor-pointer border-r bg-foreground
-                        ${
-                            safeColor === 'var(--foreground)'
-                                ? 'ring-2 ring-offset-2 ring-bg-accent scale-110'
-                                : 'hover:scale-110'
-                        }
-                    `}
+                            flex items-center justify-center w-8 h-8 rounded-md cursor-pointer border-2 border-dashed text-foreground bg-depth-3
+                            ${safeColor === 'var(--foreground)' ? ' scale-110' : 'hover:scale-110'}
+                        `}
+                    style={{
+                        borderColor: safeColor === 'var(--foreground)' ? 'var(--foreground)' : 'var(--depth-5)',
+                    }}
                     title="Цвет по умолчанию"
-                />
+                >
+                    <Ban size={18} />
+                </button>
 
                 {PRESET_COLORS.map((presetColor) => (
                     <button
                         key={presetColor}
                         onClick={() => onColorChange(presetColor)}
                         className={`
-                            w-8 h-8 rounded-md cursor-pointer transition-all duration-200
-                            ${
-                                safeColor === presetColor
-                                    ? 'ring-2 ring-offset-2 ring-bg-accent scale-110'
-                                    : 'hover:scale-110'
-                            }
+                            w-8 h-8 rounded-md cursor-pointer border-2 border-dashed transition-all duration-200
+                            ${safeColor === presetColor ? ' scale-110' : 'hover:scale-110'}
                         `}
-                        style={{ backgroundColor: presetColor }}
+                        style={{
+                            backgroundColor: presetColor,
+                            borderColor: safeColor === presetColor ? 'var(--foreground)' : presetColor,
+                        }}
                         title={presetColor}
                     />
                 ))}
