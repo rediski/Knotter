@@ -58,7 +58,7 @@ export const Node = ({ containerRef }: { containerRef: RefObject<HTMLDivElement 
     }, []);
 
     return (
-        <div ref={nodeRef} className="absolute inset-0">
+        <div ref={nodeRef} className="absolute inset-0 select-none">
             <EdgeRenderer containerRef={containerRef} />
 
             {nodes.map((node) => {
@@ -94,7 +94,9 @@ export const Node = ({ containerRef }: { containerRef: RefObject<HTMLDivElement 
 
                 const { x: screenX, y: screenY } = getScreenCoords(node.position.x, node.position.y, containerRef);
 
-                const tooltipYOffset = (NODE_SIZE / 2) * zoomLevel + 8 * zoomLevel;
+                const tooltipSpacing = 12;
+
+                const tooltipYOffset = (NODE_SIZE / 2) * zoomLevel + tooltipSpacing * zoomLevel;
                 const tooltipY = screenY - tooltipYOffset;
 
                 return (
