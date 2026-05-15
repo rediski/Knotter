@@ -154,33 +154,33 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     }
 
     return (
-        <div className="flex flex-col overflow-y-auto m-1 gap-1">
-            {showName && selectedItem.kind === 'node' && (
-                <div className="flex flex-col gap-1">
-                    <Input
-                        value={selectedItem.name}
-                        onChange={changeNodeName}
-                        placeholder={FIELD_TITLES.NAME}
-                        icon={Box}
-                        className="bg-depth-2 border border-depth-3"
-                    />
-                </div>
-            )}
-
-            {showDescription && selectedItem.kind === 'node' && (
-                <div className="flex flex-col gap-1">
-                    <Textarea
-                        value={selectedItem.description}
-                        onChange={changeNodeDescription}
-                        placeholder={FIELD_TITLES.DESCRIPTION}
-                        className="border border-depth-3"
-                    />
-                </div>
-            )}
-
+        <div className="overflow-y-auto mt-1 border-t border-depth-3">
             {selectedItem.kind === 'node' && (
-                <>
-                    {showColor && selectedItem.kind === 'node' && (
+                <div className="flex flex-col px-1 pb-1 gap-1">
+                    {showName && (
+                        <div className="flex flex-col gap-1 pt-1">
+                            <Input
+                                value={selectedItem.name}
+                                onChange={changeNodeName}
+                                placeholder={FIELD_TITLES.NAME}
+                                icon={Box}
+                                className="bg-depth-2 border border-depth-3"
+                            />
+                        </div>
+                    )}
+
+                    {showDescription && (
+                        <div className="flex flex-col gap-1">
+                            <Textarea
+                                value={selectedItem.description}
+                                onChange={changeNodeDescription}
+                                placeholder={FIELD_TITLES.DESCRIPTION}
+                                className="border border-depth-3"
+                            />
+                        </div>
+                    )}
+
+                    {showColor && (
                         <Dropdown
                             title={FIELD_TITLES.COLOR}
                             isOpen={isDropdownOpen(1.5)}
@@ -215,7 +215,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
 
                     {showEdgeFrom && renderEdgeList(incomingEdges, FIELD_TITLES.EDGE_FROM, 3, true)}
                     {showEdgeTo && renderEdgeList(outgoingEdges, FIELD_TITLES.EDGE_TO, 4, false)}
-                </>
+                </div>
             )}
         </div>
     );
