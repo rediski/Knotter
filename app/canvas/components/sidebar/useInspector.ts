@@ -78,8 +78,19 @@ export function useInspector() {
 
         const updatedNodes = moveNodes(dragDelta, updatedInitialPositions);
 
-        const updatedItems = [...updatedNodes, ...edges];
-        setItems(updatedItems);
+        const itemsMap = new Map();
+
+        for (const node of updatedNodes) {
+            itemsMap.set(node.id, node);
+        }
+
+        for (const edge of edges) {
+            if (!itemsMap.has(edge.id)) {
+                itemsMap.set(edge.id, edge);
+            }
+        }
+
+        setItems(Array.from(itemsMap.values()));
     };
 
     const changeNodeName = (newName: string) => {
