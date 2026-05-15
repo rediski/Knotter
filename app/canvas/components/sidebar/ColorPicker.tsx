@@ -31,7 +31,7 @@ export const ColorPicker = memo(function ColorPicker({ color, onColorChange }: C
                 <button
                     onClick={() => onColorChange('var(--foreground)')}
                     className={`
-                            flex items-center justify-center w-8 h-8 rounded-md cursor-pointer border-2 border-dashed text-foreground bg-depth-3
+                            flex items-center justify-center text-foreground w-8 h-8 rounded-md cursor-pointer border bg-depth-3 transition-transform duration-100
                             ${safeColor === 'var(--foreground)' ? ' scale-110' : 'hover:scale-110'}
                         `}
                     style={{
@@ -47,7 +47,7 @@ export const ColorPicker = memo(function ColorPicker({ color, onColorChange }: C
                         key={presetColor}
                         onClick={() => onColorChange(presetColor)}
                         className={`
-                            w-8 h-8 rounded-md cursor-pointer border-2 border-dashed transition-all duration-200
+                            w-8 h-8 rounded-md cursor-pointer border transition-all duration-100
                             ${safeColor === presetColor ? ' scale-110' : 'hover:scale-110'}
                         `}
                         style={{
