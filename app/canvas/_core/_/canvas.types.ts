@@ -12,6 +12,7 @@ export interface Edge {
     id: string;
     from: string;
     to: string;
+    color: string;
 }
 
 export interface Node {

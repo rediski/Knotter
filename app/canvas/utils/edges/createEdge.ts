@@ -26,6 +26,7 @@ export function createEdge(clickedNodeId: string) {
         id: uuid(),
         from: tempEdge,
         to: clickedNodeId,
+        color: 'var(--foreground)',
     };
 
     const newItems = [...items, newEdge];
