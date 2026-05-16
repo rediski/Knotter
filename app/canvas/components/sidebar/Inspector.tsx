@@ -22,7 +22,7 @@ import { PositionInputs } from '@/canvas/components/sidebar/PositionInputs';
 import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getIncomingEdges } from '@/canvas/utils/edges/getIncomingEdges';
 import { getOutgoingEdges } from '@/canvas/utils/edges/getOutgoingEdges';
-import { changeColor } from '@/canvas/utils/nodes/changeColor';
+import { changeColor } from '@/canvas/utils/items/changeColor';
 import { changeShapeType } from '@/canvas/utils/nodes/changeShapeType';
 import { deleteSelectedItemsById } from '@/canvas/utils/items/deleteSelectedItems';
 
@@ -156,7 +156,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     return (
         <div className="overflow-y-auto mt-1 border-t border-depth-3">
             {selectedItem.kind === 'node' && (
-                <div className="flex flex-col px-1 pb-1 gap-1">
+                <div className="flex flex-col px-1 gap-1">
                     {showName && (
                         <div className="flex flex-col gap-1 pt-1">
                             <Input
@@ -178,16 +178,6 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                                 className="border border-depth-3"
                             />
                         </div>
-                    )}
-
-                    {showColor && (
-                        <Dropdown
-                            title={FIELD_TITLES.COLOR}
-                            isOpen={isDropdownOpen(1.5)}
-                            onToggle={() => toggleDropdown(1.5)}
-                        >
-                            <ColorPicker color={selectedItem.color} onColorChange={(newColor) => changeColor(newColor)} />
-                        </Dropdown>
                     )}
 
                     {showShape && (
@@ -217,6 +207,14 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                     {showEdgeTo && renderEdgeList(outgoingEdges, FIELD_TITLES.EDGE_TO, 4, false)}
                 </div>
             )}
+
+            <div className="flex flex-col m-1">
+                {showColor && (
+                    <Dropdown title={FIELD_TITLES.COLOR} isOpen={isDropdownOpen(1.5)} onToggle={() => toggleDropdown(1.5)}>
+                        <ColorPicker color={selectedItem.color} onColorChange={(newColor) => changeColor(newColor)} />
+                    </Dropdown>
+                )}
+            </div>
         </div>
     );
 });

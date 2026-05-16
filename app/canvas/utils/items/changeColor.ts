@@ -8,7 +8,7 @@ export function changeColor(newColor: string) {
     const selectedItemIds = itemsStore.selectedItemIds;
 
     const updatedItems = items.map((item) => {
-        if (item.kind === 'node' && selectedItemIds.includes(item.id)) {
+        if (selectedItemIds.includes(item.id)) {
             return { ...item, color: newColor };
         }
 
