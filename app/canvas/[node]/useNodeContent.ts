@@ -7,47 +7,7 @@ import { isStructure } from '@/canvas/_core/_/parameter.type-guards';
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { getFilteredParameters } from '@/canvas/utils/parameters/getFilteredParameters';
-
-const getFlattenedParameterIds = (parameters: Parameter[], parametersMap: Map<string, Parameter>): string[] => {
-    const ids: string[] = [];
-    const stack = [...parameters];
-
-    while (stack.length) {
-        const parameter = stack.pop()!;
-        ids.push(parameter.id);
-
-        if (isStructure(parameter)) {
-            for (const id of parameter.defaultValue) {
-                const child = parametersMap.get(id);
-                if (child) stack.push(child);
-            }
-        }
-    }
-
-    return ids;
-};
-
-const getRangeSelection = (parameters: Parameter[], currentId: string, lastSelectedId: string): Set<string> => {
-    const parametersMap = new Map(parameters.map((parameter) => [parameter.id, parameter]));
-    const flatIds = getFlattenedParameterIds(parameters, parametersMap);
-
-    const currentIndex = flatIds.findIndex((id) => id === currentId);
-    const lastIndex = flatIds.findIndex((id) => id === lastSelectedId);
-
-    if (currentIndex === -1 || lastIndex === -1) {
-        return new Set();
-    }
-
-    const start = Math.min(currentIndex, lastIndex);
-    const end = Math.max(currentIndex, lastIndex);
-    const newSet = new Set<string>();
-
-    for (let i = start; i <= end; i++) {
-        newSet.add(flatIds[i]);
-    }
-
-    return newSet;
-};
+import { getRangeSelection } from '@/canvas/utils/canvas/getRangeSelection';
 
 const getSiblingsIds = (parameters: Parameter[], currentParameter: Parameter, filteredParameters: Parameter[]): string[] => {
     if (currentParameter.parentId) {
@@ -135,7 +95,7 @@ export const useNodeContent = () => {
 
         if (shiftKey && selectedParameters.size > 0) {
             const lastSelectedId = Array.from(selectedParameters)[selectedParameters.size - 1];
-            const rangeSet = getRangeSelection(parameters, id, lastSelectedId);
+            const rangeSet = getRangeSelection(filteredParameters, id, lastSelectedId);
 
             if (rangeSet.size > 0) {
                 setSelectedParameters(rangeSet);
