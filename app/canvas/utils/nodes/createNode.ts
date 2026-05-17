@@ -1,11 +1,14 @@
 import type { Node } from '@/canvas/_core/_/canvas.types';
 import { v4 as uuidv4 } from 'uuid';
 
-import { getNodes } from '@/canvas/utils/nodes/getNodes';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
+
+import { getCurrentForegroundColor } from '@/canvas/utils/canvas/getCurrentForegroundColor';
 import { getSnappedPosition } from '@/canvas/utils/items/getSnappedPosition';
 import { canAddItem } from '@/canvas/utils/items/canAddItems';
 import { generateUniqueName } from '@/canvas/utils/items/generateUniqueName';
-import { useItemsStore } from '@/canvas/store/useItemsStore';
+
+import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { addToHistory } from '@/canvas/utils/history/historyManager';
 
 export function createNode(): Node | null {
@@ -36,7 +39,7 @@ export function createNode(): Node | null {
         name,
         description: '',
         shapeType: 'point',
-        color: 'var(--foreground)',
+        color: getCurrentForegroundColor(),
         position: { x, y },
         parameters: [],
     };

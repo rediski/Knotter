@@ -5,6 +5,7 @@ import { useItemsStore } from '@/canvas/store/useItemsStore';
 
 import { canAddItem } from '@/canvas/utils/items/canAddItems';
 import { addToHistory } from '@/canvas/utils/history/historyManager';
+import { getCurrentForegroundColor } from '@/canvas/utils/canvas/getCurrentForegroundColor';
 
 export function createEdge(clickedNodeId: string) {
     if (!canAddItem()) return null;
@@ -26,7 +27,7 @@ export function createEdge(clickedNodeId: string) {
         id: uuid(),
         from: tempEdge,
         to: clickedNodeId,
-        color: 'var(--foreground)',
+        color: getCurrentForegroundColor(),
     };
 
     const newItems = [...items, newEdge];
