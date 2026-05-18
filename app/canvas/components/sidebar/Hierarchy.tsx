@@ -4,15 +4,24 @@ import { memo, Fragment, useCallback } from 'react';
 
 import { EmptyState } from '@/components/UI/EmptyState';
 import { HierarchyItem } from '@/canvas/components/sidebar/HierarchyItem';
-
 import { useHierarchy } from '@/canvas/components/sidebar/useHierarchy';
-import { useSidebarStore } from '@/canvas/store/useSidebarStore';
-import { useItemsStore } from '@/canvas/store/useItemsStore';
-import { getNodes } from '@/canvas/utils/nodes/getNodes';
-import { moveNodeUp, moveNodeDown } from '@/canvas/utils/nodes/moveNode';
-import { getRangeSelection } from '@/canvas/utils/canvas/getRangeSelection';
 
-import { ArrowBigUp, ArrowBigDown } from 'lucide-react';
+import { useItemsStore } from '@/canvas/store/useItemsStore';
+import { useSidebarStore } from '@/canvas/store/useSidebarStore';
+
+import { getNodes } from '@/canvas/utils/nodes/getNodes';
+import { getRangeSelection } from '@/canvas/utils/canvas/getRangeSelection';
+import { moveNodeUp, moveNodeDown } from '@/canvas/utils/nodes/moveNode';
+import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
+
+import { ArrowBigUp, ArrowBigDown, X, LucideIcon } from 'lucide-react';
+
+interface ActionButton {
+    id: string;
+    icon: LucideIcon;
+    onClick: () => void;
+    disabled: boolean;
+}
 
 export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string }) {
     const items = useItemsStore((state) => state.items);
@@ -86,25 +95,41 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
         setItems(newItems);
     }, [items, setItems, selectedItemIds, lastSelectedIndex, filteredNodes.length]);
 
+    const actionButtons: ActionButton[] = [
+        {
+            id: 'move-up',
+            icon: ArrowBigUp,
+            onClick: handleMoveUp,
+            disabled: selectedItemIds.length === 0 || firstSelectedIndex <= 0,
+        },
+        {
+            id: 'move-down',
+            icon: ArrowBigDown,
+            onClick: handleMoveDown,
+            disabled: selectedItemIds.length === 0 || lastSelectedIndex >= filteredNodes.length - 1,
+        },
+        {
+            id: 'delete',
+            icon: X,
+            onClick: deleteSelectedItems,
+            disabled: selectedItemIds.length === 0,
+        },
+    ];
+
     return (
         <div className="flex flex-col h-full">
             {filteredNodes.length !== 0 && (
                 <div className="flex gap-1 m-1">
-                    <button
-                        onClick={handleMoveUp}
-                        className="flex-1 flex items-center justify-center gap-1 px-2 py-1.75 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 cursor-pointer"
-                        title="Вверх"
-                    >
-                        <ArrowBigUp size={16} fill="currentColor" />
-                    </button>
-
-                    <button
-                        onClick={handleMoveDown}
-                        className="flex-1 flex items-center justify-center gap-1 px-2 py-1.75 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 cursor-pointer"
-                        title="Вниз"
-                    >
-                        <ArrowBigDown size={16} fill="currentColor" />
-                    </button>
+                    {actionButtons.map((button) => (
+                        <button
+                            key={button.id}
+                            onClick={button.onClick}
+                            disabled={button.disabled}
+                            className="flex-1 flex items-center justify-center gap-1 px-2 py-1.75 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                        >
+                            <button.icon size={16} strokeWidth={3} fill="currentColor" />
+                        </button>
+                    ))}
                 </div>
             )}
 
