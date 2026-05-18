@@ -1,10 +1,9 @@
 'use client';
 
-import { memo, Fragment, useCallback } from 'react';
+import { memo, Fragment, useCallback, useMemo } from 'react';
 
 import { EmptyState } from '@/components/UI/EmptyState';
 import { HierarchyItem } from '@/canvas/components/sidebar/HierarchyItem';
-import { useHierarchy } from '@/canvas/components/sidebar/useHierarchy';
 
 import { useItemsStore } from '@/canvas/store/useItemsStore';
 import { useSidebarStore } from '@/canvas/store/useSidebarStore';
@@ -13,6 +12,7 @@ import { getNodes } from '@/canvas/utils/nodes/getNodes';
 import { getRangeSelection } from '@/canvas/utils/canvas/getRangeSelection';
 import { moveNodeUp, moveNodeDown } from '@/canvas/utils/nodes/moveNode';
 import { deleteSelectedItems } from '@/canvas/utils/items/deleteSelectedItems';
+import { getFilteredNodes } from '@/canvas/utils/items/getFilteredItems';
 
 import { ArrowBigUp, ArrowBigDown, X, LucideIcon } from 'lucide-react';
 
@@ -32,7 +32,14 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
     const nodes = getNodes(items);
 
     const filterText = useSidebarStore((state) => (panelId ? state.filterText[panelId] : ''));
-    const { filteredNodes, deselect } = useHierarchy(filterText);
+
+    const filteredNodes = useMemo(() => getFilteredNodes(filterText), [filterText]);
+
+    const deselect = useCallback((e: React.MouseEvent<HTMLUListElement>) => {
+        if (e.target === e.currentTarget) {
+            setSelectedItemIds([]);
+        }
+    }, []);
 
     const selectItem = (nodeId: string, ctrlKey: boolean, shiftKey: boolean) => {
         if (ctrlKey) {
