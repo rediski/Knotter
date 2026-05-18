@@ -1,15 +1,18 @@
 'use client';
 
 import { memo, type MouseEvent } from 'react';
+import { useRouter } from 'next/navigation';
 
 import type { Node } from '@/canvas/_core/_/canvas.types';
 
 import { EditableName } from '@/components/UI/EditableName';
 
 import { useItemsStore } from '@/canvas/store/useItemsStore';
-import { useHierarchyItem } from '@/canvas/components/sidebar/useHierarchyItem';
+
+import { openNodeTab } from '@/canvas/utils/nodes/openNodeTab';
 
 import { Box } from 'lucide-react';
+import { changeName } from '@/canvas/utils/items/changeName';
 
 interface HierarchyItemProps {
     filteredNode: Node;
@@ -18,7 +21,7 @@ interface HierarchyItemProps {
 }
 
 export const HierarchyItem = memo(function HierarchyItem({ filteredNode, index, selectItem }: HierarchyItemProps) {
-    const { handleKeyDown, handleNameChange, handleNodeDoubleClick } = useHierarchyItem(filteredNode);
+    const router = useRouter();
 
     const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
     const isSelected = selectedItemIds.includes(filteredNode.id);
@@ -29,8 +32,7 @@ export const HierarchyItem = memo(function HierarchyItem({ filteredNode, index, 
         <li
             className="relative select-none cursor-pointer"
             onClick={(e: MouseEvent) => selectItem(filteredNode.id, e.ctrlKey, e.shiftKey)}
-            onKeyDown={handleKeyDown}
-            onDoubleClick={handleNodeDoubleClick}
+            onDoubleClick={() => openNodeTab(filteredNode.id, router)}
         >
             <div
                 className={`
@@ -47,7 +49,7 @@ export const HierarchyItem = memo(function HierarchyItem({ filteredNode, index, 
 
                     <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/10' : 'border-depth-4'}`} />
 
-                    <EditableName name={filteredNode.name} isSelected={isSelected} onChange={handleNameChange} />
+                    <EditableName name={filteredNode.name} isSelected={isSelected} onChange={changeName} />
 
                     <span className="ml-auto text-xs text-gray tabular-nums">#{orderNumber}</span>
                 </div>
