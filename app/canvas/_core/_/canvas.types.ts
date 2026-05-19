@@ -2,17 +2,16 @@ import type { NodeShapeType } from '@/canvas/_core/_/nodeShapeType';
 import { NodeParameter } from '@/canvas/_core/_/parameter';
 
 export type Position = { x: number; y: number };
-
 export type CanvasItem = Node | Edge;
-
 export type TooltipMode = 'always' | 'hover' | 'never';
 
-export interface Edge {
-    kind: 'edge';
+export interface Scene {
+    kind: 'scene';
     id: string;
-    from: string;
-    to: string;
-    color: string;
+    name: string;
+    items: CanvasItem[];
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface Node {
@@ -24,4 +23,12 @@ export interface Node {
     color: string;
     position: Position;
     parameters: NodeParameter[];
+}
+
+export interface Edge {
+    kind: 'edge';
+    id: string;
+    from: string;
+    to: string;
+    color: string;
 }
