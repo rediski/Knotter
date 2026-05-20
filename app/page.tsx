@@ -44,7 +44,7 @@ export default function Home() {
                 <div className="flex flex-col gap-4">
                     <div className="flex max-lg:flex-col gap-4">
                         <div
-                            className="relative bg-depth-1 w-full min-h-63.5 h-full rounded-lg border border-depth-3 overflow-hidden"
+                            className="relative bg-depth-1 w-full min-h-64.5 h-full rounded-lg border border-depth-3 overflow-hidden"
                             style={{
                                 backgroundImage: `
                                         linear-gradient(to right, var(--grid-color-1) 1px, transparent 1px),
@@ -64,7 +64,7 @@ export default function Home() {
                             </div>
                         </div>
 
-                        <div className="bg-depth-1 p-4 border border-depth-3 rounded-md w-full">
+                        <div className="bg-depth-1 border border-depth-3 rounded-md w-full">
                             <CodeBlock
                                 data={{
                                     name: 'The best node',
