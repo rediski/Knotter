@@ -1,4 +1,4 @@
-import { getCurrentScene } from '@/canvas/utils/canvas/getCurrentScene';
+import { getCurrentScene } from '@/canvas/utils/scene/getCurrentScene';
 
 export const getCurrentSceneItems = () => {
     const scene = getCurrentScene();
