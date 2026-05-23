@@ -1,17 +1,23 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { CanvasItem, Position } from '@/canvas/_core/_/canvas.types';
+import type { Scene, CanvasItem, Position } from '@/canvas/_core/_/canvas.types';
 import type { Parameter } from '@/canvas/_core/_/parameter';
 
 export interface ItemsState {
     items: CanvasItem[];
     setItems: (items: CanvasItem[]) => void;
 
-    parameters: Parameter[];
-    setParameters: (parameters: Parameter[]) => void;
-
     selectedItemIds: string[];
     setSelectedItemIds: (ids: string[]) => void;
+
+    scenes: Map<string, Scene>;
+    setScenes: (scenes: Map<string, Scene>) => void;
+
+    activeSceneId: string | null;
+    setActiveSceneId: (id: string | null) => void;
+
+    parameters: Parameter[];
+    setParameters: (parameters: Parameter[]) => void;
 
     hoveredNodeId: string | null;
     setHoveredNodeId: (id: string | null) => void;
@@ -35,14 +41,20 @@ export const useItemsStore = create<ItemsState>()(
             items: [],
             setItems: (items) => set({ items }),
 
-            parameters: [],
-            setParameters: (parameters) => set({ parameters }),
-
             selectedItemIds: [],
             setSelectedItemIds: (ids) => set({ selectedItemIds: ids }),
 
+            scenes: new Map(),
+            setScenes: (scenes) => set({ scenes }),
+
+            activeSceneId: null,
+            setActiveSceneId: (id) => set({ activeSceneId: id }),
+
+            parameters: [],
+            setParameters: (parameters) => set({ parameters }),
+
             hoveredNodeId: null,
-            setHoveredNodeId: (hoveredNodeId) => set({ hoveredNodeId }),
+            setHoveredNodeId: (id) => set({ hoveredNodeId: id }),
 
             tempEdge: null,
             setTempEdge: (tempEdge) => set({ tempEdge }),
@@ -58,11 +70,19 @@ export const useItemsStore = create<ItemsState>()(
         }),
         {
             name: 'items-storage',
+
             partialize: (state) => ({
                 items: state.items,
+                scenes: Array.from(state.scenes.entries()),
                 parameters: state.parameters,
                 selectedItemIds: state.selectedItemIds,
             }),
+
+            onRehydrateStorage: () => (state) => {
+                if (state && Array.isArray(state.scenes)) {
+                    state.scenes = new Map(state.scenes);
+                }
+            },
         },
     ),
 );
