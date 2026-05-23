@@ -8,7 +8,7 @@ import { isString } from '@/canvas/_core/_/parameter.type-guards';
 import { EditableName } from '@/components/UI/EditableName';
 import { Input } from '@/components/UI/Input';
 
-import { useStringParameter } from '@/canvas/[node]/parameters/useString';
+import { useStringParameter } from '@/canvas/[sceneId]/[nodeId]/parameters/useString';
 
 import { updateParameter } from '@/canvas/utils/parameters/updateParameter';
 import { updateParameterName } from '@/canvas/utils/parameters/updateParameterName';

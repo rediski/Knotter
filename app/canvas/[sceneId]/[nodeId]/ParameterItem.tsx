@@ -4,11 +4,11 @@ import { memo, useCallback, type MouseEvent } from 'react';
 
 import type { Parameter } from '@/canvas/_core/_/parameter';
 
-import { Number } from '@/canvas/[node]/parameters/Number';
-import { String } from '@/canvas/[node]/parameters/String';
-import { Boolean } from '@/canvas/[node]/parameters/Boolean';
-import { Enum } from '@/canvas/[node]/parameters/Enum';
-import { Structure } from '@/canvas/[node]/parameters/Structure';
+import { Number } from '@/canvas/[sceneId]/[nodeId]/parameters/Number';
+import { String } from '@/canvas/[sceneId]/[nodeId]/parameters/String';
+import { Boolean } from '@/canvas/[sceneId]/[nodeId]/parameters/Boolean';
+import { Enum } from '@/canvas/[sceneId]/[nodeId]/parameters/Enum';
+import { Structure } from '@/canvas/[sceneId]/[nodeId]/parameters/Structure';
 
 const parameterComponents = {
     number: Number,

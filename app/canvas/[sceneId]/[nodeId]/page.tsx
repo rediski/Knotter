@@ -5,12 +5,11 @@ import { useParams } from 'next/navigation';
 
 import { NODE_SHAPES } from '@/canvas/_core/_/nodeShapeType';
 
-import { ParameterItem } from '@/canvas/[node]/ParameterItem';
-import { NodeParameters } from '@/canvas/[node]/NodeParameters';
-import { CreateParameterForm } from '@/canvas/[node]/CreateParameterForm';
+import { ParameterItem } from '@/canvas/[sceneId]/[nodeId]/ParameterItem';
+import { NodeParameters } from '@/canvas/[sceneId]/[nodeId]/NodeParameters';
+import { CreateParameterForm } from '@/canvas/[sceneId]/[nodeId]/CreateParameterForm';
 
-import { useNodeContent } from '@/canvas/[node]/useNodeContent';
-import { useItemsStore } from '@/canvas/store/useItemsStore';
+import { useNodeContent } from '@/canvas/[sceneId]/[nodeId]/useNodeContent';
 
 import { Input } from '@/components/UI/Input';
 import { EmptyState } from '@/components/UI/EmptyState';
@@ -23,7 +22,7 @@ import { Search, ArrowBigUp, ArrowBigDown, Plus, X } from 'lucide-react';
 
 export default function NodePage() {
     const params = useParams();
-    const nodeId = params.node as string;
+    const nodeId = params.nodeId as string;
 
     const items = useItemsStore((state) => state.items);
     const nodes = getNodes(items);
