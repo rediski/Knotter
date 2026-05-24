@@ -24,7 +24,14 @@ export const HierarchyItem = memo(function HierarchyItem({ filteredNode, index, 
     const router = useRouter();
 
     const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
+    const currentSceneId = useItemsStore((state) => state.currentSceneId);
+    const scenes = useItemsStore((state) => state.scenes);
+
     const isSelected = selectedItemIds.includes(filteredNode.id);
+
+    const scene = currentSceneId ? scenes[currentSceneId] : null;
+    const currentItem = scene?.items.find((item) => item.id === filteredNode.id && item.kind === 'node');
+    const actualName = (currentItem as Node & { name: string })?.name ?? filteredNode.name;
 
     const orderNumber = index + 1;
 
@@ -49,7 +56,7 @@ export const HierarchyItem = memo(function HierarchyItem({ filteredNode, index, 
 
                     <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/10' : 'border-depth-4'}`} />
 
-                    <EditableName name={filteredNode.name} isSelected={isSelected} onChange={changeName} />
+                    <EditableName name={actualName} isSelected={isSelected} onChange={changeName} />
 
                     <span suppressHydrationWarning className="ml-auto text-xs text-gray tabular-nums">
                         #{orderNumber}
