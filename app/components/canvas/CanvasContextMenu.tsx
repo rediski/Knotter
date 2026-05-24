@@ -1,0 +1,144 @@
+'use client';
+
+import { useRef, memo } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { ContextMenu } from '@/components/UI/ContextMenu';
+import { ContextMenuItem } from '@/components/UI/ContextMenuItem';
+
+import { useClickOutside } from '@/hooks/useClickOutside';
+import { useItemsStore } from '@/store/useItemsStore';
+
+import { selectAllItems } from '@/utils/items/selectAllItems';
+import { selectAllEdges } from '@/utils/edges/selectAllEdges';
+import { deleteSelectedItems } from '@/utils/items/deleteSelectedItems';
+
+import { getNodes } from '@/utils/nodes/getNodes';
+import { selectAllNodes } from '@/utils/nodes/selectAllNodes';
+
+import { createNode } from '@/utils/nodes/createNode';
+import { initEdge } from '@/utils/edges/initEdge';
+
+import { openNodeTab } from '@/utils/nodes/openNodeTab';
+import { getSelectedNodesIds } from '@/utils/nodes/getSelectedNodes';
+
+type CanvasContextMenuProps = {
+    isOpen: boolean;
+    position: { x: number; y: number };
+    closeMenu: () => void;
+};
+
+export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, position, closeMenu }: CanvasContextMenuProps) {
+    const router = useRouter();
+    const menuRef = useRef<HTMLDivElement | null>(null);
+
+    const { currentSceneId, scenes, selectedItemIds } = useItemsStore();
+
+    const scene = currentSceneId ? scenes[currentSceneId] : null;
+    const items = scene?.items ?? [];
+    const nodes = getNodes(items);
+
+    useClickOutside(menuRef, closeMenu);
+
+    const handleOpenTab = () => {
+        const selectedNodesIds = getSelectedNodesIds({ items, selectedItemIds });
+
+        if (selectedNodesIds.length > 0) {
+            openNodeTab(selectedNodesIds[0], router);
+        }
+
+        closeMenu();
+    };
+
+    return (
+        <ContextMenu isOpen={isOpen} position={position} ref={menuRef}>
+            <ContextMenuItem
+                submenu={[
+                    <ContextMenuItem
+                        key="select-all"
+                        onClick={() => {
+                            selectAllItems();
+                            closeMenu();
+                        }}
+                        disabled={items.length === 0}
+                        shortcut="Ctrl + Shift + A"
+                    >
+                        Все элементы
+                    </ContextMenuItem>,
+
+                    <ContextMenuItem
+                        key="select-all-nodes"
+                        onClick={() => {
+                            selectAllNodes();
+                            closeMenu();
+                        }}
+                        disabled={nodes.length === 0}
+                        shortcut="Ctrl + A"
+                    >
+                        Все узлы
+                    </ContextMenuItem>,
+
+                    <ContextMenuItem
+                        key="select-all-edges"
+                        onClick={() => {
+                            selectAllEdges();
+                            closeMenu();
+                        }}
+                        disabled={nodes.length === 0}
+                        shortcut="Ctrl + E"
+                    >
+                        Все связи
+                    </ContextMenuItem>,
+                ]}
+            >
+                Выбрать
+            </ContextMenuItem>
+
+            <ContextMenuItem
+                submenu={[
+                    <ContextMenuItem
+                        key="create-node"
+                        onClick={() => {
+                            createNode();
+                            closeMenu();
+                        }}
+                        shortcut="Shift + A"
+                    >
+                        Узел
+                    </ContextMenuItem>,
+
+                    <ContextMenuItem
+                        key="initiate-edge"
+                        onClick={() => {
+                            initEdge();
+                            closeMenu();
+                        }}
+                        disabled={selectedItemIds.length === 0 || items.length < 2}
+                        shortcut="Shift + E"
+                    >
+                        Cвязь
+                    </ContextMenuItem>,
+                ]}
+            >
+                Создать
+            </ContextMenuItem>
+
+            <ContextMenuItem key="open-tab" onClick={handleOpenTab} disabled={selectedItemIds.length === 0} shortcut="Enter">
+                Открыть
+            </ContextMenuItem>
+
+            <hr className="border-b-0 border-depth-6 my-1" />
+
+            <ContextMenuItem
+                onClick={() => {
+                    deleteSelectedItems();
+                    closeMenu();
+                }}
+                disabled={selectedItemIds.length === 0}
+                shortcut="Del"
+            >
+                Удалить выбранное
+            </ContextMenuItem>
+        </ContextMenu>
+    );
+});
