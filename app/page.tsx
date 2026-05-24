@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 import { CodeBlock } from '@/components/UI/CodeBlock';
-import { panelIcons, type PanelType } from '@/canvas/_core/_/sidebarPanel';
+import { panelIcons, type PanelType } from '@/_core/_/sidebarPanel';
 
 import { Diamond } from 'lucide-react';
 
@@ -49,7 +49,7 @@ export default function Home() {
                                 backgroundImage: `
                                         linear-gradient(to right, var(--grid-color-1) 1px, transparent 1px),
                                         linear-gradient(to bottom, var(--grid-color-1) 1px, transparent 1px)
-                                    `,
+                                `,
                                 backgroundSize: '64px 64px',
                                 backgroundPosition: 'center center',
                                 backgroundRepeat: 'repeat',

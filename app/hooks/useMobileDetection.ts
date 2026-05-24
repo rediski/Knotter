@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { isMobileDevice } from '@/canvas/utils/canvas/mobileDetection';
+import { isMobileDevice } from '@/utils/canvas/mobileDetection';
 
 export const useMobileDetection = (): boolean | null => {
     const [isMobile, setIsMobile] = useState<boolean | null>(null);

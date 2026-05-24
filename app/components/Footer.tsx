@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
-import { GithubIcon } from '@/components/icons/GithubIcon';
-import { DiscordIcon } from '@/components/icons/DiscordIcon';
+import { GithubIcon } from '@/icons/GithubIcon';
+import { DiscordIcon } from '@/icons/DiscordIcon';
 
 export default function Footer() {
     return (

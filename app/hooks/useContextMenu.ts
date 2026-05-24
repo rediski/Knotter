@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Position } from '@/canvas/_core/_/canvas.types';
+import { Position } from '@/_core/_/canvas.types';
 
 export const useContextMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
