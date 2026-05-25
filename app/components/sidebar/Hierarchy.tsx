@@ -166,7 +166,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                 </div>
             )}
 
-            <ul className="flex flex-col gap-1 mx-1 mb-1 overflow-y-auto flex-1" onClick={deselect}>
+            <ul className="flex flex-col justify-center gap-1 mx-1 mb-1 overflow-y-auto flex-1" onClick={deselect}>
                 {filteredNodes.length !== 0 ? (
                     <Fragment>
                         {filteredNodes.map((filteredNode, index) => (
