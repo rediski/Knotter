@@ -4,24 +4,28 @@ import { useEffect, RefObject } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useCanvasStore } from '@/store/useCanvasStore';
+import { useItemsStore } from '@/store/useItemsStore';
 import { useCanvasRefsStore } from '@/store/useCanvasRefsStore';
 
 import { undo, redo } from '@/utils/history/historyManager';
 
 import { toggleTooltipMode } from '@/utils/canvas/toggleTooltipMode';
 import { toggleMagnetMode } from '@/utils/canvas/toggleMagnetMode';
+import { toggleInvertY } from '@/utils/canvas/toggleInvertY';
+import { clearSelection } from '@/utils/canvas/сlearSelection';
+
 import { deleteSelectedItems } from '@/utils/items/deleteSelectedItems';
 import { selectAllItems } from '@/utils/items/selectAllItems';
-import { selectAllNodes } from '@/utils/nodes/selectAllNodes';
-import { selectAllEdges } from '@/utils/edges/selectAllEdges';
-import { copySelectedItems, pasteClipboardItems } from '@/utils/clipboard/copyPasteItems';
-import { createNode } from '@/utils/nodes/createNode';
 
-import { initEdge } from '@/utils/edges/initEdge';
-import { clearSelection } from '@/utils/canvas/сlearSelection';
+import { selectAllNodes } from '@/utils/nodes/selectAllNodes';
+import { createNode } from '@/utils/nodes/createNode';
 import { openNodeTab } from '@/utils/nodes/openNodeTab';
 import { getSelectedNodesIds } from '@/utils/nodes/getSelectedNodes';
-import { useItemsStore } from '@/store/useItemsStore';
+
+import { selectAllEdges } from '@/utils/edges/selectAllEdges';
+import { initEdge } from '@/utils/edges/initEdge';
+
+import { copySelectedItems, pasteClipboardItems } from '@/utils/clipboard/copyPasteItems';
 
 const CTRL_SHIFT_MAP: Record<string, () => void> = {
     a: selectAllItems,
@@ -58,6 +62,8 @@ const TOGGLE_MAP: Record<string, () => void> = {
     е: toggleTooltipMode,
     m: toggleMagnetMode,
     ь: toggleMagnetMode,
+    y: toggleInvertY,
+    н: toggleInvertY,
     g: () => useCanvasStore.getState().toggleShowGrid(),
     п: () => useCanvasStore.getState().toggleShowGrid(),
     a: () => useCanvasStore.getState().toggleShowAxes(),
