@@ -13,6 +13,10 @@ export function Breadcrumbs() {
         return null;
     }
 
+    if (!currentNodeId) {
+        return null;
+    }
+
     const node = currentNodeId ? getNodeById(currentNodeId) : null;
 
     const nodeName = node?.name || currentNodeId;
