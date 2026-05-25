@@ -4,7 +4,8 @@ import Link from 'next/link';
 
 import { CanvasSidebar } from '@/components/canvas/CanvasSidebar';
 import { ThemeToggle } from '@/components/UI/ThemeToggle';
-import { Breadcrumbs } from '@/components/canvas/Breadcrumbs';
+import { Breadcrumbs } from '@/components/scene/Breadcrumbs';
+import { SceneList } from '@/components/scene/SceneList';
 
 import { Home } from 'lucide-react';
 
@@ -32,8 +33,9 @@ export default function CanvasLayout({ children }: { children: ReactNode }) {
 
                     <Breadcrumbs />
 
-                    <hr className="h-6 mx-1 border-l border-depth-3" />
+                    <SceneList />
                 </div>
+
                 {children}
             </div>
 
