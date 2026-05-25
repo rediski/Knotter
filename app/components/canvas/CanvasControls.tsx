@@ -11,6 +11,7 @@ import { toggleTooltipMode } from '@/utils/canvas/toggleTooltipMode';
 import { Coordinates } from '@/components/canvas/Coordinates';
 
 import { Magnet, Grid2x2, Move3d, Eye, EyeOff, EyeClosed, MoveVertical } from 'lucide-react';
+import { toggleInvertY } from '@/utils/canvas/toggleInvertY';
 
 export const CanvasControls = memo(function CanvasControls({
     canvasRef,
@@ -24,7 +25,6 @@ export const CanvasControls = memo(function CanvasControls({
     const showAxes = useCanvasStore((state) => state.showAxes);
     const tooltipMode = useCanvasStore((state) => state.tooltipMode);
     const invertY = useCanvasStore((state) => state.invertY);
-    const setInvertY = useCanvasStore((state) => state.setInvertY);
     const toggleShowGrid = useCanvasStore((state) => state.toggleShowGrid);
     const toggleShowAxes = useCanvasStore((state) => state.toggleShowAxes);
 
@@ -71,9 +71,9 @@ export const CanvasControls = memo(function CanvasControls({
         },
         {
             active: invertY,
-            onClick: () => setInvertY(!invertY),
+            onClick: toggleInvertY,
             Icon: MoveVertical,
-            label: 'Инвертировать Y',
+            label: 'Инвертировать Y (Y)',
         },
         {
             active: showGrid,
