@@ -8,7 +8,7 @@ import { NODE_SIZE } from '@/_core/_/canvas.constants';
 import { useItemsStore } from '@/store/useItemsStore';
 
 export function NodeRenderer({ node }: { node: Node }) {
-    const { currentSceneId, scenes, selectedItemIds } = useItemsStore();
+    const { currentSceneId, scenes, selectedItemIds, hoveredNodeId, tempEdge } = useItemsStore();
 
     const isSelected = selectedItemIds.includes(node.id);
 
@@ -25,21 +25,34 @@ export function NodeRenderer({ node }: { node: Node }) {
     const Icon = getShape(node.shapeType).icon;
     const isPoint = node.shapeType === 'point';
 
+    const isHovered = hoveredNodeId === node.id;
+    const isHoveredWithTempEdge = isHovered && tempEdge != null && hoveredNodeId !== tempEdge;
+
+    const borderClass = (() => {
+        if (hasDuplicatePosition) return 'border-red';
+        if (isHoveredWithTempEdge) return 'border-green';
+        return 'border-bg-accent';
+    })();
+
     return (
-        <div className="relative w-full h-full flex items-center justify-center">
-            {(isSelected || hasDuplicatePosition) && (
+        <div
+            className="relative w-full h-full flex items-center justify-center"
+            onMouseEnter={() => useItemsStore.getState().setHoveredNodeId(node.id)}
+            onMouseLeave={() => useItemsStore.getState().setHoveredNodeId(null)}
+        >
+            {(isSelected || hasDuplicatePosition || isHoveredWithTempEdge) && (
                 <div
                     className={`
-                        absolute flex items-center justify-center z-[-1] border-2 border-dashed border-bg-accent rounded-xs p-5.5 
-                        ${hasDuplicatePosition ? 'border-red' : ''}
+                        absolute flex items-center justify-center z-[-1] border-2 border-dashed rounded-xs p-5.5
+                        ${borderClass}
                     `}
                 />
             )}
 
             <Icon
                 className={`
-                    w-max fill-depth-1 hover:cursor-move active:cursor-grabbing 
-                    ${isPoint ? 'stroke-[2px]' : 'stroke-[1.5px]'} 
+                    w-max fill-depth-1 hover:cursor-move active:cursor-grabbing
+                    ${isPoint ? 'stroke-[2px]' : 'stroke-[1.5px]'}
                 `}
                 style={{ color: node.color }}
                 size={NODE_SIZE}
