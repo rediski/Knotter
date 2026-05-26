@@ -12,7 +12,6 @@ import { getNodes } from '@/utils/nodes/getNodes';
 import { getRangeSelection } from '@/utils/canvas/getRangeSelection';
 import { moveNodeUp, moveNodeDown } from '@/utils/nodes/moveNode';
 import { deleteSelectedItems } from '@/utils/items/deleteSelectedItems';
-import { getFilteredNodes } from '@/utils/nodes/getFilteredNodes';
 
 import { ArrowBigUp, ArrowBigDown, X, LucideIcon } from 'lucide-react';
 
@@ -26,10 +25,6 @@ interface ActionButton {
 export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string }) {
     const [mounted, setMounted] = useState(false);
 
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
     const { currentSceneId, scenes, selectedItemIds, setSelectedItemIds } = useItemsStore();
 
     const scene = currentSceneId ? scenes[currentSceneId] : null;
@@ -38,7 +33,21 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
 
     const filterText = useSidebarStore((state) => (panelId ? state.filterText[panelId] : ''));
 
-    const filteredNodes = useMemo(() => getFilteredNodes(filterText), [filterText]);
+    const filteredNodes = useMemo(() => {
+        if (!currentSceneId) return [];
+
+        const scene = scenes[currentSceneId];
+        const items = scene?.items ?? [];
+
+        const nodes = getNodes(items);
+        const lowerText = filterText?.toLowerCase() || '';
+
+        return nodes.filter((item) => item.name.toLowerCase().includes(lowerText));
+    }, [currentSceneId, scenes, filterText]);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const deselect = useCallback(
         (e: React.MouseEvent<HTMLUListElement>) => {
@@ -82,8 +91,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
     const lastSelectedIndex = lastSelectedId ? filteredNodes.findIndex((node) => node.id === lastSelectedId) : -1;
 
     const handleMoveUp = useCallback(() => {
-        if (selectedItemIds.length === 0) return;
-        if (firstSelectedIndex <= 0) return;
+        if (selectedItemIds.length === 0 || firstSelectedIndex <= 0) return;
 
         let newItems = items;
 
@@ -102,8 +110,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
     }, [items, currentSceneId, scenes, selectedItemIds, firstSelectedIndex, scene]);
 
     const handleMoveDown = useCallback(() => {
-        if (selectedItemIds.length === 0) return;
-        if (lastSelectedIndex >= filteredNodes.length - 1) return;
+        if (selectedItemIds.length === 0 || lastSelectedIndex >= filteredNodes.length - 1) return;
 
         let newItems = items;
         const reversedIds = [...selectedItemIds].reverse();
@@ -166,7 +173,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                 </div>
             )}
 
-            <ul className="flex flex-col justify-center gap-1 mx-1 mb-1 overflow-y-auto flex-1" onClick={deselect}>
+            <ul className="flex flex-col justify-center gap-1 mx-1 mb-1 overflow-y-auto" onClick={deselect}>
                 {filteredNodes.length !== 0 ? (
                     <Fragment>
                         {filteredNodes.map((filteredNode, index) => (
