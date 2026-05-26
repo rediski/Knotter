@@ -157,7 +157,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
     const shouldShowActions = filteredNodes.length !== 0;
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full overflow-y-auto">
             {shouldShowActions && (
                 <div className="flex gap-1 m-1">
                     {actionButtons.map((button) => (
@@ -173,26 +173,24 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                 </div>
             )}
 
-            <ul className="flex flex-col justify-center gap-1 mx-1 mb-1 overflow-y-auto" onClick={deselect}>
-                {filteredNodes.length !== 0 ? (
-                    <Fragment>
-                        {filteredNodes.map((filteredNode, index) => (
-                            <HierarchyItem
-                                key={filteredNode.id}
-                                filteredNode={filteredNode}
-                                index={index}
-                                selectItem={selectItem}
-                            />
-                        ))}
-                    </Fragment>
-                ) : nodes.length === 0 ? (
-                    <li>
-                        <EmptyState message="Создайте элемент, нажав ПКМ по холсту." />
-                    </li>
+            <ul className="flex flex-col gap-1 mx-1 mb-1 overflow-y-auto" onClick={deselect}>
+                {filteredNodes.length > 0 ? (
+                    filteredNodes.map((filteredNode, index) => (
+                        <HierarchyItem
+                            key={filteredNode.id}
+                            filteredNode={filteredNode}
+                            index={index}
+                            selectItem={selectItem}
+                        />
+                    ))
                 ) : (
-                    <li>
-                        <EmptyState message={`Не найдено элементов по запросу "${filterText}"`} />
-                    </li>
+                    <EmptyState
+                        message={
+                            nodes.length === 0
+                                ? 'Создайте элемент, нажав ПКМ по холсту.'
+                                : `Не найдено элементов по запросу "${filterText}"`
+                        }
+                    />
                 )}
             </ul>
         </div>
