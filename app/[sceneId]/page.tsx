@@ -62,12 +62,6 @@ export default function Canvas() {
                     <Node containerRef={containerRef} />
                 </div>
             )}
-
-            {!isReady && (
-                <div className="absolute inset-0 flex items-center justify-center bg-depth-1">
-                    <div className="text-foreground">Загрузка сцены...</div>
-                </div>
-            )}
         </div>
     );
 }
