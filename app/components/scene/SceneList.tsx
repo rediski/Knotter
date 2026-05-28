@@ -4,8 +4,11 @@ import { useRouter } from 'next/navigation';
 
 import { useItemsStore } from '@/store/useItemsStore';
 
+import { EditableName } from '@/components/UI/EditableName';
+
 import { createScene } from '@/utils/scene/createScene';
 import { deleteScene } from '@/utils/scene/deleteScene';
+import { changeSceneName } from '@/utils/scene/changeSceneName';
 
 import { LandPlot, Plus, X } from 'lucide-react';
 
@@ -72,14 +75,21 @@ export function SceneList() {
                                 `}
                             />
 
-                            <span className="text-sm flex-1">{scene?.name}</span>
+                            <EditableName
+                                name={scene?.name ?? ''}
+                                onChange={(newName) => changeSceneName(sceneId, newName)}
+                                isSelected={currentSceneId === sceneId}
+                                className="flex-1"
+                                disabled={false}
+                            />
 
                             {hasMultipleScenes && (
                                 <button
                                     onClick={(e) => handleDeleteClick(e, sceneId)}
                                     className={`
                                         opacity-0 group-hover:opacity-100 rounded p-0.5 transition-opacity border cursor-pointer 
-                                        ${currentSceneId === sceneId ? 'bg-bg-accent/10 hover:bg-bg-accent/15 border-bg-accent/10' : 'bg-depth-4 hover:bg-depth-5 border-depth-5'}`}
+                                        ${currentSceneId === sceneId ? 'bg-bg-accent/10 hover:bg-bg-accent/15 border-bg-accent/10' : 'bg-depth-4 hover:bg-depth-5 border-depth-5'}
+                                    `}
                                 >
                                     <X size={14} />
                                 </button>
