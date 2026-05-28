@@ -77,6 +77,7 @@ export default function Home() {
                                     edges: [],
                                     parameters: [],
                                 }}
+                                showActions={false}
                             />
                         </div>
                     </div>

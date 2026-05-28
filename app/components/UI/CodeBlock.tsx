@@ -10,6 +10,18 @@ interface JsonProps {
     value: AnyObject;
 }
 
+interface CodeBlockProps<T = AnyObject> {
+    data: T | null | undefined;
+    showActions?: boolean;
+}
+
+interface ActionButtonProps {
+    onClick: () => void;
+    icon: LucideIcon;
+    label: string;
+    isSuccess?: boolean;
+}
+
 function isObject(value: any): value is Record<string, any> {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -67,30 +79,19 @@ function Json({ value }: JsonProps) {
     return <span className="text-gray">unknown</span>;
 }
 
-interface CodeBlockProps<T = AnyObject> {
-    data: T | null | undefined;
-}
-
-interface ActionButtonProps {
-    onClick: () => void;
-    icon: LucideIcon;
-    label: string;
-    isSuccess?: boolean;
-}
-
 const ActionButton = ({ onClick, icon: Icon, label, isSuccess = false }: ActionButtonProps) => (
     <button
         onClick={onClick}
         className={`
-                flex items-center gap-2 px-3 py-1.25 rounded-md hover:bg-depth-4/80 active:bg-depth-5 cursor-pointer select-none bg-depth-3 border border-depth-4 
-                ${isSuccess ? 'text-green' : 'text-contrast'}
-            `}
+            flex items-center gap-2 px-3 py-1.25 rounded-md hover:bg-depth-4/80 active:bg-depth-5 cursor-pointer select-none bg-depth-3 border border-depth-4 
+            ${isSuccess ? 'text-green' : 'text-contrast'}
+        `}
     >
         <Icon size={16} /> {label}
     </button>
 );
 
-export function CodeBlock<T = AnyObject>({ data }: CodeBlockProps<T>) {
+export function CodeBlock<T = AnyObject>({ data, showActions = true }: CodeBlockProps<T>) {
     if (!data) return <span className="text-json-null">Нет данных</span>;
 
     const [isCopied, setIsCopied] = useState(false);
@@ -129,19 +130,22 @@ export function CodeBlock<T = AnyObject>({ data }: CodeBlockProps<T>) {
 
     return (
         <div className="text-sm leading-5 select-text relative">
-            <div className="sticky top-1 z-10 h-0 m-1">
-                <div className="absolute right-0 top-0 flex gap-2 translate-y-1 w-full">
-                    <div className="flex ml-auto mr-1 gap-1 w-fit">
-                        <ActionButton
-                            onClick={handleCopy}
-                            icon={isCopied ? Check : Copy}
-                            isSuccess={isCopied}
-                            label="Копировать"
-                        />
-                        <ActionButton onClick={handleSave} icon={ArrowDownToLine} label="Сохранить" />
+            {showActions && (
+                <div className="sticky top-1 z-10 h-0 m-1">
+                    <div className="absolute right-0 top-0 flex gap-2 translate-y-1 w-full">
+                        <div className="flex ml-auto mr-1 gap-1 w-fit">
+                            <ActionButton
+                                onClick={handleCopy}
+                                icon={isCopied ? Check : Copy}
+                                isSuccess={isCopied}
+                                label="Копировать"
+                            />
+
+                            <ActionButton onClick={handleSave} icon={ArrowDownToLine} label="Сохранить" />
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             <div className="p-4 font-mono">
                 <Json value={data} />
