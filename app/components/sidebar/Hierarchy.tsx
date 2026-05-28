@@ -173,7 +173,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                 </div>
             )}
 
-            <ul className="flex flex-col gap-1 mx-1 mb-1 overflow-y-auto h-full" onClick={deselect}>
+            <ul className="flex flex-col gap-1 mx-1 overflow-y-auto h-full" onClick={deselect}>
                 {filteredNodes.length > 0 ? (
                     filteredNodes.map((filteredNode, index) => (
                         <HierarchyItem
