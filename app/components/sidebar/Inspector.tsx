@@ -17,7 +17,6 @@ import { Dropdown } from '@/components/UI/Dropdown';
 
 import { ColorPicker } from '@/components/sidebar/ColorPicker';
 import { ShapeButtons } from '@/components/sidebar/ShapeButtons';
-import { PositionInputs } from '@/components/sidebar/PositionInputs';
 
 import { getNodes } from '@/utils/nodes/getNodes';
 import { getIncomingEdges } from '@/utils/edges/getIncomingEdges';
@@ -41,15 +40,12 @@ const FIELD_TITLES = {
 export const Inspector = memo(function Inspector({ panelId }: { panelId?: string }) {
     const {
         shapeType,
-        positionX,
-        positionY,
 
         selectedItem,
         selectedNode,
 
         changeNodeName,
         changeNodeDescription,
-        changeNodesPosition,
     } = useInspector();
 
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
@@ -186,20 +182,6 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                             <ShapeButtons
                                 shapeType={shapeType}
                                 onTypeChange={(newShapeType) => changeShapeType(newShapeType)}
-                            />
-                        </Dropdown>
-                    )}
-
-                    {showPosition && (
-                        <Dropdown
-                            title={FIELD_TITLES.TRANSFORM}
-                            isOpen={isDropdownOpen(2)}
-                            onToggle={() => toggleDropdown(2)}
-                        >
-                            <PositionInputs
-                                positionX={positionX}
-                                positionY={positionY}
-                                changeItemsPosition={changeNodesPosition}
                             />
                         </Dropdown>
                     )}

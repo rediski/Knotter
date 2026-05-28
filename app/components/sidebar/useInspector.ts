@@ -1,12 +1,9 @@
 'use client';
 
-import { useMemo } from 'react';
-
-import type { Node, Position } from '@/_core/_/canvas.types';
+import type { Node } from '@/_core/_/canvas.types';
 
 import { useItemsStore } from '@/store/useItemsStore';
 
-import { moveNodes } from '@/utils/nodes/moveNodes';
 import { getSelectedItem } from '@/utils/items/getSelectedItems';
 import { getSelectedNode } from '@/utils/nodes/getSelectedNodes';
 import { getNodes } from '@/utils/nodes/getNodes';
@@ -23,73 +20,6 @@ export function useInspector() {
 
     const nodes = getNodes(items);
     const edges = getEdges(items);
-
-    const initialPositions = useMemo(() => {
-        const map = new Map<string, Position>();
-
-        if (!selectedNode) return map;
-
-        if (selectedItemIds.length > 0) {
-            nodes.forEach((node) => {
-                if (selectedItemIds.includes(node.id)) {
-                    map.set(node.id, {
-                        x: node.position.x,
-                        y: node.position.y,
-                    });
-                }
-            });
-
-            return map;
-        }
-
-        map.set(selectedNode.id, {
-            x: selectedNode.position.x,
-            y: selectedNode.position.y,
-        });
-
-        return map;
-    }, [selectedNode, selectedItemIds, nodes]);
-
-    const getUpdatedPositions = () => {
-        const updated = new Map(initialPositions);
-
-        if (updated.size === 0 && selectedNode) {
-            nodes.forEach((node) => {
-                if (selectedItemIds.includes(node.id) || node.id === selectedNode.id) {
-                    updated.set(node.id, {
-                        x: node.position.x,
-                        y: node.position.y,
-                    });
-                }
-            });
-        }
-
-        return updated;
-    };
-
-    const changeNodesPosition = (axis: 'x' | 'y', value: number) => {
-        if (!selectedNode) return;
-
-        const updatedInitialPositions = getUpdatedPositions();
-
-        const dragDelta = {
-            x: axis === 'x' ? value - selectedNode.position.x : 0,
-            y: axis === 'y' ? value - selectedNode.position.y : 0,
-        };
-
-        const updatedNodes = moveNodes(dragDelta, updatedInitialPositions);
-
-        const newItems = [...updatedNodes, ...edges];
-
-        if (currentSceneId && scene) {
-            const updatedScene = {
-                ...scene,
-                items: newItems,
-                updatedAt: new Date(),
-            };
-            useItemsStore.setState({ scenes: { ...scenes, [currentSceneId]: updatedScene } });
-        }
-    };
 
     const changeNodeName = (newName: string) => {
         if (!selectedNode) return;
@@ -125,14 +55,11 @@ export function useInspector() {
 
     return {
         shapeType: selectedNode?.shapeType ?? null,
-        positionX: selectedNode?.position.x ?? 0,
-        positionY: selectedNode?.position.y ?? 0,
 
         selectedItem,
         selectedNode,
 
         changeNodeName,
         changeNodeDescription,
-        changeNodesPosition,
     };
 }
