@@ -66,7 +66,7 @@ export function SceneList() {
                             `}
                             onClick={() => handleSelectScene(sceneId)}
                         >
-                            <LandPlot size={16} />
+                            <LandPlot size={16} className="min-w-4" />
 
                             <hr
                                 className={`
