@@ -1,8 +1,13 @@
+'use client';
+
+import { useState, useMemo } from 'react';
+
 import { EmptyState } from '@/components/UI/EmptyState';
 import { CodeBlock } from '@/components/UI/CodeBlock';
+import { KeyFilters } from '@/components/sidebar/KeyFilters';
 
-import { getSelectedItems } from '@/utils/items/getSelectedItems';
 import { useItemsStore } from '@/store/useItemsStore';
+import { getSelectedItems } from '@/utils/items/getSelectedItems';
 
 export const Details = () => {
     const { currentSceneId, scenes, selectedItemIds } = useItemsStore();
@@ -10,7 +15,8 @@ export const Details = () => {
     const scene = currentSceneId ? scenes[currentSceneId] : null;
     const items = scene?.items ?? [];
 
-    const selectedItems = getSelectedItems({ items, selectedItemIds });
+    const selectedItems = useMemo(() => getSelectedItems({ items, selectedItemIds }), [items, selectedItemIds]);
+    const [filteredSelectedItems, setFilteredSelectedItems] = useState(selectedItems);
 
     if (items.length === 0) {
         return <EmptyState message="Создайте хотя бы один элемент" />;
@@ -21,8 +27,12 @@ export const Details = () => {
     }
 
     return (
-        <div className="relative m-1 bg-depth-2 border border-depth-3 rounded-md overflow-y-auto">
-            <CodeBlock data={selectedItems} />
+        <div className="flex flex-col gap-1 overflow-y-auto m-1">
+            <KeyFilters data={selectedItems} onFilterChange={setFilteredSelectedItems} />
+
+            <div className="relative bg-depth-2 border border-depth-3 rounded-md">
+                <CodeBlock data={filteredSelectedItems} />
+            </div>
         </div>
     );
 };
