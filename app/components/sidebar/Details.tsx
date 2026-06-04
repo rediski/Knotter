@@ -27,10 +27,10 @@ export const Details = () => {
     }
 
     return (
-        <div className="flex flex-col gap-1 overflow-y-auto m-1">
+        <div className="flex gap-1 overflow-y-auto m-1 h-full">
             <KeyFilters data={selectedItems} onFilterChange={setFilteredSelectedItems} />
 
-            <div className="relative bg-depth-2 border border-depth-3 rounded-md">
+            <div className="relative bg-depth-2 border border-depth-3 rounded-md w-full h-fit">
                 <CodeBlock data={filteredSelectedItems} />
             </div>
         </div>

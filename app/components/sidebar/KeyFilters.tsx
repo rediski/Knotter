@@ -70,7 +70,7 @@ export function KeyFilters<T extends AnyObject = AnyObject>({ data, onFilterChan
     }, [filteredData]);
 
     return (
-        <div className="flex flex-wrap gap-1 max-h-64 select-none">
+        <div className="flex flex-col gap-1 max-h-64 select-none">
             {allKeys.map((key) => (
                 <label
                     key={key}
