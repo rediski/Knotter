@@ -1,16 +1,18 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import { EmptyState } from '@/components/UI/EmptyState';
 import { CodeBlock } from '@/components/UI/CodeBlock';
 import { KeyFilters } from '@/components/sidebar/KeyFilters';
 
 import { useItemsStore } from '@/store/useItemsStore';
+import { useSidebarStore } from '@/store/useSidebarStore';
 import { getSelectedItems } from '@/utils/items/getSelectedItems';
 
 export const Details = () => {
     const { currentSceneId, scenes, selectedItemIds } = useItemsStore();
+    const { showFilters, toggleShowFilters } = useSidebarStore();
 
     const scene = currentSceneId ? scenes[currentSceneId] : null;
     const items = scene?.items ?? [];
@@ -28,10 +30,10 @@ export const Details = () => {
 
     return (
         <div className="flex gap-1 overflow-y-auto m-1 h-full">
-            <KeyFilters data={selectedItems} onFilterChange={setFilteredSelectedItems} />
+            {showFilters && <KeyFilters data={selectedItems} onFilterChange={setFilteredSelectedItems} />}
 
             <div className="relative bg-depth-2 border border-depth-3 rounded-md w-full h-fit">
-                <CodeBlock data={filteredSelectedItems} />
+                <CodeBlock data={filteredSelectedItems} onToggleFilters={toggleShowFilters} showFilters={showFilters} />
             </div>
         </div>
     );
