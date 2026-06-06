@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowDownToLine, Copy, Check, type LucideIcon } from 'lucide-react';
+import { ArrowDownToLine, Copy, Check, Filter, type LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 
 type Primitive = string | number | boolean | null | undefined;
@@ -13,6 +13,8 @@ interface JsonProps {
 interface CodeBlockProps<T = AnyObject> {
     data: T | null | undefined;
     showActions?: boolean;
+    onToggleFilters?: () => void;
+    showFilters?: boolean;
 }
 
 interface ActionButtonProps {
@@ -91,7 +93,7 @@ const ActionButton = ({ onClick, icon: Icon, label, isSuccess = false }: ActionB
     </button>
 );
 
-export function CodeBlock<T = AnyObject>({ data, showActions = true }: CodeBlockProps<T>) {
+export function CodeBlock<T = AnyObject>({ data, showActions = true, onToggleFilters, showFilters }: CodeBlockProps<T>) {
     if (!data) return <span className="text-json-null">Нет данных</span>;
 
     const [isCopied, setIsCopied] = useState(false);
@@ -134,6 +136,10 @@ export function CodeBlock<T = AnyObject>({ data, showActions = true }: CodeBlock
                 <div className="sticky top-1 z-10 h-0 m-1">
                     <div className="absolute right-0 top-0 flex gap-2 translate-y-1 w-full">
                         <div className="flex ml-auto mr-1 gap-1 w-fit">
+                            {onToggleFilters !== undefined && showFilters !== undefined && (
+                                <ActionButton onClick={onToggleFilters} icon={Filter} label="Фильтры" />
+                            )}
+
                             <ActionButton
                                 onClick={handleCopy}
                                 icon={isCopied ? Check : Copy}
