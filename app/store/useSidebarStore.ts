@@ -15,6 +15,10 @@ export interface SidebarState {
     filterText: Record<string, string>;
     setFilterText: (panelId: string, text: string) => void;
     clearFilterText: (panelId: string) => void;
+
+    showFilters: boolean;
+    setShowFilters: (show: boolean) => void;
+    toggleShowFilters: () => void;
 }
 
 export const useSidebarStore = create<SidebarState>()(
@@ -51,6 +55,10 @@ export const useSidebarStore = create<SidebarState>()(
                     delete newFilterText[panelId];
                     return { filterText: newFilterText };
                 }),
+
+            showFilters: true,
+            setShowFilters: (showFilters) => set({ showFilters }),
+            toggleShowFilters: () => set((state) => ({ showFilters: !state.showFilters })),
         }),
         {
             name: 'sidebar-storage',
@@ -58,6 +66,7 @@ export const useSidebarStore = create<SidebarState>()(
                 sidebarWidth: state.sidebarWidth,
                 sidebarPanels: state.sidebarPanels,
                 filterText: state.filterText,
+                showFilters: state.showFilters,
             }),
         },
     ),
