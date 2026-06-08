@@ -52,7 +52,7 @@ export const HierarchyItem = memo(function HierarchyItem({ filteredNode, index, 
                 `}
             >
                 <div className="flex items-center gap-2 flex-1">
-                    <Box size={16} />
+                    <Box size={16} className={`${isSelected ? 'text-text-accent' : 'text-foreground'}`} />
 
                     <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/10' : 'border-depth-4'}`} />
 
