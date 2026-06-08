@@ -30,7 +30,7 @@ export function SceneList() {
 
     const handleSelectScene = (sceneId: string) => {
         setCurrentSceneId(sceneId);
-        router.push(`/${sceneId}`);
+        window.history.pushState({ path: `/${sceneId}` }, '', `/${sceneId}`);
     };
 
     const handleDeleteClick = (e: React.MouseEvent, sceneId: string) => {
@@ -71,7 +71,7 @@ export function SceneList() {
                             <hr
                                 className={`
                                     h-5 mx-1 border-l
-                                    ${currentSceneId === sceneId ? 'border-bg-accent/10' : 'border-depth-3'}
+                                    ${currentSceneId === sceneId ? 'border-bg-accent/10' : 'border-depth-5'}
                                 `}
                             />
 
