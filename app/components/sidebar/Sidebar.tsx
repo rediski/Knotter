@@ -33,7 +33,7 @@ export const Sidebar = memo(function Sidebar() {
                 <div
                     className={`
                         w-0.5 h-8 group-hover:bg-bg-accent rounded-md
-                        ${isResizingSidebar ? 'bg-bg-accent' : 'bg-depth-3'}
+                        ${isResizingSidebar ? 'bg-bg-accent' : 'bg-depth-7'}
                     `}
                 />
             </div>
