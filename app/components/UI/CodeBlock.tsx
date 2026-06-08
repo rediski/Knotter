@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowDownToLine, Copy, Check, Filter, type LucideIcon } from 'lucide-react';
+import { ArrowDownToLine, Copy, Check, SlidersHorizontal, type LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 
 type Primitive = string | number | boolean | null | undefined;
@@ -20,8 +20,9 @@ interface CodeBlockProps<T = AnyObject> {
 interface ActionButtonProps {
     onClick: () => void;
     icon: LucideIcon;
-    label: string;
+    label?: string;
     isSuccess?: boolean;
+    isActive?: boolean;
 }
 
 function isObject(value: any): value is Record<string, any> {
@@ -81,12 +82,13 @@ function Json({ value }: JsonProps) {
     return <span className="text-gray">unknown</span>;
 }
 
-const ActionButton = ({ onClick, icon: Icon, label, isSuccess = false }: ActionButtonProps) => (
+const ActionButton = ({ onClick, icon: Icon, label = '', isSuccess = false, isActive = false }: ActionButtonProps) => (
     <button
         onClick={onClick}
         className={`
-            flex items-center gap-2 px-3 py-1.25 rounded-md hover:bg-depth-4/80 active:bg-depth-5 cursor-pointer select-none bg-depth-3 border border-depth-4 
+            flex items-center gap-2 px-3 py-1.25 border rounded-md cursor-pointer select-none  
             ${isSuccess ? 'text-green' : 'text-contrast'}
+            ${isActive ? 'bg-bg-accent border-bg-accent text-white' : 'bg-depth-3 hover:bg-depth-4/80 active:bg-depth-5 border-depth-4'}
         `}
     >
         <Icon size={16} /> {label}
@@ -137,7 +139,7 @@ export function CodeBlock<T = AnyObject>({ data, showActions = true, onToggleFil
                     <div className="absolute right-0 top-0 flex gap-2 translate-y-1 w-full">
                         <div className="flex ml-auto mr-1 gap-1 w-fit">
                             {onToggleFilters !== undefined && showFilters !== undefined && (
-                                <ActionButton onClick={onToggleFilters} icon={Filter} label="Фильтры" />
+                                <ActionButton onClick={onToggleFilters} isActive={showFilters} icon={SlidersHorizontal} />
                             )}
 
                             <ActionButton
