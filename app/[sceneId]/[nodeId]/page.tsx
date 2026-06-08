@@ -120,7 +120,7 @@ export default function NodePage() {
                             <Icon
                                 size={96}
                                 className="fill-depth-1"
-                                strokeWidth={openedNode.shapeType === 'point' ? 2 : 1.5}
+                                strokeWidth={openedNode.shapeType === 'point' ? 2.5 : 1.5}
                                 style={{ color: openedNode.color }}
                             />
                         )}
