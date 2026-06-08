@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
-import { CanvasSidebar } from '@/components/sidebar/Sidebar';
+import { Sidebar } from '@/components/sidebar/Sidebar';
 import { ThemeToggle } from '@/components/UI/ThemeToggle';
 import { Breadcrumbs } from '@/components/scene/Breadcrumbs';
 import { SceneList } from '@/components/scene/SceneList';
@@ -38,7 +38,7 @@ export default function CanvasLayout({ children }: { children: ReactNode }) {
                 {children}
             </div>
 
-            <CanvasSidebar />
+            <Sidebar />
         </div>
     );
 }
