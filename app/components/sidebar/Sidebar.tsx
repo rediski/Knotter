@@ -11,7 +11,7 @@ import { useSidebarResize } from '@/components/sidebar/useSidebarResize';
 import { useContextMenu } from '@/hooks/useContextMenu';
 import { useClickOutside } from '@/hooks/useClickOutside';
 
-export const CanvasSidebar = memo(function Sidebar() {
+export const Sidebar = memo(function Sidebar() {
     const panels = useSidebarStore((state) => state.sidebarPanels);
 
     const menu = useContextMenu();
