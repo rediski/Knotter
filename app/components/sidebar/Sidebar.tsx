@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo, useRef } from 'react';
+import { memo, useRef } from 'react';
 
 import { SidebarPanel } from '@/components/sidebar/SidebarPanel';
 import { SidebarContextMenu } from '@/components/sidebar/SidebarContextMenu';
