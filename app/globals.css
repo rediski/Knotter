@@ -113,3 +113,7 @@ html.resizing * {
     cursor: ew-resize !important;
     user-select: none;
 }
+
+[data-theme='dark'] {
+    scrollbar-color: #575759 #2b2b2d;
+}
