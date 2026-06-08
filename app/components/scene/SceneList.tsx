@@ -49,7 +49,7 @@ export function SceneList() {
 
     return (
         <>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 max-h-8">
                 {sceneIds.map((sceneId) => {
                     const scene = scenes[sceneId];
 
