@@ -114,7 +114,7 @@ export default function NodePage() {
                     backgroundSize: '128px 128px',
                 }}
             >
-                <div className="relative pt-84 flex flex-col items-center gap-4 min-w-md w-full h-fit overflow-y-auto shadow">
+                <div className="relative pt-84 flex flex-col items-center gap-4 min-w-md w-full h-fit overflow-y-auto">
                     <div className="ml-px flex items-center justify-center shrink-0">
                         {Icon && (
                             <Icon
