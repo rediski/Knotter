@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo, Fragment, useCallback, useMemo, useState, useEffect } from 'react';
+import React, { memo, useCallback, useMemo, useState, useEffect, useRef } from 'react';
 
 import { EmptyState } from '@/components/UI/EmptyState';
 import { HierarchyItem } from '@/components/sidebar/HierarchyItem';
@@ -13,17 +13,11 @@ import { getRangeSelection } from '@/utils/canvas/getRangeSelection';
 import { moveNodeUp, moveNodeDown } from '@/utils/nodes/moveNode';
 import { deleteSelectedItems } from '@/utils/items/deleteSelectedItems';
 
-import { ArrowBigUp, ArrowBigDown, X, LucideIcon } from 'lucide-react';
-
-interface ActionButton {
-    id: string;
-    icon: LucideIcon;
-    onClick: () => void;
-    disabled: boolean;
-}
-
 export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string }) {
     const [mounted, setMounted] = useState(false);
+    const [draggingId, setDraggingId] = useState<string | null>(null);
+    const [insertPosition, setInsertPosition] = useState<number | null>(null);
+    const listRef = useRef<HTMLUListElement>(null);
 
     const { currentSceneId, scenes, selectedItemIds, setSelectedItemIds } = useItemsStore();
 
@@ -48,6 +42,26 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            const target = e.target as HTMLElement;
+            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+                return;
+            }
+
+            if (e.key === 'Delete' && selectedItemIds.length > 0) {
+                e.preventDefault();
+                deleteSelectedItems();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [selectedItemIds, deleteSelectedItems]);
 
     const deselect = useCallback(
         (e: React.MouseEvent<HTMLUListElement>) => {
@@ -83,20 +97,106 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
         setSelectedItemIds([nodeId]);
     };
 
-    const selectedNodesList = selectedItemIds;
-    const firstSelectedId = selectedNodesList[0];
-    const lastSelectedId = selectedNodesList[selectedItemIds.length - 1];
+    const handleDragStart = (e: React.DragEvent, nodeId: string) => {
+        e.stopPropagation();
 
-    const firstSelectedIndex = firstSelectedId ? filteredNodes.findIndex((node) => node.id === firstSelectedId) : -1;
-    const lastSelectedIndex = lastSelectedId ? filteredNodes.findIndex((node) => node.id === lastSelectedId) : -1;
+        if (!selectedItemIds.includes(nodeId)) {
+            setSelectedItemIds([nodeId]);
+        }
 
-    const handleMoveUp = useCallback(() => {
-        if (selectedItemIds.length === 0 || firstSelectedIndex <= 0) return;
+        setDraggingId(nodeId);
+
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData(
+            'text/plain',
+            JSON.stringify({
+                primaryId: nodeId,
+                selectedIds: selectedItemIds,
+            }),
+        );
+    };
+
+    const handleDragOver = (e: React.DragEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        if (!draggingId || !listRef.current) return;
+
+        const listRect = listRef.current.getBoundingClientRect();
+        const mouseY = e.clientY - listRect.top;
+        const itemHeight = 38;
+
+        const position = Math.floor(mouseY / itemHeight);
+        const clampedPosition = Math.max(0, Math.min(position, filteredNodes.length));
+
+        const currentIndexes = selectedItemIds.map((id) => filteredNodes.findIndex((node) => node.id === id));
+        const minIndex = Math.min(...currentIndexes);
+        const maxIndex = Math.max(...currentIndexes);
+
+        let insertPos: number | null = clampedPosition;
+
+        if (clampedPosition >= minIndex && clampedPosition <= maxIndex + 1) {
+            insertPos = null;
+        }
+
+        setInsertPosition(insertPos);
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        if (!draggingId || insertPosition === null) {
+            setDraggingId(null);
+            setInsertPosition(null);
+            return;
+        }
+
+        let selectedIds = [draggingId];
+
+        try {
+            const rawData = e.dataTransfer.getData('text/plain');
+            const data = JSON.parse(rawData);
+
+            if (data.selectedIds && Array.isArray(data.selectedIds)) {
+                selectedIds = data.selectedIds;
+            }
+        } catch (error) {
+            console.warn('Failed to parse drag data:', error);
+        }
+
+        const currentIndexes = selectedIds.map((id) => filteredNodes.findIndex((node) => node.id === id));
+        const minIndex = Math.min(...currentIndexes);
+        const selectedCount = selectedIds.length;
+
+        if (currentIndexes.includes(-1) || minIndex === insertPosition) {
+            setDraggingId(null);
+            setInsertPosition(null);
+            return;
+        }
 
         let newItems = items;
 
-        for (const nodeId of selectedItemIds) {
-            newItems = moveNodeUp(newItems, nodeId);
+        if (minIndex < insertPosition) {
+            for (let i = selectedCount - 1; i >= 0; i--) {
+                const nodeId = selectedIds[i];
+                const currentIndex = currentIndexes[i];
+
+                for (let j = currentIndex; j < insertPosition; j++) {
+                    newItems = moveNodeDown(newItems, nodeId);
+                }
+            }
+        }
+
+        if (minIndex > insertPosition) {
+            for (let i = 0; i < selectedCount; i++) {
+                const nodeId = selectedIds[i];
+                const currentIndex = currentIndexes[i];
+
+                for (let j = currentIndex; j > insertPosition; j--) {
+                    newItems = moveNodeUp(newItems, nodeId);
+                }
+            }
         }
 
         if (currentSceneId) {
@@ -107,82 +207,55 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
             };
             useItemsStore.setState({ scenes: { ...scenes, [currentSceneId]: updatedScene } });
         }
-    }, [items, currentSceneId, scenes, selectedItemIds, firstSelectedIndex, scene]);
 
-    const handleMoveDown = useCallback(() => {
-        if (selectedItemIds.length === 0 || lastSelectedIndex >= filteredNodes.length - 1) return;
+        setDraggingId(null);
+        setInsertPosition(null);
+    };
 
-        let newItems = items;
-        const reversedIds = [...selectedItemIds].reverse();
-
-        for (const nodeId of reversedIds) {
-            newItems = moveNodeDown(newItems, nodeId);
-        }
-
-        if (currentSceneId) {
-            const updatedScene = {
-                ...scene!,
-                items: newItems,
-                updatedAt: new Date(),
-            };
-            useItemsStore.setState({ scenes: { ...scenes, [currentSceneId]: updatedScene } });
-        }
-    }, [items, currentSceneId, scenes, selectedItemIds, lastSelectedIndex, filteredNodes.length, scene]);
-
-    const actionButtons: ActionButton[] = [
-        {
-            id: 'move-up',
-            icon: ArrowBigUp,
-            onClick: handleMoveUp,
-            disabled: selectedItemIds.length === 0 || firstSelectedIndex <= 0,
-        },
-        {
-            id: 'move-down',
-            icon: ArrowBigDown,
-            onClick: handleMoveDown,
-            disabled: selectedItemIds.length === 0 || lastSelectedIndex >= filteredNodes.length - 1,
-        },
-        {
-            id: 'delete',
-            icon: X,
-            onClick: deleteSelectedItems,
-            disabled: selectedItemIds.length === 0,
-        },
-    ];
+    const handleDragEnd = () => {
+        setDraggingId(null);
+        setInsertPosition(null);
+    };
 
     if (!mounted) {
         return <div className="flex flex-col h-full" />;
     }
 
-    const shouldShowActions = filteredNodes.length !== 0;
-
     return (
         <div className="flex flex-col h-full overflow-y-auto">
-            {shouldShowActions && (
-                <div className="flex gap-1 m-1">
-                    {actionButtons.map((button) => (
-                        <button
-                            key={button.id}
-                            onClick={button.onClick}
-                            disabled={button.disabled}
-                            className="flex-1 flex items-center justify-center gap-1 px-2 py-1.75 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
-                        >
-                            <button.icon size={16} strokeWidth={3} fill="currentColor" />
-                        </button>
-                    ))}
-                </div>
-            )}
-
-            <ul className="flex flex-col gap-1 mx-1 overflow-y-auto h-full" onClick={deselect}>
+            <ul
+                ref={listRef}
+                className="flex flex-col gap-1 m-1 overflow-y-auto h-full relative"
+                onClick={deselect}
+                onDragEnd={handleDragEnd}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+            >
                 {filteredNodes.length > 0 ? (
-                    filteredNodes.map((filteredNode, index) => (
-                        <HierarchyItem
-                            key={filteredNode.id}
-                            filteredNode={filteredNode}
-                            index={index}
-                            selectItem={selectItem}
-                        />
-                    ))
+                    <>
+                        {insertPosition !== null && draggingId && (
+                            <div
+                                className="absolute left-0 right-0 h-0.5 bg-bg-accent rounded-full z-20"
+                                style={{
+                                    top: `${insertPosition * 39}px`,
+                                    transition: 'top 0.05s ease-out',
+                                }}
+                            />
+                        )}
+
+                        {filteredNodes.map((filteredNode, index) => (
+                            <div key={filteredNode.id} className="relative">
+                                <HierarchyItem
+                                    filteredNode={filteredNode}
+                                    index={index}
+                                    selectItem={selectItem}
+                                    isSelected={selectedItemIds.includes(filteredNode.id)}
+                                    handleDragStart={handleDragStart}
+                                    selectedItemIds={selectedItemIds}
+                                />
+                            </div>
+                        ))}
+                    </>
                 ) : (
                     <EmptyState
                         message={

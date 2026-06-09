@@ -7,8 +7,6 @@ import type { Node } from '@/_core/_/canvas.types';
 
 import { EditableName } from '@/components/UI/EditableName';
 
-import { useItemsStore } from '@/store/useItemsStore';
-
 import { openNodeTab } from '@/utils/nodes/openNodeTab';
 
 import { Box } from 'lucide-react';
@@ -18,37 +16,38 @@ interface HierarchyItemProps {
     filteredNode: Node;
     index: number;
     selectItem: (id: string, ctrlKey: boolean, shiftKey: boolean) => void;
+    isSelected: boolean;
+    handleDragStart: (e: React.DragEvent, nodeId: string) => void;
+    selectedItemIds: string[];
 }
 
-export const HierarchyItem = memo(function HierarchyItem({ filteredNode, index, selectItem }: HierarchyItemProps) {
+export const HierarchyItem = memo(function HierarchyItem({
+    filteredNode,
+    index,
+    selectItem,
+    isSelected,
+    handleDragStart,
+    selectedItemIds,
+}: HierarchyItemProps) {
     const router = useRouter();
 
-    const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
-    const currentSceneId = useItemsStore((state) => state.currentSceneId);
-    const scenes = useItemsStore((state) => state.scenes);
-
-    const isSelected = selectedItemIds.includes(filteredNode.id);
-
-    const scene = currentSceneId ? scenes[currentSceneId] : null;
-    const currentItem = scene?.items.find((item) => item.id === filteredNode.id && item.kind === 'node');
-    const actualName = (currentItem as Node & { name: string })?.name ?? filteredNode.name;
-
+    const actualName = filteredNode.name;
     const orderNumber = index + 1;
+    const isPartOfSelectionGroup = isSelected && selectedItemIds.length > 1;
 
     return (
         <li
-            className="relative select-none cursor-pointer"
+            className="relative select-none cursor-grab"
             onClick={(e: MouseEvent) => selectItem(filteredNode.id, e.ctrlKey, e.shiftKey)}
             onDoubleClick={() => openNodeTab(filteredNode.id, router)}
+            onDragStart={(e) => handleDragStart(e, filteredNode.id)}
+            draggable={true}
         >
             <div
                 className={`
                     w-full px-3 h-9 rounded-md outline-none tabular-nums flex items-center
-                    ${
-                        isSelected
-                            ? 'bg-bg-accent/10 border border-bg-accent/10 focus-visible:bg-bg-accent/15'
-                            : 'bg-depth-2 hover:bg-depth-3 border border-depth-3 focus-visible:bg-depth-3'
-                    }
+                    ${isSelected ? 'bg-bg-accent/10 border border-bg-accent/10' : 'bg-depth-2 hover:bg-depth-3 border border-depth-3'}
+                    ${isPartOfSelectionGroup && 'border-bg-accent/20'}
                 `}
             >
                 <div className="flex items-center gap-2 flex-1">
