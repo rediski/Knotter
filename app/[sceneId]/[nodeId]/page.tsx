@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 import { NODE_SHAPES } from '@/_core/_/nodeShapeType';
 
@@ -24,6 +24,7 @@ import { useItemsStore } from '@/store/useItemsStore';
 export default function NodePage() {
     const params = useParams();
     const nodeId = params.nodeId as string;
+    const router = useRouter();
 
     const { currentSceneId, scenes, currentNodeId, setCurrentNodeIds } = useItemsStore();
 
@@ -32,6 +33,30 @@ export default function NodePage() {
             setCurrentNodeIds(nodeId);
         }
     }, [nodeId, currentNodeId, setCurrentNodeIds]);
+
+    useEffect(() => {
+        const unsubscribe = useItemsStore.subscribe((state) => {
+            const currentNodeId = state.currentNodeId;
+            const currentSceneId = state.currentSceneId;
+
+            if (!currentNodeId || currentSceneId) {
+                const scenes = state.scenes;
+                const scene = currentSceneId ? scenes[currentSceneId] : null;
+                const items = scene?.items ?? [];
+                const nodes = getNodes(items);
+
+                const nodeExists = nodes.find((item) => item.id === nodeId);
+
+                if (!nodeExists) {
+                    if (currentSceneId) {
+                        router.push(`/${currentSceneId}/`);
+                    }
+                }
+            }
+        });
+
+        return () => unsubscribe();
+    }, [nodeId, router]);
 
     const scene = currentSceneId ? scenes[currentSceneId] : null;
     const items = scene?.items ?? [];
@@ -114,7 +139,7 @@ export default function NodePage() {
                     backgroundSize: '128px 128px',
                 }}
             >
-                <div className="relative pt-84 flex flex-col items-center gap-4 min-w-md w-full h-fit overflow-y-auto">
+                <div className="relative pt-84 flex flex-col items-center gap-4 min-w-md w-full h-fit overflow-y-auto shadow">
                     <div className="ml-px flex items-center justify-center shrink-0">
                         {Icon && (
                             <Icon
