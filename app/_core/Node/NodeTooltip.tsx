@@ -13,7 +13,7 @@ export function NodeTooltip({ node, position, zoomLevel, isSelected }: NodeToolt
     return (
         <div
             className={`
-                absolute flex flex-col gap-px px-3 py-1 rounded-xl text-white text-xs whitespace-nowrap cursor-default select-none
+                absolute flex flex-col gap-px px-3 py-1 border rounded-xl text-white text-xs whitespace-nowrap cursor-default select-none 
            
             `}
             style={{
@@ -22,6 +22,7 @@ export function NodeTooltip({ node, position, zoomLevel, isSelected }: NodeToolt
                 transform: `translateX(-50%) translateY(-100%) scale(${zoomLevel})`,
                 transformOrigin: 'bottom center',
                 backgroundColor: node.color,
+                borderColor: node.color,
                 color: node.color === '#ededed' ? 'black' : 'white',
             }}
         >
