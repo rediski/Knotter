@@ -42,6 +42,7 @@ export function createNode(): Node | null {
     const node: Node = {
         kind: 'node',
         id: uuidv4(),
+        sceneId: currentSceneId,
         name,
         description: '',
         shapeType: 'point',

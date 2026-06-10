@@ -17,6 +17,7 @@ export interface Scene {
 export interface Node {
     kind: 'node';
     id: string;
+    sceneId: string;
     name: string;
     description: string;
     shapeType: NodeShapeType;
