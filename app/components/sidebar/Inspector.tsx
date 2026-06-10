@@ -21,8 +21,9 @@ import { ShapeButtons } from '@/components/sidebar/ShapeButtons';
 import { getNodes } from '@/utils/nodes/getNodes';
 import { getIncomingEdges } from '@/utils/edges/getIncomingEdges';
 import { getOutgoingEdges } from '@/utils/edges/getOutgoingEdges';
-import { changeColor } from '@/utils/items/changeColor';
+import { changeNodePosition } from '@/utils/nodes/changeNodePosition';
 import { changeShapeType } from '@/utils/nodes/changeShapeType';
+import { changeColor } from '@/utils/items/changeColor';
 import { deleteSelectedItemsById } from '@/utils/items/deleteSelectedItems';
 
 import { Box, Link2Icon, X, ArrowRight } from 'lucide-react';
@@ -30,6 +31,7 @@ import { Box, Link2Icon, X, ArrowRight } from 'lucide-react';
 const FIELD_TITLES = {
     NAME: 'Название',
     DESCRIPTION: 'Описание',
+    POSITION: 'Позиция',
     SHAPE: 'Форма',
     COLOR: 'Цвет',
     TRANSFORM: 'Трансформация',
@@ -133,14 +135,14 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
 
     const showName = shouldShowField(FIELD_TITLES.NAME);
     const showDescription = shouldShowField(FIELD_TITLES.DESCRIPTION);
+    const showPosition = shouldShowField(FIELD_TITLES.POSITION);
     const showShape = shouldShowField(FIELD_TITLES.SHAPE);
     const showColor = shouldShowField(FIELD_TITLES.COLOR);
-    const showPosition = shouldShowField(FIELD_TITLES.TRANSFORM);
     const showEdgeFrom = shouldShowField(FIELD_TITLES.EDGE_FROM);
     const showEdgeTo = shouldShowField(FIELD_TITLES.EDGE_TO);
 
     const hasVisibleFields =
-        showName || showDescription || showShape || showColor || showPosition || showEdgeFrom || showEdgeTo;
+        showName || showDescription || showPosition || showShape || showColor || showEdgeFrom || showEdgeTo;
 
     if (filterText && !hasVisibleFields) {
         return (
@@ -177,6 +179,52 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                         </div>
                     )}
 
+                    {showPosition && (
+                        <Dropdown
+                            title={FIELD_TITLES.POSITION}
+                            isOpen={isDropdownOpen(2)}
+                            onToggle={() => toggleDropdown(2)}
+                        >
+                            <div className="flex flex-col gap-1">
+                                <div className="flex items-center bg-depth-3 border border-depth-4 rounded-md">
+                                    <span className="text-sm text-center min-w-8 border-r border-depth-5">X</span>
+
+                                    <Input
+                                        type="number"
+                                        value={selectedItem.position.x.toString()}
+                                        onChange={(value) => {
+                                            const newX = value === '' ? 0 : Number(value);
+                                            if (selectedNode) {
+                                                changeNodePosition(selectedNode.id, { ...selectedNode.position, x: newX });
+                                            }
+                                        }}
+                                        className="bg-depth-3 border-depth-4"
+                                        allowNegative={true}
+                                        allowDecimal={true}
+                                    />
+                                </div>
+
+                                <div className="flex items-center bg-depth-3 border border-depth-4 rounded-md">
+                                    <span className="text-sm text-center min-w-8 border-r border-depth-5">Y</span>
+
+                                    <Input
+                                        type="number"
+                                        value={selectedItem.position.y.toString()}
+                                        onChange={(value) => {
+                                            const newY = value === '' ? 0 : Number(value);
+                                            if (selectedNode) {
+                                                changeNodePosition(selectedNode.id, { ...selectedNode.position, y: newY });
+                                            }
+                                        }}
+                                        className="bg-depth-3 border-depth-4"
+                                        allowNegative={true}
+                                        allowDecimal={true}
+                                    />
+                                </div>
+                            </div>
+                        </Dropdown>
+                    )}
+
                     {showShape && (
                         <Dropdown title={FIELD_TITLES.SHAPE} isOpen={isDropdownOpen(1)} onToggle={() => toggleDropdown(1)}>
                             <ShapeButtons
@@ -186,18 +234,34 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                         </Dropdown>
                     )}
 
+                    {showColor && (
+                        <Dropdown
+                            title={FIELD_TITLES.COLOR}
+                            isOpen={isDropdownOpen(1.5)}
+                            onToggle={() => toggleDropdown(1.5)}
+                        >
+                            <ColorPicker color={selectedItem.color} onColorChange={(newColor) => changeColor(newColor)} />
+                        </Dropdown>
+                    )}
+
                     {showEdgeFrom && renderEdgeList(incomingEdges, FIELD_TITLES.EDGE_FROM, 3, true)}
                     {showEdgeTo && renderEdgeList(outgoingEdges, FIELD_TITLES.EDGE_TO, 4, false)}
                 </div>
             )}
 
-            <div className="flex flex-col m-1">
-                {showColor && (
-                    <Dropdown title={FIELD_TITLES.COLOR} isOpen={isDropdownOpen(1.5)} onToggle={() => toggleDropdown(1.5)}>
-                        <ColorPicker color={selectedItem.color} onColorChange={(newColor) => changeColor(newColor)} />
-                    </Dropdown>
-                )}
-            </div>
+            {selectedItem.kind === 'edge' && (
+                <div className="flex flex-col m-1">
+                    {showColor && (
+                        <Dropdown
+                            title={FIELD_TITLES.COLOR}
+                            isOpen={isDropdownOpen(1.5)}
+                            onToggle={() => toggleDropdown(1.5)}
+                        >
+                            <ColorPicker color={selectedItem.color} onColorChange={(newColor) => changeColor(newColor)} />
+                        </Dropdown>
+                    )}
+                </div>
+            )}
         </div>
     );
 });
