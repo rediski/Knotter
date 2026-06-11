@@ -37,6 +37,8 @@ const FIELD_TITLES = {
     TRANSFORM: 'Трансформация',
     EDGE_FROM: 'Входящие связи',
     EDGE_TO: 'Исходящие связи',
+    EDGE_FROM_NODE: 'Начальный узел',
+    EDGE_TO_NODE: 'Конечный узел',
 } as const;
 
 export const Inspector = memo(function Inspector({ panelId }: { panelId?: string }) {
@@ -91,15 +93,15 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                                 <div className="flex items-center gap-1.5 flex-1">
                                     {isIncoming ? (
                                         <>
-                                            <span className="font-medium">{connectedNodeName}</span>
-                                            <ArrowRight size={14} className="text-text-muted" />
-                                            <span className="text-text-muted">{selectedNode?.name}</span>
+                                            <span>{connectedNodeName}</span>
+                                            <ArrowRight size={14} />
+                                            <span>{selectedNode?.name}</span>
                                         </>
                                     ) : (
                                         <>
-                                            <span className="font-medium">{selectedNode?.name}</span>
-                                            <ArrowRight size={14} className="text-text-muted" />
-                                            <span className="text-text-muted">{connectedNodeName}</span>
+                                            <span>{selectedNode?.name}</span>
+                                            <ArrowRight size={14} />
+                                            <span>{connectedNodeName}</span>
                                         </>
                                     )}
                                 </div>
@@ -140,9 +142,19 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     const showColor = shouldShowField(FIELD_TITLES.COLOR);
     const showEdgeFrom = shouldShowField(FIELD_TITLES.EDGE_FROM);
     const showEdgeTo = shouldShowField(FIELD_TITLES.EDGE_TO);
+    const showEdgeFromNode = shouldShowField(FIELD_TITLES.EDGE_FROM_NODE);
+    const showEdgeToNode = shouldShowField(FIELD_TITLES.EDGE_TO_NODE);
 
     const hasVisibleFields =
-        showName || showDescription || showPosition || showShape || showColor || showEdgeFrom || showEdgeTo;
+        showName ||
+        showDescription ||
+        showPosition ||
+        showShape ||
+        showColor ||
+        showEdgeFrom ||
+        showEdgeTo ||
+        showEdgeFromNode ||
+        showEdgeToNode;
 
     if (filterText && !hasVisibleFields) {
         return (
@@ -250,7 +262,41 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
             )}
 
             {selectedItem.kind === 'edge' && (
-                <div className="flex flex-col m-1">
+                <div className="flex flex-col m-1 gap-1">
+                    {showEdgeFromNode && (
+                        <Dropdown
+                            title={FIELD_TITLES.EDGE_FROM_NODE}
+                            isOpen={isDropdownOpen(5)}
+                            onToggle={() => toggleDropdown(5)}
+                        >
+                            <div
+                                onClick={() => setSelectedItemIds([selectedItem.from])}
+                                className="flex items-center gap-2 text-sm px-3 py-2 rounded-md cursor-pointer group bg-depth-3 hover:bg-depth-4 border border-depth-4 text-contrast"
+                            >
+                                <Link2Icon size={16} />
+                                <div className="border-l h-5 border-depth-5" />
+                                <span>{nodes.find((node) => node.id === selectedItem.from)?.name}</span>
+                            </div>
+                        </Dropdown>
+                    )}
+
+                    {showEdgeToNode && (
+                        <Dropdown
+                            title={FIELD_TITLES.EDGE_TO_NODE}
+                            isOpen={isDropdownOpen(6)}
+                            onToggle={() => toggleDropdown(6)}
+                        >
+                            <div
+                                onClick={() => setSelectedItemIds([selectedItem.to])}
+                                className="flex items-center gap-2 text-sm px-3 py-2 rounded-md cursor-pointer group bg-depth-3 hover:bg-depth-4 border border-depth-4 text-contrast"
+                            >
+                                <Link2Icon size={16} />
+                                <div className="border-l h-5 border-depth-5" />
+                                <span>{nodes.find((node) => node.id === selectedItem.to)?.name}</span>
+                            </div>
+                        </Dropdown>
+                    )}
+
                     {showColor && (
                         <Dropdown
                             title={FIELD_TITLES.COLOR}
