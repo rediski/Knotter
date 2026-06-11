@@ -10,7 +10,7 @@ export function MobileFallback({ isMobile }: { isMobile: boolean | null }) {
                 <div className="flex flex-col items-center gap-2">
                     <LoaderCircle size={24} className="animate-spin" />
 
-                    <p className="text-text-muted">Проверяем размеры экрана...</p>
+                    <p>Проверяем размеры экрана...</p>
                 </div>
             </div>
         );
