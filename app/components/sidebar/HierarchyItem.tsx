@@ -57,7 +57,7 @@ export const HierarchyItem = memo(function HierarchyItem({
 
                     <EditableName name={actualName} isSelected={isSelected} onChange={changeName} />
 
-                    <span suppressHydrationWarning className="ml-auto text-xs text-gray tabular-nums">
+                    <span className={`ml-auto text-xs tabular-nums ${isSelected ? 'text-text-accent' : 'text-foreground'}`}>
                         #{orderNumber}
                     </span>
                 </div>
