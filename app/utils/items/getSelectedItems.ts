@@ -1,24 +1,20 @@
-import type { CanvasItem, Position } from '@/_core/_/canvas.types';
-import type { SelectedItemsParams } from '@/_core/_/items.types';
+import type { CanvasItem } from '@/_core/_/canvas.types';
+import { useItemsStore } from '@/store/useItemsStore';
 
-export const getSelectedItems = ({ items, selectedItemIds }: SelectedItemsParams): CanvasItem[] => {
+export const getSelectedItems = (): CanvasItem[] => {
+    const { currentSceneId, scenes, selectedItemIds } = useItemsStore();
+
+    const scene = currentSceneId ? scenes[currentSceneId] : null;
+    const items = scene?.items ?? [];
+
     const selectedIdsSet = new Set(selectedItemIds);
     const selectedItems = items.filter((item) => selectedIdsSet.has(item.id));
 
     return selectedItems;
 };
 
-export function getSelectedNodesPositions({ items, selectedItemIds }: SelectedItemsParams): Map<string, Position> {
-    const selectedItems = getSelectedItems({ items, selectedItemIds });
-    const positions = new Map(
-        selectedItems.filter((item) => item.kind === 'node').map((item) => [item.id, { ...item.position }]),
-    );
-
-    return positions;
-}
-
-export const getSelectedItem = ({ items, selectedItemIds }: SelectedItemsParams): CanvasItem | null => {
-    const selectedItems = getSelectedItems({ items, selectedItemIds });
+export const getSelectedItem = (): CanvasItem | null => {
+    const selectedItems = getSelectedItems();
 
     return selectedItems[0] || null;
 };

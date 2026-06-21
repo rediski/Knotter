@@ -1,22 +1,21 @@
 'use client';
 
-import type { Node } from '@/_core/_/canvas.types';
-
 import { useItemsStore } from '@/store/useItemsStore';
 
 import { getSelectedItem } from '@/utils/items/getSelectedItems';
 import { getSelectedNode } from '@/utils/nodes/getSelectedNodes';
+
 import { getNodes } from '@/utils/nodes/getNodes';
 import { getEdges } from '@/utils/edges/getEdges';
 
 export function useInspector() {
-    const { currentSceneId, scenes, selectedItemIds } = useItemsStore();
+    const { currentSceneId, scenes } = useItemsStore();
 
     const scene = currentSceneId ? scenes[currentSceneId] : null;
     const items = scene?.items ?? [];
 
-    const selectedItem = getSelectedItem({ items, selectedItemIds });
-    const selectedNode = getSelectedNode({ items, selectedItemIds }) as Node | null;
+    const selectedItem = getSelectedItem();
+    const selectedNode = getSelectedNode();
 
     const nodes = getNodes(items);
     const edges = getEdges(items);

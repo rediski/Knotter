@@ -17,7 +17,8 @@ export const Details = () => {
     const scene = currentSceneId ? scenes[currentSceneId] : null;
     const items = scene?.items ?? [];
 
-    const selectedItems = useMemo(() => getSelectedItems({ items, selectedItemIds }), [items, selectedItemIds]);
+    const selectedItems = getSelectedItems();
+
     const [filteredSelectedItems, setFilteredSelectedItems] = useState(selectedItems);
 
     if (items.length === 0) {
