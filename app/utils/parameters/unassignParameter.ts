@@ -3,14 +3,14 @@ import { useItemsStore } from '@/store/useItemsStore';
 import { getSelectedNode } from '@/utils/nodes/getSelectedNodes';
 
 export const unassignParameter = (parameterId: string) => {
-    const { currentSceneId, scenes, selectedItemIds, parameters: allParameters } = useItemsStore.getState();
+    const { currentSceneId, scenes, parameters: allParameters } = useItemsStore.getState();
 
     if (!currentSceneId) return;
 
     const scene = scenes[currentSceneId];
     const items = scene?.items ?? [];
 
-    const node = getSelectedNode({ items, selectedItemIds });
+    const node = getSelectedNode();
 
     if (!node) return;
 

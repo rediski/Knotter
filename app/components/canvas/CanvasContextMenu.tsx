@@ -41,7 +41,7 @@ export const CanvasContextMenu = memo(function CanvasContextMenu({ isOpen, posit
     useClickOutside(menuRef, closeMenu);
 
     const handleOpenTab = () => {
-        const selectedNodesIds = getSelectedNodesIds({ items, selectedItemIds });
+        const selectedNodesIds = getSelectedNodesIds();
 
         if (selectedNodesIds.length > 0) {
             openNodeTab(selectedNodesIds[0], router);

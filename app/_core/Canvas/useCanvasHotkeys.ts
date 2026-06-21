@@ -132,10 +132,7 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             }
 
             if (e.code === 'Enter') {
-                const { currentSceneId, scenes, selectedItemIds } = useItemsStore.getState();
-                const scene = currentSceneId ? scenes[currentSceneId] : null;
-                const items = scene?.items ?? [];
-                const selectedNodesIds = getSelectedNodesIds({ items, selectedItemIds });
+                const selectedNodesIds = getSelectedNodesIds();
 
                 if (selectedNodesIds.length > 0) {
                     openNodeTab(selectedNodesIds[0], router);

@@ -96,14 +96,10 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
 
     const onMouseUp = useCallback(() => {
         const refsState = useCanvasRefsStore.getState();
-        const { currentSceneId, scenes, selectedItemIds } = useItemsStore.getState();
 
         const initialNodePositions = refsState.initialNodePositions;
 
-        const scene = currentSceneId ? scenes[currentSceneId] : null;
-        const items = scene?.items ?? [];
-
-        const selectedNodes = getSelectedNodes({ items, selectedItemIds });
+        const selectedNodes = getSelectedNodes();
 
         const changedNodes = selectedNodes.filter((node) => {
             if (node.kind !== 'node') return null;
