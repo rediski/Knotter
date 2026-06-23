@@ -8,7 +8,6 @@ import { EmptyState } from '@/components/UI/EmptyState';
 import { Input } from '@/components/UI/Input';
 import { Textarea } from '@/components/UI/Textarea';
 
-import { useInspector } from '@/components/sidebar/useInspector';
 import { useItemsStore } from '@/store/useItemsStore';
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { useDropdownStore } from '@/store/useDropdownStore';
@@ -19,8 +18,12 @@ import { ColorPicker } from '@/components/sidebar/ColorPicker';
 import { ShapeButtons } from '@/components/sidebar/ShapeButtons';
 
 import { getNodes } from '@/utils/nodes/getNodes';
+import { getSelectedItem } from '@/utils/items/getSelectedItems';
+import { getSelectedNode } from '@/utils/nodes/getSelectedNodes';
 import { getIncomingEdges } from '@/utils/edges/getIncomingEdges';
 import { getOutgoingEdges } from '@/utils/edges/getOutgoingEdges';
+import { changeNodeName } from '@/utils/nodes/changeNodeName';
+import { changeNodeDescription } from '@/utils/nodes/changeNodeDescription';
 import { changeNodePosition } from '@/utils/nodes/changeNodePosition';
 import { changeShapeType } from '@/utils/nodes/changeShapeType';
 import { changeColor } from '@/utils/items/changeColor';
@@ -42,15 +45,8 @@ const FIELD_TITLES = {
 } as const;
 
 export const Inspector = memo(function Inspector({ panelId }: { panelId?: string }) {
-    const {
-        shapeType,
-
-        selectedItem,
-        selectedNode,
-
-        changeNodeName,
-        changeNodeDescription,
-    } = useInspector();
+    const selectedItem = getSelectedItem();
+    const selectedNode = getSelectedNode();
 
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
 
@@ -240,7 +236,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                     {showShape && (
                         <Dropdown title={FIELD_TITLES.SHAPE} isOpen={isDropdownOpen(1)} onToggle={() => toggleDropdown(1)}>
                             <ShapeButtons
-                                shapeType={shapeType}
+                                shapeType={selectedNode?.shapeType ?? null}
                                 onTypeChange={(newShapeType) => changeShapeType(newShapeType)}
                             />
                         </Dropdown>
