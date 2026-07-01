@@ -56,13 +56,8 @@ export function useCanvasInteraction({ containerRef, canvasRef }: useCanvasInter
 
             const isTouchpadPan = pan.handleWheelForTouchpad(e);
 
-            if (isTouchpadPan) {
-                e.preventDefault();
-            }
-
-            if (!isTouchpadPan) {
-                scroll(e);
-            }
+            if (isTouchpadPan) e.preventDefault();
+            if (!isTouchpadPan) scroll(e);
         };
 
         container.addEventListener('mousedown', handleMouseDown);
