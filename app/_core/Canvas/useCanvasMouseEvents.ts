@@ -18,13 +18,16 @@ import { startDragging, stopDragging } from '@/utils/items/dragItems';
 import { addToHistory } from '@/utils/history/historyManager';
 
 export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | null>) {
+    const itemsState = useItemsStore();
+    const refsState = useCanvasRefsStore();
+
     const onMouseDown = useCallback(
         (e: MouseEvent) => {
             if (!canvasRef.current) return;
 
             const isCanvasUnderCursor = findCanvasUnderCursor(e, canvasRef.current);
 
-            const { tempEdge, setTempEdge } = useItemsStore.getState();
+            const { tempEdge, setTempEdge } = itemsState;
 
             if (tempEdge && isCanvasUnderCursor) {
                 setTempEdge(null);
@@ -36,14 +39,12 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             handleClickOnItem(e, isCanvasUnderCursor);
             startDragging(e, canvasRef);
         },
-        [canvasRef],
+        [canvasRef, itemsState],
     );
 
     const onMouseMove = useCallback(
         (e: MouseEvent) => {
             if (!canvasRef.current) return;
-
-            const refsState = useCanvasRefsStore.getState();
 
             const mousePosition = refsState.mousePosition;
             const isPanning = refsState.isPanning;
@@ -51,10 +52,9 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             const dragStartMouse = refsState.dragStartMouse;
             const initialNodePositions = refsState.initialNodePositions;
 
-            const { tempEdge, currentSceneId, scenes, setScenes } = useItemsStore.getState();
+            const { tempEdge, currentSceneId, scenes, setScenes } = itemsState;
 
             const scene = currentSceneId ? scenes[currentSceneId] : null;
-            const items = scene?.items ?? [];
 
             const mousePos = getMousePosition(e, canvasRef.current);
 
@@ -69,9 +69,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             const hasNodesToMove = initialNodePositions.current.size > 0;
             const isCurrentlyPanning = isPanning?.current;
 
-            if (!isLeftMouseButtonPressed || isCurrentlyPanning || !hasNodesToMove) {
-                return;
-            }
+            if (!isLeftMouseButtonPressed || isCurrentlyPanning || !hasNodesToMove) return;
 
             isDragging.current = true;
 
@@ -88,23 +86,22 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
                     items: newItems,
                     updatedAt: new Date(),
                 };
+
                 setScenes({ ...scenes, [currentSceneId]: updatedScene });
             }
         },
-        [canvasRef],
+        [canvasRef, refsState, itemsState],
     );
 
     const onMouseUp = useCallback(() => {
-        const refsState = useCanvasRefsStore.getState();
-
         const initialNodePositions = refsState.initialNodePositions;
-
         const selectedNodes = getSelectedNodes();
 
         const changedNodes = selectedNodes.filter((node) => {
             if (node.kind !== 'node') return null;
 
             const initialPos = initialNodePositions.current.get(node.id);
+
             return initialPos && (initialPos.x !== node.position.x || initialPos.y !== node.position.y);
         });
 
@@ -116,7 +113,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
         }
 
         stopDragging();
-    }, []);
+    }, [refsState]);
 
     return { onMouseDown, onMouseMove, onMouseUp };
 }
