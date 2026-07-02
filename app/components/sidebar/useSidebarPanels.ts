@@ -29,10 +29,19 @@ export const useSidebarPanels = () => {
         setSidebarPanels(newPanels);
     };
 
+    const movePanelUp = (canMoveUp: boolean, index: number) => {
+        if (canMoveUp) movePanel(index, index - 1);
+    };
+
+    const movePanelDown = (canMoveDown: boolean, index: number) => {
+        if (canMoveDown) movePanel(index, index + 1);
+    };
+
     return {
         addPanel,
         removePanel,
         setPanelType,
-        movePanel,
+        movePanelUp,
+        movePanelDown,
     };
 };
