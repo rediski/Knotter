@@ -14,13 +14,12 @@ export function useCanvasRenderer(canvasRef: RefObject<HTMLCanvasElement | null>
     const renderCanvas = useCallback(() => {
         const canvas = canvasRef.current;
 
-        if (canvas) {
-            drawCanvas(canvas);
-        }
+        if (canvas) drawCanvas(canvas);
     }, [canvasRef]);
 
     const initializeCanvasOffset = useCallback(() => {
         const canvas = canvasRef.current;
+
         if (!canvas || isInitialOffsetSet) return;
 
         const rect = canvas.getBoundingClientRect();

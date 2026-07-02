@@ -97,9 +97,7 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             const isShift = e.shiftKey;
             const isCopyPaste = key === 'c' || key === 'с' || key === 'v' || key === 'м';
 
-            if (hasSelectedText && isCtrl && isCopyPaste) {
-                return;
-            }
+            if (hasSelectedText && isCtrl && isCopyPaste) return;
 
             if (isCtrl && isShift && CTRL_SHIFT_MAP[key]) {
                 e.preventDefault();
