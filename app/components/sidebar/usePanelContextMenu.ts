@@ -4,8 +4,6 @@ import { useState, useCallback, useRef, RefObject } from 'react';
 
 import type { SidebarPanel } from '@/_core/_/sidebarPanel';
 
-import { useSidebarStore } from '@/store/useSidebarStore';
-import { useSidebarPanels } from '@/components/sidebar/useSidebarPanels';
 import { useClickOutside } from '@/hooks/useClickOutside';
 
 let activeMenuId: string | null = null;
@@ -17,9 +15,6 @@ interface UsePanelContextMenuParams {
 }
 
 export function usePanelContextMenu({ panel, panelRef }: UsePanelContextMenuParams) {
-    const sidebarPanels = useSidebarStore((state) => state.sidebarPanels);
-    const { addPanel, removePanel, movePanel } = useSidebarPanels();
-
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -54,47 +49,12 @@ export function usePanelContextMenu({ panel, panelRef }: UsePanelContextMenuPara
 
     useClickOutside(panelRef, closeMenu);
 
-    const panelIndex = sidebarPanels.findIndex((p) => p.id === panel.id);
-    const canMoveUp = panelIndex > 0;
-    const canMoveDown = panelIndex < sidebarPanels.length - 1;
-
-    const handleAddPanel = () => {
-        addPanel();
-        closeMenu();
-    };
-
-    const handleRemove = () => {
-        removePanel(panel.id);
-        closeMenu();
-    };
-
-    const handleMoveUp = () => {
-        if (canMoveUp) {
-            movePanel(panelIndex, panelIndex - 1);
-            closeMenu();
-        }
-    };
-
-    const handleMoveDown = () => {
-        if (canMoveDown) {
-            movePanel(panelIndex, panelIndex + 1);
-            closeMenu();
-        }
-    };
-
     return {
         menuRef,
         isMenuOpen,
         menuPosition,
+
         openMenu,
         closeMenu,
-
-        canMoveUp,
-        canMoveDown,
-
-        handleAddPanel,
-        handleRemove,
-        handleMoveUp,
-        handleMoveDown,
     };
 }
