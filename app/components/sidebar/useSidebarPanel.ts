@@ -4,15 +4,16 @@ import { useRef, useCallback, useMemo } from 'react';
 
 import type { SidebarPanel as SidebarPanelType, PanelType } from '@/_core/_/sidebarPanel';
 
-import { useSidebarPanels } from '@/components/sidebar/useSidebarPanels';
 import { useSidebarStore } from '@/store/useSidebarStore';
 
 import { panelTitles, panelIcons } from '@/_core/_/sidebarPanel';
+import { setPanelType } from '@/utils/sidebar/setPanelType';
 
 export function useSidebarPanel(panel: SidebarPanelType, panelIndex: number) {
     const panelRef = useRef<HTMLDivElement>(null);
 
-    const { setPanelType } = useSidebarPanels();
+    const sidebarPanels = useSidebarStore((state) => state.sidebarPanels);
+    const setSidebarPanels = useSidebarStore((state) => state.setSidebarPanels);
 
     const filterText = useSidebarStore((state) => state.filterText[panel.id] || '');
     const setFilterText = useSidebarStore((state) => state.setFilterText);
@@ -29,7 +30,7 @@ export function useSidebarPanel(panel: SidebarPanelType, panelIndex: number) {
 
     const handleSelect = useCallback(
         (value: PanelType) => {
-            setPanelType(panel.id, value);
+            setPanelType(sidebarPanels, setSidebarPanels, panel.id, value);
             setFilterText(panel.id, '');
         },
         [panel.id, setPanelType, setFilterText],

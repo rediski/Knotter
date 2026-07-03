@@ -17,14 +17,18 @@ import { Parameters } from '@/components/sidebar/Parameters';
 
 import { useSidebarPanel } from '@/components/sidebar/useSidebarPanel';
 import { usePanelContextMenu } from '@/components/sidebar/usePanelContextMenu';
-import { useSidebarPanels } from '@/components/sidebar/useSidebarPanels';
 
 import { useSidebarStore } from '@/store/useSidebarStore';
+
+import { addPanel } from '@/utils/sidebar/addPanel';
+import { removePanel } from '@/utils/sidebar/removePanel';
+import { movePanelDown, movePanelUp } from '@/utils/sidebar/movePanel';
 
 import { Search } from 'lucide-react';
 
 export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
     const sidebarPanels = useSidebarStore((state) => state.sidebarPanels);
+    const setSidebarPanels = useSidebarStore((state) => state.setSidebarPanels);
     const panelIndex = sidebarPanels.findIndex((sidebarPanel) => sidebarPanel.id === panel.id);
 
     const {
@@ -37,8 +41,6 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
         handleSelect,
         handleFilterChange,
     } = useSidebarPanel(panel, panelIndex);
-
-    const { addPanel, removePanel, movePanelDown, movePanelUp } = useSidebarPanels();
 
     const { menuRef, isMenuOpen, menuPosition, openMenu, closeMenu } = usePanelContextMenu({
         panel,
@@ -62,15 +64,15 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                 canMoveUp={canMoveUp}
                 canMoveDown={canMoveDown}
                 onAdd={() => {
-                    addPanel();
+                    addPanel(sidebarPanels, setSidebarPanels);
                     closeMenu();
                 }}
                 onRemove={() => {
-                    removePanel(panel.id);
+                    removePanel(sidebarPanels, setSidebarPanels, panel.id);
                     closeMenu();
                 }}
-                onMoveUp={() => movePanelUp(canMoveUp, panelIndex)}
-                onMoveDown={() => movePanelDown(canMoveDown, panelIndex)}
+                onMoveUp={() => movePanelUp(sidebarPanels, setSidebarPanels, canMoveUp, panelIndex)}
+                onMoveDown={() => movePanelDown(sidebarPanels, setSidebarPanels, canMoveDown, panelIndex)}
             />
 
             <div
