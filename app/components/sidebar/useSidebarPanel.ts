@@ -9,16 +9,13 @@ import { useSidebarStore } from '@/store/useSidebarStore';
 
 import { panelTitles, panelIcons } from '@/_core/_/sidebarPanel';
 
-export function useSidebarPanel(panel: SidebarPanelType) {
+export function useSidebarPanel(panel: SidebarPanelType, panelIndex: number) {
     const panelRef = useRef<HTMLDivElement>(null);
 
     const { setPanelType } = useSidebarPanels();
 
-    const sidebarPanels = useSidebarStore((state) => state.sidebarPanels);
     const filterText = useSidebarStore((state) => state.filterText[panel.id] || '');
     const setFilterText = useSidebarStore((state) => state.setFilterText);
-
-    const panelIndex = sidebarPanels.findIndex((p) => p.id === panel.id);
 
     const panelOptions = useMemo(
         () =>

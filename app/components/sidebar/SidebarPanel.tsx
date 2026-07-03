@@ -24,6 +24,9 @@ import { useSidebarStore } from '@/store/useSidebarStore';
 import { Search } from 'lucide-react';
 
 export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
+    const sidebarPanels = useSidebarStore((state) => state.sidebarPanels);
+    const panelIndex = sidebarPanels.findIndex((sidebarPanel) => sidebarPanel.id === panel.id);
+
     const {
         panelRef,
         filterText,
@@ -33,7 +36,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
 
         handleSelect,
         handleFilterChange,
-    } = useSidebarPanel(panel);
+    } = useSidebarPanel(panel, panelIndex);
 
     const { addPanel, removePanel, movePanelDown, movePanelUp } = useSidebarPanels();
 
@@ -42,9 +45,6 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
         panelRef,
     });
 
-    const sidebarPanels = useSidebarStore((state) => state.sidebarPanels);
-
-    const panelIndex = sidebarPanels.findIndex((sidebarPanel) => sidebarPanel.id === panel.id);
     const canMoveUp = panelIndex > 0;
     const canMoveDown = panelIndex < sidebarPanels.length - 1;
 
