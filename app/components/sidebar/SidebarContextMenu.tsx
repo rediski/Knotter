@@ -6,7 +6,8 @@ import type { Position } from '@/_core/_/canvas.types';
 import { ContextMenu } from '@/components/UI/ContextMenu';
 import { ContextMenuItem } from '@/components/UI/ContextMenuItem';
 
-import { useSidebarPanels } from '@/components/sidebar/useSidebarPanels';
+import { useSidebarStore } from '@/store/useSidebarStore';
+import { addPanel } from '@/utils/sidebar/addPanel';
 
 import { Plus } from 'lucide-react';
 
@@ -21,14 +22,16 @@ type SidebarContextMenuProps = {
 
 export function SidebarContextMenu({ menu }: SidebarContextMenuProps) {
     const { isOpen, position, closeMenu } = menu;
-    const { addPanel } = useSidebarPanels();
+
+    const sidebarPanels = useSidebarStore((state) => state.sidebarPanels);
+    const setSidebarPanels = useSidebarStore((state) => state.setSidebarPanels);
 
     return (
         <ContextMenu isOpen={isOpen} position={position}>
             <ContextMenuItem
                 icon={Plus}
                 onClick={() => {
-                    addPanel();
+                    addPanel(sidebarPanels, setSidebarPanels);
                     closeMenu();
                 }}
             >
