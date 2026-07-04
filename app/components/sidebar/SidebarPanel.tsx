@@ -1,6 +1,10 @@
 'use client';
 
-import type { SidebarPanel as SidebarPanelType } from '@/_core/_/sidebarPanel';
+import { useRef } from 'react';
+
+import type { PanelType, SidebarPanel as SidebarPanelType } from '@/_core/_/sidebarPanel';
+
+import { panelTitles, panelIcons } from '@/_core/_/sidebarPanel';
 
 import { Clipboard } from '@/components/sidebar/Clipboard';
 import { Details } from '@/components/sidebar/Details';
@@ -15,7 +19,6 @@ import { EmptyState } from '@/components/UI/EmptyState';
 import { PanelContextMenu } from '@/components/sidebar/PanelContextMenu';
 import { Parameters } from '@/components/sidebar/Parameters';
 
-import { useSidebarPanel } from '@/components/sidebar/useSidebarPanel';
 import { usePanelContextMenu } from '@/components/sidebar/usePanelContextMenu';
 
 import { useSidebarStore } from '@/store/useSidebarStore';
@@ -23,6 +26,7 @@ import { useSidebarStore } from '@/store/useSidebarStore';
 import { addPanel } from '@/utils/sidebar/addPanel';
 import { removePanel } from '@/utils/sidebar/removePanel';
 import { movePanelDown, movePanelUp } from '@/utils/sidebar/movePanel';
+import { setPanelType } from '@/utils/sidebar/setPanelType';
 
 import { Search } from 'lucide-react';
 
@@ -31,16 +35,16 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
     const setSidebarPanels = useSidebarStore((state) => state.setSidebarPanels);
     const panelIndex = sidebarPanels.findIndex((sidebarPanel) => sidebarPanel.id === panel.id);
 
-    const {
-        panelRef,
-        filterText,
-        panelOptions,
-        currentPanelTitle,
-        currentPanelIcon,
+    const panelOptions = (Object.keys(panelTitles) as PanelType[]).map((key) => ({
+        value: key,
+        label: panelTitles[key],
+        icon: panelIcons[key],
+    }));
 
-        handleSelect,
-        handleFilterChange,
-    } = useSidebarPanel(panel, panelIndex);
+    const filterText = useSidebarStore((state) => state.filterText[panel.id] || '');
+    const setFilterText = useSidebarStore((state) => state.setFilterText);
+
+    const panelRef = useRef<HTMLDivElement>(null);
 
     const { menuRef, isMenuOpen, menuPosition, openMenu, closeMenu } = usePanelContextMenu({
         panel,
@@ -49,6 +53,9 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
 
     const canMoveUp = panelIndex > 0;
     const canMoveDown = panelIndex < sidebarPanels.length - 1;
+
+    const currentPanelTitle = panel.type ? panelTitles[panel.type] : 'Пустая панель';
+    const currentPanelIcon = panel.type ? panelIcons[panel.type] : undefined;
 
     return (
         <div
@@ -85,7 +92,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                     {panel.type && (
                         <Input
                             value={filterText}
-                            onChange={handleFilterChange}
+                            onChange={() => setFilterText(panel.id, filterText)}
                             placeholder="Фильтр..."
                             icon={Search}
                             iconSize={14}
@@ -98,7 +105,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                     {panelOptions.map((option) => (
                         <button
                             key={option.value}
-                            onClick={() => handleSelect(option.value)}
+                            onClick={() => setPanelType(sidebarPanels, setSidebarPanels, panel.id, option.value)}
                             className={`
                                 flex items-center gap-2 px-3 h-8 text-left text-sm rounded-md cursor-pointer w-full 
                                 ${
