@@ -7,7 +7,8 @@ import { SidebarContextMenu } from '@/components/sidebar/SidebarContextMenu';
 import { EmptyState } from '@/components/UI/EmptyState';
 
 import { useSidebarStore } from '@/store/useSidebarStore';
-import { useSidebarResize } from '@/components/sidebar/useSidebarResize';
+
+import { useSidebarResize } from '@/hooks/useSidebarResize';
 import { useContextMenu } from '@/hooks/useContextMenu';
 import { useClickOutside } from '@/hooks/useClickOutside';
 
