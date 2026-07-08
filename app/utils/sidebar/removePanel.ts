@@ -5,5 +5,6 @@ export const removePanel = (
     setSidebarPanels: (panels: SidebarPanel[]) => void,
     panelId: string,
 ) => {
+    if (sidebarPanels.length <= 1) return;
     setSidebarPanels(sidebarPanels.filter((panel) => panel.id !== panelId));
 };
