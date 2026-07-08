@@ -5,7 +5,8 @@ import { memo, useRef } from 'react';
 import { SidebarPanel } from '@/components/sidebar/SidebarPanel';
 
 import { useSidebarStore } from '@/store/useSidebarStore';
-import { useSidebarResize } from '@/components/sidebar/useSidebarResize';
+
+import { useSidebarResize } from '@/hooks/useSidebarResize';
 import { useContextMenu } from '@/hooks/useContextMenu';
 import { useClickOutside } from '@/hooks/useClickOutside';
 
