@@ -3,8 +3,6 @@
 import { memo, useRef } from 'react';
 
 import { SidebarPanel } from '@/components/sidebar/SidebarPanel';
-import { SidebarContextMenu } from '@/components/sidebar/SidebarContextMenu';
-import { EmptyState } from '@/components/UI/EmptyState';
 
 import { useSidebarStore } from '@/store/useSidebarStore';
 import { useSidebarResize } from '@/components/sidebar/useSidebarResize';
@@ -46,14 +44,10 @@ export const Sidebar = memo(function Sidebar() {
                 onClick={menu.closeMenu}
             >
                 <div className="flex flex-col h-full">
-                    {panels.length > 0 ? (
-                        panels.map((panel) => <SidebarPanel key={panel.id} panel={panel} />)
-                    ) : (
-                        <EmptyState message="Нажмите ПКМ по этой области, чтобы добавить панель" />
-                    )}
+                    {panels.map((panel) => (
+                        <SidebarPanel key={panel.id} panel={panel} />
+                    ))}
                 </div>
-
-                <SidebarContextMenu menu={menu} />
             </div>
         </div>
     );
