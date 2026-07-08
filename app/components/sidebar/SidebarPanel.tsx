@@ -12,16 +12,15 @@ import { Hierarchy } from '@/components/sidebar/Hierarchy';
 import { Inspector } from '@/components/sidebar/Inspector';
 
 import { History } from '@/components/sidebar/History';
+import { Parameters } from '@/components/sidebar/Parameters';
 
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 import { Input } from '@/components/UI/Input';
 import { EmptyState } from '@/components/UI/EmptyState';
 import { PanelContextMenu } from '@/components/sidebar/PanelContextMenu';
-import { Parameters } from '@/components/sidebar/Parameters';
-
-import { usePanelContextMenu } from '@/components/sidebar/usePanelContextMenu';
 
 import { useSidebarStore } from '@/store/useSidebarStore';
+import { useContextMenu } from '@/hooks/useContextMenu';
 
 import { addPanel } from '@/utils/sidebar/addPanel';
 import { removePanel } from '@/utils/sidebar/removePanel';
@@ -46,10 +45,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
 
     const panelRef = useRef<HTMLDivElement>(null);
 
-    const { menuRef, isMenuOpen, menuPosition, openMenu, closeMenu } = usePanelContextMenu({
-        panel,
-        panelRef,
-    });
+    const { isOpen, position, menuRef, handleContextMenu, closeMenu } = useContextMenu();
 
     const canMoveUp = panelIndex > 0;
     const canMoveDown = panelIndex < sidebarPanels.length - 1;
@@ -61,15 +57,16 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
         <div
             ref={panelRef}
             className="flex flex-col w-full h-full overflow-y-auto relative"
-            onContextMenu={openMenu}
+            onContextMenu={handleContextMenu}
             onClick={closeMenu}
         >
             <PanelContextMenu
                 menuRef={menuRef}
-                isOpen={isMenuOpen}
-                position={menuPosition}
+                isOpen={isOpen}
+                position={position}
                 canMoveUp={canMoveUp}
                 canMoveDown={canMoveDown}
+                sidebarPanelsLength={sidebarPanels.length}
                 onAdd={() => {
                     addPanel(sidebarPanels, setSidebarPanels);
                     closeMenu();
@@ -78,8 +75,14 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                     removePanel(sidebarPanels, setSidebarPanels, panel.id);
                     closeMenu();
                 }}
-                onMoveUp={() => movePanelUp(sidebarPanels, setSidebarPanels, canMoveUp, panelIndex)}
-                onMoveDown={() => movePanelDown(sidebarPanels, setSidebarPanels, canMoveDown, panelIndex)}
+                onMoveUp={() => {
+                    movePanelUp(sidebarPanels, setSidebarPanels, canMoveUp, panelIndex);
+                    closeMenu();
+                }}
+                onMoveDown={() => {
+                    movePanelDown(sidebarPanels, setSidebarPanels, canMoveDown, panelIndex);
+                    closeMenu();
+                }}
             />
 
             <div
@@ -105,7 +108,10 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                     {panelOptions.map((option) => (
                         <button
                             key={option.value}
-                            onClick={() => setPanelType(sidebarPanels, setSidebarPanels, panel.id, option.value)}
+                            onClick={() => {
+                                setPanelType(sidebarPanels, setSidebarPanels, panel.id, option.value);
+                                closeMenu();
+                            }}
                             className={`
                                 flex items-center gap-2 px-3 h-8 text-left text-sm rounded-md cursor-pointer w-full 
                                 ${
