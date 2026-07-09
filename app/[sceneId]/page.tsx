@@ -19,6 +19,7 @@ import { useCanvasStore } from '@/store/useCanvasStore';
 import { useItemsStore } from '@/store/useItemsStore';
 
 import { getNodes } from '@/utils/nodes/getNodes';
+import { createScene } from '@/utils/scene/createScene';
 import { getCurrentSceneItems } from '@/utils/canvas/getCurrentSceneItems';
 
 export default function Canvas() {
@@ -44,6 +45,20 @@ export default function Canvas() {
 
     const hasNodes = getNodes(items).length !== 0;
     const isReady = isCanvasHydrated && isItemsHydrated;
+
+    useEffect(() => {
+        if (!isItemsHydrated) return;
+
+        const initScene = async () => {
+            const { scenes, currentSceneId } = useItemsStore.getState();
+
+            if (Object.keys(scenes).length > 0 && currentSceneId) return;
+
+            createScene('Сцена');
+        };
+
+        initScene();
+    }, [isItemsHydrated]);
 
     return (
         <div ref={containerRef} className="h-full w-full relative rounded-md bg-depth-1" onContextMenu={handleContextMenu}>
