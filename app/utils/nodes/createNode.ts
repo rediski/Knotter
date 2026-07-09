@@ -21,9 +21,7 @@ export function createNode(): Node | null {
     const setScenes = itemsState.setScenes;
     const setSelectedItemIds = itemsState.setSelectedItemIds;
 
-    if (!currentSceneId || !scenes[currentSceneId]) {
-        return null;
-    }
+    if (!currentSceneId || !scenes[currentSceneId]) return null;
 
     const scene = scenes[currentSceneId];
     const nodes = getNodes(scene.items);
@@ -64,7 +62,6 @@ export function createNode(): Node | null {
     };
 
     setScenes({ ...scenes, [currentSceneId]: updatedScene });
-
     setSelectedItemIds([node.id]);
 
     return node;
