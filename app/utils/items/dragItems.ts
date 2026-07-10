@@ -19,12 +19,9 @@ export function startDragging(e: MouseEvent, canvasRef: RefObject<HTMLCanvasElem
 
     dragStartMouse.current = mousePos;
 
-    const { currentSceneId, scenes } = useItemsStore.getState();
+    const { currentSceneId } = useItemsStore.getState();
 
     if (!currentSceneId) return;
-
-    const scene = scenes[currentSceneId];
-    const items = scene?.items ?? [];
 
     initialNodePositions.current = getSelectedNodesPositions();
     isDragging.current = false;
