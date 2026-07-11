@@ -16,16 +16,17 @@ export const History = () => {
 
     return (
         <div className="flex flex-col gap-1 p-1 h-full pt-0 mt-1 text-sm overflow-auto">
-            {history.map((action, index) => {
-                const isCurrent = index === historyPosition;
-                const isInFuture = index > historyPosition;
-                const orderNumber = index + 1;
+            {history
+                .map((action, index) => {
+                    const isCurrent = index === historyPosition;
+                    const isInFuture = index > historyPosition;
+                    const orderNumber = index + 1;
 
-                return (
-                    <div
-                        key={index}
-                        onClick={() => handleHistoryClick(index)}
-                        className={`
+                    return (
+                        <div
+                            key={index}
+                            onClick={() => handleHistoryClick(index)}
+                            className={`
                             px-3 py-2 border rounded-md cursor-pointer
                             ${
                                 isCurrent
@@ -34,14 +35,15 @@ export const History = () => {
                             }
                             ${isInFuture ? 'text-gray' : ''}
                         `}
-                    >
-                        <div className="flex items-center justify-between gap-2">
-                            <span className="flex-1">{action.type}</span>
-                            <span className="text-xs text-gray">#{orderNumber}</span>
+                        >
+                            <div className="flex items-center justify-between gap-2">
+                                <span className="flex-1">{action.type}</span>
+                                <span className="text-xs text-gray">#{orderNumber}</span>
+                            </div>
                         </div>
-                    </div>
-                );
-            })}
+                    );
+                })
+                .reverse()}
 
             {history.length === 0 && <EmptyState message="История пуста" />}
         </div>
