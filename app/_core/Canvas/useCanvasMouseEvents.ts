@@ -10,7 +10,7 @@ import { findCanvasUnderCursor } from '@/utils/canvas/findCanvasUnderCursor';
 import { updateHoveredNodeId } from '@/utils/nodes/updateHoveredNodeId';
 
 import { changeNodePositions } from '@/utils/nodes/changeNodePosition';
-import { getSelectedNodes } from '@/utils/nodes/getSelectedNodes';
+import { getMovedNodes } from '@/utils/nodes/getMovedNodes';
 import { getMousePosition } from '@/utils/canvas/getMousePosition';
 import { handleClickOnItem } from '@/utils/items/handleClickOnItem';
 
@@ -90,26 +90,18 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
     );
 
     const onMouseUp = useCallback(() => {
-        const initialNodePositions = refsState.initialNodePositions;
-        const selectedNodes = getSelectedNodes();
+        const initialPositions = refsState.initialNodePositions.current;
+        const movedNodes = getMovedNodes(initialPositions);
 
-        const changedNodes = selectedNodes.filter((node) => {
-            if (node.kind !== 'node') return null;
-
-            const initialPos = initialNodePositions.current.get(node.id);
-
-            return initialPos && (initialPos.x !== node.position.x || initialPos.y !== node.position.y);
-        });
-
-        if (changedNodes.length > 0) {
+        if (movedNodes.length > 0) {
             addToHistory({
                 type: 'MOVE_ITEMS',
-                items: structuredClone(changedNodes),
+                items: structuredClone(movedNodes),
             });
         }
 
         stopDragging();
-    }, [refsState]);
+    }, [refsState.initialNodePositions]);
 
     return { onMouseDown, onMouseMove, onMouseUp };
 }
