@@ -9,7 +9,7 @@ import { findCanvasUnderCursor } from '@/utils/canvas/findCanvasUnderCursor';
 
 import { updateHoveredNodeId } from '@/utils/nodes/updateHoveredNodeId';
 
-import { moveNodes } from '@/utils/nodes/moveNodes';
+import { changeNodePositions } from '@/utils/nodes/changeNodePosition';
 import { getSelectedNodes } from '@/utils/nodes/getSelectedNodes';
 import { getMousePosition } from '@/utils/canvas/getMousePosition';
 import { handleClickOnItem } from '@/utils/items/handleClickOnItem';
@@ -52,9 +52,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             const dragStartMouse = refsState.dragStartMouse;
             const initialNodePositions = refsState.initialNodePositions;
 
-            const { tempEdge, currentSceneId, scenes, setScenes } = itemsState;
-
-            const scene = currentSceneId ? scenes[currentSceneId] : null;
+            const { tempEdge } = itemsState;
 
             const mousePos = getMousePosition(e, canvasRef.current);
 
@@ -78,17 +76,15 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             const dx = mousePos.x - dragStartMouse.current.x;
             const dy = mousePos.y - dragStartMouse.current.y;
 
-            const newItems = moveNodes({ x: dx, y: dy }, initialNodePositions.current);
+            const updates = Array.from(initialNodePositions.current.entries()).map(([nodeId, initialPos]) => ({
+                nodeId,
+                newPosition: {
+                    x: initialPos.x + dx,
+                    y: initialPos.y + dy,
+                },
+            }));
 
-            if (currentSceneId && scene) {
-                const updatedScene = {
-                    ...scene,
-                    items: newItems,
-                    updatedAt: new Date(),
-                };
-
-                setScenes({ ...scenes, [currentSceneId]: updatedScene });
-            }
+            changeNodePositions(updates);
         },
         [canvasRef, refsState, itemsState],
     );
