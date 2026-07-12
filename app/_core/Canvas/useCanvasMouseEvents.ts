@@ -95,7 +95,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
 
         if (movedNodes.length > 0) {
             addToHistory({
-                type: 'MOVE_ITEMS',
+                type: 'CHANGE_ITEMS',
                 items: structuredClone(movedNodes),
             });
         }

@@ -6,5 +6,4 @@ export type CanvasAction =
     | { type: 'ADD_ITEMS'; items: CanvasItem[] }
     | { type: 'DELETE_ITEMS'; ids: string[] }
     | { type: 'PASTE_ITEMS'; items: CanvasItem[] }
-    | { type: 'MOVE_ITEMS'; items: CanvasItem[] }
-    | { type: 'UPDATE_ITEMS'; items: CanvasItem[] };
+    | { type: 'CHANGE_ITEMS'; items: CanvasItem[] };
