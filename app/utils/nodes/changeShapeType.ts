@@ -14,6 +14,8 @@ export function changeShapeType(newShape: NodeShapeType) {
 
     const selectedNodes = getSelectedNodes();
 
+    const changedItems = items.filter((item) => item.kind === 'node' && selectedNodes.some((node) => node.id === item.id));
+
     const updatedItems = items.map((item) => {
         if (item.kind === 'node' && selectedNodes.some((node) => node.id === item.id)) {
             return { ...item, shapeType: newShape };
@@ -22,7 +24,7 @@ export function changeShapeType(newShape: NodeShapeType) {
         return item;
     });
 
-    if (scene) {
+    if (scene && changedItems.length > 0) {
         const updatedScene = {
             ...scene,
             items: updatedItems,
@@ -31,11 +33,9 @@ export function changeShapeType(newShape: NodeShapeType) {
 
         useItemsStore.setState({ scenes: { ...scenes, [currentSceneId]: updatedScene } });
 
-        if (selectedNodes.length > 0) {
-            addToHistory({
-                type: 'CHANGE_ITEMS',
-                items: structuredClone(selectedNodes),
-            });
-        }
+        addToHistory({
+            type: 'CHANGE_ITEMS',
+            items: structuredClone(changedItems),
+        });
     }
 }
