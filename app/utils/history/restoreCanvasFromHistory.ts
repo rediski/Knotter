@@ -20,6 +20,13 @@ export function restoreCanvasFromHistory(actions: CanvasAction[]) {
             case 'DELETE_ITEMS':
                 canvasItems = canvasItems.filter((item) => !action.ids.includes(item.id));
                 break;
+
+            case 'CHANGE_ITEMS':
+                canvasItems = canvasItems.map((item) => {
+                    const changedItem = action.items.find((changed) => changed.id === item.id);
+                    return changedItem ? { ...item, ...changedItem } : item;
+                });
+                break;
         }
     }
 
