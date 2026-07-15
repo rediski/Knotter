@@ -14,8 +14,6 @@ export function changeShapeType(newShape: NodeShapeType) {
 
     const selectedNodes = getSelectedNodes();
 
-    const changedItems = items.filter((item) => item.kind === 'node' && selectedNodes.some((node) => node.id === item.id));
-
     const updatedItems = items.map((item) => {
         if (item.kind === 'node' && selectedNodes.some((node) => node.id === item.id)) {
             return { ...item, shapeType: newShape };
@@ -23,6 +21,10 @@ export function changeShapeType(newShape: NodeShapeType) {
 
         return item;
     });
+
+    const changedItems = updatedItems.filter(
+        (item) => item.kind === 'node' && selectedNodes.some((node) => node.id === item.id),
+    );
 
     if (scene && changedItems.length > 0) {
         const updatedScene = {

@@ -9,8 +9,6 @@ export function changeColor(newColor: string) {
     const scene = scenes[currentSceneId];
     const items = scene?.items ?? [];
 
-    const changedItems = items.filter((item) => selectedItemIds.includes(item.id));
-
     const updatedItems = items.map((item) => {
         if (selectedItemIds.includes(item.id)) {
             return { ...item, color: newColor };
@@ -18,6 +16,8 @@ export function changeColor(newColor: string) {
 
         return item;
     });
+
+    const changedItems = updatedItems.filter((item) => selectedItemIds.includes(item.id));
 
     if (scene && changedItems.length > 0) {
         const updatedScene = {
