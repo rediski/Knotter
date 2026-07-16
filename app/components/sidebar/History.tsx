@@ -1,6 +1,12 @@
+import type { ReactNode } from 'react';
+import type { CanvasAction } from '@/_core/_/history.types';
+
+import { EmptyState } from '@/components/UI/EmptyState';
+
 import { useHistoryStore } from '@/store/useHistoryStore';
 import { restoreCanvasFromHistory } from '@/utils/history/restoreCanvasFromHistory';
-import { EmptyState } from '@/components/UI/EmptyState';
+
+import { Pencil, Trash2, Plus, ClipboardPaste } from 'lucide-react';
 
 export const History = () => {
     const history = useHistoryStore((state) => state.history);
@@ -14,6 +20,47 @@ export const History = () => {
         restoreCanvasFromHistory(actionsUpToIndex);
     };
 
+    const getActionInfo = (action: CanvasAction) => {
+        const actionMap: Record<CanvasAction['type'], { icon: ReactNode; label: string }> = {
+            ADD_ITEMS: {
+                icon: <Plus className="w-4 h-4" />,
+                label: 'Добавление элементов',
+            },
+            DELETE_ITEMS: {
+                icon: <Trash2 className="w-4 h-4" />,
+                label: 'Удаление элементов',
+            },
+            PASTE_ITEMS: {
+                icon: <ClipboardPaste className="w-4 h-4" />,
+                label: 'Вставка элементов',
+            },
+            CHANGE_ITEMS: {
+                icon: <Pencil className="w-4 h-4" />,
+                label: 'Изменение элементов',
+            },
+        };
+
+        return actionMap[action.type];
+    };
+
+    const getItemsCount = (action: CanvasAction): number => {
+        switch (action.type) {
+            case 'ADD_ITEMS':
+            case 'PASTE_ITEMS':
+            case 'CHANGE_ITEMS':
+                return action.items.length;
+            case 'DELETE_ITEMS':
+                return action.ids.length;
+            default:
+                return 0;
+        }
+    };
+
+    const getRussianPlural = (count: number, words: [string, string, string]) => {
+        const cases = [2, 0, 1, 1, 1, 2];
+        return words[count % 100 > 4 && count % 100 < 20 ? 2 : cases[Math.min(count % 10, 5)]];
+    };
+
     return (
         <div className="flex flex-col gap-1 p-1 h-full pt-0 mt-1 text-sm overflow-auto">
             {history
@@ -22,22 +69,45 @@ export const History = () => {
                     const isInFuture = index > historyPosition;
                     const orderNumber = index + 1;
 
+                    const itemsCount = getItemsCount(action);
+                    const actionInfo = getActionInfo(action);
+
                     return (
                         <div
                             key={index}
                             onClick={() => handleHistoryClick(index)}
                             className={`
-                            px-3 py-2 border rounded-md cursor-pointer
-                            ${
-                                isCurrent
-                                    ? 'bg-bg-accent/10 text-text-accent border-bg-accent/10'
-                                    : 'bg-depth-2 border-depth-4 hover:bg-depth-3'
-                            }
-                            ${isInFuture ? 'text-gray' : ''}
-                        `}
+                                group px-3 py-2 border rounded-md cursor-pointer
+                                ${
+                                    isCurrent
+                                        ? 'bg-bg-accent/10 text-text-accent border-bg-accent/10'
+                                        : 'bg-depth-2 border-depth-4 hover:bg-depth-3'
+                                }
+                                ${isInFuture ? 'opacity-50' : ''}
+                            `}
                         >
-                            <div className="flex items-center justify-between gap-2">
-                                <span className="flex-1">{action.type}</span>
+                            <div className="flex items-center justify-between gap-3">
+                                <div className="flex items-center gap-2 min-w-0">
+                                    <span className="text-text-accent">{actionInfo.icon}</span>
+
+                                    <div
+                                        className={`border-l h-5 
+                                            ${isCurrent ? 'border-bg-accent/10' : 'border-depth-4'}
+                                        `}
+                                    />
+
+                                    <span className="font-medium truncate">{actionInfo.label}</span>
+
+                                    <span
+                                        className={`
+                                            text-xs px-2 py-0.5 rounded-full truncate
+                                            ${isCurrent ? 'bg-bg-accent/10' : 'bg-depth-3 group-hover:bg-depth-4'}
+                                        `}
+                                    >
+                                        {itemsCount} {getRussianPlural(itemsCount, ['элемент', 'элемента', 'элементов'])}
+                                    </span>
+                                </div>
+
                                 <span className="text-xs text-gray">#{orderNumber}</span>
                             </div>
                         </div>
