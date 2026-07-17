@@ -56,11 +56,6 @@ export const History = () => {
         }
     };
 
-    const getRussianPlural = (count: number, words: [string, string, string]) => {
-        const cases = [2, 0, 1, 1, 1, 2];
-        return words[count % 100 > 4 && count % 100 < 20 ? 2 : cases[Math.min(count % 10, 5)]];
-    };
-
     return (
         <div className="flex flex-col gap-1 p-1 h-full pt-0 mt-1 text-sm overflow-auto">
             {history
@@ -88,7 +83,9 @@ export const History = () => {
                         >
                             <div className="flex items-center justify-between gap-3">
                                 <div className="flex items-center gap-2 min-w-0">
-                                    <span className="text-text-accent">{actionInfo.icon}</span>
+                                    <span className={`${isCurrent ? 'text-text-accent' : 'text-foreground'}`}>
+                                        {actionInfo.icon}
+                                    </span>
 
                                     <div
                                         className={`border-l h-5 
@@ -96,15 +93,8 @@ export const History = () => {
                                         `}
                                     />
 
-                                    <span className="font-medium truncate">{actionInfo.label}</span>
-
-                                    <span
-                                        className={`
-                                            text-xs px-2 py-0.5 rounded-full truncate
-                                            ${isCurrent ? 'bg-bg-accent/10' : 'bg-depth-3 group-hover:bg-depth-4'}
-                                        `}
-                                    >
-                                        {itemsCount} {getRussianPlural(itemsCount, ['элемент', 'элемента', 'элементов'])}
+                                    <span className="font-medium truncate tabular-nums">
+                                        {actionInfo.label} ({itemsCount})
                                     </span>
                                 </div>
 
