@@ -38,12 +38,14 @@ export function deleteSelectedItemsById(itemIds: string | string[]) {
 
     const allIdsToDelete = new Set([...idsToDelete, ...affectedEdgeIds]);
 
-    const newItems = items.filter((item) => !allIdsToDelete.has(item.id));
+    const deletedItems = items.filter((item) => allIdsToDelete.has(item.id));
 
     addToHistory({
         type: 'DELETE_ITEMS',
-        ids: Array.from(allIdsToDelete),
+        items: deletedItems,
     });
+
+    const newItems = items.filter((item) => !allIdsToDelete.has(item.id));
 
     if (scene) {
         const updatedScene = {

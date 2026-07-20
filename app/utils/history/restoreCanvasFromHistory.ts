@@ -18,7 +18,8 @@ export function restoreCanvasFromHistory(actions: CanvasAction[]) {
                 break;
 
             case 'DELETE_ITEMS':
-                canvasItems = canvasItems.filter((item) => !action.ids.includes(item.id));
+                const deleteIds = action.items.map((item) => item.id);
+                canvasItems = canvasItems.filter((item) => !deleteIds.includes(item.id));
                 break;
 
             case 'CHANGE_ITEMS':
