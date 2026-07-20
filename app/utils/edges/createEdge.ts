@@ -3,9 +3,11 @@ import { v4 as uuid } from 'uuid';
 import type { Edge } from '@/_core/_/canvas.types';
 import { useItemsStore } from '@/store/useItemsStore';
 
-import { canAddItem } from '@/utils/items/canAddItems';
-import { addToHistory } from '@/utils/history/historyManager';
 import { getCurrentForegroundColor } from '@/utils/canvas/getCurrentForegroundColor';
+import { addToHistory } from '@/utils/history/historyManager';
+import { canAddItem } from '@/utils/items/canAddItems';
+import { generateUniqueName } from '@/utils/items/generateUniqueName';
+import { getEdges } from '@/utils/edges/getEdges';
 
 export function createEdge(clickedNodeId: string) {
     if (!canAddItem()) return null;
@@ -15,15 +17,27 @@ export function createEdge(clickedNodeId: string) {
     if (!currentSceneId) return null;
 
     const scene = scenes[currentSceneId];
-    const items = scene?.items ?? [];
+
+    if (!scene) return null;
+
+    const items = scene.items;
+    const edges = getEdges(items);
 
     if (!tempEdge || !clickedNodeId || tempEdge === clickedNodeId) {
         return null;
     }
 
+    const baseName = 'Связь';
+
+    const name = generateUniqueName(
+        baseName,
+        edges.map((edge) => edge.name),
+    );
+
     const newEdge: Edge = {
         kind: 'edge',
         id: uuid(),
+        name,
         from: tempEdge,
         to: clickedNodeId,
         color: getCurrentForegroundColor(),
@@ -36,14 +50,13 @@ export function createEdge(clickedNodeId: string) {
         items: [structuredClone(newEdge)],
     });
 
-    if (scene) {
-        const updatedScene = {
-            ...scene,
-            items: newItems,
-            updatedAt: new Date(),
-        };
-        useItemsStore.setState({ scenes: { ...scenes, [currentSceneId]: updatedScene } });
-    }
+    const updatedScene = {
+        ...scene,
+        items: newItems,
+        updatedAt: new Date(),
+    };
+
+    useItemsStore.setState({ scenes: { ...scenes, [currentSceneId]: updatedScene } });
 
     setTempEdge(null);
 }
