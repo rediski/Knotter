@@ -29,6 +29,7 @@ export interface Node {
 export interface Edge {
     kind: 'edge';
     id: string;
+    name: string;
     from: string;
     to: string;
     color: string;
