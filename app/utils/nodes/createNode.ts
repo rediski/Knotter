@@ -1,4 +1,4 @@
-import type { Node, Scene } from '@/_core/_/canvas.types';
+import type { Node } from '@/_core/_/canvas.types';
 import { v4 as uuidv4 } from 'uuid';
 
 import { useItemsStore } from '@/store/useItemsStore';
