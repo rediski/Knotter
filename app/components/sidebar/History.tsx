@@ -24,48 +24,45 @@ export const History = () => {
         const actionMap: Record<CanvasAction['type'], { icon: ReactNode; label: string }> = {
             ADD_ITEMS: {
                 icon: <Plus className="w-4 h-4" />,
-                label: 'Добавление элементов',
+                label: 'Добавлено',
             },
             DELETE_ITEMS: {
                 icon: <Trash2 className="w-4 h-4" />,
-                label: 'Удаление элементов',
+                label: 'Удалено',
             },
             PASTE_ITEMS: {
                 icon: <ClipboardPaste className="w-4 h-4" />,
-                label: 'Вставка элементов',
+                label: 'Вставлено',
             },
             CHANGE_ITEMS: {
                 icon: <Pencil className="w-4 h-4" />,
-                label: 'Изменение элементов',
+                label: 'Изменено',
             },
         };
 
         return actionMap[action.type];
     };
 
-    const getItemsCount = (action: CanvasAction): number => {
+    const getItemNames = (action: CanvasAction): string => {
         switch (action.type) {
             case 'ADD_ITEMS':
             case 'PASTE_ITEMS':
             case 'CHANGE_ITEMS':
-                return action.items.length;
             case 'DELETE_ITEMS':
-                return action.ids.length;
+                return action.items.map((item) => item.name).join(', ');
             default:
-                return 0;
+                return '';
         }
     };
-
     return (
         <div className="flex flex-col gap-1 p-1 h-full pt-0 mt-1 text-sm overflow-auto">
             {history
                 .map((action, index) => {
                     const isCurrent = index === historyPosition;
                     const isInFuture = index > historyPosition;
-                    const orderNumber = index + 1;
 
-                    const itemsCount = getItemsCount(action);
                     const actionInfo = getActionInfo(action);
+                    const itemNames = getItemNames(action);
 
                     return (
                         <div
@@ -94,11 +91,15 @@ export const History = () => {
                                     />
 
                                     <span className="font-medium truncate tabular-nums">
-                                        {actionInfo.label} ({itemsCount})
+                                        {actionInfo.label}: [{itemNames}]
                                     </span>
                                 </div>
 
-                                <span className="text-xs text-gray">#{orderNumber}</span>
+                                <span
+                                    className={`text-xs tabular-nums ${isCurrent ? 'text-text-accent' : 'text-foreground'}`}
+                                >
+                                    00:00
+                                </span>
                             </div>
                         </div>
                     );
