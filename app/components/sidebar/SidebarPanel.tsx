@@ -96,7 +96,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                         <Input
                             value={filterText}
                             onChange={() => setFilterText(panel.id, filterText)}
-                            placeholder="Фильтр..."
+                            placeholder="Поиск..."
                             icon={Search}
                             iconSize={14}
                             className="bg-depth-2 border border-depth-3"
