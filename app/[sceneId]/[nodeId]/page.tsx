@@ -193,9 +193,10 @@ export default function NodePage() {
                         value={filterText}
                         onChange={setFilterText}
                         icon={Search}
-                        placeholder="Фильтр..."
+                        placeholder="Поиск..."
                         className="bg-depth-2 border border-depth-3 flex-1"
                     />
+
                     <CreateParameterForm />
                 </div>
 
