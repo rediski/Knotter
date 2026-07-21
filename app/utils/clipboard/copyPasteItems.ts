@@ -58,6 +58,7 @@ export function pasteClipboardItems() {
     addToHistory({
         type: 'PASTE_ITEMS',
         items: structuredClone(newItems),
+        timestamp: Date.now(),
     });
 
     const updatedItems = [...items, ...newItems];

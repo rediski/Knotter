@@ -52,9 +52,11 @@ export function createNode(): Node | null {
     addToHistory({
         type: 'ADD_ITEMS',
         items: [structuredClone(node)],
+        timestamp: Date.now(),
     });
 
     const updatedItems = [...scene.items, node];
+
     const updatedScene: typeof scene = {
         ...scene,
         items: updatedItems,

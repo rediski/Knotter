@@ -97,6 +97,7 @@ export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | nu
             addToHistory({
                 type: 'CHANGE_ITEMS',
                 items: structuredClone(movedNodes),
+                timestamp: Date.now(),
             });
         }
 

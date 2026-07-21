@@ -43,6 +43,7 @@ export function deleteSelectedItemsById(itemIds: string | string[]) {
     addToHistory({
         type: 'DELETE_ITEMS',
         items: deletedItems,
+        timestamp: Date.now(),
     });
 
     const newItems = items.filter((item) => !allIdsToDelete.has(item.id));

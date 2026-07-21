@@ -38,6 +38,7 @@ export function changeShapeType(newShape: NodeShapeType) {
         addToHistory({
             type: 'CHANGE_ITEMS',
             items: structuredClone(changedItems),
+            timestamp: Date.now(),
         });
     }
 }

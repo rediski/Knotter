@@ -48,6 +48,7 @@ export function createEdge(clickedNodeId: string) {
     addToHistory({
         type: 'ADD_ITEMS',
         items: [structuredClone(newEdge)],
+        timestamp: Date.now(),
     });
 
     const updatedScene = {

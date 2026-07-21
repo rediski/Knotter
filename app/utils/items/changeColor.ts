@@ -30,6 +30,7 @@ export function changeColor(newColor: string) {
         addToHistory({
             type: 'CHANGE_ITEMS',
             items: structuredClone(changedItems),
+            timestamp: Date.now(),
         });
     }
 }
