@@ -104,7 +104,7 @@ export default function NodePage() {
         {
             onClick: () => addSelectedParametersToNode(nodeId),
             icon: Plus,
-            iconProps: { size: 16, strokeWidth: 3 },
+            iconProps: { size: 16 },
             disabled: !canAddSelected,
         },
         {
@@ -122,7 +122,7 @@ export default function NodePage() {
         {
             onClick: deleteSelectedParameters,
             icon: X,
-            iconProps: { size: 16, strokeWidth: 3 },
+            iconProps: { size: 16 },
             disabled: !canDeleteSelected,
         },
     ];
