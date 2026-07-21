@@ -8,6 +8,13 @@ import { restoreCanvasFromHistory } from '@/utils/history/restoreCanvasFromHisto
 
 import { Pencil, Trash2, Plus, ClipboardPaste } from 'lucide-react';
 
+const formatTimestamp = (timestamp: number): string => {
+    const date = new Date(timestamp);
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
+};
+
 export const History = () => {
     const history = useHistoryStore((state) => state.history);
     const historyPosition = useHistoryStore((state) => state.historyPosition);
@@ -54,6 +61,7 @@ export const History = () => {
                 return '';
         }
     };
+
     return (
         <div className="flex flex-col gap-1 p-1 h-full pt-0 mt-1 text-sm overflow-auto">
             {history
@@ -63,6 +71,8 @@ export const History = () => {
 
                     const actionInfo = getActionInfo(action);
                     const itemNames = getItemNames(action);
+
+                    const timeString = action.timestamp ? formatTimestamp(action.timestamp) : '--:--';
 
                     return (
                         <div
@@ -98,7 +108,7 @@ export const History = () => {
                                 <span
                                     className={`text-xs tabular-nums ${isCurrent ? 'text-text-accent' : 'text-foreground'}`}
                                 >
-                                    00:00
+                                    {timeString}
                                 </span>
                             </div>
                         </div>
