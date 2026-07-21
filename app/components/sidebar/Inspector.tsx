@@ -17,17 +17,17 @@ import { Dropdown } from '@/components/UI/Dropdown';
 import { ColorPicker } from '@/components/sidebar/ColorPicker';
 import { ShapeButtons } from '@/components/sidebar/ShapeButtons';
 
-import { getNodes } from '@/utils/nodes/getNodes';
 import { getSelectedItem } from '@/utils/items/getSelectedItems';
-import { getSelectedNode } from '@/utils/nodes/getSelectedNodes';
-import { getIncomingEdges } from '@/utils/edges/getIncomingEdges';
-import { getOutgoingEdges } from '@/utils/edges/getOutgoingEdges';
-import { changeNodeName } from '@/utils/nodes/changeNodeName';
+import { changeName } from '@/utils/items/changeName';
+import { changeColor } from '@/utils/items/changeColor';
+import { deleteSelectedItemsById } from '@/utils/items/deleteSelectedItems';
+import { getNodes } from '@/utils/nodes/getNodes';
 import { changeNodeDescription } from '@/utils/nodes/changeNodeDescription';
 import { changeNodePosition } from '@/utils/nodes/changeNodePosition';
 import { changeShapeType } from '@/utils/nodes/changeShapeType';
-import { changeColor } from '@/utils/items/changeColor';
-import { deleteSelectedItemsById } from '@/utils/items/deleteSelectedItems';
+import { getSelectedNode } from '@/utils/nodes/getSelectedNodes';
+import { getIncomingEdges } from '@/utils/edges/getIncomingEdges';
+import { getOutgoingEdges } from '@/utils/edges/getOutgoingEdges';
 
 import { Box, Link2Icon, X, ArrowRight } from 'lucide-react';
 
@@ -162,20 +162,20 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
 
     return (
         <div className="overflow-y-auto mt-1 border-t border-depth-3">
+            {showName && (
+                <div className="flex flex-col gap-1 pt-1 m-1 mt-0">
+                    <Input
+                        value={selectedItem.name}
+                        onChange={changeName}
+                        placeholder={FIELD_TITLES.NAME}
+                        icon={Box}
+                        className="bg-depth-2 border border-depth-3"
+                    />
+                </div>
+            )}
+
             {selectedItem.kind === 'node' && (
                 <div className="flex flex-col px-1 gap-1">
-                    {showName && (
-                        <div className="flex flex-col gap-1 pt-1">
-                            <Input
-                                value={selectedItem.name}
-                                onChange={changeNodeName}
-                                placeholder={FIELD_TITLES.NAME}
-                                icon={Box}
-                                className="bg-depth-2 border border-depth-3"
-                            />
-                        </div>
-                    )}
-
                     {showDescription && (
                         <div className="flex flex-col gap-1">
                             <Textarea
