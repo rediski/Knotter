@@ -23,20 +23,18 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
 
     const scene = currentSceneId ? scenes[currentSceneId] : null;
     const items = scene?.items ?? [];
-    const nodes = getNodes(items);
 
     const filterText = useSidebarStore((state) => (panelId ? state.filterText[panelId] : ''));
 
-    const filteredNodes = useMemo(() => {
+    const filteredItems = useMemo(() => {
         if (!currentSceneId) return [];
 
         const scene = scenes[currentSceneId];
         const items = scene?.items ?? [];
 
-        const nodes = getNodes(items);
         const lowerText = filterText?.toLowerCase() || '';
 
-        return nodes.filter((item) => item.name.toLowerCase().includes(lowerText));
+        return items.filter((item) => item.name.toLowerCase().includes(lowerText));
     }, [currentSceneId, scenes, filterText]);
 
     useEffect(() => {
@@ -85,7 +83,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
 
         if (shiftKey && selectedItemIds.length > 0) {
             const lastSelectedId = selectedItemIds[selectedItemIds.length - 1];
-            const rangeSet = getRangeSelection(filteredNodes, nodeId, lastSelectedId);
+            const rangeSet = getRangeSelection(filteredItems, nodeId, lastSelectedId);
 
             if (rangeSet.size > 0) {
                 setSelectedItemIds(Array.from(rangeSet));
@@ -127,9 +125,9 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
         const itemHeight = 38;
 
         const position = Math.floor(mouseY / itemHeight);
-        const clampedPosition = Math.max(0, Math.min(position, filteredNodes.length));
+        const clampedPosition = Math.max(0, Math.min(position, filteredItems.length));
 
-        const currentIndexes = selectedItemIds.map((id) => filteredNodes.findIndex((node) => node.id === id));
+        const currentIndexes = selectedItemIds.map((id) => filteredItems.findIndex((item) => item.id === id));
         const minIndex = Math.min(...currentIndexes);
         const maxIndex = Math.max(...currentIndexes);
 
@@ -165,7 +163,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
             console.warn('Failed to parse drag data:', error);
         }
 
-        const currentIndexes = selectedIds.map((id) => filteredNodes.findIndex((node) => node.id === id));
+        const currentIndexes = selectedIds.map((id) => filteredItems.findIndex((item) => item.id === id));
         const minIndex = Math.min(...currentIndexes);
         const selectedCount = selectedIds.length;
 
@@ -231,7 +229,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
             >
-                {filteredNodes.length > 0 ? (
+                {filteredItems.length > 0 ? (
                     <>
                         {insertPosition !== null && draggingId && (
                             <div
@@ -243,13 +241,13 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                             />
                         )}
 
-                        {filteredNodes.map((filteredNode, index) => (
-                            <div key={filteredNode.id} className="relative">
+                        {filteredItems.map((filteredItem, index) => (
+                            <div key={filteredItem.id} className="relative">
                                 <HierarchyItem
-                                    filteredNode={filteredNode}
+                                    filteredItem={filteredItem}
                                     index={index}
                                     selectItem={selectItem}
-                                    isSelected={selectedItemIds.includes(filteredNode.id)}
+                                    isSelected={selectedItemIds.includes(filteredItem.id)}
                                     handleDragStart={handleDragStart}
                                     selectedItemIds={selectedItemIds}
                                 />
@@ -259,7 +257,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                 ) : (
                     <EmptyState
                         message={
-                            nodes.length === 0
+                            items.length === 0
                                 ? 'Создайте элемент, нажав ПКМ по холсту.'
                                 : `Не найдено элементов по запросу "${filterText}"`
                         }
