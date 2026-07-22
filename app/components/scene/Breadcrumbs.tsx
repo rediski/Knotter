@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { useItemsStore } from '@/store/useItemsStore';
 import { getNodeById } from '@/utils/nodes/getNodeById';
-import { ChevronRight, LandPlot, Box } from 'lucide-react';
+import { ChevronRight, LandPlot, PackageOpen } from 'lucide-react';
 
 export function Breadcrumbs() {
     const { currentSceneId, currentNodeId } = useItemsStore();
@@ -49,6 +49,7 @@ export function Breadcrumbs() {
             {currentNodeId && (
                 <>
                     <ChevronRight size={16} className="text-gray" />
+
                     <Link
                         href={`/${scene.id}/${currentNodeId}`}
                         className={`
@@ -56,7 +57,7 @@ export function Breadcrumbs() {
                             bg-bg-accent/10 border-bg-accent/10 text-text-accent
                         `}
                     >
-                        <Box size={16} />
+                        <PackageOpen size={16} />
 
                         <hr className="h-5 mx-1 border-l border-bg-accent/10" />
 
