@@ -35,7 +35,6 @@ export const HierarchyItem = memo(function HierarchyItem({
     const currentNodeId = useItemsStore((state) => state.currentNodeId);
     const isNodeTabOpen = currentNodeId === filteredItem.id;
 
-    const actualName = filteredItem.name;
     const orderNumber = index + 1;
     const isPartOfSelectionGroup = isSelected && selectedItemIds.length > 1;
 
@@ -89,7 +88,9 @@ export const HierarchyItem = memo(function HierarchyItem({
 
                         <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/10' : 'border-depth-4'}`} />
 
-                        <EditableName name={actualName} isSelected={isSelected} onChange={changeName} />
+                        <span className={`text-sm ${isSelected ? 'text-text-accent' : 'text-foreground'}`}>
+                            {filteredItem.name}
+                        </span>
 
                         <span
                             className={`ml-auto text-xs tabular-nums ${isSelected ? 'text-text-accent' : 'text-foreground'}`}
