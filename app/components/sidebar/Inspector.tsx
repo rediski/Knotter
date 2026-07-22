@@ -29,7 +29,7 @@ import { getSelectedNode } from '@/utils/nodes/getSelectedNodes';
 import { getIncomingEdges } from '@/utils/edges/getIncomingEdges';
 import { getOutgoingEdges } from '@/utils/edges/getOutgoingEdges';
 
-import { Box, Link2Icon, X, ArrowRight } from 'lucide-react';
+import { Box, X, LineSquiggle, Package } from 'lucide-react';
 
 const FIELD_TITLES = {
     NAME: 'Название',
@@ -70,43 +70,28 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                     {edges.map((edge) => {
                         const isSelected = selectedItemIds.includes(edge.id);
 
-                        const connectedNodeId = isIncoming ? edge.from : edge.to;
-                        const connectedNodeName = nodes.find((node) => node.id === connectedNodeId)?.name;
-
                         return (
                             <div
                                 key={edge.id}
                                 onClick={() => setSelectedItemIds([edge.id])}
                                 className={`
-                                    flex items-center gap-2 text-sm px-3 py-2 rounded-md cursor-pointer group
-                                    ${isSelected ? 'bg-bg-accent/10 border border-bg-accent/10 text-text-accent' : 'bg-depth-3 hover:bg-depth-4 border border-depth-4 text-contrast'}
-                                `}
+                                flex items-center gap-2 text-sm px-3 py-2 rounded-md cursor-pointer group
+                                ${isSelected ? 'bg-bg-accent/10 border border-bg-accent/10 text-text-accent' : 'bg-depth-3 hover:bg-depth-4 border border-depth-4 text-contrast'}
+                            `}
                             >
-                                <Link2Icon size={16} />
+                                <LineSquiggle size={16} />
 
                                 <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/20' : 'border-depth-5'}`} />
 
                                 <div className="flex items-center gap-1.5 flex-1">
-                                    {isIncoming ? (
-                                        <>
-                                            <span>{connectedNodeName}</span>
-                                            <ArrowRight size={14} />
-                                            <span>{selectedNode?.name}</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <span>{selectedNode?.name}</span>
-                                            <ArrowRight size={14} />
-                                            <span>{connectedNodeName}</span>
-                                        </>
-                                    )}
+                                    <span>{edge.name}</span>
                                 </div>
 
                                 <button
                                     className={`
-                                        opacity-0 group-hover:opacity-100 rounded p-0.5 transition-opacity cursor-pointer
-                                        ${isSelected ? 'hover:bg-bg-accent/10' : 'hover:bg-depth-5 '}
-                                    `}
+                                    opacity-0 group-hover:opacity-100 rounded p-0.5 transition-opacity cursor-pointer
+                                    ${isSelected ? 'hover:bg-bg-accent/10' : 'hover:bg-depth-5'}
+                                `}
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         deleteSelectedItemsById(edge.id);
@@ -269,7 +254,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                                 onClick={() => setSelectedItemIds([selectedItem.from])}
                                 className="flex items-center gap-2 text-sm px-3 py-2 rounded-md cursor-pointer group bg-depth-3 hover:bg-depth-4 border border-depth-4 text-contrast"
                             >
-                                <Link2Icon size={16} />
+                                <Package size={16} />
                                 <div className="border-l h-5 border-depth-5" />
                                 <span>{nodes.find((node) => node.id === selectedItem.from)?.name}</span>
                             </div>
@@ -286,7 +271,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                                 onClick={() => setSelectedItemIds([selectedItem.to])}
                                 className="flex items-center gap-2 text-sm px-3 py-2 rounded-md cursor-pointer group bg-depth-3 hover:bg-depth-4 border border-depth-4 text-contrast"
                             >
-                                <Link2Icon size={16} />
+                                <Package size={16} />
                                 <div className="border-l h-5 border-depth-5" />
                                 <span>{nodes.find((node) => node.id === selectedItem.to)?.name}</span>
                             </div>
