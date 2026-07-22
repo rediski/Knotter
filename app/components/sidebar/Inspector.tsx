@@ -162,7 +162,9 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
                         value={selectedItem.name}
                         onChange={changeName}
                         placeholder={FIELD_TITLES.NAME}
-                        icon={Box}
+                        icon={
+                            selectedItem.kind === 'node' ? Package : selectedItem.kind === 'edge' ? LineSquiggle : undefined
+                        }
                         className="bg-depth-2 border border-depth-3"
                     />
                 </div>
