@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useState, useEffect } from 'react';
 
 import type { Edge } from '@/_core/_/canvas.types';
 
@@ -45,18 +45,23 @@ const FIELD_TITLES = {
 } as const;
 
 export const Inspector = memo(function Inspector({ panelId }: { panelId?: string }) {
-    const selectedItem = getSelectedItem();
-    const selectedNode = getSelectedNode();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
-
     const { currentSceneId, scenes, selectedItemIds, setSelectedItemIds } = useItemsStore();
+
+    const filterText = useSidebarStore((state) => (panelId ? state.filterText[panelId] : ''));
+
+    const selectedItem = mounted ? getSelectedItem() : null;
+    const selectedNode = mounted ? getSelectedNode() : null;
 
     const scene = currentSceneId ? scenes[currentSceneId] : null;
     const items = scene?.items ?? [];
     const nodes = getNodes(items);
-
-    const filterText = useSidebarStore((state) => (panelId ? state.filterText[panelId] : ''));
 
     const incomingEdges = getIncomingEdges(items, selectedNode?.id);
     const outgoingEdges = getOutgoingEdges(items, selectedNode?.id);
@@ -106,6 +111,10 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
             </Dropdown>
         );
     };
+
+    if (!mounted) {
+        return <EmptyState message="Загрузка..." />;
+    }
 
     if (!selectedItem) {
         return <EmptyState message="Необходимо выбрать один из элементов" />;
