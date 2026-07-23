@@ -5,13 +5,11 @@ import { useRouter } from 'next/navigation';
 
 import type { CanvasItem } from '@/_core/_/canvas.types';
 
-import { EditableName } from '@/components/UI/EditableName';
+import { useItemsStore } from '@/store/useItemsStore';
 
 import { openNodeTab } from '@/utils/nodes/openNodeTab';
 
 import { LineSquiggle, Package, PackageOpen } from 'lucide-react';
-import { changeName } from '@/utils/items/changeName';
-import { useItemsStore } from '@/store/useItemsStore';
 
 interface HierarchyItemProps {
     filteredItem: CanvasItem;
