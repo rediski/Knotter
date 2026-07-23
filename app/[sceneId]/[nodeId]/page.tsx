@@ -5,21 +5,22 @@ import { useParams, useRouter } from 'next/navigation';
 
 import { NODE_SHAPES } from '@/_core/_/nodeShapeType';
 
+import { Input } from '@/components/UI/Input';
+import { EmptyState } from '@/components/UI/EmptyState';
+
 import { ParameterItem } from '@/components/parameters/ParameterItem';
 import { NodeParameters } from '@/components/parameters/NodeParameters';
 import { CreateParameterForm } from '@/components/parameters/CreateParameterForm';
 
-import { useNodeContent } from '@/components/parameters/useNodeContent';
+import { useItemsStore } from '@/store/useItemsStore';
 
-import { Input } from '@/components/UI/Input';
-import { EmptyState } from '@/components/UI/EmptyState';
+import { useNodeContent } from '@/components/parameters/useNodeContent';
 
 import { getNodes } from '@/utils/nodes/getNodes';
 import { addSelectedParametersToNode } from '@/utils/nodes/addSelectedParametersToNode';
 import { hasParameterInNode } from '@/utils/nodes/hasParameterInNode';
 
-import { Search, ArrowBigUp, ArrowBigDown, Plus, X } from 'lucide-react';
-import { useItemsStore } from '@/store/useItemsStore';
+import { Search, Plus, X } from 'lucide-react';
 
 export default function NodePage() {
     const params = useParams();
@@ -80,9 +81,15 @@ export default function NodePage() {
 
         selectParameters,
         clearSelection,
-        moveSelectedParametersUp,
-        moveSelectedParametersDown,
         deleteSelectedParameters,
+
+        draggingId,
+        insertPosition,
+        listRef,
+        handleDragStart,
+        handleDragOver,
+        handleDrop,
+        handleDragEnd,
     } = useNodeContent();
 
     if (!openedNode) return null;
@@ -106,18 +113,6 @@ export default function NodePage() {
             icon: Plus,
             iconProps: { size: 16 },
             disabled: !canAddSelected,
-        },
-        {
-            onClick: moveSelectedParametersUp,
-            icon: ArrowBigUp,
-            iconProps: { size: 16, fill: 'var(--foreground)', stroke: 'var(--foreground)' },
-            disabled: !hasSelectedParameters,
-        },
-        {
-            onClick: moveSelectedParametersDown,
-            icon: ArrowBigDown,
-            iconProps: { size: 16, fill: 'var(--foreground)', stroke: 'var(--foreground)' },
-            disabled: !hasSelectedParameters,
         },
         {
             onClick: deleteSelectedParameters,
@@ -214,27 +209,49 @@ export default function NodePage() {
                         ))}
                     </div>
 
-                    {filteredParameters.length > 0 && (
-                        <div className="flex flex-col gap-1 p-1">
-                            {filteredParameters.map((parameter) => (
-                                <ParameterItem
-                                    key={parameter.id}
-                                    parameter={parameter}
-                                    selectedIds={selectedParameters}
-                                    onSelect={selectParameters}
-                                    hasParameterInNode={hasParameterInNode(parameter.id, nodeId)}
-                                />
-                            ))}
-                        </div>
-                    )}
+                    <ul
+                        className="flex flex-col gap-1 p-1 list-none relative"
+                        ref={listRef}
+                        onDragOver={handleDragOver}
+                        onDrop={handleDrop}
+                        onDragEnd={handleDragEnd}
+                    >
+                        {filteredParameters.length > 0 ? (
+                            <>
+                                {insertPosition !== null && draggingId && (
+                                    <div
+                                        className="absolute left-1 right-1 h-0.5 bg-bg-accent rounded-full z-20 pointer-events-none"
+                                        style={{
+                                            top: `calc(${insertPosition} * (100% / ${filteredParameters.length}))`,
+                                            transition: 'top 0.05s ease-out',
+                                        }}
+                                    />
+                                )}
 
-                    {filteredParameters.length === 0 && (
-                        <EmptyState
-                            message={
-                                parameters.length === 0 ? 'Параметры не найдены' : 'Параметры с таким именем не найдены'
-                            }
-                        />
-                    )}
+                                {filteredParameters.map((parameter) => (
+                                    <li
+                                        key={parameter.id}
+                                        className="list-none"
+                                        draggable
+                                        onDragStart={(e) => handleDragStart(e, parameter.id)}
+                                    >
+                                        <ParameterItem
+                                            parameter={parameter}
+                                            selectedIds={selectedParameters}
+                                            onSelect={selectParameters}
+                                            hasParameterInNode={hasParameterInNode(parameter.id, nodeId)}
+                                        />
+                                    </li>
+                                ))}
+                            </>
+                        ) : (
+                            <EmptyState
+                                message={
+                                    parameters.length === 0 ? 'Параметры не найдены' : 'Параметры с таким именем не найдены'
+                                }
+                            />
+                        )}
+                    </ul>
                 </div>
             </div>
         </div>

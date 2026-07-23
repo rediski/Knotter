@@ -1,10 +1,11 @@
-import { useMemo, useState, type MouseEvent } from 'react';
+import { useMemo, useState, useCallback, type MouseEvent } from 'react';
 
 import type { Parameter } from '@/_core/_/parameter';
 
 import { isStructure } from '@/_core/_/parameter.type-guards';
 
 import { useItemsStore } from '@/store/useItemsStore';
+import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 
 import { getFilteredParameters } from '@/utils/parameters/getFilteredParameters';
 import { getRangeSelection } from '@/utils/canvas/getRangeSelection';
@@ -80,91 +81,36 @@ export const useNodeContent = () => {
 
     const filteredParameters = useMemo(() => getFilteredParameters(parameters, filterText), [parameters, filterText]);
 
-    const selectParameters = (id: string, ctrlKey: boolean, shiftKey: boolean) => {
-        if (ctrlKey) {
-            const newSet = new Set(selectedParameters);
-            const wasDeleted = newSet.delete(id);
+    const handleDragReorder = useCallback(
+        (newParameters: Parameter[]) => {
+            const firstSelectedId = Array.from(selectedParameters)[0];
+            if (!firstSelectedId) return;
 
-            if (!wasDeleted) {
-                newSet.add(id);
-            }
+            const firstParameter = parameters.find((p) => p.id === firstSelectedId);
+            if (!firstParameter) return;
 
-            setSelectedParameters(newSet);
-            return;
-        }
+            const newSiblingsIds = newParameters
+                .filter((p) => {
+                    if (firstParameter.parentId) {
+                        return p.parentId === firstParameter.parentId;
+                    }
+                    return p.parentId === null;
+                })
+                .map((p) => p.id);
 
-        if (shiftKey && selectedParameters.size > 0) {
-            const lastSelectedId = Array.from(selectedParameters)[selectedParameters.size - 1];
-            const rangeSet = getRangeSelection(filteredParameters, id, lastSelectedId);
+            updateSiblingsOrder(parameters, firstParameter, newSiblingsIds, setParameters);
+        },
+        [parameters, selectedParameters, setParameters],
+    );
 
-            if (rangeSet.size > 0) {
-                setSelectedParameters(rangeSet);
-            }
-
-            return;
-        }
-
-        setSelectedParameters(new Set([id]));
-    };
-
-    const clearSelection = () => {
-        setSelectedParameters(new Set());
-    };
-
-    const moveSelectedParameters = (direction: 'up' | 'down') => {
-        if (selectedParameters.size === 0) return;
-
-        const selectedIds = Array.from(selectedParameters);
-        const selectedParametersList = selectedIds
-            .map((id) => parameters.find((parameter) => parameter.id === id))
-            .filter((parameter): parameter is Parameter => parameter !== undefined);
-
-        if (selectedParametersList.length === 0) return;
-
-        const firstParameter = selectedParametersList[0];
-        const siblingsIds = getSiblingsIds(parameters, firstParameter, filteredParameters);
-        if (siblingsIds.length === 0) return;
-
-        const selectedIndices = selectedIds
-            .map((id) => siblingsIds.findIndex((siblingId) => siblingId === id))
-            .filter((index) => index !== -1)
-            .sort((a, b) => a - b);
-
-        if (selectedIndices.length === 0) return;
-
-        if (direction === 'up' && selectedIndices[0] <= 0) return;
-        if (direction === 'down' && selectedIndices[selectedIndices.length - 1] === siblingsIds.length - 1) return;
-
-        const newSiblingsIds = [...siblingsIds];
-
-        if (direction === 'up') {
-            const firstIndex = selectedIndices[0];
-            const movedElement = newSiblingsIds[firstIndex - 1];
-
-            newSiblingsIds.splice(firstIndex - 1, 1);
-            newSiblingsIds.splice(selectedIndices[selectedIndices.length - 1], 0, movedElement);
-        }
-
-        if (direction === 'down') {
-            const lastIndex = selectedIndices[selectedIndices.length - 1];
-            const movedElement = newSiblingsIds[lastIndex + 1];
-
-            newSiblingsIds.splice(lastIndex + 1, 1);
-            newSiblingsIds.splice(selectedIndices[0], 0, movedElement);
-        }
-
-        updateSiblingsOrder(parameters, firstParameter, newSiblingsIds, setParameters);
-    };
-
-    const moveSelectedParametersUp = (e: MouseEvent) => {
-        e.stopPropagation();
-        moveSelectedParameters('up');
-    };
-
-    const moveSelectedParametersDown = (e: MouseEvent) => {
-        e.stopPropagation();
-        moveSelectedParameters('down');
-    };
+    const { draggingId, insertPosition, listRef, handleDragStart, handleDragOver, handleDrop, handleDragEnd } =
+        useDragAndDrop<Parameter>({
+            filteredItems: filteredParameters,
+            items: parameters,
+            selectedIds: Array.from(selectedParameters),
+            onSelect: (ids) => setSelectedParameters(new Set(ids)),
+            onReorder: handleDragReorder,
+        });
 
     const deleteSelectedParameters = (e: MouseEvent) => {
         e.stopPropagation();
@@ -191,6 +137,40 @@ export const useNodeContent = () => {
         setSelectedParameters(new Set());
     };
 
+    const clearSelection = useCallback(() => {
+        setSelectedParameters(new Set());
+    }, [setSelectedParameters]);
+
+    const selectParameters = useCallback(
+        (id: string, ctrlKey: boolean, shiftKey: boolean) => {
+            if (ctrlKey) {
+                const newSet = new Set(selectedParameters);
+                const wasDeleted = newSet.delete(id);
+
+                if (!wasDeleted) {
+                    newSet.add(id);
+                }
+
+                setSelectedParameters(newSet);
+                return;
+            }
+
+            if (shiftKey && selectedParameters.size > 0) {
+                const lastSelectedId = Array.from(selectedParameters)[selectedParameters.size - 1];
+                const rangeSet = getRangeSelection(filteredParameters, id, lastSelectedId);
+
+                if (rangeSet.size > 0) {
+                    setSelectedParameters(rangeSet);
+                }
+
+                return;
+            }
+
+            setSelectedParameters(new Set([id]));
+        },
+        [selectedParameters, filteredParameters, setSelectedParameters],
+    );
+
     return {
         filteredParameters,
         parameters,
@@ -201,8 +181,14 @@ export const useNodeContent = () => {
 
         selectParameters,
         clearSelection,
-        moveSelectedParametersUp,
-        moveSelectedParametersDown,
         deleteSelectedParameters,
+
+        draggingId,
+        insertPosition,
+        listRef,
+        handleDragStart,
+        handleDragOver,
+        handleDrop,
+        handleDragEnd,
     };
 };
