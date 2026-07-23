@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo, useCallback, useMemo, useState, useEffect, useRef } from 'react';
+import React, { memo, useCallback, useMemo, useState, useEffect } from 'react';
 
 import { EmptyState } from '@/components/UI/EmptyState';
 import { HierarchyItem } from '@/components/sidebar/HierarchyItem';
@@ -8,21 +8,19 @@ import { HierarchyItem } from '@/components/sidebar/HierarchyItem';
 import { useItemsStore } from '@/store/useItemsStore';
 import { useSidebarStore } from '@/store/useSidebarStore';
 
-import { getNodes } from '@/utils/nodes/getNodes';
 import { getRangeSelection } from '@/utils/canvas/getRangeSelection';
-import { moveNodeUp, moveNodeDown } from '@/utils/nodes/moveNode';
 import { deleteSelectedItems } from '@/utils/items/deleteSelectedItems';
+import { useDragAndDrop } from '@/hooks/useDragAndDrop';
+
+import type { CanvasItem } from '@/_core/_/canvas.types';
 
 export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string }) {
     const [mounted, setMounted] = useState(false);
-    const [draggingId, setDraggingId] = useState<string | null>(null);
-    const [insertPosition, setInsertPosition] = useState<number | null>(null);
-    const listRef = useRef<HTMLUListElement>(null);
 
     const { currentSceneId, scenes, selectedItemIds, setSelectedItemIds } = useItemsStore();
 
     const scene = currentSceneId ? scenes[currentSceneId] : null;
-    const items = scene?.items ?? [];
+    const items: CanvasItem[] = scene?.items ?? [];
 
     const filterText = useSidebarStore((state) => (panelId ? state.filterText[panelId] : ''));
 
@@ -36,6 +34,30 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
 
         return items.filter((item) => item.name.toLowerCase().includes(lowerText));
     }, [currentSceneId, scenes, filterText]);
+
+    const handleReorder = useCallback(
+        (newItems: CanvasItem[]) => {
+            if (currentSceneId && scene) {
+                const { scenes } = useItemsStore.getState();
+                const updatedScene = {
+                    ...scene,
+                    items: newItems,
+                    updatedAt: new Date(),
+                };
+                useItemsStore.setState({ scenes: { ...scenes, [currentSceneId]: updatedScene } });
+            }
+        },
+        [currentSceneId, scene],
+    );
+
+    const { draggingId, insertPosition, listRef, handleDragStart, handleDragOver, handleDrop, handleDragEnd } =
+        useDragAndDrop<CanvasItem>({
+            filteredItems,
+            items,
+            selectedIds: selectedItemIds,
+            onSelect: setSelectedItemIds,
+            onReorder: handleReorder,
+        });
 
     useEffect(() => {
         setMounted(true);
@@ -70,150 +92,33 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
         [setSelectedItemIds],
     );
 
-    const selectItem = (nodeId: string, ctrlKey: boolean, shiftKey: boolean) => {
-        if (ctrlKey) {
-            const newSet = new Set(selectedItemIds);
-            const wasDeleted = newSet.delete(nodeId);
+    const selectItem = useCallback(
+        (nodeId: string, ctrlKey: boolean, shiftKey: boolean) => {
+            if (ctrlKey) {
+                const newSet = new Set(selectedItemIds);
+                const wasDeleted = newSet.delete(nodeId);
 
-            if (!wasDeleted) newSet.add(nodeId);
+                if (!wasDeleted) newSet.add(nodeId);
 
-            setSelectedItemIds(Array.from(newSet));
-            return;
-        }
-
-        if (shiftKey && selectedItemIds.length > 0) {
-            const lastSelectedId = selectedItemIds[selectedItemIds.length - 1];
-            const rangeSet = getRangeSelection(filteredItems, nodeId, lastSelectedId);
-
-            if (rangeSet.size > 0) {
-                setSelectedItemIds(Array.from(rangeSet));
+                setSelectedItemIds(Array.from(newSet));
+                return;
             }
 
-            return;
-        }
+            if (shiftKey && selectedItemIds.length > 0) {
+                const lastSelectedId = selectedItemIds[selectedItemIds.length - 1];
+                const rangeSet = getRangeSelection(filteredItems, nodeId, lastSelectedId);
 
-        setSelectedItemIds([nodeId]);
-    };
+                if (rangeSet.size > 0) {
+                    setSelectedItemIds(Array.from(rangeSet));
+                }
 
-    const handleDragStart = (e: React.DragEvent, nodeId: string) => {
-        e.stopPropagation();
+                return;
+            }
 
-        if (!selectedItemIds.includes(nodeId)) {
             setSelectedItemIds([nodeId]);
-        }
-
-        setDraggingId(nodeId);
-
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData(
-            'text/plain',
-            JSON.stringify({
-                primaryId: nodeId,
-                selectedIds: selectedItemIds,
-            }),
-        );
-    };
-
-    const handleDragOver = (e: React.DragEvent) => {
-        e.stopPropagation();
-        e.preventDefault();
-
-        if (!draggingId || !listRef.current) return;
-
-        const listRect = listRef.current.getBoundingClientRect();
-        const mouseY = e.clientY - listRect.top;
-        const itemHeight = 38;
-
-        const position = Math.floor(mouseY / itemHeight);
-        const clampedPosition = Math.max(0, Math.min(position, filteredItems.length));
-
-        const currentIndexes = selectedItemIds.map((id) => filteredItems.findIndex((item) => item.id === id));
-        const minIndex = Math.min(...currentIndexes);
-        const maxIndex = Math.max(...currentIndexes);
-
-        let insertPos: number | null = clampedPosition;
-
-        if (clampedPosition >= minIndex && clampedPosition <= maxIndex + 1) {
-            insertPos = null;
-        }
-
-        setInsertPosition(insertPos);
-    };
-
-    const handleDrop = (e: React.DragEvent) => {
-        e.stopPropagation();
-        e.preventDefault();
-
-        if (!draggingId || insertPosition === null) {
-            setDraggingId(null);
-            setInsertPosition(null);
-            return;
-        }
-
-        let selectedIds = [draggingId];
-
-        try {
-            const rawData = e.dataTransfer.getData('text/plain');
-            const data = JSON.parse(rawData);
-
-            if (data.selectedIds && Array.isArray(data.selectedIds)) {
-                selectedIds = data.selectedIds;
-            }
-        } catch (error) {
-            console.warn('Failed to parse drag data:', error);
-        }
-
-        const currentIndexes = selectedIds.map((id) => filteredItems.findIndex((item) => item.id === id));
-        const minIndex = Math.min(...currentIndexes);
-        const selectedCount = selectedIds.length;
-
-        if (currentIndexes.includes(-1) || minIndex === insertPosition) {
-            setDraggingId(null);
-            setInsertPosition(null);
-            return;
-        }
-
-        let newItems = items;
-
-        if (minIndex < insertPosition) {
-            for (let i = selectedCount - 1; i >= 0; i--) {
-                const nodeId = selectedIds[i];
-                const currentIndex = currentIndexes[i];
-
-                for (let j = currentIndex; j < insertPosition; j++) {
-                    newItems = moveNodeDown(newItems, nodeId);
-                }
-            }
-        }
-
-        if (minIndex > insertPosition) {
-            for (let i = 0; i < selectedCount; i++) {
-                const nodeId = selectedIds[i];
-                const currentIndex = currentIndexes[i];
-
-                for (let j = currentIndex; j > insertPosition; j--) {
-                    newItems = moveNodeUp(newItems, nodeId);
-                }
-            }
-        }
-
-        if (currentSceneId) {
-            const updatedScene = {
-                ...scene!,
-                items: newItems,
-                updatedAt: new Date(),
-            };
-            useItemsStore.setState({ scenes: { ...scenes, [currentSceneId]: updatedScene } });
-        }
-
-        setDraggingId(null);
-        setInsertPosition(null);
-    };
-
-    const handleDragEnd = () => {
-        setDraggingId(null);
-        setInsertPosition(null);
-    };
+        },
+        [selectedItemIds, setSelectedItemIds, filteredItems],
+    );
 
     if (!mounted) {
         return <div className="flex flex-col h-full" />;
