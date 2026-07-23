@@ -12,7 +12,7 @@ import { Hierarchy } from '@/components/sidebar/Hierarchy';
 import { Inspector } from '@/components/sidebar/Inspector';
 
 import { History } from '@/components/sidebar/History';
-import { Parameters } from '@/components/sidebar/Parameters';
+import { Data } from '@/components/sidebar/Data';
 
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 import { Input } from '@/components/UI/Input';
@@ -140,8 +140,8 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                         return <History />;
                     case 'inspector':
                         return <Inspector panelId={panel.id} />;
-                    case 'parameters':
-                        return <Parameters />;
+                    case 'data':
+                        return <Data />;
                     default:
                         return <EmptyState message="Выберите тип панели" />;
                 }

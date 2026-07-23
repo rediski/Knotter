@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 
 import { CodeBlock } from '@/components/UI/CodeBlock';
 import { EmptyState } from '@/components/UI/EmptyState';
@@ -9,7 +9,7 @@ import { KeyFilters } from '@/components/sidebar/KeyFilters';
 import { useItemsStore } from '@/store/useItemsStore';
 import { useSidebarStore } from '@/store/useSidebarStore';
 
-export const Parameters = () => {
+export const Data = () => {
     const parameters = useItemsStore((state) => state.parameters);
     const { showFilters, toggleShowFilters } = useSidebarStore();
     const [filteredParameters, setFilteredParameters] = useState(parameters);
