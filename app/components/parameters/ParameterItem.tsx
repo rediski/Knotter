@@ -54,7 +54,7 @@ export const ParameterItem = memo(function ParameterItem({
         <div
             onClick={handleClick}
             className={`
-                flex gap-2 px-3 py-1 text-sm border rounded-md items-center group cursor-pointer select-none
+                flex gap-2 px-3 py-1 text-sm border rounded-md items-center group cursor-grab select-none
                 ${isSelected ? 'bg-bg-accent/10 border-bg-accent/10' : 'bg-depth-2 border-depth-3'}
             `}
         >
