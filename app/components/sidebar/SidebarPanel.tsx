@@ -10,9 +10,9 @@ import { Clipboard } from '@/components/sidebar/Clipboard';
 import { Details } from '@/components/sidebar/Details';
 import { Hierarchy } from '@/components/sidebar/Hierarchy';
 import { Inspector } from '@/components/sidebar/Inspector';
-
 import { History } from '@/components/sidebar/History';
 import { Data } from '@/components/sidebar/Data';
+import { Paramters } from '@/components/sidebar/Parameters';
 
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
 import { Input } from '@/components/UI/Input';
@@ -142,6 +142,8 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                         return <Inspector panelId={panel.id} />;
                     case 'data':
                         return <Data />;
+                    case 'parameters':
+                        return <Paramters />;
                     default:
                         return <EmptyState message="Выберите тип панели" />;
                 }
