@@ -1,6 +1,6 @@
-import { ListTree, History, Settings, Database, FileBracesCorner, Clipboard, type LucideIcon } from 'lucide-react';
+import { ListTree, History, Settings, Database, FileBracesCorner, Clipboard, ScanBox, type LucideIcon } from 'lucide-react';
 
-export type PanelType = 'clipboard' | 'details' | 'hierarchy' | 'history' | 'inspector' | 'data';
+export type PanelType = 'clipboard' | 'details' | 'hierarchy' | 'history' | 'inspector' | 'data' | 'parameters';
 
 export interface SidebarPanel {
     id: string;
@@ -14,6 +14,7 @@ export const panelTitles: Record<PanelType, string> = {
     history: 'История',
     inspector: 'Инспектор',
     data: 'Данные',
+    parameters: 'Параметры',
 };
 
 export const panelIcons: Record<PanelType, LucideIcon> = {
@@ -23,4 +24,5 @@ export const panelIcons: Record<PanelType, LucideIcon> = {
     history: History,
     inspector: Settings,
     data: Database,
+    parameters: ScanBox,
 };
