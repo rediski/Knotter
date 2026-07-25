@@ -1,31 +1,20 @@
 import { useParams } from 'next/navigation';
-import { NODE_SHAPES } from '@/_core/_/nodeShapeType';
 
 import { Input } from '@/components/UI/Input';
 import { EmptyState } from '@/components/UI/EmptyState';
 import { ParameterItem } from '@/components/parameters/ParameterItem';
 import { CreateParameterForm } from '@/components/parameters/CreateParameterForm';
 
-import { useNodeContent } from '../parameters/useNodeContent';
-import { useItemsStore } from '@/store/useItemsStore';
+import { useNodeContent } from '@/components/parameters/useNodeContent';
 
 import { hasParameterInNode } from '@/utils/nodes/hasParameterInNode';
 import { addSelectedParametersToNode } from '@/utils/nodes/addSelectedParametersToNode';
-import { getNodes } from '@/utils/nodes/getNodes';
 
 import { Search, Plus, X } from 'lucide-react';
 
 export const Paramters = () => {
     const params = useParams();
     const nodeId = params.nodeId as string;
-
-    const { currentSceneId, scenes } = useItemsStore();
-
-    const scene = currentSceneId ? scenes[currentSceneId] : null;
-    const items = scene?.items ?? [];
-    const nodes = getNodes(items);
-
-    const openedNode = nodes.find((item) => item.id === nodeId && item.kind === 'node');
 
     const {
         filteredParameters,
@@ -46,12 +35,6 @@ export const Paramters = () => {
         handleDrop,
         handleDragEnd,
     } = useNodeContent();
-
-    if (!openedNode) return <EmptyState message="Необходимо перейти в один из узлов" />;
-
-    const Icon = NODE_SHAPES[openedNode.shapeType]?.icon;
-
-    if (!Icon) return null;
 
     const selectedIds = Array.from(selectedParameters);
     const selectedParametersList = parameters.filter((parameter) => selectedParameters.has(parameter.id));
