@@ -10,23 +10,23 @@
     },
     "dependencies": {
         "lucide-react": "^1.26.0",
-        "next": "16.2.6",
-        "react": "19.2.6",
-        "react-dom": "19.2.6",
-        "uuid": "^14.0.0",
-        "zustand": "^5.0.13"
+        "next": "16.2.11",
+        "react": "19.2.8",
+        "react-dom": "19.2.8",
+        "uuid": "^14.0.1",
+        "zustand": "^5.0.14"
     },
     "devDependencies": {
-        "@eslint/eslintrc": "^3.3.5",
-        "@tailwindcss/postcss": "^4.3.0",
+        "@eslint/eslintrc": "^3.3.6",
+        "@tailwindcss/postcss": "^4.3.3",
         "@types/next": "^8.0.7",
-        "@types/node": "^25.9.1",
-        "@types/react": "^19.2.15",
+        "@types/node": "^26.1.1",
+        "@types/react": "^19.2.17",
         "@types/react-dom": "^19.2.3",
-        "eslint": "^10.4.0",
-        "eslint-config-next": "16.2.6",
-        "prettier": "^3.8.3",
-        "tailwindcss": "^4.3.0",
+        "eslint": "^10.8.0",
+        "eslint-config-next": "16.2.11",
+        "prettier": "^3.9.6",
+        "tailwindcss": "^4.3.3",
         "typescript": "^6.0.3"
     }
 }
