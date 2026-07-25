@@ -72,7 +72,7 @@ export default function NodePage() {
     return (
         <div className="flex gap-1 w-full h-full" onClick={clearSelection}>
             <div
-                className="bg-depth-1 max-w-3xl min-w-3xl w-full rounded-lg border border-depth-3 overflow-hidden"
+                className="bg-depth-1 min-w-3xl w-full rounded-lg border border-depth-3 overflow-hidden"
                 style={{
                     backgroundImage: `
                         linear-gradient(to right, var(--grid-color-1) 1px, transparent 1px),
