@@ -7,11 +7,10 @@ import type { PanelType, SidebarPanel as SidebarPanelType } from '@/_core/_/side
 import { panelTitles, panelIcons } from '@/_core/_/sidebarPanel';
 
 import { Clipboard } from '@/components/sidebar/Clipboard';
-import { Details } from '@/components/sidebar/Details';
-import { Hierarchy } from '@/components/sidebar/Hierarchy';
-import { Inspector } from '@/components/sidebar/Inspector';
-import { History } from '@/components/sidebar/History';
 import { Data } from '@/components/sidebar/Data';
+import { Hierarchy } from '@/components/sidebar/Hierarchy';
+import { History } from '@/components/sidebar/History';
+import { Inspector } from '@/components/sidebar/Inspector';
 import { Paramters } from '@/components/sidebar/Parameters';
 
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
@@ -130,18 +129,16 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
 
             {(() => {
                 switch (panel.type) {
-                    case 'details':
-                        return <Details />;
-                    case 'hierarchy':
-                        return <Hierarchy panelId={panel.id} />;
                     case 'clipboard':
                         return <Clipboard />;
+                    case 'data':
+                        return <Data />;
+                    case 'hierarchy':
+                        return <Hierarchy panelId={panel.id} />;
                     case 'history':
                         return <History />;
                     case 'inspector':
                         return <Inspector panelId={panel.id} />;
-                    case 'data':
-                        return <Data />;
                     case 'parameters':
                         return <Paramters />;
                     default:
