@@ -47,7 +47,7 @@ export const Paramters = () => {
         handleDragEnd,
     } = useNodeContent();
 
-    if (!openedNode) return null;
+    if (!openedNode) return <EmptyState message="Необходимо перейти в один из узлов" />;
 
     const Icon = NODE_SHAPES[openedNode.shapeType]?.icon;
 
@@ -99,7 +99,10 @@ export const Paramters = () => {
                             key={index}
                             onClick={button.onClick}
                             disabled={button.disabled}
-                            className="flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 active:bg-depth-4 rounded-md border border-depth-3 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
+                            className={`
+                                flex flex-1 items-center justify-center w-8 h-8 p-1 bg-depth-2 hover:bg-depth-3 rounded-md border border-depth-3 disabled:opacity-30 
+                                ${button.disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
+                            `}
                         >
                             <button.icon {...button.iconProps} />
                         </button>
