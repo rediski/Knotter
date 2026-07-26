@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 import { CodeBlock } from '@/components/UI/CodeBlock';
 import { EmptyState } from '@/components/UI/EmptyState';
@@ -8,39 +8,48 @@ import { KeyFilters } from '@/components/sidebar/KeyFilters';
 
 import { useItemsStore } from '@/store/useItemsStore';
 import { useSidebarStore } from '@/store/useSidebarStore';
-import { getSelectedItems } from '@/utils/items/getSelectedItems';
 
 type ViewMode = 'parameters' | 'details';
 
+const VIEW_LABELS: Record<ViewMode, string> = {
+    parameters: 'Параметры',
+    details: 'Элементы',
+};
+
 export const Data = () => {
-    const [viewMode, setViewMode] = useState<ViewMode>('parameters');
-
     const parameters = useItemsStore((state) => state.parameters);
-    const { currentSceneId, scenes } = useItemsStore();
-    const { showFilters, toggleShowFilters } = useSidebarStore();
+    const currentSceneId = useItemsStore((state) => state.currentSceneId);
+    const scenes = useItemsStore((state) => state.scenes);
+    const selectedItemIds = useItemsStore((state) => state.selectedItemIds);
 
-    const data = useMemo(() => {
-        if (viewMode === 'parameters') {
-            return parameters;
-        }
+    const { showFilters, toggleShowFilters, dataViewMode, setDataViewMode } = useSidebarStore();
 
+    const selectedItems = useMemo(() => {
         const scene = currentSceneId ? scenes[currentSceneId] : null;
         const items = scene?.items ?? [];
+        const selectedIdsSet = new Set(selectedItemIds);
 
-        return items.length > 0 ? getSelectedItems() : [];
-    }, [viewMode, parameters, currentSceneId, scenes]);
+        return items.filter((item) => selectedIdsSet.has(item.id));
+    }, [currentSceneId, scenes, selectedItemIds]);
+
+    const data = useMemo(() => {
+        if (dataViewMode === 'parameters') {
+            return parameters;
+        }
+        return selectedItems;
+    }, [dataViewMode, parameters, selectedItems]);
 
     const [filteredData, setFilteredData] = useState(data);
 
-    useMemo(() => {
+    useEffect(() => {
         setFilteredData(data);
     }, [data]);
 
     const isEmpty = data.length === 0;
 
-    const getEmptyMessage = () => {
-        if (viewMode === 'parameters') {
-            return 'У вас нет созданных параметров';
+    const emptyMessage = useMemo(() => {
+        if (dataViewMode === 'parameters') {
+            return 'Нет созданных параметров';
         }
 
         const scene = currentSceneId ? scenes[currentSceneId] : null;
@@ -50,36 +59,36 @@ export const Data = () => {
             return 'Создайте хотя бы один элемент';
         }
 
-        return 'Необходимо выбрать один из элементов';
+        return 'Выберите элементы для просмотра';
+    }, [dataViewMode, currentSceneId, scenes]);
+
+    const handleFilterChange = (filtered: any[]) => {
+        setFilteredData(filtered);
     };
 
     return (
         <div className="flex flex-col gap-1 overflow-y-auto m-1 h-full">
-            <div className="flex gap-1 text-sm">
-                <button
-                    onClick={() => setViewMode('details')}
-                    className={`px-3 py-1 rounded-md w-full cursor-pointer bg-depth-3 hover:bg-depth-4 max-w-xs ${
-                        viewMode === 'details' ? 'opacity-100' : 'opacity-50'
-                    }`}
-                >
-                    Элементы
-                </button>
-
-                <button
-                    onClick={() => setViewMode('parameters')}
-                    className={`px-3 py-1 rounded-md w-full cursor-pointer bg-depth-3 hover:bg-depth-4 max-w-xs ${
-                        viewMode === 'parameters' ? 'opacity-100' : 'opacity-50'
-                    }`}
-                >
-                    Параметры
-                </button>
+            <div className="flex gap-1 text-sm bg-background p-1 rounded-md">
+                {Object.entries(VIEW_LABELS).map(([mode, label]) => (
+                    <button
+                        key={mode}
+                        onClick={() => setDataViewMode(mode as ViewMode)}
+                        className={`
+                            px-3 py-2 rounded-md w-full cursor-pointer 
+                            bg-depth-3 hover:bg-depth-4
+                            ${dataViewMode === mode ? 'opacity-100' : 'opacity-50'}
+                        `}
+                    >
+                        {label}
+                    </button>
+                ))}
             </div>
 
             {isEmpty ? (
-                <EmptyState message={getEmptyMessage()} />
+                <EmptyState message={emptyMessage} />
             ) : (
-                <div className="flex gap-1">
-                    {showFilters && <KeyFilters data={data} onFilterChange={setFilteredData} />}
+                <div className="flex flex-col gap-1">
+                    {showFilters && <KeyFilters data={data} onFilterChange={handleFilterChange} />}
 
                     <div className="relative bg-depth-2 border border-depth-3 rounded-md w-full h-max">
                         <CodeBlock data={filteredData} onToggleFilters={toggleShowFilters} showFilters={showFilters} />
