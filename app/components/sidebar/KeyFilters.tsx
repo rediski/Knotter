@@ -43,7 +43,7 @@ export function KeyFilters<T extends AnyObject = AnyObject>({ data, onFilterChan
     }, [allKeys]);
 
     const filteredData = useMemo((): T => {
-        if (selectedKeys.size === 0 || selectedKeys.size === allKeys.length) {
+        if (selectedKeys.size === 0) {
             return data;
         }
 
@@ -70,11 +70,11 @@ export function KeyFilters<T extends AnyObject = AnyObject>({ data, onFilterChan
     }, [filteredData]);
 
     return (
-        <div className="flex flex-col gap-1 select-none top-0 sticky">
+        <div className="flex flex-wrap gap-1 select-none">
             {allKeys.map((key) => (
                 <label
                     key={key}
-                    className="flex items-center gap-2 text-md cursor-pointer bg-depth-2 hover:bg-depth-3 border border-depth-3 min-w-64 px-3 py-1 h-fit rounded-md"
+                    className="flex w-full flex-1 items-center gap-2 text-md cursor-pointer bg-depth-2 hover:bg-depth-3 border border-depth-3 min-w-64 px-3 py-1 h-fit rounded-md"
                 >
                     <Checkbox
                         checked={selectedKeys.has(key)}
