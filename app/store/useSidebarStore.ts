@@ -3,6 +3,8 @@ import { persist } from 'zustand/middleware';
 import type { SidebarPanel } from '@/_core/_/sidebarPanel';
 import { v4 as uuid } from 'uuid';
 
+export type DataViewMode = 'parameters' | 'details';
+
 export interface SidebarState {
     sidebarPanels: SidebarPanel[];
     setSidebarPanels: (panels: SidebarPanel[]) => void;
@@ -19,6 +21,10 @@ export interface SidebarState {
     showFilters: boolean;
     setShowFilters: (show: boolean) => void;
     toggleShowFilters: () => void;
+
+    dataViewMode: DataViewMode;
+    setDataViewMode: (mode: DataViewMode) => void;
+    toggleDataViewMode: () => void;
 }
 
 export const useSidebarStore = create<SidebarState>()(
@@ -59,6 +65,13 @@ export const useSidebarStore = create<SidebarState>()(
             showFilters: true,
             setShowFilters: (showFilters) => set({ showFilters }),
             toggleShowFilters: () => set((state) => ({ showFilters: !state.showFilters })),
+
+            dataViewMode: 'parameters',
+            setDataViewMode: (dataViewMode) => set({ dataViewMode }),
+            toggleDataViewMode: () =>
+                set((state) => ({
+                    dataViewMode: state.dataViewMode === 'parameters' ? 'details' : 'parameters',
+                })),
         }),
         {
             name: 'sidebar-storage',
@@ -67,6 +80,7 @@ export const useSidebarStore = create<SidebarState>()(
                 sidebarPanels: state.sidebarPanels,
                 filterText: state.filterText,
                 showFilters: state.showFilters,
+                dataViewMode: state.dataViewMode,
             }),
         },
     ),
