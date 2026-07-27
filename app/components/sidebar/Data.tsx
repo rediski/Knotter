@@ -68,14 +68,14 @@ export const Data = () => {
 
     return (
         <div className="flex flex-col gap-1 overflow-y-auto m-1 h-full">
-            <div className="flex gap-1 text-sm bg-background p-1 rounded-md">
+            <div className="flex gap-1 text-sm bg-background p-1 rounded-md border border-depth-2">
                 {Object.entries(VIEW_LABELS).map(([mode, label]) => (
                     <button
                         key={mode}
                         onClick={() => setDataViewMode(mode as ViewMode)}
                         className={`
-                            px-3 py-2 rounded-md w-full cursor-pointer 
-                            bg-depth-3 hover:bg-depth-4
+                            px-3 h-9 rounded-md w-full cursor-pointer 
+                            bg-depth-2 hover:bg-depth-3 border border-depth-3
                             ${dataViewMode === mode ? 'opacity-100' : 'opacity-50'}
                         `}
                     >
