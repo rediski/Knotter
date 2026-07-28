@@ -1,6 +1,6 @@
 import { useItemsStore } from '@/store/useItemsStore';
 
-export const clearSelection = () => {
+export const сlearSelectedItems = () => {
     const itemsState = useItemsStore.getState();
 
     const hasTempEdge = itemsState.tempEdge !== null;

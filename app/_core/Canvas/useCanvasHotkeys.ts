@@ -12,7 +12,7 @@ import { undo, redo } from '@/utils/history/historyManager';
 import { toggleTooltipMode } from '@/utils/canvas/toggleTooltipMode';
 import { toggleMagnetMode } from '@/utils/canvas/toggleMagnetMode';
 import { toggleInvertY } from '@/utils/canvas/toggleInvertY';
-import { clearSelection } from '@/utils/canvas/сlearSelection';
+import { сlearSelectedItems } from '@/utils/items/сlearSelectedItems';
 
 import { deleteSelectedItems } from '@/utils/items/deleteSelectedItems';
 import { selectAllItems } from '@/utils/items/selectAllItems';
@@ -140,7 +140,7 @@ export function useCanvasHotkeys(canvasRef: RefObject<HTMLCanvasElement | null>)
             }
 
             if (key === 'escape') {
-                clearSelection();
+                сlearSelectedItems();
                 return;
             }
 
