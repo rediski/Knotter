@@ -89,7 +89,7 @@ export default function Home() {
                         />
 
                         <Card
-                            title="details"
+                            title="data"
                             text="Удобный доступ к данным выбранного элемента с функциями сохранения и копирования."
                         />
 
@@ -105,7 +105,7 @@ export default function Home() {
 
                         <Card title="inspector" text="Перечень доступных и редактируемых свойств выбранного элемента." />
 
-                        <Card title="data" text="Гибкая система параметров, поддерживающая примитивы и структуры." />
+                        <Card title="parameters" text="Гибкая система параметров, поддерживающая примитивы и структуры." />
                     </div>
                 </div>
             </div>
