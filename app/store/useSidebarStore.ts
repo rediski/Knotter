@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import type { SidebarPanel } from '@/_core/_/sidebarPanel';
 import { v4 as uuid } from 'uuid';
 
-export type DataViewMode = 'parameters' | 'details';
+export type DataViewMode = 'items' | 'parameters';
 
 export interface SidebarState {
     sidebarPanels: SidebarPanel[];
@@ -70,7 +70,7 @@ export const useSidebarStore = create<SidebarState>()(
             setDataViewMode: (dataViewMode) => set({ dataViewMode }),
             toggleDataViewMode: () =>
                 set((state) => ({
-                    dataViewMode: state.dataViewMode === 'parameters' ? 'details' : 'parameters',
+                    dataViewMode: state.dataViewMode === 'parameters' ? 'items' : 'parameters',
                 })),
         }),
         {
