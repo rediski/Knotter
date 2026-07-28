@@ -4,6 +4,7 @@ import { memo, type MouseEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
 import type { CanvasItem } from '@/_core/_/canvas.types';
+import { MAX_CANVAS_ITEMS } from '@/_core/_/canvas.constants';
 
 import { useItemsStore } from '@/store/useItemsStore';
 
@@ -93,7 +94,7 @@ export const HierarchyItem = memo(function HierarchyItem({
                         <span
                             className={`ml-auto text-xs tabular-nums ${isSelected ? 'text-text-accent' : 'text-foreground'}`}
                         >
-                            #{orderNumber}
+                            {orderNumber} / {MAX_CANVAS_ITEMS}
                         </span>
                     </div>
                 </div>
