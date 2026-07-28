@@ -8,9 +8,6 @@ import { NODE_SHAPES } from '@/_core/_/nodeShapeType';
 import { NodeParameters } from '@/components/parameters/NodeParameters';
 
 import { useItemsStore } from '@/store/useItemsStore';
-
-import { useNodeContent } from '@/components/parameters/useNodeContent';
-
 import { getNodes } from '@/utils/nodes/getNodes';
 
 export default function NodePage() {
@@ -62,15 +59,13 @@ export default function NodePage() {
         }
     }, [openedNode?.name]);
 
-    const { clearSelection } = useNodeContent();
-
     if (!openedNode) return null;
 
     const Icon = NODE_SHAPES[openedNode.shapeType]?.icon;
     if (!Icon) return null;
 
     return (
-        <div className="flex gap-1 w-full h-full" onClick={clearSelection}>
+        <div className="flex gap-1 w-full h-full">
             <div
                 className="bg-depth-1 min-w-3xl w-full rounded-lg border border-depth-3 overflow-hidden"
                 style={{

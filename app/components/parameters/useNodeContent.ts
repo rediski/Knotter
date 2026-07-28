@@ -137,10 +137,6 @@ export const useNodeContent = () => {
         setSelectedParameters(new Set());
     };
 
-    const clearSelection = useCallback(() => {
-        setSelectedParameters(new Set());
-    }, [setSelectedParameters]);
-
     const selectParameters = useCallback(
         (id: string, ctrlKey: boolean, shiftKey: boolean) => {
             if (ctrlKey) {
@@ -180,7 +176,6 @@ export const useNodeContent = () => {
         setFilterText,
 
         selectParameters,
-        clearSelection,
         deleteSelectedParameters,
 
         draggingId,
