@@ -1,5 +1,7 @@
 'use client';
 
+import type { DataViewMode } from '@/store/useSidebarStore';
+
 import { useState, useMemo, useEffect } from 'react';
 
 import { CodeBlock } from '@/components/UI/CodeBlock';
@@ -9,11 +11,9 @@ import { KeyFilters } from '@/components/sidebar/KeyFilters';
 import { useItemsStore } from '@/store/useItemsStore';
 import { useSidebarStore } from '@/store/useSidebarStore';
 
-type ViewMode = 'parameters' | 'details';
-
-const VIEW_LABELS: Record<ViewMode, string> = {
+const VIEW_LABELS: Record<DataViewMode, string> = {
+    items: 'Элементы',
     parameters: 'Параметры',
-    details: 'Элементы',
 };
 
 export const Data = () => {
@@ -72,7 +72,7 @@ export const Data = () => {
                 {Object.entries(VIEW_LABELS).map(([mode, label]) => (
                     <button
                         key={mode}
-                        onClick={() => setDataViewMode(mode as ViewMode)}
+                        onClick={() => setDataViewMode(mode as DataViewMode)}
                         className={`
                             px-3 h-9 rounded-md w-full cursor-pointer 
                             bg-depth-2 hover:bg-depth-3 border border-depth-3
