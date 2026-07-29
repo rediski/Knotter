@@ -22,6 +22,8 @@ export async function createScene(name?: string): Promise<string> {
         id: uuid(),
         name: finalName,
         items: [],
+        history: [],
+        historyPosition: -1,
         createdAt: new Date(),
         updatedAt: new Date(),
     };
