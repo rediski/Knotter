@@ -1,4 +1,5 @@
 import type { NodeShapeType } from '@/_core/_/nodeShapeType';
+import type { CanvasAction } from '@/_core/_/history.types';
 import { NodeParameter } from '@/_core/_/parameter';
 
 export type Position = { x: number; y: number };
@@ -10,6 +11,8 @@ export interface Scene {
     id: string;
     name: string;
     items: CanvasItem[];
+    history: CanvasAction[];
+    historyPosition: number;
     createdAt: Date;
     updatedAt: Date;
 }
