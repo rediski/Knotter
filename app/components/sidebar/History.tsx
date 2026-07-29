@@ -3,8 +3,8 @@ import type { CanvasAction } from '@/_core/_/history.types';
 
 import { EmptyState } from '@/components/UI/EmptyState';
 
-import { useHistoryStore } from '@/store/useHistoryStore';
-import { restoreCanvasFromHistory } from '@/utils/history/restoreCanvasFromHistory';
+import { useItemsStore } from '@/store/useItemsStore';
+import { restoreCanvasFromHistory } from '@/utils/scene/restoreCanvasFromHistory';
 
 import { Pencil, Trash2, Plus, ClipboardPaste } from 'lucide-react';
 
@@ -16,18 +16,40 @@ const formatTimestamp = (timestamp: number): string => {
 };
 
 export const History = () => {
-    const history = useHistoryStore((state) => state.history);
-    const historyPosition = useHistoryStore((state) => state.historyPosition);
-    const setHistoryPosition = useHistoryStore((state) => state.setHistoryPosition);
+    const scenes = useItemsStore((state) => state.scenes);
+    const currentSceneId = useItemsStore((state) => state.currentSceneId);
+    const setScenes = useItemsStore((state) => state.setScenes);
+
+    const currentScene = currentSceneId ? scenes[currentSceneId] : null;
+
+    if (!currentScene) {
+        return (
+            <div className="flex flex-col gap-1 p-1 h-full pt-0 mt-1 text-sm overflow-auto">
+                <EmptyState message="Нет активной сцены" />
+            </div>
+        );
+    }
+
+    const { history, historyPosition } = currentScene;
 
     const handleHistoryClick = (index: number) => {
-        setHistoryPosition(index);
+        if (!currentSceneId) return;
+
+        const updatedScene = {
+            ...currentScene,
+            historyPosition: index,
+        };
+
+        setScenes({
+            ...scenes,
+            [currentSceneId]: updatedScene,
+        });
 
         const actionsUpToIndex = history.slice(0, index + 1);
         restoreCanvasFromHistory(actionsUpToIndex);
     };
 
-    const getActionInfo = (action: CanvasAction) => {
+    const getActionInfo = (action: CanvasAction): { icon: ReactNode; label: string } => {
         const actionMap: Record<CanvasAction['type'], { icon: ReactNode; label: string }> = {
             ADD_ITEMS: {
                 icon: <Plus className="w-4 h-4" />,
