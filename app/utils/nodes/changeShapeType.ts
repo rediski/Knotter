@@ -1,7 +1,7 @@
 import type { NodeShapeType } from '@/_core/_/nodeShapeType';
 import { useItemsStore } from '@/store/useItemsStore';
 
-import { addToHistory } from '@/utils/history/historyManager';
+import { addToHistory } from '@/utils/scene/historyManager';
 import { getSelectedNodes } from '@/utils/nodes/getSelectedNodes';
 
 export function changeShapeType(newShape: NodeShapeType) {

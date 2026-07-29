@@ -4,7 +4,7 @@ import type { Edge } from '@/_core/_/canvas.types';
 import { useItemsStore } from '@/store/useItemsStore';
 
 import { getCurrentForegroundColor } from '@/utils/canvas/getCurrentForegroundColor';
-import { addToHistory } from '@/utils/history/historyManager';
+import { addToHistory } from '@/utils/scene/historyManager';
 import { canAddItem } from '@/utils/items/canAddItems';
 import { generateUniqueName } from '@/utils/items/generateUniqueName';
 import { getEdges } from '@/utils/edges/getEdges';
@@ -45,12 +45,6 @@ export function createEdge(clickedNodeId: string) {
 
     const newItems = [...items, newEdge];
 
-    addToHistory({
-        type: 'ADD_ITEMS',
-        items: [structuredClone(newEdge)],
-        timestamp: Date.now(),
-    });
-
     const updatedScene = {
         ...scene,
         items: newItems,
@@ -60,4 +54,10 @@ export function createEdge(clickedNodeId: string) {
     useItemsStore.setState({ scenes: { ...scenes, [currentSceneId]: updatedScene } });
 
     setTempEdge(null);
+
+    addToHistory({
+        type: 'ADD_ITEMS',
+        items: [structuredClone(newEdge)],
+        timestamp: Date.now(),
+    });
 }

@@ -9,7 +9,7 @@ import { canAddItem } from '@/utils/items/canAddItems';
 import { generateUniqueName } from '@/utils/items/generateUniqueName';
 
 import { getNodes } from '@/utils/nodes/getNodes';
-import { addToHistory } from '@/utils/history/historyManager';
+import { addToHistory } from '@/utils/scene/historyManager';
 
 export function createNode(): Node | null {
     if (!canAddItem()) return null;
@@ -49,12 +49,6 @@ export function createNode(): Node | null {
         parameters: [],
     };
 
-    addToHistory({
-        type: 'ADD_ITEMS',
-        items: [structuredClone(node)],
-        timestamp: Date.now(),
-    });
-
     const updatedItems = [...scene.items, node];
 
     const updatedScene: typeof scene = {
@@ -65,6 +59,12 @@ export function createNode(): Node | null {
 
     setScenes({ ...scenes, [currentSceneId]: updatedScene });
     setSelectedItemIds([node.id]);
+
+    addToHistory({
+        type: 'ADD_ITEMS',
+        items: [structuredClone(node)],
+        timestamp: Date.now(),
+    });
 
     return node;
 }

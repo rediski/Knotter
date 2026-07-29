@@ -7,7 +7,7 @@ import { useCanvasStore } from '@/store/useCanvasStore';
 import { useItemsStore } from '@/store/useItemsStore';
 import { useCanvasRefsStore } from '@/store/useCanvasRefsStore';
 
-import { undo, redo } from '@/utils/history/historyManager';
+import { undo, redo } from '@/utils/scene/historyManager';
 
 import { toggleTooltipMode } from '@/utils/canvas/toggleTooltipMode';
 import { toggleMagnetMode } from '@/utils/canvas/toggleMagnetMode';

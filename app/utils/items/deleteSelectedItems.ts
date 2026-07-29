@@ -2,7 +2,7 @@ import { useItemsStore } from '@/store/useItemsStore';
 
 import { getNodes } from '@/utils/nodes/getNodes';
 import { getEdges } from '@/utils/edges/getEdges';
-import { addToHistory } from '@/utils/history/historyManager';
+import { addToHistory } from '@/utils/scene/historyManager';
 
 export function deleteSelectedItems() {
     const { currentSceneId, selectedItemIds } = useItemsStore.getState();
@@ -17,7 +17,7 @@ export function deleteSelectedItems() {
 }
 
 export function deleteSelectedItemsById(itemIds: string | string[]) {
-    const { currentSceneId, scenes, selectedItemIds, setSelectedItemIds } = useItemsStore.getState();
+    const { currentSceneId, scenes, selectedItemIds, setSelectedItemIds, setScenes } = useItemsStore.getState();
 
     if (!currentSceneId) return;
 
@@ -40,11 +40,9 @@ export function deleteSelectedItemsById(itemIds: string | string[]) {
 
     const deletedItems = items.filter((item) => allIdsToDelete.has(item.id));
 
-    addToHistory({
-        type: 'DELETE_ITEMS',
-        items: deletedItems,
-        timestamp: Date.now(),
-    });
+    if (deletedItems.length === 0) {
+        return;
+    }
 
     const newItems = items.filter((item) => !allIdsToDelete.has(item.id));
 
@@ -54,8 +52,18 @@ export function deleteSelectedItemsById(itemIds: string | string[]) {
             items: newItems,
             updatedAt: new Date(),
         };
-        useItemsStore.setState({ scenes: { ...scenes, [currentSceneId]: updatedScene } });
+
+        setScenes({
+            ...scenes,
+            [currentSceneId]: updatedScene,
+        });
     }
 
     setSelectedItemIds(selectedItemIds.filter((id) => !allIdsToDelete.has(id)));
+
+    addToHistory({
+        type: 'DELETE_ITEMS',
+        items: deletedItems,
+        timestamp: Date.now(),
+    });
 }

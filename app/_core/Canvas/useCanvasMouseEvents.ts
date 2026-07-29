@@ -15,7 +15,7 @@ import { getMousePosition } from '@/utils/canvas/getMousePosition';
 import { handleClickOnItem } from '@/utils/items/handleClickOnItem';
 
 import { startDragging, stopDragging } from '@/utils/items/dragItems';
-import { addToHistory } from '@/utils/history/historyManager';
+import { addToHistory } from '@/utils/scene/historyManager';
 
 export function useCanvasMouseEvents(canvasRef: RefObject<HTMLCanvasElement | null>) {
     const itemsState = useItemsStore();

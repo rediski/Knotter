@@ -1,5 +1,5 @@
 import { useItemsStore } from '@/store/useItemsStore';
-import { addToHistory } from '@/utils/history/historyManager';
+import { addToHistory } from '@/utils/scene/historyManager';
 
 export function changeColor(newColor: string) {
     const { currentSceneId, scenes, selectedItemIds } = useItemsStore.getState();

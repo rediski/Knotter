@@ -6,7 +6,7 @@ import { useItemsStore } from '@/store/useItemsStore';
 import { useClipboardStore } from '@/store/useClipboardStore';
 
 import { canAddItems } from '@/utils/items/canAddItems';
-import { addToHistory } from '@/utils/history/historyManager';
+import { addToHistory } from '@/utils/scene/historyManager';
 import { getSelectedNodes } from '@/utils/nodes/getSelectedNodes';
 import { getSelectedEdges } from '@/utils/edges/getSelectedEdges';
 
@@ -69,7 +69,7 @@ function generateNewIds(items: CanvasItem[]): Map<string, string> {
 
 export function pasteClipboardItems() {
     const clipboardState = useClipboardStore.getState();
-    const { currentSceneId, scenes } = useItemsStore.getState();
+    const { currentSceneId, scenes, setScenes } = useItemsStore.getState();
 
     const clipboard = clipboardState.clipboard;
 
@@ -130,12 +130,6 @@ export function pasteClipboardItems() {
 
     if (newItems.length === 0) return;
 
-    addToHistory({
-        type: 'PASTE_ITEMS',
-        items: structuredClone(newItems),
-        timestamp: Date.now(),
-    });
-
     const updatedItems = [...items, ...newItems];
 
     if (scene) {
@@ -144,8 +138,14 @@ export function pasteClipboardItems() {
             items: updatedItems,
             updatedAt: new Date(),
         };
-        useItemsStore.setState({ scenes: { ...scenes, [currentSceneId]: updatedScene } });
+        setScenes({ ...scenes, [currentSceneId]: updatedScene });
     }
 
     setSelectedItemIds(newItems.map((item) => item.id));
+
+    addToHistory({
+        type: 'PASTE_ITEMS',
+        items: structuredClone(newItems),
+        timestamp: Date.now(),
+    });
 }
