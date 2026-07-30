@@ -1,4 +1,4 @@
-import { MAX_CANVAS_ITEMS } from '@/_core/_/canvas.constants';
+import { MAX_SCENE_ITEMS } from '@/_core/_/canvas.constants';
 import { useItemsStore } from '@/store/useItemsStore';
 
 export function canAddItem(): boolean {
@@ -13,9 +13,9 @@ export function canAddItems(count: number): boolean {
     const scene = scenes[currentSceneId];
     const items = scene?.items ?? [];
 
-    if (items.length + count > MAX_CANVAS_ITEMS) {
+    if (items.length + count > MAX_SCENE_ITEMS) {
         console.warn(
-            `Невозможно добавить ${count} элементов. ` + `Текущее количество: ${items.length}, лимит: ${MAX_CANVAS_ITEMS}.`,
+            `Невозможно добавить ${count} элементов. ` + `Текущее количество: ${items.length}, лимит: ${MAX_SCENE_ITEMS}.`,
         );
         return false;
     }
