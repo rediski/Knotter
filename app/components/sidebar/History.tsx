@@ -4,36 +4,12 @@ import type { CanvasAction } from '@/_core/_/history.types';
 import { EmptyState } from '@/components/UI/EmptyState';
 
 import { useItemsStore } from '@/store/useItemsStore';
+
 import { restoreCanvasFromHistory } from '@/utils/scene/restoreCanvasFromHistory';
+import { formatTimestamp } from '@/utils/date/formatTimestamp';
+import { formatDateLabel } from '@/utils/date/formatDateLabel';
 
 import { Pencil, Trash2, Plus, ClipboardPaste } from 'lucide-react';
-
-const formatTimestamp = (timestamp: number): string => {
-    const date = new Date(timestamp);
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes}`;
-};
-
-const formatDateLabel = (timestamp: number): string => {
-    const date = new Date(timestamp);
-    const today = new Date();
-    const yesterday = new Date(today);
-
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    const isToday = date.toDateString() === today.toDateString();
-    const isYesterday = date.toDateString() === yesterday.toDateString();
-
-    if (isToday) return 'Сегодня';
-    if (isYesterday) return 'Вчера';
-
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-
-    return `${day}.${month}.${year}`;
-};
 
 export const History = () => {
     const scenes = useItemsStore((state) => state.scenes);
