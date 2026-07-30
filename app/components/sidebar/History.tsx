@@ -15,6 +15,26 @@ const formatTimestamp = (timestamp: number): string => {
     return `${hours}:${minutes}`;
 };
 
+const formatDateLabel = (timestamp: number): string => {
+    const date = new Date(timestamp);
+    const today = new Date();
+    const yesterday = new Date(today);
+
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const isToday = date.toDateString() === today.toDateString();
+    const isYesterday = date.toDateString() === yesterday.toDateString();
+
+    if (isToday) return 'Сегодня';
+    if (isYesterday) return 'Вчера';
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}.${month}.${year}`;
+};
+
 export const History = () => {
     const scenes = useItemsStore((state) => state.scenes);
     const currentSceneId = useItemsStore((state) => state.currentSceneId);
@@ -84,61 +104,100 @@ export const History = () => {
         }
     };
 
+    const sortedHistory = [...history].sort((a, b) => {
+        const timestampA = a.timestamp || 0;
+        const timestampB = b.timestamp || 0;
+        return timestampB - timestampA;
+    });
+
+    const groupedHistory: { date: string; items: CanvasAction[]; indices: number[] }[] = [];
+
+    sortedHistory.forEach((action) => {
+        if (!action.timestamp) return;
+
+        const originalIndex = history.indexOf(action);
+        const dateLabel = formatDateLabel(action.timestamp);
+        const lastGroup = groupedHistory[groupedHistory.length - 1];
+
+        if (lastGroup && lastGroup.date === dateLabel) {
+            lastGroup.items.push(action);
+            lastGroup.indices.push(originalIndex);
+
+            return;
+        }
+
+        groupedHistory.push({
+            date: dateLabel,
+            items: [action],
+            indices: [originalIndex],
+        });
+    });
+
     return (
         <div className="flex flex-col gap-1 p-1 h-full pt-0 mt-1 text-sm overflow-auto">
-            {history
-                .map((action, index) => {
-                    const isCurrent = index === historyPosition;
-                    const isInFuture = index > historyPosition;
+            {groupedHistory.length === 0 && <EmptyState message="История пуста" />}
 
-                    const actionInfo = getActionInfo(action);
-                    const itemNames = getItemNames(action);
+            {groupedHistory.map((group, groupIndex) => (
+                <div key={groupIndex} className="flex flex-col gap-1">
+                    <div className="flex items-center justify-center my-2">
+                        <span className="text-xs text-foreground/50 px-3 py-1 bg-depth-3/50 rounded-full">{group.date}</span>
+                    </div>
 
-                    const timeString = action.timestamp ? formatTimestamp(action.timestamp) : '--:--';
+                    {group.items.map((action, index) => {
+                        const originalIndex = group.indices[index];
+                        const isCurrent = originalIndex === historyPosition;
+                        const isInFuture = originalIndex > historyPosition;
 
-                    return (
-                        <div
-                            key={index}
-                            onClick={() => handleHistoryClick(index)}
-                            className={`
-                                group px-3 py-2 border rounded-md cursor-pointer
-                                ${
-                                    isCurrent
-                                        ? 'bg-bg-accent/10 text-text-accent border-bg-accent/10'
-                                        : 'bg-depth-2 border-depth-4 hover:bg-depth-3'
-                                }
-                                ${isInFuture ? 'opacity-50' : ''}
-                            `}
-                        >
-                            <div className="flex items-center justify-between gap-3">
-                                <div className="flex items-center gap-2 min-w-0">
-                                    <span className={`${isCurrent ? 'text-text-accent' : 'text-foreground'}`}>
-                                        {actionInfo.icon}
-                                    </span>
+                        const actionInfo = getActionInfo(action);
+                        const itemNames = getItemNames(action);
 
-                                    <div
-                                        className={`border-l h-5 
-                                            ${isCurrent ? 'border-bg-accent/10' : 'border-depth-4'}
+                        const timeString = action.timestamp ? formatTimestamp(action.timestamp) : '--:--';
+
+                        return (
+                            <div
+                                key={originalIndex}
+                                onClick={() => handleHistoryClick(originalIndex)}
+                                className={`
+                                    group px-3 py-2 border rounded-md cursor-pointer
+                                    ${
+                                        isCurrent
+                                            ? 'bg-bg-accent/10 text-text-accent border-bg-accent/10'
+                                            : 'bg-depth-2 border-depth-4 hover:bg-depth-3'
+                                    }
+                                    ${isInFuture ? 'opacity-50' : ''}
+                                `}
+                            >
+                                <div className="flex items-center justify-between gap-3">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <span className={`${isCurrent ? 'text-text-accent' : 'text-foreground'}`}>
+                                            {actionInfo.icon}
+                                        </span>
+
+                                        <div
+                                            className={`border-l h-5 
+                                                ${isCurrent ? 'border-bg-accent/10' : 'border-depth-4'}
+                                            `}
+                                        />
+
+                                        <span className="font-medium truncate tabular-nums">
+                                            {actionInfo.label}: [{itemNames}]
+                                        </span>
+                                    </div>
+
+                                    <span
+                                        className={`
+                                            text-xs tabular-nums 
+                                            ${isCurrent ? 'text-text-accent' : 'text-foreground'}
                                         `}
-                                    />
-
-                                    <span className="font-medium truncate tabular-nums">
-                                        {actionInfo.label}: [{itemNames}]
+                                    >
+                                        {timeString}
                                     </span>
                                 </div>
-
-                                <span
-                                    className={`text-xs tabular-nums ${isCurrent ? 'text-text-accent' : 'text-foreground'}`}
-                                >
-                                    {timeString}
-                                </span>
                             </div>
-                        </div>
-                    );
-                })
-                .reverse()}
-
-            {history.length === 0 && <EmptyState message="История пуста" />}
+                        );
+                    })}
+                </div>
+            ))}
         </div>
     );
 };
