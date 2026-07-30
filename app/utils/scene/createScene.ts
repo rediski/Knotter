@@ -1,13 +1,20 @@
 import { v4 as uuid } from 'uuid';
-import { useItemsStore } from '@/store/useItemsStore';
 import type { Scene } from '@/_core/_/canvas.types';
+import { MAX_SCENES } from '@/_core/_/canvas.constants';
+import { useItemsStore } from '@/store/useItemsStore';
 
-export async function createScene(name?: string): Promise<string> {
+export async function createScene(name?: string): Promise<string | null> {
     const { scenes, setScenes, setCurrentSceneId } = useItemsStore.getState();
+
+    const currentScenesCount = Object.keys(scenes).length;
+
+    if (currentScenesCount >= MAX_SCENES) {
+        return null;
+    }
 
     const baseName = name || 'Сцена';
 
-    const existingNames = Object.values(scenes).map((s) => s.name);
+    const existingNames = Object.values(scenes).map((scene) => scene.name);
 
     let finalName = baseName;
     let counter = 1;
