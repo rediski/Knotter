@@ -7,7 +7,7 @@ import { Node } from '@/_core/Node';
 
 import { SelectionBox } from '@/components/canvas/CanvasSelectionBox';
 import { CanvasContextMenu } from '@/components/canvas/CanvasContextMenu';
-import { CanvasControls } from '@/components/canvas/CanvasControls';
+import { Coordinates } from '@/components/canvas/Coordinates';
 
 import { useCanvasInteraction } from '@/_core/Canvas/useCanvasInteraction';
 import { useCanvasRenderer } from '@/_core/Canvas/useCanvasRenderer';
@@ -62,8 +62,8 @@ export default function Canvas() {
 
     return (
         <div ref={containerRef} className="h-full w-full relative rounded-md bg-depth-1" onContextMenu={handleContextMenu}>
-            <CanvasControls canvasRef={canvasRef} />
             <CanvasContextMenu isOpen={isOpen} position={position} closeMenu={closeMenu} />
+            <Coordinates canvasRef={canvasRef} />
 
             <canvas
                 ref={canvasRef}
