@@ -5,8 +5,8 @@ export function changeSceneName(sceneId: string, newName: string): boolean {
         return false;
     }
 
-    const scenes = useItemsStore.getState().scenes;
-    const scene = scenes[sceneId];
+    const state = useItemsStore.getState();
+    const scene = state.scenes[sceneId];
 
     if (!scene) {
         return false;
@@ -17,11 +17,10 @@ export function changeSceneName(sceneId: string, newName: string): boolean {
         name: newName.trim(),
     };
 
-    const updatedScenes = {
-        ...scenes,
+    state.setScenes({
+        ...state.scenes,
         [sceneId]: updatedScene,
-    };
+    });
 
-    useItemsStore.getState().setScenes(updatedScenes);
     return true;
 }
