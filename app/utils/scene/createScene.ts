@@ -28,6 +28,8 @@ export async function createScene(name?: string): Promise<string | null> {
         kind: 'scene',
         id: uuid(),
         name: finalName,
+        description: '',
+        color: '',
         items: [],
         history: [],
         historyPosition: -1,

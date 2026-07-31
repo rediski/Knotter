@@ -10,6 +10,8 @@ export interface Scene {
     kind: 'scene';
     id: string;
     name: string;
+    description: string;
+    color: string;
     items: CanvasItem[];
     history: CanvasAction[];
     historyPosition: number;
