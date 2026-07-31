@@ -8,18 +8,11 @@ import { useCanvasStore } from '@/store/useCanvasStore';
 
 import { toggleMagnetMode } from '@/utils/canvas/toggleMagnetMode';
 import { toggleTooltipMode } from '@/utils/canvas/toggleTooltipMode';
-import { Coordinates } from '@/components/canvas/Coordinates';
 
 import { Magnet, Grid2x2, Move3d, Eye, EyeOff, EyeClosed, MoveVertical } from 'lucide-react';
 import { toggleInvertY } from '@/utils/canvas/toggleInvertY';
 
-export const CanvasControls = memo(function CanvasControls({
-    canvasRef,
-}: {
-    canvasRef: React.RefObject<HTMLCanvasElement | null>;
-}) {
-    if (!canvasRef) return null;
-
+export const CanvasControls = () => {
     const isMagnet = useCanvasStore((state) => state.isMagnet);
     const showGrid = useCanvasStore((state) => state.showGrid);
     const showAxes = useCanvasStore((state) => state.showAxes);
@@ -93,7 +86,7 @@ export const CanvasControls = memo(function CanvasControls({
 
     return (
         <>
-            <div className="relative flex justify-end gap-2 w-full pt-4 pr-4 z-10">
+            <div className="absolute right-0 z-20 flex gap-1">
                 {controls.map(({ active, onClick, Icon, label }, index) => (
                     <Tooltip key={index} label={label}>
                         <button
@@ -111,8 +104,6 @@ export const CanvasControls = memo(function CanvasControls({
                     </Tooltip>
                 ))}
             </div>
-
-            <Coordinates canvasRef={canvasRef} />
         </>
     );
-});
+};
