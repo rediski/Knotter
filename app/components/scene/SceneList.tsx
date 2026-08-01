@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect, useCallback, useMemo } from 'react';
+import { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { MAX_SCENES } from '@/_core/_/canvas.constants';
@@ -18,167 +18,89 @@ import { LandPlot, Plus, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export function SceneList() {
     const router = useRouter();
-
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const itemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-    const [canScrollLeft, setCanScrollLeft] = useState(false);
-    const [canScrollRight, setCanScrollRight] = useState(false);
-    const isScrollingRef = useRef(false);
-    const isInitialScrollDone = useRef(false);
-
-    const currentPage = useSceneListStore((state) => state.currentPage);
-    const setCurrentPage = useSceneListStore((state) => state.setCurrentPage);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const isRestoredRef = useRef(false);
 
     const scenes = useItemsStore((state) => state.scenes);
     const currentSceneId = useItemsStore((state) => state.currentSceneId);
     const setCurrentSceneId = useItemsStore((state) => state.setCurrentSceneId);
+
     const { currentNodeId } = useItemsStore();
 
-    if (currentNodeId) return null;
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(false);
+
+    const scrollPosition = useSceneListStore((state) => state.scrollPosition);
+    const setScrollPosition = useSceneListStore((state) => state.setScrollPosition);
 
     const sceneIds = Object.keys(scenes);
     const hasMultipleScenes = sceneIds.length > 1;
     const canAddScene = sceneIds.length >= MAX_SCENES;
 
-    const ITEMS_PER_PAGE = 3;
+    const checkScrollPosition = () => {
+        const scrollableElement = containerRef.current;
+        if (!scrollableElement) return;
 
-    const calculatedMaxPage = useMemo(() => {
-        const totalItems = sceneIds.length;
-        if (totalItems <= ITEMS_PER_PAGE) return 0;
+        const currentScrollPosition = scrollableElement.scrollLeft;
+        const maxScrollPosition = scrollableElement.scrollWidth - scrollableElement.clientWidth;
+        const scrollTolerance = 1;
 
-        const maxPage = Math.ceil(totalItems / ITEMS_PER_PAGE) - 1;
+        setCanScrollLeft(currentScrollPosition > 0);
+        setCanScrollRight(currentScrollPosition < maxScrollPosition - scrollTolerance);
+    };
 
-        return maxPage;
-    }, [sceneIds.length]);
+    const saveCurrentScrollPosition = () => {
+        const scrollContainer = containerRef.current;
+        if (!scrollContainer) return;
 
-    const getCurrentPage = useCallback(() => {
-        const container = scrollContainerRef.current;
-        if (!container) return 0;
-
-        const containerRect = container.getBoundingClientRect();
-        const containerLeftEdge = containerRect.left;
-
-        let firstVisibleItemIndex = 0;
-        let minimumDistance = Infinity;
-
-        for (let index = 0; index < sceneIds.length; index++) {
-            const element = itemRefs.current.get(sceneIds[index]);
-            if (!element) continue;
-
-            const elementRect = element.getBoundingClientRect();
-            const distanceFromContainerLeft = Math.abs(elementRect.left - containerLeftEdge);
-
-            if (distanceFromContainerLeft < minimumDistance) {
-                minimumDistance = distanceFromContainerLeft;
-                firstVisibleItemIndex = index;
-            }
-        }
-
-        const currentPage = Math.floor(firstVisibleItemIndex / ITEMS_PER_PAGE);
-
-        return currentPage;
-    }, [sceneIds]);
-
-    const checkScroll = useCallback(() => {
-        const container = scrollContainerRef.current;
-        if (!container) return;
-
-        const { scrollLeft, scrollWidth, clientWidth } = container;
-
-        setCanScrollLeft(scrollLeft > 0);
-        setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1);
-
-        if (!isScrollingRef.current) {
-            const page = getCurrentPage();
-            setCurrentPage(Math.min(page, calculatedMaxPage));
-        }
-    }, [getCurrentPage, calculatedMaxPage, setCurrentPage]);
-
-    useEffect(() => {
-        const restoreScroll = () => {
-            if (isInitialScrollDone.current) return;
-            if (sceneIds.length === 0) return;
-
-            const targetIndex = currentPage * ITEMS_PER_PAGE;
-            const targetId = sceneIds[targetIndex];
-            const targetElement = itemRefs.current.get(targetId);
-
-            if (targetElement) {
-                isScrollingRef.current = true;
-
-                targetElement.scrollIntoView({
-                    behavior: 'instant',
-                    block: 'nearest',
-                    inline: 'start',
-                });
-
-                setTimeout(() => {
-                    isScrollingRef.current = false;
-                    isInitialScrollDone.current = true;
-                    checkScroll();
-                }, 100);
-
-                return;
-            }
-
-            setTimeout(restoreScroll, 100);
-        };
-
-        const timer = setTimeout(restoreScroll, 50);
-
-        return () => clearTimeout(timer);
-    }, [sceneIds, currentPage, checkScroll]);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            checkScroll();
-        }, 50);
-
-        window.addEventListener('resize', checkScroll);
-
-        return () => {
-            clearTimeout(timer);
-            window.removeEventListener('resize', checkScroll);
-        };
-    }, [sceneIds, checkScroll]);
+        const currentHorizontalOffset = scrollContainer.scrollLeft;
+        setScrollPosition(currentHorizontalOffset);
+    };
 
     const scroll = (direction: 'left' | 'right') => {
-        const container = scrollContainerRef.current;
+        const scrollContainer = containerRef.current;
+        if (!scrollContainer) return;
 
-        if (!container) return;
+        const scrollAmount = 196 * 3;
 
-        let newPage = currentPage;
-
-        if (direction === 'left') {
-            newPage = Math.max(0, currentPage - 1);
-        }
-
-        if (direction === 'right') {
-            newPage = Math.min(calculatedMaxPage, currentPage + 1);
-        }
-
-        if (newPage === currentPage) return;
-
-        isScrollingRef.current = true;
-        setCurrentPage(newPage);
-
-        const targetIndex = newPage * ITEMS_PER_PAGE;
-        const targetId = sceneIds[targetIndex];
-        const targetElement = itemRefs.current.get(targetId);
-
-        if (targetElement) {
-            targetElement.scrollIntoView({
-                behavior: 'smooth',
-                block: 'nearest',
-                inline: 'start',
-            });
-        }
+        scrollContainer.scrollBy({
+            left: direction === 'left' ? -scrollAmount : scrollAmount,
+            behavior: 'smooth',
+        });
 
         setTimeout(() => {
-            isScrollingRef.current = false;
-            checkScroll();
-        }, 500);
+            checkScrollPosition();
+            saveCurrentScrollPosition();
+        }, 400);
     };
+
+    useEffect(() => {
+        if (isRestoredRef.current) return;
+
+        const scrollContainer = containerRef.current;
+        if (!scrollContainer) return;
+
+        requestAnimationFrame(() => {
+            const hasSavedPosition = scrollPosition > 0;
+            if (hasSavedPosition) {
+                scrollContainer.scrollLeft = scrollPosition;
+            }
+
+            checkScrollPosition();
+            isRestoredRef.current = true;
+        });
+    }, [scrollPosition]);
+
+    const handleScroll = () => {
+        checkScrollPosition();
+        saveCurrentScrollPosition();
+    };
+
+    useLayoutEffect(() => {
+        checkScrollPosition();
+    }, [scenes, currentSceneId]);
+
+    if (currentNodeId) return null;
 
     const handleCreateScene = async () => {
         const sceneId = await createScene();
@@ -207,11 +129,11 @@ export function SceneList() {
         <div className="flex items-center gap-1">
             <button
                 onClick={() => scroll('left')}
-                disabled={!canScrollLeft || currentPage === 0}
+                disabled={!canScrollLeft}
                 className={`
                     flex items-center justify-center w-8 h-8 rounded-md border shrink-0
                     ${
-                        canScrollLeft && currentPage > 0
+                        canScrollLeft
                             ? 'bg-depth-2 hover:bg-depth-3 border-depth-3 cursor-pointer'
                             : 'bg-depth-1 border-depth-2 opacity-30 cursor-default'
                     }
@@ -222,8 +144,8 @@ export function SceneList() {
             </button>
 
             <div
-                ref={scrollContainerRef}
-                onScroll={checkScroll}
+                ref={containerRef}
+                onScroll={handleScroll}
                 className="flex overflow-x-auto gap-1 max-h-8 scrollbar-hide flex-1 min-w-0"
                 style={{
                     scrollbarWidth: 'none',
@@ -233,21 +155,16 @@ export function SceneList() {
             >
                 {sceneIds.map((sceneId) => {
                     const scene = scenes[sceneId];
+                    const isActive = currentSceneId === sceneId;
 
                     return (
                         <div
                             key={sceneId}
-                            ref={(el) => {
-                                if (el) {
-                                    itemRefs.current.set(sceneId, el);
-                                } else {
-                                    itemRefs.current.delete(sceneId);
-                                }
-                            }}
                             className={`
-                                flex items-center gap-1 px-3 py-1.25 min-w-48 rounded-md border group cursor-pointer shrink-0
+                                flex items-center gap-1 px-3 py-1.25 min-w-48 rounded-md border 
+                                group cursor-pointer shrink-0
                                 ${
-                                    currentSceneId === sceneId
+                                    isActive
                                         ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
                                         : 'bg-depth-2 border-depth-3 hover:bg-depth-3'
                                 }
@@ -266,9 +183,8 @@ export function SceneList() {
                             <EditableName
                                 name={scene?.name ?? ''}
                                 onChange={(newName) => changeSceneName(sceneId, newName)}
-                                isSelected={currentSceneId === sceneId}
+                                isSelected={isActive}
                                 className="flex-1 min-w-0"
-                                disabled={false}
                             />
 
                             {hasMultipleScenes && (
@@ -289,11 +205,11 @@ export function SceneList() {
 
             <button
                 onClick={() => scroll('right')}
-                disabled={!canScrollRight || currentPage === calculatedMaxPage}
+                disabled={!canScrollRight}
                 className={`
                     flex items-center justify-center w-8 h-8 rounded-md border  shrink-0
                     ${
-                        canScrollRight && currentPage < calculatedMaxPage
+                        canScrollRight
                             ? 'bg-depth-2 hover:bg-depth-3 border-depth-3 cursor-pointer'
                             : 'bg-depth-1 border-depth-2 opacity-30 cursor-default'
                     }
