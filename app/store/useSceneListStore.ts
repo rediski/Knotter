@@ -2,20 +2,20 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface SceneListState {
-    currentPage: number;
-    setCurrentPage: (page: number) => void;
+    scrollPosition: number;
+    setScrollPosition: (position: number) => void;
 }
 
 export const useSceneListStore = create<SceneListState>()(
     persist(
         (set) => ({
-            currentPage: 0,
-            setCurrentPage: (page) => set({ currentPage: page }),
+            scrollPosition: 0,
+            setScrollPosition: (position) => set({ scrollPosition: position }),
         }),
         {
             name: 'scene-list-storage',
             partialize: (state) => ({
-                currentPage: state.currentPage,
+                scrollPosition: state.scrollPosition,
             }),
         },
     ),
