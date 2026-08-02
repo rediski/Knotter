@@ -25,7 +25,7 @@ export function SceneList() {
     const currentSceneId = useItemsStore((state) => state.currentSceneId);
     const setCurrentSceneId = useItemsStore((state) => state.setCurrentSceneId);
 
-    const { currentNodeId } = useItemsStore();
+    const currentNodeId = useItemsStore((state) => state.currentNodeId);
 
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
