@@ -8,8 +8,6 @@ import { MAX_SCENES } from '@/_core/_/canvas.constants';
 import { useItemsStore } from '@/store/useItemsStore';
 import { useSceneListStore } from '@/store/useSceneListStore';
 
-import { EditableName } from '@/components/UI/EditableName';
-
 import { createScene } from '@/utils/scene/createScene';
 import { deleteScene } from '@/utils/scene/deleteScene';
 import { changeSceneName } from '@/utils/scene/changeSceneName';
@@ -326,12 +324,7 @@ export function SceneList() {
                                     `}
                                 />
 
-                                <EditableName
-                                    name={scene?.name ?? ''}
-                                    onChange={(newName) => changeSceneName(sceneId, newName)}
-                                    isSelected={isActive}
-                                    className="flex-1 min-w-0"
-                                />
+                                <span className="text-sm text-foreground w-full max-w-27.5 truncate">{scene.name}</span>
 
                                 {hasMultipleScenes && (
                                     <button
