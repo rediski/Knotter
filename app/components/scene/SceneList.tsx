@@ -10,7 +10,6 @@ import { useSceneListStore } from '@/store/useSceneListStore';
 
 import { createScene } from '@/utils/scene/createScene';
 import { deleteScene } from '@/utils/scene/deleteScene';
-import { changeSceneName } from '@/utils/scene/changeSceneName';
 
 import { LandPlot, Plus, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
