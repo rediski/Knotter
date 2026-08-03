@@ -252,7 +252,7 @@ export function SceneList() {
                     <button
                         key={`group-${groupStart}`}
                         onClick={() => scrollToScene(groupStart)}
-                        className="flex items-center justify-center h-2 gap-1 cursor-pointer"
+                        className="flex items-center justify-center h-2 gap-1.25 cursor-pointer"
                         title={
                             groupSize === 1
                                 ? `Перейти к сцене ${groupStart + 1}`
