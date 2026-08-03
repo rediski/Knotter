@@ -323,7 +323,13 @@ export function SceneList() {
                                     `}
                                 />
 
-                                <span className="text-sm text-foreground w-full max-w-27.5 truncate">{scene.name}</span>
+                                <span
+                                    className={`text-sm w-full max-w-27.5 truncate
+                                    ${currentSceneId === sceneId ? 'text-text-accent' : 'text-foreground'}
+                                    `}
+                                >
+                                    {scene.name}
+                                </span>
 
                                 {hasMultipleScenes && (
                                     <button
