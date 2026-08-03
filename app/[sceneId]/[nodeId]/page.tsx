@@ -53,12 +53,6 @@ export default function NodePage() {
 
     const openedNode = nodes.find((item) => item.id === nodeId && item.kind === 'node');
 
-    useEffect(() => {
-        if (openedNode?.name) {
-            document.title = openedNode.name;
-        }
-    }, [openedNode?.name]);
-
     if (!openedNode) return null;
 
     const Icon = NODE_SHAPES[openedNode.shapeType]?.icon;
