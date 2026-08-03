@@ -20,6 +20,9 @@ export function SceneList() {
     const router = useRouter();
     const containerRef = useRef<HTMLDivElement>(null);
     const isRestoredRef = useRef(false);
+    const prevScrollLeftRef = useRef(0);
+    const isScrollingRef = useRef(false);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const scenes = useItemsStore((state) => state.scenes);
     const currentSceneId = useItemsStore((state) => state.currentSceneId);
@@ -29,6 +32,7 @@ export function SceneList() {
 
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
+    const [visibleRange, setVisibleRange] = useState({ start: 0, end: 0 });
 
     const scrollPosition = useSceneListStore((state) => state.scrollPosition);
     const setScrollPosition = useSceneListStore((state) => state.setScrollPosition);
@@ -36,6 +40,27 @@ export function SceneList() {
     const sceneIds = Object.keys(scenes);
     const hasMultipleScenes = sceneIds.length > 1;
     const canAddScene = sceneIds.length >= MAX_SCENES;
+
+    const calculateVisibleRange = () => {
+        const scrollableElement = containerRef.current;
+        if (!scrollableElement) return { start: 0, end: 0 };
+
+        const totalItems = sceneIds.length;
+        if (totalItems === 0) return { start: 0, end: 0 };
+
+        const maxScrollPosition = scrollableElement.scrollWidth - scrollableElement.clientWidth;
+        if (maxScrollPosition <= 0) {
+            return { start: 0, end: Math.min(3, totalItems) };
+        }
+
+        const currentScrollPosition = scrollableElement.scrollLeft;
+        const scrollRatio = currentScrollPosition / maxScrollPosition;
+        const maxStartIndex = Math.max(0, totalItems - 3);
+        const startIndex = Math.round(scrollRatio * maxStartIndex);
+        const endIndex = Math.min(totalItems, startIndex + 3);
+
+        return { start: startIndex, end: endIndex };
+    };
 
     const checkScrollPosition = () => {
         const scrollableElement = containerRef.current;
@@ -47,14 +72,17 @@ export function SceneList() {
 
         setCanScrollLeft(currentScrollPosition > 0);
         setCanScrollRight(currentScrollPosition < maxScrollPosition - scrollTolerance);
+
+        const newRange = calculateVisibleRange();
+        prevScrollLeftRef.current = currentScrollPosition;
+        setVisibleRange(newRange);
     };
 
     const saveCurrentScrollPosition = () => {
         const scrollContainer = containerRef.current;
         if (!scrollContainer) return;
 
-        const currentHorizontalOffset = scrollContainer.scrollLeft;
-        setScrollPosition(currentHorizontalOffset);
+        setScrollPosition(scrollContainer.scrollLeft);
     };
 
     const scroll = (direction: 'left' | 'right') => {
@@ -62,16 +90,10 @@ export function SceneList() {
         if (!scrollContainer) return;
 
         const scrollAmount = 196 * 3;
+        scrollContainer.scrollLeft += direction === 'left' ? -scrollAmount : scrollAmount;
 
-        scrollContainer.scrollBy({
-            left: direction === 'left' ? -scrollAmount : scrollAmount,
-            behavior: 'smooth',
-        });
-
-        setTimeout(() => {
-            checkScrollPosition();
-            saveCurrentScrollPosition();
-        }, 400);
+        checkScrollPosition();
+        saveCurrentScrollPosition();
     };
 
     useEffect(() => {
@@ -81,31 +103,56 @@ export function SceneList() {
         if (!scrollContainer) return;
 
         requestAnimationFrame(() => {
-            const hasSavedPosition = scrollPosition > 0;
-            if (hasSavedPosition) {
+            if (scrollPosition > 0) {
                 scrollContainer.scrollLeft = scrollPosition;
             }
 
+            prevScrollLeftRef.current = scrollContainer.scrollLeft;
             checkScrollPosition();
             isRestoredRef.current = true;
         });
     }, [scrollPosition]);
 
     const handleScroll = () => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+
+        isScrollingRef.current = true;
+
+        timeoutRef.current = setTimeout(() => {
+            isScrollingRef.current = false;
+            checkScrollPosition();
+            saveCurrentScrollPosition();
+        }, 50);
+
         checkScrollPosition();
         saveCurrentScrollPosition();
     };
 
     useLayoutEffect(() => {
-        checkScrollPosition();
+        requestAnimationFrame(() => {
+            if (!isScrollingRef.current) {
+                checkScrollPosition();
+            }
+        });
     }, [scenes, currentSceneId]);
+
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, []);
 
     if (currentNodeId) return null;
 
     const handleCreateScene = async () => {
         const sceneId = await createScene();
         if (sceneId) {
-            router.push(`/${sceneId}`);
+            setCurrentSceneId(sceneId);
+            window.history.pushState({ path: `/${sceneId}` }, '', `/${sceneId}`);
         }
     };
 
@@ -118,11 +165,109 @@ export function SceneList() {
         e.preventDefault();
         e.stopPropagation();
 
-        if (deleteScene(sceneId)) {
-            const nextSceneId = sceneIds.filter((id) => id !== sceneId).find((id) => id);
+        if (!deleteScene(sceneId)) return;
 
-            router.push(`/${nextSceneId ?? ''}`);
+        const nextSceneId = sceneIds.filter((id) => id !== sceneId).find((id) => id);
+        const isDeletingCurrentScene = currentSceneId === sceneId;
+
+        if (!isDeletingCurrentScene) return;
+
+        if (nextSceneId) {
+            setCurrentSceneId(nextSceneId);
+            window.history.pushState({ path: `/${nextSceneId}` }, '', `/${nextSceneId}`);
+            return;
         }
+
+        setCurrentSceneId(null);
+        window.history.pushState({ path: '/' }, '', '/');
+    };
+
+    const scrollToScene = (index: number) => {
+        const scrollContainer = containerRef.current;
+        if (!scrollContainer) return;
+
+        const itemWidth = 196;
+        scrollContainer.scrollLeft = index * itemWidth;
+
+        checkScrollPosition();
+        saveCurrentScrollPosition();
+    };
+
+    const renderIndicators = () => {
+        const total = sceneIds.length;
+        if (total <= 3) return null;
+
+        const indicators = [];
+        const currentRange = visibleRange;
+
+        for (let groupStart = 0; groupStart < total; groupStart += 3) {
+            const groupEnd = Math.min(groupStart + 3, total);
+            const groupSize = groupEnd - groupStart;
+
+            const renderGroup = () => {
+                if (groupSize === 3) {
+                    const visibleStart = Math.max(currentRange.start, groupStart);
+                    const visibleEnd = Math.min(currentRange.end, groupEnd);
+                    const firstVisibleIndex = visibleStart - groupStart;
+                    const visibleCount = Math.max(0, visibleEnd - visibleStart);
+
+                    const leftOffset = (firstVisibleIndex / groupSize) * 100;
+                    const fillWidth = (visibleCount / groupSize) * 100;
+
+                    return (
+                        <button
+                            key={`group-${groupStart}`}
+                            onClick={() => scrollToScene(groupStart)}
+                            className="relative w-6 h-2 rounded-full cursor-pointer overflow-hidden bg-depth-4"
+                            title={`Перейти к сценам ${groupStart + 1}-${groupEnd}`}
+                        >
+                            <div
+                                className="absolute top-0 h-full bg-text-accent transition-all duration-150"
+                                style={{
+                                    left: `${leftOffset}%`,
+                                    width: `${fillWidth}%`,
+                                }}
+                            />
+                        </button>
+                    );
+                }
+
+                const dots = [];
+
+                for (let i = 0; i < groupSize; i++) {
+                    const itemIndex = groupStart + i;
+                    const isItemVisible = itemIndex >= currentRange.start && itemIndex < currentRange.end;
+
+                    dots.push(
+                        <div
+                            key={`dot-${itemIndex}`}
+                            className={`w-2 h-2 rounded-full transition-colors duration-150 ${
+                                isItemVisible ? 'bg-text-accent' : 'bg-depth-4'
+                            }`}
+                        />,
+                    );
+                }
+
+                return (
+                    <button
+                        key={`group-${groupStart}`}
+                        onClick={() => scrollToScene(groupStart)}
+                        className="flex items-center justify-center h-2 gap-1 cursor-pointer"
+                        title={
+                            groupSize === 1
+                                ? `Перейти к сцене ${groupStart + 1}`
+                                : `Перейти к сценам ${groupStart + 1}-${groupEnd}`
+                        }
+                    >
+                        {dots}
+                    </button>
+                );
+            };
+
+            indicators.push(renderGroup());
+        }
+
+        return indicators;
     };
 
     return (
@@ -143,71 +288,83 @@ export function SceneList() {
                 <ChevronLeft size={16} />
             </button>
 
-            <div
-                ref={containerRef}
-                onScroll={handleScroll}
-                className="flex overflow-x-auto gap-1 max-h-8 scrollbar-hide flex-1 min-w-0"
-                style={{
-                    scrollbarWidth: 'none',
-                    msOverflowStyle: 'none',
-                    maxWidth: 'calc(192px * 3 + 4px * 2)',
-                }}
-            >
-                {sceneIds.map((sceneId) => {
-                    const scene = scenes[sceneId];
-                    const isActive = currentSceneId === sceneId;
+            <div className="relative flex-1 min-w-0">
+                <div
+                    ref={containerRef}
+                    onScroll={handleScroll}
+                    className="flex overflow-x-auto gap-1 max-h-8 scrollbar-hide"
+                    style={{
+                        scrollbarWidth: 'none',
+                        msOverflowStyle: 'none',
+                        maxWidth: 'calc(192px * 3 + 4px * 2)',
+                    }}
+                >
+                    {sceneIds.map((sceneId) => {
+                        const scene = scenes[sceneId];
+                        const isActive = currentSceneId === sceneId;
 
-                    return (
-                        <div
-                            key={sceneId}
-                            className={`
-                                flex items-center gap-1 px-3 py-1.25 min-w-48 rounded-md border 
-                                group cursor-pointer shrink-0
-                                ${
-                                    isActive
-                                        ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
-                                        : 'bg-depth-2 border-depth-3 hover:bg-depth-3'
-                                }
-                            `}
-                            onClick={() => handleSelectScene(sceneId)}
-                        >
-                            <LandPlot size={16} className="min-w-4" />
-
-                            <hr
+                        return (
+                            <div
+                                key={sceneId}
                                 className={`
-                                    h-5 mx-1 border-l
-                                    ${currentSceneId === sceneId ? 'border-bg-accent/10' : 'border-depth-5'}
+                                    flex items-center gap-1 px-3 py-1.25 min-w-48 rounded-md border 
+                                    group cursor-pointer shrink-0
+                                    ${
+                                        isActive
+                                            ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
+                                            : 'bg-depth-2 border-depth-3 hover:bg-depth-3'
+                                    }
                                 `}
-                            />
+                                onClick={() => handleSelectScene(sceneId)}
+                            >
+                                <LandPlot size={16} className="min-w-4" />
 
-                            <EditableName
-                                name={scene?.name ?? ''}
-                                onChange={(newName) => changeSceneName(sceneId, newName)}
-                                isSelected={isActive}
-                                className="flex-1 min-w-0"
-                            />
-
-                            {hasMultipleScenes && (
-                                <button
-                                    onClick={(e) => handleDeleteClick(e, sceneId)}
+                                <hr
                                     className={`
-                                        opacity-0 group-hover:opacity-100 rounded p-0.5 border cursor-pointer shrink-0
-                                        ${currentSceneId === sceneId ? 'bg-bg-accent/10 hover:bg-bg-accent/15 border-bg-accent/10' : 'bg-depth-4 hover:bg-depth-5 border-depth-5'}
+                                        h-5 mx-1 border-l
+                                        ${currentSceneId === sceneId ? 'border-bg-accent/10' : 'border-depth-5'}
                                     `}
-                                >
-                                    <X size={14} />
-                                </button>
-                            )}
-                        </div>
-                    );
-                })}
+                                />
+
+                                <EditableName
+                                    name={scene?.name ?? ''}
+                                    onChange={(newName) => changeSceneName(sceneId, newName)}
+                                    isSelected={isActive}
+                                    className="flex-1 min-w-0"
+                                />
+
+                                {hasMultipleScenes && (
+                                    <button
+                                        onClick={(e) => handleDeleteClick(e, sceneId)}
+                                        className={`
+                                            opacity-0 group-hover:opacity-100 rounded p-0.5 border cursor-pointer shrink-0
+                                            ${
+                                                currentSceneId === sceneId
+                                                    ? 'bg-bg-accent/10 hover:bg-bg-accent/15 border-bg-accent/10'
+                                                    : 'bg-depth-4 hover:bg-depth-5 border-depth-5'
+                                            }
+                                        `}
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {sceneIds.length > 3 && (
+                    <div className="absolute -bottom-5 left-0 right-0 flex justify-center items-center gap-1.5">
+                        {renderIndicators()}
+                    </div>
+                )}
             </div>
 
             <button
                 onClick={() => scroll('right')}
                 disabled={!canScrollRight}
                 className={`
-                    flex items-center justify-center w-8 h-8 rounded-md border  shrink-0
+                    flex items-center justify-center w-8 h-8 rounded-md border shrink-0
                     ${
                         canScrollRight
                             ? 'bg-depth-2 hover:bg-depth-3 border-depth-3 cursor-pointer'
@@ -219,21 +376,23 @@ export function SceneList() {
                 <ChevronRight size={16} />
             </button>
 
-            <button
-                onClick={handleCreateScene}
-                disabled={canAddScene}
-                className={`
-                    flex items-center justify-center w-8 h-8 p-2 rounded-md border shrink-0
-                    ${
-                        canAddScene
-                            ? 'bg-depth-1 border-depth-2 opacity-50 cursor-not-allowed'
-                            : 'bg-depth-2 hover:bg-depth-3 border-depth-3 cursor-pointer'
-                    }
-                `}
-                title={canAddScene ? `Достигнут лимит сцен (${MAX_SCENES})` : 'Создать сцену'}
-            >
-                <Plus size={16} />
-            </button>
+            <div className="flex items-center gap-2 ml-1">
+                <button
+                    onClick={handleCreateScene}
+                    disabled={canAddScene}
+                    className={`
+                        flex items-center justify-center w-8 h-8 p-2 rounded-md border shrink-0
+                        ${
+                            canAddScene
+                                ? 'bg-depth-1 border-depth-2 opacity-50 cursor-not-allowed'
+                                : 'bg-depth-2 hover:bg-depth-3 border-depth-3 cursor-pointer'
+                        }
+                    `}
+                    title={canAddScene ? `Достигнут лимит сцен (${MAX_SCENES})` : 'Создать сцену'}
+                >
+                    <Plus size={16} />
+                </button>
+            </div>
         </div>
     );
 }
