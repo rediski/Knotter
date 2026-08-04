@@ -9,4 +9,4 @@ export const NODE_MOVE_MAX_STEP = 50;
 export const MIN_DRAG_DISTANCE = 5;
 
 export const MAX_SCENE_ITEMS = 250;
-export const MAX_SCENES = 15;
+export const MAX_SCENES = 30;
