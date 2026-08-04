@@ -54,7 +54,7 @@ export const InspectorScene = memo(function InspectorScene({
     );
 
     const handleColorChange = useCallback(
-        (newColor: string) => {
+        (newColor: string | null) => {
             changeSceneColor(scene.id, newColor);
         },
         [scene.id],
@@ -88,7 +88,7 @@ export const InspectorScene = memo(function InspectorScene({
 
             {showColor && (
                 <Dropdown title={FIELD_TITLES.COLOR} isOpen={isDropdownOpen(7)} onToggle={() => toggleDropdown(7)}>
-                    <ColorPicker color={scene.color || '#ffffff'} onColorChange={handleColorChange} />
+                    <ColorPicker color={scene.color ?? null} onColorChange={handleColorChange} />
                 </Dropdown>
             )}
         </div>

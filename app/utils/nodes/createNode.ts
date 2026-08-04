@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { useItemsStore } from '@/store/useItemsStore';
 
-import { getCurrentForegroundColor } from '@/utils/canvas/getCurrentForegroundColor';
 import { getSnappedPosition } from '@/utils/items/getSnappedPosition';
 import { canAddItem } from '@/utils/items/canAddItems';
 import { generateUniqueName } from '@/utils/items/generateUniqueName';
@@ -44,7 +43,7 @@ export function createNode(): Node | null {
         name,
         description: '',
         shapeType: 'point',
-        color: getCurrentForegroundColor(),
+        color: null,
         position: { x, y },
         parameters: [],
     };

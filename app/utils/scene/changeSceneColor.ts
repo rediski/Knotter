@@ -1,6 +1,6 @@
 import { useItemsStore } from '@/store/useItemsStore';
 
-export function changeSceneColor(sceneId: string, newColor: string): boolean {
+export function changeSceneColor(sceneId: string, newColor: string | null): boolean {
     if (!sceneId || !newColor) {
         return false;
     }

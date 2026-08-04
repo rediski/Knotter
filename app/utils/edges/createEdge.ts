@@ -3,7 +3,6 @@ import { v4 as uuid } from 'uuid';
 import type { Edge } from '@/_core/_/canvas.types';
 import { useItemsStore } from '@/store/useItemsStore';
 
-import { getCurrentForegroundColor } from '@/utils/canvas/getCurrentForegroundColor';
 import { addToHistory } from '@/utils/scene/historyManager';
 import { canAddItem } from '@/utils/items/canAddItems';
 import { generateUniqueName } from '@/utils/items/generateUniqueName';
@@ -40,7 +39,7 @@ export function createEdge(clickedNodeId: string) {
         name,
         from: tempEdge,
         to: clickedNodeId,
-        color: getCurrentForegroundColor(),
+        color: null,
     };
 
     const newItems = [...items, newEdge];
