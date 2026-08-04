@@ -21,9 +21,9 @@ export function NodeTooltip({ node, position, zoomLevel, isSelected }: NodeToolt
                 top: `${position.y}px`,
                 transform: `translateX(-50%) translateY(-100%) scale(${zoomLevel})`,
                 transformOrigin: 'bottom center',
-                backgroundColor: node.color,
-                borderColor: node.color,
-                color: node.color === '#ededed' ? 'black' : 'white',
+                backgroundColor: node.color ?? 'var(--foreground)',
+                borderColor: node.color ?? 'var(--foreground)',
+                color: 'var(--background)',
             }}
         >
             <h2 className="text-base">{node.name}</h2>
@@ -33,7 +33,7 @@ export function NodeTooltip({ node, position, zoomLevel, isSelected }: NodeToolt
                     absolute top-full left-1/2 -translate-x-1/2 border-6 border-transparent
                     ${isSelected ? 'border-t-bg-accent' : 'border-t-foreground'}
                 `}
-                style={{ borderTopColor: node.color }}
+                style={{ borderTopColor: node.color ?? 'var(--foreground)' }}
             />
         </div>
     );

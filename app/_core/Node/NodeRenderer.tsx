@@ -54,7 +54,7 @@ export function NodeRenderer({ node }: { node: Node }) {
                     w-max fill-depth-1 hover:cursor-move active:cursor-grabbing
                     ${isPoint ? 'stroke-[2px]' : 'stroke-[1.5px]'}
                 `}
-                style={{ color: node.color }}
+                style={{ color: node.color ?? 'var(--foreground)' }}
                 size={NODE_SIZE}
             />
         </div>
