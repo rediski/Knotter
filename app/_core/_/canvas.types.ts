@@ -11,7 +11,7 @@ export interface Scene {
     id: string;
     name: string;
     description: string;
-    color: string;
+    color: string | null;
     items: CanvasItem[];
     history: CanvasAction[];
     historyPosition: number;
@@ -26,7 +26,7 @@ export interface Node {
     name: string;
     description: string;
     shapeType: NodeShapeType;
-    color: string;
+    color: string | null;
     position: Position;
     parameters: NodeParameter[];
 }
@@ -37,5 +37,5 @@ export interface Edge {
     name: string;
     from: string;
     to: string;
-    color: string;
+    color: string | null;
 }
