@@ -7,7 +7,7 @@ import { Breadcrumbs } from '@/components/scene/Breadcrumbs';
 import { SceneList } from '@/components/scene/SceneList';
 import { Sidebar } from '@/components/sidebar/Sidebar';
 
-import { Home } from 'lucide-react';
+import { Database, Home } from 'lucide-react';
 
 export default function CanvasLayout({ children }: { children: ReactNode }) {
     return (
@@ -24,6 +24,13 @@ export default function CanvasLayout({ children }: { children: ReactNode }) {
                     </Link>
 
                     <ThemeToggle />
+
+                    <Link
+                        href="/data"
+                        className="flex items-center w-8 h-8 p-2 rounded-md bg-depth-2 hover:bg-depth-3 border border-depth-3 cursor-pointer"
+                    >
+                        <Database size={16} />
+                    </Link>
 
                     <hr className="h-6 mx-1 border-l border-depth-3" />
 
