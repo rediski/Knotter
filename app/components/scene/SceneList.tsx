@@ -8,6 +8,8 @@ import { MAX_SCENES } from '@/_core/_/canvas.constants';
 import { useItemsStore } from '@/store/useItemsStore';
 import { useSceneListStore } from '@/store/useSceneListStore';
 
+import { ScenePagination } from '@/components/scene/ScenePagination';
+
 import { createScene } from '@/utils/scene/createScene';
 import { deleteScene } from '@/utils/scene/deleteScene';
 
@@ -190,79 +192,6 @@ export function SceneList() {
         saveCurrentScrollPosition();
     };
 
-    const renderIndicators = () => {
-        const total = sceneIds.length;
-        if (total <= 3) return null;
-
-        const indicators = [];
-        const currentRange = visibleRange;
-
-        for (let groupStart = 0; groupStart < total; groupStart += 3) {
-            const groupEnd = Math.min(groupStart + 3, total);
-            const groupSize = groupEnd - groupStart;
-
-            const renderGroup = () => {
-                if (groupSize === 3) {
-                    const visibleStart = Math.max(currentRange.start, groupStart);
-                    const visibleEnd = Math.min(currentRange.end, groupEnd);
-                    const firstVisibleIndex = visibleStart - groupStart;
-                    const visibleCount = Math.max(0, visibleEnd - visibleStart);
-
-                    const leftOffset = (firstVisibleIndex / groupSize) * 100;
-                    const fillWidth = (visibleCount / groupSize) * 100;
-
-                    return (
-                        <button
-                            key={`group-${groupStart}`}
-                            onClick={() => scrollToScene(groupStart)}
-                            className="relative w-6 h-2 rounded-full cursor-pointer overflow-hidden bg-depth-4"
-                            title={`Перейти к сценам ${groupStart + 1}-${groupEnd}`}
-                        >
-                            <div
-                                className="absolute top-0 h-full bg-text-accent transition-all duration-150"
-                                style={{
-                                    left: `${leftOffset}%`,
-                                    width: `${fillWidth}%`,
-                                }}
-                            />
-                        </button>
-                    );
-                }
-
-                return (
-                    <button
-                        key={`group-${groupStart}`}
-                        onClick={() => scrollToScene(groupStart)}
-                        className="flex items-center justify-center h-2 gap-1.25 cursor-pointer"
-                        title={
-                            groupSize === 1
-                                ? `Перейти к сцене ${groupStart + 1}`
-                                : `Перейти к сценам ${groupStart + 1}-${groupEnd}`
-                        }
-                    >
-                        {Array.from({ length: groupSize }, (_, i) => {
-                            const itemIndex = groupStart + i;
-                            const isItemVisible = itemIndex >= currentRange.start && itemIndex < currentRange.end;
-
-                            return (
-                                <div
-                                    key={`dot-${itemIndex}`}
-                                    className={`w-2 h-2 rounded-full
-                                        ${isItemVisible ? 'bg-text-accent' : 'bg-depth-4'}
-                                     `}
-                                />
-                            );
-                        })}
-                    </button>
-                );
-            };
-
-            indicators.push(renderGroup());
-        }
-
-        return indicators;
-    };
-
     return (
         <div className="flex items-center gap-1">
             <button
@@ -347,11 +276,7 @@ export function SceneList() {
                     })}
                 </div>
 
-                {sceneIds.length > 3 && (
-                    <div className="absolute -bottom-5 left-0 right-0 flex justify-center items-center gap-1.5">
-                        {renderIndicators()}
-                    </div>
-                )}
+                <ScenePagination totalItems={sceneIds.length} visibleRange={visibleRange} onScrollToScene={scrollToScene} />
             </div>
 
             <button
