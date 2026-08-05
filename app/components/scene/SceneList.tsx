@@ -229,22 +229,6 @@ export function SceneList() {
                     );
                 }
 
-                const dots = [];
-
-                for (let i = 0; i < groupSize; i++) {
-                    const itemIndex = groupStart + i;
-                    const isItemVisible = itemIndex >= currentRange.start && itemIndex < currentRange.end;
-
-                    dots.push(
-                        <div
-                            key={`dot-${itemIndex}`}
-                            className={`w-2 h-2 rounded-full transition-colors duration-150 ${
-                                isItemVisible ? 'bg-text-accent' : 'bg-depth-4'
-                            }`}
-                        />,
-                    );
-                }
-
                 return (
                     <button
                         key={`group-${groupStart}`}
@@ -256,7 +240,19 @@ export function SceneList() {
                                 : `Перейти к сценам ${groupStart + 1}-${groupEnd}`
                         }
                     >
-                        {dots}
+                        {Array.from({ length: groupSize }, (_, i) => {
+                            const itemIndex = groupStart + i;
+                            const isItemVisible = itemIndex >= currentRange.start && itemIndex < currentRange.end;
+
+                            return (
+                                <div
+                                    key={`dot-${itemIndex}`}
+                                    className={`w-2 h-2 rounded-full
+                                        ${isItemVisible ? 'bg-text-accent' : 'bg-depth-4'}
+                                     `}
+                                />
+                            );
+                        })}
                     </button>
                 );
             };
