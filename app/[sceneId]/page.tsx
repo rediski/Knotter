@@ -7,7 +7,7 @@ import { Node } from '@/_core/Node';
 
 import { SelectionBox } from '@/components/canvas/CanvasSelectionBox';
 import { CanvasContextMenu } from '@/components/canvas/CanvasContextMenu';
-import { Coordinates } from '@/components/canvas/Coordinates';
+import { Coordinates } from '@/components/scene/Coordinates';
 
 import { useCanvasInteraction } from '@/_core/Canvas/useCanvasInteraction';
 import { useCanvasRenderer } from '@/_core/Canvas/useCanvasRenderer';
