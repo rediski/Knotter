@@ -32,7 +32,7 @@ export function Breadcrumbs() {
             <Link
                 href={`/${scene.id}/`}
                 className={`
-                    flex items-center gap-1 px-3 py-1.25 min-w-64 rounded-md border cursor-pointer text-sm
+                    flex items-center gap-1 px-3 py-1.25 w-48 rounded-md border cursor-pointer text-sm
                     ${currentSceneId === scene.id && currentNodeId === null ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-2 hover:bg-depth-3 border-depth-3'}
                 `}
             >
@@ -53,7 +53,7 @@ export function Breadcrumbs() {
                     <Link
                         href={`/${scene.id}/${currentNodeId}`}
                         className={`
-                            flex items-center gap-1 px-3 py-1.25 min-w-64 rounded-md border cursor-pointer text-sm
+                            flex items-center gap-1 px-3 py-1.25 w-48 rounded-md border cursor-pointer text-sm
                             bg-bg-accent/10 border-bg-accent/10 text-text-accent
                         `}
                     >
