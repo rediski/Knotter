@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useState, useLayoutEffect, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 import { MAX_SCENES } from '@/_core/_/canvas.constants';
 
@@ -16,7 +15,6 @@ import { deleteScene } from '@/utils/scene/deleteScene';
 import { LandPlot, Plus, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export function SceneList() {
-    const router = useRouter();
     const containerRef = useRef<HTMLDivElement>(null);
     const isRestoredRef = useRef(false);
     const prevScrollLeftRef = useRef(0);
