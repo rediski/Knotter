@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowDownToLine, Copy, Check, SlidersHorizontal, type LucideIcon } from 'lucide-react';
+import { ArrowDownToLine, Copy, Check, type LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 
 type Primitive = string | number | boolean | null | undefined;
@@ -86,7 +86,7 @@ const ActionButton = ({ onClick, icon: Icon, label = '', isSuccess = false, isAc
     <button
         onClick={onClick}
         className={`
-            flex items-center gap-2 px-3 py-1.25 border rounded-md cursor-pointer select-none  
+            flex items-center w-8 h-8 p-2 rounded-md cursor-pointer shadow-xs border
             ${isSuccess ? 'text-green' : 'text-contrast'}
             ${isActive ? 'bg-bg-accent border-bg-accent text-white' : 'bg-depth-3 hover:bg-depth-4/80 active:bg-depth-5 border-depth-4'}
         `}
@@ -95,7 +95,7 @@ const ActionButton = ({ onClick, icon: Icon, label = '', isSuccess = false, isAc
     </button>
 );
 
-export function CodeBlock<T = AnyObject>({ data, showActions = true, onToggleFilters, showFilters }: CodeBlockProps<T>) {
+export function CodeBlock<T = AnyObject>({ data, showActions = true }: CodeBlockProps<T>) {
     if (!data) return <span className="text-json-null">Нет данных</span>;
 
     const [isCopied, setIsCopied] = useState(false);
@@ -133,30 +133,23 @@ export function CodeBlock<T = AnyObject>({ data, showActions = true, onToggleFil
     };
 
     return (
-        <div className="text-sm leading-5 select-text relative">
-            {showActions && (
-                <div className="sticky top-1 z-10 h-0 m-1">
-                    <div className="absolute right-0 top-0 flex gap-2 translate-y-1 w-full">
-                        <div className="flex ml-auto mr-1 gap-1 w-fit">
-                            {onToggleFilters !== undefined && showFilters !== undefined && (
-                                <ActionButton onClick={onToggleFilters} isActive={showFilters} icon={SlidersHorizontal} />
-                            )}
+        <div className="text-sm relative">
+            <div className="text-sm relative">
+                {showActions && (
+                    <div className="flex items-center bg-depth-2 border-b border-depth-3 justify-between gap-1 p-1 pl-3 w-full h-10.5">
+                        <span>Все сцены</span>
 
-                            <ActionButton
-                                onClick={handleCopy}
-                                icon={isCopied ? Check : Copy}
-                                isSuccess={isCopied}
-                                label="Копировать"
-                            />
+                        <div className="flex gap-1">
+                            <ActionButton onClick={handleCopy} icon={isCopied ? Check : Copy} isSuccess={isCopied} />
 
-                            <ActionButton onClick={handleSave} icon={ArrowDownToLine} label="Сохранить" />
+                            <ActionButton onClick={handleSave} icon={ArrowDownToLine} />
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            <div className="p-4 font-mono">
-                <Json value={data} />
+                <div className="p-4 font-mono max-h-[calc(100vh-42px-42px-8px-4px-2px)] overflow-auto">
+                    <Json value={data} />
+                </div>
             </div>
         </div>
     );
