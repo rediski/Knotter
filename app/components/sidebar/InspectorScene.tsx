@@ -18,7 +18,7 @@ import { changeSceneColor } from '@/utils/scene/changeSceneColor';
 import { LandPlot } from 'lucide-react';
 
 const FIELD_TITLES = {
-    NAME: 'Название',
+    NAME: 'Наименование',
     DESCRIPTION: 'Описание',
     COLOR: 'Цвет вкладки',
     POSITION: 'Позиция',
@@ -91,6 +91,8 @@ export const InspectorScene = memo(function InspectorScene({
                     <ColorPicker color={scene.color ?? null} onColorChange={handleColorChange} />
                 </Dropdown>
             )}
+
+            <span className="text-xs text-gray text-right p-1 select-text">{scene.id}</span>
         </div>
     );
 });

@@ -25,7 +25,7 @@ import { getOutgoingEdges } from '@/utils/edges/getOutgoingEdges';
 import { Package, X, LineSquiggle } from 'lucide-react';
 
 const FIELD_TITLES = {
-    NAME: 'Название',
+    NAME: 'Наименование',
     DESCRIPTION: 'Описание',
     POSITION: 'Позиция',
     SHAPE: 'Форма',
@@ -189,6 +189,8 @@ export const InspectorNode = memo(function InspectorNode({
 
             {showEdgeFrom && renderEdgeList(incomingEdges, FIELD_TITLES.EDGE_FROM, 3)}
             {showEdgeTo && renderEdgeList(outgoingEdges, FIELD_TITLES.EDGE_TO, 4)}
+
+            <span className="text-xs text-gray text-right p-1 select-text">{node.id}</span>
         </div>
     );
 });

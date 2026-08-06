@@ -18,7 +18,7 @@ import { getNodes } from '@/utils/nodes/getNodes';
 import { Package, LineSquiggle } from 'lucide-react';
 
 const FIELD_TITLES = {
-    NAME: 'Название',
+    NAME: 'Наименование',
     COLOR: 'Цвет',
     EDGE_FROM_NODE: 'Начальный узел',
     EDGE_TO_NODE: 'Конечный узел',
@@ -86,6 +86,8 @@ export const InspectorEdge = memo(function InspectorEdge({
                     <ColorPicker color={edge.color} onColorChange={(newColor) => changeColor(newColor)} />
                 </Dropdown>
             )}
+
+            <span className="text-xs text-gray text-right p-1 select-text">{edge.id}</span>
         </div>
     );
 });
