@@ -13,7 +13,7 @@ import { useSidebarStore } from '@/store/useSidebarStore';
 import { getSelectedItem } from '@/utils/items/getSelectedItems';
 
 const FIELD_TITLES = {
-    NAME: 'Название',
+    NAME: 'Наименование',
     DESCRIPTION: 'Описание',
     POSITION: 'Позиция',
     SHAPE: 'Форма',
