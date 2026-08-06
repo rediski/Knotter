@@ -1,7 +1,7 @@
 import { useItemsStore } from '@/store/useItemsStore';
 import { addToHistory } from '@/utils/scene/historyManager';
 
-export function changeColor(newColor: string) {
+export function changeColor(newColor: string | null) {
     const { currentSceneId, scenes, selectedItemIds } = useItemsStore.getState();
 
     if (!currentSceneId) return;
