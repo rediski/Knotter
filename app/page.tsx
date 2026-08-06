@@ -4,9 +4,8 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 import { CodeBlock } from '@/components/UI/CodeBlock';
-import { panelIcons, type PanelType } from '@/_core/_/sidebarPanel';
 
-import { Diamond } from 'lucide-react';
+import { Clipboard, Database, Diamond, History, ListTree, LucideIcon, ScanBox, Settings } from 'lucide-react';
 
 export const metadata: Metadata = {
     title: 'Knotter',
@@ -14,8 +13,19 @@ export const metadata: Metadata = {
         'Knotter - это нодовый редактор для работы с данными, распространяемый под лицензией GPL-3.0, которая гарантирует, что любые производные работы и модификации останутся столь же свободными и открытыми.',
 };
 
-const Card = ({ title, text }: { title: PanelType; text: string }) => {
-    const Icon = panelIcons[title];
+export type CardType = 'clipboard' | 'data' | 'hierarchy' | 'history' | 'inspector' | 'parameters';
+
+export const cardIcons: Record<CardType, LucideIcon> = {
+    clipboard: Clipboard,
+    data: Database,
+    hierarchy: ListTree,
+    history: History,
+    inspector: Settings,
+    parameters: ScanBox,
+};
+
+const Card = ({ title, text }: { title: CardType; text: string }) => {
+    const Icon = cardIcons[title];
 
     return (
         <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-lg p-6">
