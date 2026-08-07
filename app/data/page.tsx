@@ -3,10 +3,10 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import type { Scene, Node, Edge } from '@/_core/_/canvas.types';
+import type { Scene, Node, Edge, CanvasItem } from '@/_core/_/canvas.types';
 import type { Parameter } from '@/_core/_/parameter';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 
 import { useItemsStore } from '@/store/useItemsStore';
 import { DataViewMode, useSidebarStore } from '@/store/useSidebarStore';
@@ -14,8 +14,12 @@ import { DataViewMode, useSidebarStore } from '@/store/useSidebarStore';
 import { DataCodeBlock } from '@/components/data/DataCodeBlock';
 import { ThemeToggle } from '@/components/UI/ThemeToggle';
 import { Checkbox } from '@/components/UI/Checkbox';
+import { Input } from '@/components/UI/Input';
 
-import { Home, LandPlot } from 'lucide-react';
+import { Home, LandPlot, X } from 'lucide-react';
+
+type FilterableData = Parameter | Scene | Node | Edge | (Record<string, unknown> & { kind?: string });
+type FilteredItem = Record<string, unknown>;
 
 const VIEW_LABELS: Record<DataViewMode, string> = {
     scenes: 'Сцены',
@@ -95,8 +99,9 @@ export default function DataPage() {
 
     const [selectedFields, setSelectedFields] = useState<Set<string>>(new Set());
     const [selectedItemFields, setSelectedItemFields] = useState<Set<string>>(new Set());
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
-    const availableFields = useMemo(() => {
+    const availableFields = useMemo((): readonly string[] => {
         if (dataViewMode === 'parameters') {
             return PARAMETER_FIELDS;
         }
@@ -104,7 +109,7 @@ export default function DataPage() {
         return SCENE_FIELDS;
     }, [dataViewMode]);
 
-    const availableItemFields = useMemo(() => {
+    const availableItemFields = useMemo((): readonly string[] => {
         if (dataViewMode !== 'scenes') return [];
 
         return [...new Set([...NODE_FIELDS, ...EDGE_FIELDS])];
@@ -122,41 +127,101 @@ export default function DataPage() {
         }
     }, [availableItemFields]);
 
-    const filteredData = useMemo(() => {
+    const filterByName = useCallback(<T extends FilterableData>(data: T[]): T[] => {
+        if (!searchQuery.trim()) return data;
+
+        const query = searchQuery.toLowerCase().trim();
+
+        if (dataViewMode === 'parameters') {
+            return data.filter((item) => {
+                return 'name' in item && typeof item.name === 'string' && 
+                       item.name.toLowerCase().includes(query);
+            });
+        }
+
+        const result: T[] = [];
+
+        for (const item of data) {
+            const scene = item as Scene & Record<string, unknown>;
+            const sceneNameMatches = 'name' in scene && typeof scene.name === 'string' && 
+                                     scene.name.toLowerCase().includes(query);
+
+            if (sceneNameMatches) {
+                result.push(item);
+                continue;
+            }
+
+            if ('items' in scene && Array.isArray(scene.items)) {
+                const matchingItems = (scene.items as CanvasItem[]).filter((canvasItem) => {
+                    return 'name' in canvasItem && typeof canvasItem.name === 'string' && 
+                           canvasItem.name.toLowerCase().includes(query);
+                });
+
+                if (matchingItems.length > 0) {
+                    for (const matchingItem of matchingItems) {
+                        result.push(matchingItem as unknown as T);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }, [searchQuery, dataViewMode]);
+
+    const filteredData = useMemo((): FilteredItem[] => {
         if (dataViewMode === 'parameters') {
             if (selectedFields.size === 0) return [];
 
-            return parameters.map((item) => {
-                const filtered: Record<string, any> = {};
+            const result: FilteredItem[] = [];
+
+            for (const item of parameters) {
+                const filtered: FilteredItem = {};
 
                 for (const field of selectedFields) {
-                    if (item && typeof item === 'object' && field in item) {
-                        filtered[field] = (item as Record<string, any>)[field];
+                    if (field in item) {
+                        filtered[field] = item[field as keyof Parameter];
                     }
                 }
 
-                return filtered;
-            });
+                result.push(filtered);
+            }
+
+            return filterByName(result);
         }
 
         const scenesArray = Object.values(scenes);
 
         if (selectedFields.size === 0) return [];
 
-        return scenesArray.map((scene) => {
-            const filtered: Record<string, any> = {};
+        const filteredItems = filterByName(scenesArray);
+
+        if (filteredItems.length > 0) {
+            const firstItem = filteredItems[0];
+            if (firstItem && 'kind' in firstItem && firstItem.kind !== 'scene') {
+                return filteredItems.map((item) => {
+                    const filtered: FilteredItem = {};
+
+                    for (const field of selectedItemFields) {
+                        if (field in item && item[field as keyof typeof item] !== undefined) {
+                            filtered[field] = item[field as keyof typeof item];
+                        }
+                    }
+
+                    return filtered;
+                });
+            }
+        }
+
+        return filteredItems.map((scene) => {
+            const filtered: FilteredItem = {};
 
             for (const field of selectedFields) {
-                if (!(scene && typeof scene === 'object' && field in scene)) continue;
+                if (!(field in scene) || field === 'items') continue;
 
-                if (field === 'items') {
-                    continue;
-                }
-
-                filtered[field] = (scene as Record<string, any>)[field];
+                filtered[field] = scene[field as keyof typeof scene];
             }
 
-            const items = scene.items || [];
+            const items = 'items' in scene && Array.isArray(scene.items) ? scene.items : [];
 
             if (!selectedFields.has('items')) {
                 filtered['items'] = [];
@@ -168,21 +233,25 @@ export default function DataPage() {
                 return filtered;
             }
 
-            filtered['items'] = items.map((item: any) => {
-                const filteredItem: Record<string, any> = {};
+            const filteredItems = [];
+
+            for (const item of items) {
+                const filteredItem: FilteredItem = {};
 
                 for (const itemField of selectedItemFields) {
-                    if (item && typeof item === 'object' && itemField in item) {
-                        filteredItem[itemField] = item[itemField];
+                    if (item && itemField in item && item[itemField as keyof typeof item] !== undefined) {
+                        filteredItem[itemField] = item[itemField as keyof typeof item];
                     }
                 }
 
-                return filteredItem;
-            });
+                filteredItems.push(filteredItem);
+            }
+
+            filtered['items'] = filteredItems;
 
             return filtered;
         });
-    }, [dataViewMode, parameters, scenes, selectedFields, selectedItemFields]);
+    }, [dataViewMode, parameters, scenes, selectedFields, selectedItemFields, filterByName]);
 
     useEffect(() => {
         document.title = 'Данные';
@@ -218,7 +287,7 @@ export default function DataPage() {
 
     const createToggleAllHandler = (
         setter: React.Dispatch<React.SetStateAction<Set<string>>>,
-        availableFields: string[],
+        availableFields: readonly string[],
     ) => {
         return () => {
             setter((previousSelection) => {
@@ -289,8 +358,25 @@ export default function DataPage() {
                             ))}
                         </div>
 
-                        <div className='overflow-y-auto max-h-[calc(100vh-4px-4px-42px-42px-4px-4px-4px-4px)]'>
+                        <div className="relative p-1 border-b border-depth-3">
+                            <Input
+                                value={searchQuery}
+                                onChange={setSearchQuery}
+                                placeholder="Поиск..."
+                                className="bg-depth-2 border border-depth-3"
+                            />
 
+                            {searchQuery && (
+                                <button
+                                    onClick={() => setSearchQuery('')}
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray hover:text-foreground cursor-pointer z-10"
+                                >
+                                    <X size={16} />
+                                </button>
+                            )}
+                        </div>
+
+                        <div className='overflow-y-auto max-h-[calc(100vh-4px-4px-42px-42px-42px-4px-4px-4px-4px)]'>
                             {dataViewMode === 'scenes' && (
                                 <>
                                     <div className="flex flex-col gap-1 p-1">
@@ -389,7 +475,7 @@ export default function DataPage() {
                     <DataCodeBlock
                         data={filteredData}
                         maxHeight='calc(100vh - 108px)'
-                        title="Все сцены"
+                        title={searchQuery ? `Результаты поиска: "${searchQuery}"` : "Все сцены"}
                         fileName="selected-item"
                     />
                 </div>
