@@ -11,7 +11,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useItemsStore } from '@/store/useItemsStore';
 import { DataViewMode, useSidebarStore } from '@/store/useSidebarStore';
 
-import { CodeBlock } from '@/components/UI/CodeBlock';
+import { DataCodeBlock } from '@/components/data/DataCodeBlock';
 import { ThemeToggle } from '@/components/UI/ThemeToggle';
 import { Checkbox } from '@/components/UI/Checkbox';
 
@@ -386,7 +386,12 @@ export default function DataPage() {
                 )}
 
                 <div className="relative max-h-[calc(100vh-4px-4px-42px-4px-4px-4px)] bg-depth-1 border border-depth-3 rounded-md w-full">
-                    <CodeBlock data={filteredData} showActions={true} maxHeight='calc(100vh - 4px - 4px - 42px - 42px - 4px - 4px - 4px)' />
+                    <DataCodeBlock
+                        data={filteredData}
+                        maxHeight='calc(100vh - 108px)'
+                        title="Все сцены"
+                        fileName="selected-item"
+                    />
                 </div>
             </div>
         </div>
