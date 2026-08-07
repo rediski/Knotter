@@ -12,7 +12,7 @@ export const Coordinates = ({ canvasRef }: { canvasRef: React.RefObject<HTMLCanv
     const center = getCanvasCenter(canvasRef);
 
     return (
-        <div className="absolute bottom-4 left-4 z-10 text-sm select-none">
+        <div className="absolute bottom-1 left-1 z-10 text-sm select-none">
             <div className="flex gap-1 bg-depth-1 border border-depth-3 rounded-lg shadow-xs p-1">
                 <div className="flex flex-col gap-1 flex-1 text-sm">
                     <div className="flex items-center justify-between gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-0.75">
