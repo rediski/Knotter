@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import type { Scene, Node, Edge } from '@/_core/_/canvas.types';
+import type { Parameter } from '@/_core/_/parameter';
+
 import { useState, useMemo, useEffect } from 'react';
 
 import { useItemsStore } from '@/store/useItemsStore';
@@ -55,6 +58,24 @@ const ITEM_FIELD_LABELS: Record<string, string> = {
     to: 'К',
 };
 
+const SCENE_FIELDS: (keyof Scene)[] = [
+    'kind', 'id', 'name', 'description', 'color',
+    'items', 'history', 'historyPosition', 'createdAt', 'updatedAt'
+];
+
+const NODE_FIELDS: (keyof Node)[] = [
+    'kind', 'id', 'sceneId', 'name', 'description',
+    'shapeType', 'color', 'position', 'parameters'
+];
+
+const EDGE_FIELDS: (keyof Edge)[] = [
+    'kind', 'id', 'name', 'from', 'to', 'color'
+];
+
+const PARAMETER_FIELDS: (keyof Parameter)[] = [
+    'id', 'name', 'type', 'defaultValue', 'parentId'
+];
+
 const getFieldLabel = (mode: DataViewMode, field: string): string => {
     const labels = FIELD_LABELS[mode === 'scenes' ? 'scenes' : 'parameters'];
     return labels?.[field] || field;
@@ -77,30 +98,17 @@ export default function DataPage() {
 
     const availableFields = useMemo(() => {
         if (dataViewMode === 'parameters') {
-            if (parameters.length === 0) return [];
-            return Object.keys(parameters[0] || {});
+            return PARAMETER_FIELDS;
         }
 
-        const scenesArray = Object.values(scenes);
-
-        if (scenesArray.length === 0) return [];
-        return Object.keys(scenesArray[0] || {});
-    }, [dataViewMode, parameters, scenes]);
+        return SCENE_FIELDS;
+    }, [dataViewMode]);
 
     const availableItemFields = useMemo(() => {
         if (dataViewMode !== 'scenes') return [];
 
-        const scenesArray = Object.values(scenes);
-        if (scenesArray.length === 0) return [];
-
-        const firstScene = scenesArray[0];
-        if (!firstScene.items || firstScene.items.length === 0) return [];
-
-        const firstItem = firstScene.items[0];
-        if (!firstItem || typeof firstItem !== 'object') return [];
-
-        return Object.keys(firstItem);
-    }, [dataViewMode, scenes]);
+        return [...new Set([...NODE_FIELDS, ...EDGE_FIELDS])];
+    }, [dataViewMode]);
 
     useEffect(() => {
         if (availableFields.length > 0 && selectedFields.size === 0) {
@@ -229,7 +237,7 @@ export default function DataPage() {
     const activeIndex = Object.keys(VIEW_LABELS).indexOf(dataViewMode);
 
     const sceneFields = availableFields.filter((field) => field !== 'items');
-    const hasItemsField = availableFields.includes('items');
+    const hasItemsField = new Set(availableFields).has('items');
     const isItemsSelected = selectedFields.has('items');
 
     return (
