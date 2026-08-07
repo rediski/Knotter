@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Tooltip } from '@/components/UI/Tooltip';
 
@@ -8,9 +8,9 @@ import { useCanvasStore } from '@/store/useCanvasStore';
 
 import { toggleMagnetMode } from '@/utils/canvas/toggleMagnetMode';
 import { toggleTooltipMode } from '@/utils/canvas/toggleTooltipMode';
+import { toggleInvertY } from '@/utils/canvas/toggleInvertY';
 
 import { Magnet, Grid2x2, Move3d, Eye, EyeOff, EyeClosed, MoveVertical } from 'lucide-react';
-import { toggleInvertY } from '@/utils/canvas/toggleInvertY';
 
 export const CanvasControls = () => {
     const isMagnet = useCanvasStore((state) => state.isMagnet);
