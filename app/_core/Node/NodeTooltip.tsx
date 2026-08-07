@@ -23,7 +23,7 @@ export function NodeTooltip({ node, position, zoomLevel, isSelected }: NodeToolt
                 transformOrigin: 'bottom center',
                 backgroundColor: node.color ?? 'var(--foreground)',
                 borderColor: node.color ?? 'var(--foreground)',
-                color: 'var(--background)',
+                color: node.color !== null ? '#ededed' : 'var(--background)'
             }}
         >
             <h2 className="text-base">{node.name}</h2>
