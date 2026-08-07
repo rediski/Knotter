@@ -63,22 +63,33 @@ const ITEM_FIELD_LABELS: Record<string, string> = {
 };
 
 const SCENE_FIELDS: (keyof Scene)[] = [
-    'kind', 'id', 'name', 'description', 'color',
-    'items', 'history', 'historyPosition', 'createdAt', 'updatedAt'
+    'kind',
+    'id',
+    'name',
+    'description',
+    'color',
+    'items',
+    'history',
+    'historyPosition',
+    'createdAt',
+    'updatedAt',
 ];
 
 const NODE_FIELDS: (keyof Node)[] = [
-    'kind', 'id', 'sceneId', 'name', 'description',
-    'shapeType', 'color', 'position', 'parameters'
+    'kind',
+    'id',
+    'sceneId',
+    'name',
+    'description',
+    'shapeType',
+    'color',
+    'position',
+    'parameters',
 ];
 
-const EDGE_FIELDS: (keyof Edge)[] = [
-    'kind', 'id', 'name', 'from', 'to', 'color'
-];
+const EDGE_FIELDS: (keyof Edge)[] = ['kind', 'id', 'name', 'from', 'to', 'color'];
 
-const PARAMETER_FIELDS: (keyof Parameter)[] = [
-    'id', 'name', 'type', 'defaultValue', 'parentId'
-];
+const PARAMETER_FIELDS: (keyof Parameter)[] = ['id', 'name', 'type', 'defaultValue', 'parentId'];
 
 const getFieldLabel = (mode: DataViewMode, field: string): string => {
     const labels = FIELD_LABELS[mode === 'scenes' ? 'scenes' : 'parameters'];
@@ -127,46 +138,51 @@ export default function DataPage() {
         }
     }, [availableItemFields]);
 
-    const filterByName = useCallback(<T extends FilterableData>(data: T[]): T[] => {
-        if (!searchQuery.trim()) return data;
+    const filterByName = useCallback(
+        <T extends FilterableData>(data: T[]): T[] => {
+            if (!searchQuery.trim()) return data;
 
-        const query = searchQuery.toLowerCase().trim();
+            const query = searchQuery.toLowerCase().trim();
 
-        if (dataViewMode === 'parameters') {
-            return data.filter((item) => {
-                return 'name' in item && typeof item.name === 'string' && 
-                       item.name.toLowerCase().includes(query);
-            });
-        }
-
-        const result: T[] = [];
-
-        for (const item of data) {
-            const scene = item as Scene & Record<string, unknown>;
-            const sceneNameMatches = 'name' in scene && typeof scene.name === 'string' && 
-                                     scene.name.toLowerCase().includes(query);
-
-            if (sceneNameMatches) {
-                result.push(item);
-                continue;
+            if (dataViewMode === 'parameters') {
+                return data.filter((item) => {
+                    return 'name' in item && typeof item.name === 'string' && item.name.toLowerCase().includes(query);
+                });
             }
 
-            if ('items' in scene && Array.isArray(scene.items)) {
-                const matchingItems = (scene.items as CanvasItem[]).filter((canvasItem) => {
-                    return 'name' in canvasItem && typeof canvasItem.name === 'string' && 
-                           canvasItem.name.toLowerCase().includes(query);
-                });
+            const result: T[] = [];
 
-                if (matchingItems.length > 0) {
-                    for (const matchingItem of matchingItems) {
-                        result.push(matchingItem as unknown as T);
+            for (const item of data) {
+                const scene = item as Scene & Record<string, unknown>;
+                const sceneNameMatches =
+                    'name' in scene && typeof scene.name === 'string' && scene.name.toLowerCase().includes(query);
+
+                if (sceneNameMatches) {
+                    result.push(item);
+                    continue;
+                }
+
+                if ('items' in scene && Array.isArray(scene.items)) {
+                    const matchingItems = (scene.items as CanvasItem[]).filter((canvasItem) => {
+                        return (
+                            'name' in canvasItem &&
+                            typeof canvasItem.name === 'string' &&
+                            canvasItem.name.toLowerCase().includes(query)
+                        );
+                    });
+
+                    if (matchingItems.length > 0) {
+                        for (const matchingItem of matchingItems) {
+                            result.push(matchingItem as unknown as T);
+                        }
                     }
                 }
             }
-        }
 
-        return result;
-    }, [searchQuery, dataViewMode]);
+            return result;
+        },
+        [searchQuery, dataViewMode],
+    );
 
     const filteredData = useMemo((): FilteredItem[] => {
         if (dataViewMode === 'parameters') {
@@ -334,7 +350,7 @@ export default function DataPage() {
 
             <div className="flex gap-1 container m-auto">
                 {availableFields.length > 0 && (
-                    <div className="w-xs bg-depth-1 border border-depth-3 rounded-md select-none">
+                    <div className="w-xs h-fit bg-depth-1 border border-depth-3 rounded-md select-none">
                         <div className="relative flex items-center gap-1 p-1 bg-background border-b border-depth-3 h-10.5">
                             <div
                                 className="absolute h-[calc(100%-8px)] top-1 rounded-md bg-depth-2 transition-[left,width] duration-300 ease-in-out"
@@ -376,7 +392,7 @@ export default function DataPage() {
                             )}
                         </div>
 
-                        <div className='overflow-y-auto max-h-[calc(100vh-4px-4px-42px-42px-42px-4px-4px-4px-4px)]'>
+                        <div className="overflow-y-auto max-h-[calc(100vh-4px-4px-42px-42px-42px-4px-4px-4px-4px)]">
                             {dataViewMode === 'scenes' && (
                                 <>
                                     <div className="flex flex-col gap-1 p-1">
@@ -434,7 +450,9 @@ export default function DataPage() {
                                                             onChange={() => toggleItemField(itemField)}
                                                         />
 
-                                                        <span className="text-sm truncate">{getItemFieldLabel(itemField)}</span>
+                                                        <span className="text-sm truncate">
+                                                            {getItemFieldLabel(itemField)}
+                                                        </span>
                                                     </label>
                                                 ))}
                                             </div>
@@ -461,7 +479,9 @@ export default function DataPage() {
                                                     onChange={() => toggleField(field)}
                                                 />
 
-                                                <span className="text-sm truncate">{getFieldLabel(dataViewMode, field)}</span>
+                                                <span className="text-sm truncate">
+                                                    {getFieldLabel(dataViewMode, field)}
+                                                </span>
                                             </label>
                                         ))}
                                     </div>
@@ -474,8 +494,8 @@ export default function DataPage() {
                 <div className="relative max-h-[calc(100vh-4px-4px-42px-4px-4px-4px)] bg-depth-1 border border-depth-3 rounded-md w-full">
                     <DataCodeBlock
                         data={filteredData}
-                        maxHeight='calc(100vh - 108px)'
-                        title={searchQuery ? `Результаты поиска: "${searchQuery}"` : "Все сцены"}
+                        maxHeight="calc(100vh - 108px)"
+                        title={searchQuery ? `Результаты поиска: "${searchQuery}"` : 'Все сцены'}
                         fileName="selected-item"
                     />
                 </div>
