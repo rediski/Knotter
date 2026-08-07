@@ -13,8 +13,7 @@ interface JsonProps {
 interface CodeBlockProps<T = AnyObject> {
     data: T | null | undefined;
     showActions?: boolean;
-    onToggleFilters?: () => void;
-    showFilters?: boolean;
+    maxHeight: string
 }
 
 interface ActionButtonProps {
@@ -95,7 +94,7 @@ const ActionButton = ({ onClick, icon: Icon, label = '', isSuccess = false, isAc
     </button>
 );
 
-export function CodeBlock<T = AnyObject>({ data, showActions = true }: CodeBlockProps<T>) {
+export function CodeBlock<T = AnyObject>({ data, showActions = true, maxHeight }: CodeBlockProps<T>) {
     if (!data) return <span className="text-json-null">Нет данных</span>;
 
     const [isCopied, setIsCopied] = useState(false);
@@ -147,7 +146,7 @@ export function CodeBlock<T = AnyObject>({ data, showActions = true }: CodeBlock
                     </div>
                 )}
 
-                <div className="p-4 font-mono max-h-[calc(100vh-42px-42px-8px-4px-2px)] overflow-auto">
+                <div className="p-4 font-mono overflow-auto" style={{ maxHeight: maxHeight }}>
                     <Json value={data} />
                 </div>
             </div>
