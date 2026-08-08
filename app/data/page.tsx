@@ -397,8 +397,10 @@ export default function DataPage() {
                                 <>
                                     <div className="flex flex-col gap-1 p-1">
                                         <div className="flex items-center gap-3 px-3 py-1">
-                                            <Checkbox checked={isAllSelected} onChange={toggleAllFields} />
-                                            <span className="text-sm font-bold">Поля сцен</span>
+                                            <label className="flex items-center gap-3 cursor-pointer">
+                                                <Checkbox checked={isAllSelected} onChange={toggleAllFields} />
+                                                <span className="text-sm font-bold">Поля сцен</span>
+                                            </label>
                                         </div>
 
                                         <div className="flex flex-col gap-1">
@@ -435,8 +437,10 @@ export default function DataPage() {
                                     {isItemsSelected && hasItemsField && availableItemFields.length > 0 && (
                                         <div className="flex flex-col gap-1 p-1 border-t border-depth-3">
                                             <div className="flex items-center gap-3 px-3 py-1">
-                                                <Checkbox checked={isAllItemSelected} onChange={toggleAllItemFields} />
-                                                <span className="text-sm font-bold">Поля элементов</span>
+                                                <label className="flex items-center gap-3 cursor-pointer">
+                                                    <Checkbox checked={isAllItemSelected} onChange={toggleAllItemFields} />
+                                                    <span className="text-sm font-bold">Поля элементов</span>
+                                                </label>
                                             </div>
 
                                             <div className="flex flex-col gap-1">
@@ -464,8 +468,10 @@ export default function DataPage() {
                             {dataViewMode === 'parameters' && (
                                 <div className="flex flex-col gap-1 p-1">
                                     <div className="flex items-center gap-3 px-3 py-1">
-                                        <Checkbox checked={isAllSelected} onChange={toggleAllFields} />
-                                        <span className="text-sm font-bold">Поля параметров</span>
+                                        <label className="flex items-center gap-3 cursor-pointer">
+                                            <Checkbox checked={isAllSelected} onChange={toggleAllFields} />
+                                            <span className="text-sm font-bold">Поля параметров</span>
+                                        </label>
                                     </div>
 
                                     <div className="flex flex-col gap-1">
