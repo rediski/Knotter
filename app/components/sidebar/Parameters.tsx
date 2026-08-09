@@ -19,10 +19,7 @@ export const Paramters = () => {
     const {
         filteredParameters,
         parameters,
-        filterText,
         selectedParameters,
-
-        setFilterText,
 
         selectParameters,
         deleteSelectedParameters,
@@ -64,14 +61,6 @@ export const Paramters = () => {
     return (
         <div className="flex flex-col gap-1 flex-1 overflow-y-auto max-h-[calc(100vh-8px-32px-4px)]">
             <div className="flex flex-col gap-1 p-1 bg-depth-1 border border-depth-3 rounded-md">
-                <Input
-                    value={filterText}
-                    onChange={setFilterText}
-                    icon={Search}
-                    placeholder="Поиск..."
-                    className="bg-depth-2 border border-depth-3 flex-1"
-                />
-
                 <CreateParameterForm />
             </div>
 
