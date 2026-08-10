@@ -28,13 +28,15 @@ const Card = ({ title, text }: { title: CardType; text: string }) => {
     const Icon = cardIcons[title];
 
     return (
-        <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-lg p-6">
-            <div className="flex items-center gap-2">
-                <Icon size={18} className="text-text-accent" />
-                <h3 className="capitalize">{title}</h3>
+        <div className="flex flex-col gap-4 bg-depth-1 border border-depth-3 rounded-lg p-6">
+            <div className="flex gap-2 items-center border border-depth-3 px-3 py-1 w-fit bg-depth-2 rounded-md">
+                <Icon size={20} className="text-text-accent" />
+                <h3 className="capitalize text-base">{title}</h3>
             </div>
 
-            <p className="text-gray text-sm leading-6">{text}</p>
+            <div className="flex flex-col gap-1">
+                <p className="text-gray text-sm leading-6">{text}</p>
+            </div>
         </div>
     );
 };
@@ -87,7 +89,6 @@ export default function Home() {
                                     edges: [],
                                     parameters: [],
                                 }}
-                                showActions={false}
                             />
                         </div>
                     </div>
