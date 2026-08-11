@@ -9,17 +9,17 @@ interface ColorPickerProps {
 }
 
 const PRESET_COLORS = [
-    '#846358',
-    '#0c8599',
-    '#1971c2',
-    '#6741d9',
-    '#9c36b5',
-    '#c2255c',
-    '#2f9e44',
-    '#099268',
-    '#f08c00',
-    '#e8590c',
-    '#e03131',
+    'rgb(132, 99, 88)',
+    'rgb(12, 133, 153)',
+    'rgb(25, 113, 194)',
+    'rgb(103, 65, 217)',
+    'rgb(156, 54, 181)',
+    'rgb(194, 37, 92)',
+    'rgb(47, 158, 68)',
+    'rgb(9, 146, 104)',
+    'rgb(240, 140, 0)',
+    'rgb(232, 89, 12)',
+    'rgb(224, 49, 49)',
 ];
 
 export const ColorPicker = memo(function ColorPicker({ color, onColorChange }: ColorPickerProps) {
