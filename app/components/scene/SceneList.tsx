@@ -228,7 +228,7 @@ export function SceneList() {
                                 key={sceneId}
                                 className={`
                                     flex items-center gap-1 px-3 py-1.25 min-w-48 rounded-md border 
-                                    group cursor-pointer shrink-0
+                                    group cursor-pointer select-none
                                     ${
                                         isActive
                                             ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
