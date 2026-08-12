@@ -67,7 +67,6 @@ const SCENE_FIELDS: (keyof Scene)[] = [
     'id',
     'name',
     'description',
-    'color',
     'items',
     'history',
     'historyPosition',

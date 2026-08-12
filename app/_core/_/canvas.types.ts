@@ -11,7 +11,6 @@ export interface Scene {
     id: string;
     name: string;
     description: string;
-    color: string | null;
     items: CanvasItem[];
     history: CanvasAction[];
     historyPosition: number;

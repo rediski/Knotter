@@ -26,7 +26,7 @@ const FIELD_TITLES = {
     DESCRIPTION: 'Описание',
     COLOR: 'Цвет вкладки',
     POSITION: 'Позиция',
-    CANVAS_SETTINGS: 'Настройки канваса',
+    CANVAS_SETTINGS: 'Настройки сцены',
     MAGNET: 'Магнит (M)',
     GRID: 'Сетка (G)',
     AXES: 'Оси (A)',
@@ -164,12 +164,6 @@ export const InspectorScene = memo(function InspectorScene({
                 </div>
             )}
 
-            {showColor && (
-                <Dropdown title={FIELD_TITLES.COLOR} isOpen={isDropdownOpen(7)} onToggle={() => toggleDropdown(7)}>
-                    <ColorPicker color={scene.color ?? null} onColorChange={handleColorChange} />
-                </Dropdown>
-            )}
-
             <Dropdown title={FIELD_TITLES.CANVAS_SETTINGS} isOpen={isDropdownOpen(8)} onToggle={() => toggleDropdown(8)}>
                 <div className="flex flex-col gap-1">
                     {controls.map(({ active, onClick, Icon, label, key }) => (
@@ -188,7 +182,7 @@ export const InspectorScene = memo(function InspectorScene({
 
                             <hr className={`h-6 border-l ${active ? 'border-bg-accent/10' : 'border-depth-5'}`} />
 
-                            <span className="text-sm select-none">{label}</span>
+                            <span className="text-sm select-none truncate">{label}</span>
                         </label>
                     ))}
                 </div>
