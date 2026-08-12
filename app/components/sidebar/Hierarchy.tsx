@@ -15,10 +15,11 @@ import { getRangeSelection } from '@/utils/canvas/getRangeSelection';
 import { deleteSelectedItems } from '@/utils/items/deleteSelectedItems';
 import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 
-import { LandPlot } from 'lucide-react';
+import { LandPlot, ChevronDown, ChevronRight } from 'lucide-react';
 
 export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string }) {
     const [mounted, setMounted] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(true);
 
     const { currentSceneId, scenes, selectedItemIds, setSelectedItemIds } = useItemsStore();
 
@@ -124,12 +125,20 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
     );
 
     const selectScene = useCallback(() => {
-        setSelectedItemIds([currentSceneId!]);
+        if (currentSceneId) {
+            setSelectedItemIds([currentSceneId]);
+        }
     }, [currentSceneId, setSelectedItemIds]);
 
     if (!mounted) {
         return <div className="flex flex-col h-full" />;
     }
+
+    if (!currentSceneId || !scene) {
+        return <div className="flex flex-col h-full" />;
+    }
+
+    const isSceneSelected = selectedItemIds.includes(currentSceneId);
 
     return (
         <div className="flex flex-col h-full overflow-y-auto">
@@ -141,85 +150,84 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
             >
-                {currentSceneId && scene && (
-                    <>
-                        <li className="relative select-none cursor-pointer" onClick={selectScene}>
-                            <div className="flex items-center gap-1">
-                                <div
-                                    className={`
-                                    w-full px-3 h-9 rounded-md outline-none tabular-nums flex items-center
+                <li className="relative select-none cursor-pointer" onClick={selectScene}>
+                    <div
+                        className={`
+                                    w-full pr-3 pl-2 h-9 rounded-md outline-none tabular-nums flex items-center
                                     ${
                                         selectedItemIds.includes(currentSceneId)
                                             ? 'bg-bg-accent/10 border border-bg-accent/10'
                                             : 'bg-depth-2 hover:bg-depth-3 border border-depth-3'
                                     }
                                 `}
-                                >
-                                    <div className="flex items-center gap-2 flex-1">
-                                        <LandPlot
-                                            size={16}
-                                            className={`min-w-4 ${selectedItemIds.includes(currentSceneId) ? 'text-text-accent' : 'text-foreground'}`}
-                                        />
+                    >
+                        <div className="flex items-center gap-2 flex-1">
+                            <button
+                                onClick={() => setIsExpanded((prev) => !prev)}
+                                className={`flex items-center justify-center p-0.5 rounded cursor-pointer ${isSceneSelected ? 'text-text-accent hover:bg-bg-accent/10' : 'hover:bg-depth-3'}`}
+                            >
+                                {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                            </button>
 
-                                        <div
-                                            className={`border-l h-5 ${selectedItemIds.includes(currentSceneId) ? 'border-bg-accent/10' : 'border-depth-4'}`}
-                                        />
+                            <div className={`border-l h-5 ${isSceneSelected ? 'border-bg-accent/10' : 'border-depth-4'}`} />
 
-                                        <span
-                                            className={`text-sm ${selectedItemIds.includes(currentSceneId) ? 'text-text-accent' : 'text-foreground'}`}
-                                        >
-                                            {scene.name}
-                                        </span>
+                            <LandPlot
+                                size={16}
+                                className={`min-w-4 ${isSceneSelected ? 'text-text-accent' : 'text-foreground'}`}
+                            />
 
-                                        <span
-                                            className={`ml-auto text-xs tabular-nums ${selectedItemIds.includes(currentSceneId) ? 'text-text-accent' : 'text-foreground'}`}
-                                        >
-                                            {items.length} / {MAX_SCENE_ITEMS}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+                            <div className={`border-l h-5 ${isSceneSelected ? 'border-bg-accent/10' : 'border-depth-4'}`} />
 
-                        <div className="relative my-1">
-                            <hr className="border-depth-3" />
+                            <span className={`text-sm truncate ${isSceneSelected ? 'text-text-accent' : 'text-foreground'}`}>
+                                {scene.name}
+                            </span>
+
+                            <span
+                                className={`ml-auto text-xs tabular-nums text-nowrap ${isSceneSelected ? 'text-text-accent' : 'text-foreground'}`}
+                            >
+                                {items.length} / {MAX_SCENE_ITEMS}
+                            </span>
                         </div>
-                    </>
-                )}
+                    </div>
+                </li>
 
-                {filteredItems.length > 0 ? (
+                {isExpanded && (
                     <>
-                        {insertPosition !== null && draggingId && (
-                            <div
-                                className="absolute left-0 right-0 h-0.5 bg-bg-accent rounded-full z-20"
-                                style={{
-                                    top: `${(insertPosition + 1) * 39 + 20}px`,
-                                    transition: 'top 0.05s ease-out',
-                                }}
+                        {filteredItems.length > 0 ? (
+                            <div className="flex flex-col gap-1 border-l border-depth-3 ml-5 pl-5">
+                                {insertPosition !== null && draggingId && (
+                                    <div
+                                        className="absolute left-0 right-0 h-0.5 bg-bg-accent rounded-full z-20"
+                                        style={{
+                                            top: `${(insertPosition + 1) * 36 + 36}px`,
+                                            transition: 'top 0.05s ease-out',
+                                        }}
+                                    />
+                                )}
+
+                                {filteredItems.map((filteredItem, index) => (
+                                    <div key={filteredItem.id}>
+                                        <HierarchyItem
+                                            filteredItem={filteredItem}
+                                            index={index}
+                                            selectItem={selectItem}
+                                            isSelected={selectedItemIds.includes(filteredItem.id)}
+                                            handleDragStart={handleDragStart}
+                                            selectedItemIds={selectedItemIds}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <EmptyState
+                                message={
+                                    items.length === 0
+                                        ? 'Создайте элемент, нажав ПКМ по холсту.'
+                                        : `Не найдено элементов по запросу "${filterText}"`
+                                }
                             />
                         )}
-
-                        {filteredItems.map((filteredItem, index) => (
-                            <div key={filteredItem.id} className="relative">
-                                <HierarchyItem
-                                    filteredItem={filteredItem}
-                                    index={index}
-                                    selectItem={selectItem}
-                                    isSelected={selectedItemIds.includes(filteredItem.id)}
-                                    handleDragStart={handleDragStart}
-                                    selectedItemIds={selectedItemIds}
-                                />
-                            </div>
-                        ))}
                     </>
-                ) : (
-                    <EmptyState
-                        message={
-                            items.length === 0
-                                ? 'Создайте элемент, нажав ПКМ по холсту.'
-                                : `Не найдено элементов по запросу "${filterText}"`
-                        }
-                    />
                 )}
             </ul>
         </div>
