@@ -62,7 +62,7 @@ export const HierarchyItem = memo(function HierarchyItem({
             draggable={true}
         >
             <div
-                className="absolute border-l border-depth-3"
+                className="absolute border-l border-depth-4"
                 style={{
                     left: `${LINE_LEFT}px`,
                     top: '0',
@@ -72,7 +72,7 @@ export const HierarchyItem = memo(function HierarchyItem({
             />
 
             <div
-                className="absolute border-t border-depth-3"
+                className="absolute border-t border-depth-4"
                 style={{
                     left: `${LINE_LEFT}px`,
                     top: '50%',
