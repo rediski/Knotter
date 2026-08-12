@@ -14,6 +14,7 @@ import { LineSquiggle, Package, PackageOpen } from 'lucide-react';
 interface HierarchyItemProps {
     filteredItem: CanvasItem;
     index: number;
+    totalItems: number;
     selectItem: (id: string, ctrlKey: boolean, shiftKey: boolean) => void;
     isSelected: boolean;
     handleDragStart: (e: React.DragEvent, nodeId: string) => void;
@@ -23,6 +24,7 @@ interface HierarchyItemProps {
 export const HierarchyItem = memo(function HierarchyItem({
     filteredItem,
     index,
+    totalItems,
     selectItem,
     isSelected,
     handleDragStart,
@@ -46,6 +48,11 @@ export const HierarchyItem = memo(function HierarchyItem({
         }
     };
 
+    const isLast = index === totalItems - 1;
+
+    const LINE_LEFT = 18.8;
+    const LINE_WIDTH = 16;
+
     return (
         <li
             className="relative select-none cursor-grab"
@@ -54,12 +61,32 @@ export const HierarchyItem = memo(function HierarchyItem({
             onDragStart={(e) => handleDragStart(e, filteredItem.id)}
             draggable={true}
         >
-            <div className="flex items-center gap-1">
+            <div
+                className="absolute border-l border-depth-3"
+                style={{
+                    left: `${LINE_LEFT}px`,
+                    top: '0',
+                    bottom: isLast ? '50%' : '0',
+                    height: isLast ? '50%' : '100%',
+                }}
+            />
+
+            <div
+                className="absolute border-t border-depth-3"
+                style={{
+                    left: `${LINE_LEFT}px`,
+                    top: '50%',
+                    width: `${LINE_WIDTH}px`,
+                }}
+            />
+
+            <div className="flex items-center gap-1 relative" style={{ paddingLeft: LINE_LEFT + LINE_WIDTH }}>
                 <div
                     className={`
                     w-full px-3 h-9 rounded-md outline-none tabular-nums flex items-center text-nowrap
                     ${isSelected ? 'bg-bg-accent/10 border border-bg-accent/10' : 'bg-depth-2 hover:bg-depth-3 border border-depth-3'}
                     ${isPartOfSelectionGroup && 'border-bg-accent/20'}
+                    relative z-10
                 `}
                 >
                     <div className="flex items-center gap-2 flex-1">

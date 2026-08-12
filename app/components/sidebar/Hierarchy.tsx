@@ -194,7 +194,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                 {isExpanded && (
                     <>
                         {filteredItems.length > 0 ? (
-                            <div className="flex flex-col gap-1 border-l border-depth-3 ml-5 pl-5">
+                            <div className="flex flex-col gap-1 relative">
                                 {insertPosition !== null && draggingId && (
                                     <div
                                         className="absolute left-0 right-0 h-0.5 bg-bg-accent rounded-full z-20"
@@ -206,16 +206,16 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                                 )}
 
                                 {filteredItems.map((filteredItem, index) => (
-                                    <div key={filteredItem.id}>
-                                        <HierarchyItem
-                                            filteredItem={filteredItem}
-                                            index={index}
-                                            selectItem={selectItem}
-                                            isSelected={selectedItemIds.includes(filteredItem.id)}
-                                            handleDragStart={handleDragStart}
-                                            selectedItemIds={selectedItemIds}
-                                        />
-                                    </div>
+                                    <HierarchyItem
+                                        key={filteredItem.id}
+                                        filteredItem={filteredItem}
+                                        index={index}
+                                        totalItems={filteredItems.length}
+                                        selectItem={selectItem}
+                                        isSelected={selectedItemIds.includes(filteredItem.id)}
+                                        handleDragStart={handleDragStart}
+                                        selectedItemIds={selectedItemIds}
+                                    />
                                 ))}
                             </div>
                         ) : (
