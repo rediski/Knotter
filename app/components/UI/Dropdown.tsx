@@ -48,7 +48,7 @@ export const Dropdown = memo(function Dropdown({
                     size={16}
                 />
 
-                <span className="flex-1 text-left">{title}</span>
+                <span className="flex-1 text-left truncate">{title}</span>
             </button>
 
             {isOpen && !disabled && <div className="flex flex-col gap-1 px-3 pb-2">{children}</div>}
