@@ -57,7 +57,7 @@ export const HierarchyItem = memo(function HierarchyItem({
             <div className="flex items-center gap-1">
                 <div
                     className={`
-                    w-full px-3 h-9 rounded-md outline-none tabular-nums flex items-center
+                    w-full px-3 h-9 rounded-md outline-none tabular-nums flex items-center text-nowrap
                     ${isSelected ? 'bg-bg-accent/10 border border-bg-accent/10' : 'bg-depth-2 hover:bg-depth-3 border border-depth-3'}
                     ${isPartOfSelectionGroup && 'border-bg-accent/20'}
                 `}
