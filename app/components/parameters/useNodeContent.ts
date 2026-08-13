@@ -10,18 +10,6 @@ import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 import { getFilteredParameters } from '@/utils/parameters/getFilteredParameters';
 import { getRangeSelection } from '@/utils/canvas/getRangeSelection';
 
-const getSiblingsIds = (parameters: Parameter[], currentParameter: Parameter, filteredParameters: Parameter[]): string[] => {
-    if (currentParameter.parentId) {
-        const parent = parameters.find((parameter) => parameter.id === currentParameter.parentId);
-
-        if (!parent || !isStructure(parent)) return [];
-
-        return parent.defaultValue;
-    }
-
-    return filteredParameters.map((parameter) => parameter.id);
-};
-
 const updateSiblingsOrder = (
     parameters: Parameter[],
     currentParameter: Parameter,
@@ -103,7 +91,7 @@ export const useNodeContent = () => {
         [parameters, selectedParameters, setParameters],
     );
 
-    const { draggingId, insertPosition, listRef, handleDragStart, handleDragOver, handleDrop, handleDragEnd } =
+    const { draggingId, dragOverId, listRef, handleDragStart, handleDragOver, handleDrop, handleDragEnd } =
         useDragAndDrop<Parameter>({
             filteredItems: filteredParameters,
             items: parameters,
@@ -179,7 +167,7 @@ export const useNodeContent = () => {
         deleteSelectedParameters,
 
         draggingId,
-        insertPosition,
+        dragOverId,
         listRef,
         handleDragStart,
         handleDragOver,
