@@ -212,8 +212,6 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                                         totalItems={filteredItems.length}
                                         selectItem={selectItem}
                                         isSelected={selectedItemIds.includes(filteredItem.id)}
-                                        isDragOver={dragOverId === filteredItem.id}
-                                        isDragging={draggingId === filteredItem.id}
                                         handleDragStart={handleDragStart}
                                         selectedItemIds={selectedItemIds}
                                     />
