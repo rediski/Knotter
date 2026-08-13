@@ -55,6 +55,7 @@ export const HierarchyItem = memo(function HierarchyItem({
 
     return (
         <li
+            data-id={filteredItem.id}
             className="relative select-none cursor-grab"
             onClick={(e: MouseEvent) => selectItem(filteredItem.id, e.ctrlKey, e.shiftKey)}
             onDoubleClick={handleDoubleClick}
@@ -112,7 +113,7 @@ export const HierarchyItem = memo(function HierarchyItem({
 
                         <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/10' : 'border-depth-4'}`} />
 
-                        <span className={`text-sm ${isSelected ? 'text-text-accent' : 'text-foreground'}`}>
+                        <span className={`text-sm truncate ${isSelected ? 'text-text-accent' : 'text-foreground'}`}>
                             {filteredItem.name}
                         </span>
                     </div>
