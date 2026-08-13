@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, type RefObject, useEffect } from 'react';
+import { useState, useRef, useCallback, type RefObject } from 'react';
 
 interface Identifiable {
     id: string;
@@ -13,19 +13,17 @@ interface UseDragAndDropProps<Item extends Identifiable> {
     itemSelector?: string;
 }
 
-interface UseDragAndDropReturn<> {
+interface UseDragAndDropReturn {
     draggingId: string | null;
-    insertPosition: number | null;
+    dragOverId: string | null;
     listRef: RefObject<HTMLUListElement | null>;
     handleDragStart: (e: React.DragEvent, nodeId: string) => void;
     handleDragOver: (e: React.DragEvent) => void;
     handleDrop: (e: React.DragEvent) => void;
     handleDragEnd: () => void;
-    resetDragState: () => void;
 }
 
 export function useDragAndDrop<Item extends Identifiable>({
-    filteredItems,
     items,
     selectedIds,
     onSelect,
@@ -33,26 +31,8 @@ export function useDragAndDrop<Item extends Identifiable>({
     itemSelector = 'li',
 }: UseDragAndDropProps<Item>): UseDragAndDropReturn {
     const [draggingId, setDraggingId] = useState<string | null>(null);
-    const [insertPosition, setInsertPosition] = useState<number | null>(null);
+    const [dragOverId, setDragOverId] = useState<string | null>(null);
     const listRef = useRef<HTMLUListElement | null>(null);
-  
-
-    useEffect(() => {
-        if (!listRef.current) return;
-
-        const items = listRef.current.querySelectorAll(itemSelector);
-        const heights: number[] = [];
-        let totalHeight = 0;
-
-        items.forEach((item) => {
-            const rect = item.getBoundingClientRect();
-            const height = rect.height;
-            heights.push(totalHeight);
-            totalHeight += height;
-        });
-
-     
-    }, [filteredItems, itemSelector]);
 
     const handleDragStart = useCallback(
         (e: React.DragEvent, nodeId: string): void => {
@@ -64,12 +44,14 @@ export function useDragAndDrop<Item extends Identifiable>({
 
             setDraggingId(nodeId);
 
+            const idsToMove = selectedIds.includes(nodeId) ? selectedIds : [nodeId];
+
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData(
                 'text/plain',
                 JSON.stringify({
                     primaryId: nodeId,
-                    selectedIds: selectedIds,
+                    selectedIds: idsToMove,
                 }),
             );
         },
@@ -81,124 +63,115 @@ export function useDragAndDrop<Item extends Identifiable>({
             e.stopPropagation();
             e.preventDefault();
 
-            if (!draggingId || !listRef.current) return;
-
-            const listRect = listRef.current.getBoundingClientRect();
-            const mouseY = e.clientY - listRect.top;
-
-            const items = listRef.current.querySelectorAll(itemSelector);
-            let insertPos = items.length;
-
-            for (let i = 0; i < items.length; i++) {
-                const rect = items[i].getBoundingClientRect();
-                const itemMiddle = rect.top + rect.height / 2 - listRect.top;
-
-                if (mouseY < itemMiddle) {
-                    insertPos = i;
-                    break;
-                }
-            }
-
-            const currentIndexes = selectedIds.map((id) => filteredItems.findIndex((item) => item.id === id));
-            const minIndex = Math.min(...currentIndexes);
-            const maxIndex = Math.max(...currentIndexes);
-
-            let insertPosFinal: number | null = insertPos;
-
-            if (insertPos >= minIndex && insertPos <= maxIndex + 1) {
-                insertPosFinal = null;
-            }
-
-            setInsertPosition(insertPosFinal);
-        },
-        [draggingId, filteredItems, selectedIds, itemSelector],
-    );
-
-    const handleDrop = useCallback(
-        (e: React.DragEvent): void => {
-            e.stopPropagation();
-            e.preventDefault();
-
-            if (!draggingId || insertPosition === null) {
-                setDraggingId(null);
-                setInsertPosition(null);
+            if (!draggingId || !listRef.current) {
+                setDragOverId(null);
                 return;
             }
 
-            let selectedIdsToMove: string[] = [draggingId];
+            const target = (e.target as HTMLElement).closest(itemSelector);
 
-            try {
-                const rawData = e.dataTransfer.getData('text/plain');
-                const data = JSON.parse(rawData) as { primaryId: string; selectedIds: string[] };
-
-                if (data.selectedIds && Array.isArray(data.selectedIds)) {
-                    selectedIdsToMove = data.selectedIds;
-                }
-            } catch (error) {
-                console.warn('Failed to parse drag data:', error);
-            }
-
-            const currentIndexes = selectedIdsToMove.map((id) => filteredItems.findIndex((item) => item.id === id));
-            const minIndex = Math.min(...currentIndexes);
-            const selectedCount = selectedIdsToMove.length;
-
-            if (currentIndexes.includes(-1) || minIndex === insertPosition) {
-                setDraggingId(null);
-                setInsertPosition(null);
+            if (!target) {
+                setDragOverId(null);
                 return;
             }
+
+            const targetId = target.getAttribute('data-id');
+
+            if (!targetId || targetId === draggingId) {
+                setDragOverId(null);
+                return;
+            }
+
+            if (selectedIds.includes(targetId)) {
+                setDragOverId(null);
+                return;
+            }
+
+            const targetIndex = items.findIndex((item) => item.id === targetId);
+            const draggedIndex = items.findIndex((item) => item.id === draggingId);
+
+            if (targetIndex === -1 || draggedIndex === -1) {
+                setDragOverId(null);
+                return;
+            }
+
+            const selectedItems = items.filter((item) => selectedIds.includes(item.id));
+            const selectedIndices = selectedItems
+                .map((item) => items.findIndex((i) => i.id === item.id))
+                .sort((a, b) => a - b);
+
+            const minSelectedIndex = Math.min(...selectedIndices);
+            const maxSelectedIndex = Math.max(...selectedIndices);
+            const selectedCount = selectedItems.length;
+
+            const rect = target.getBoundingClientRect();
+            const mouseY = e.clientY;
+            const relativeY = (mouseY - rect.top) / rect.height;
+
+            const isBefore = relativeY < 0.5;
 
             const newItems = [...items];
 
-            const itemsToMove = selectedIdsToMove
-                .map((id) => {
-                    const index = newItems.findIndex((item) => item.id === id);
-                    if (index === -1) return null;
+            const itemsToMove = selectedIndices
+                .sort((a, b) => b - a)
+                .map((index) => {
                     const [item] = newItems.splice(index, 1);
                     return item;
                 })
-                .filter((item): item is Item => item !== null);
+                .reverse();
 
-            if (itemsToMove.length === 0) {
-                setDraggingId(null);
-                setInsertPosition(null);
+            let newIndex = targetIndex;
+
+            if (maxSelectedIndex < targetIndex) {
+                newIndex = isBefore ? targetIndex - selectedCount : targetIndex - selectedCount + 1;
+            }
+
+            if (minSelectedIndex > targetIndex) {
+                newIndex = isBefore ? targetIndex : targetIndex + 1;
+            }
+
+            if (maxSelectedIndex >= targetIndex && minSelectedIndex <= targetIndex) {
+                newIndex = isBefore ? targetIndex : targetIndex + 1;
+            }
+
+            newIndex = Math.max(0, Math.min(newIndex, newItems.length));
+
+            newItems.splice(newIndex, 0, ...itemsToMove);
+
+            const currentOrder = items.map((item) => item.id);
+            const newOrder = newItems.map((item) => item.id);
+
+            if (JSON.stringify(currentOrder) !== JSON.stringify(newOrder)) {
+                onReorder(newItems);
+                setDragOverId(targetId);
                 return;
             }
 
-            let targetIndex = insertPosition;
-            if (minIndex < insertPosition) {
-                targetIndex = insertPosition - selectedCount;
-            }
-
-            const clampedTargetIndex = Math.max(0, Math.min(targetIndex, newItems.length));
-            newItems.splice(clampedTargetIndex, 0, ...itemsToMove);
-
-            onReorder(newItems);
-
-            setDraggingId(null);
-            setInsertPosition(null);
+            setDragOverId(null);
         },
-        [draggingId, insertPosition, filteredItems, items, onReorder],
+        [draggingId, items, selectedIds, onReorder, itemSelector],
     );
+
+    const handleDrop = useCallback((e: React.DragEvent): void => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        setDraggingId(null);
+        setDragOverId(null);
+    }, []);
 
     const handleDragEnd = useCallback((): void => {
         setDraggingId(null);
-        setInsertPosition(null);
-    }, []);
-
-    const resetDragState = useCallback((): void => {
-        setDraggingId(null);
-        setInsertPosition(null);
+        setDragOverId(null);
     }, []);
 
     return {
         draggingId,
-        insertPosition,
+        dragOverId,
         listRef,
         handleDragStart,
         handleDragOver,
         handleDrop,
         handleDragEnd,
-        resetDragState,
     };
 }
