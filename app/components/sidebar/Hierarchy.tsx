@@ -54,13 +54,14 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
         [currentSceneId, scene],
     );
 
-    const { draggingId, insertPosition, listRef, handleDragStart, handleDragOver, handleDrop, handleDragEnd } =
+    const { draggingId, dragOverId, listRef, handleDragStart, handleDragOver, handleDrop, handleDragEnd } =
         useDragAndDrop<CanvasItem>({
             filteredItems,
             items,
             selectedIds: selectedItemIds,
             onSelect: setSelectedItemIds,
             onReorder: handleReorder,
+            itemSelector: 'li',
         });
 
     useEffect(() => {
@@ -85,7 +86,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [selectedItemIds, deleteSelectedItems]);
+    }, [selectedItemIds]);
 
     const deselect = useCallback(
         (e: React.MouseEvent<HTMLUListElement>) => {
@@ -139,6 +140,8 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
     }
 
     const isSceneSelected = selectedItemIds.includes(currentSceneId);
+
+    const visibleSelectedCount = filteredItems.filter((item) => selectedItemIds.includes(item.id)).length;
 
     return (
         <div className="flex flex-col h-full overflow-y-auto">
@@ -195,14 +198,10 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                     <>
                         {filteredItems.length > 0 ? (
                             <div className="flex flex-col gap-1 relative">
-                                {insertPosition !== null && draggingId && (
-                                    <div
-                                        className="absolute left-0 right-0 h-0.5 bg-bg-accent rounded-full z-20"
-                                        style={{
-                                            top: `${(insertPosition + 1) * 36 + 36}px`,
-                                            transition: 'top 0.05s ease-out',
-                                        }}
-                                    />
+                                {visibleSelectedCount > 1 && (
+                                    <div className="text-xs text-text-accent px-3 py-1 bg-bg-accent/5 rounded-md truncate">
+                                        Выбранных элементов: {visibleSelectedCount}
+                                    </div>
                                 )}
 
                                 {filteredItems.map((filteredItem, index) => (
@@ -213,6 +212,8 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                                         totalItems={filteredItems.length}
                                         selectItem={selectItem}
                                         isSelected={selectedItemIds.includes(filteredItem.id)}
+                                        isDragOver={dragOverId === filteredItem.id}
+                                        isDragging={draggingId === filteredItem.id}
                                         handleDragStart={handleDragStart}
                                         selectedItemIds={selectedItemIds}
                                     />
