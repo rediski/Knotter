@@ -144,7 +144,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
         <div className="flex flex-col h-full overflow-y-auto">
             <ul
                 ref={listRef}
-                className="flex flex-col gap-1 m-1 pr-1 overflow-y-auto h-full relative"
+                className="flex flex-col gap-1 m-1 mr-0 pr-1 overflow-y-auto h-full relative"
                 onClick={deselect}
                 onDragEnd={handleDragEnd}
                 onDragOver={handleDragOver}
