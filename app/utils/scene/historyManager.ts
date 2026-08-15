@@ -13,14 +13,9 @@ export function addToHistory(action: CanvasAction) {
 
     const currentScene = scenes[currentSceneId];
 
-    if (!currentScene) {
-        console.warn('Current scene not found');
-        return;
-    }
+    if (!currentScene) return;
 
     const { history, historyPosition } = currentScene;
-
-    console.log('📝 addToHistory called:', action.type, action.items.length);
 
     let newHistory = [...history.slice(0, historyPosition + 1), structuredClone(action)];
 
@@ -45,8 +40,6 @@ export function addToHistory(action: CanvasAction) {
             [currentSceneId]: updatedScene,
         },
     });
-
-    console.log('✅ History updated, new length:', newHistory.length);
 }
 
 export function getHistoryUpToCurrent() {
