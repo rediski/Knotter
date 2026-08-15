@@ -2,9 +2,7 @@
 
 import { memo } from 'react';
 
-import type { Node } from '@/_core/_/canvas.types';
-import type { NodeParameter } from '@/_core/_/parameter';
-import { isNumber, isString, isBoolean, isEnum, isStructure } from '@/_core/_/parameter.type-guards';
+import type { Parameter } from '@/_core/_/parameter';
 
 import { Input } from '@/components/UI/Input';
 import { Checkbox } from '@/components/UI/Checkbox';
@@ -21,35 +19,30 @@ import { X } from 'lucide-react';
 export const NodeParameters = memo(function NodeParameters({
     nodeParameter,
     nodeId,
-    isChild = false,
 }: {
-    nodeParameter: NodeParameter;
+    nodeParameter: Parameter;
     nodeId: string;
-    isChild?: boolean;
 }) {
-    if (!isChild && nodeParameter.parentId !== null) {
-        return null;
+    if (!nodeParameter || nodeParameter.type === null || nodeParameter.type === undefined) {
+        return (
+            <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1 opacity-50">
+                <div className="flex items-center gap-2 w-full truncate">
+                    <span className="text-gray-500">Некорректный параметр</span>
+                </div>
+                <button
+                    onClick={() => unassignParameter(nodeParameter?.id)}
+                    className="cursor-pointer text-gray hover:text-white min-w-4"
+                >
+                    <X size={16} />
+                </button>
+            </div>
+        );
     }
 
     const ParameterIcon = getParameterIcon(nodeParameter.type);
-    const { currentSceneId, scenes, parameters } = useItemsStore();
+    const { parameters } = useItemsStore();
 
-    const scene = currentSceneId ? scenes[currentSceneId] : null;
-    const items = scene?.items ?? [];
-
-    const showDeleteButton = !isChild;
-
-    if (isNumber(nodeParameter)) {
-        const handleNumberChange = (newValue: string | null) => {
-            if (newValue === null) return;
-
-            const numValue = parseFloat(newValue);
-
-            if (isNaN(numValue)) return;
-
-            updateNodeParameter(nodeId, nodeParameter.id, numValue);
-        };
-
+    if (nodeParameter.type === 'number') {
         return (
             <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
                 <div className="flex items-center gap-2 w-full truncate">
@@ -58,61 +51,53 @@ export const NodeParameters = memo(function NodeParameters({
                 </div>
 
                 <Input
-                    value={nodeParameter.value?.toString() ?? '0'}
+                    value={typeof nodeParameter.value === 'number' ? nodeParameter.value.toString() : '0'}
                     type="number"
                     className="bg-depth-3 border border-depth-4 hover:bg-depth-4"
-                    onChange={handleNumberChange}
+                    onChange={(newValue) => {
+                        if (newValue === null) return;
+                        const numValue = parseFloat(newValue);
+                        if (isNaN(numValue)) return;
+                        updateNodeParameter(nodeId, nodeParameter.id, numValue);
+                    }}
                 />
-
-                {showDeleteButton && (
-                    <button
-                        onClick={() => unassignParameter(nodeParameter.id)}
-                        className="cursor-pointer text-gray hover:text-white min-w-4"
-                    >
-                        <X size={16} />
-                    </button>
-                )}
+                <button
+                    onClick={() => unassignParameter(nodeParameter.id)}
+                    className="cursor-pointer text-gray hover:text-white min-w-4"
+                >
+                    <X size={16} />
+                </button>
             </div>
         );
     }
 
-    if (isString(nodeParameter)) {
-        const handleStringChange = (newValue: string | null) => {
-            if (newValue === null) return;
-            updateNodeParameter(nodeId, nodeParameter.id, newValue);
-        };
-
+    if (nodeParameter.type === 'string') {
         return (
             <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
                 <div className="flex items-center gap-2 w-full truncate">
                     <ParameterIcon size={16} />
                     <p className="truncate">{nodeParameter.name}</p>
                 </div>
-
                 <Input
-                    value={(nodeParameter.value as string) ?? ''}
+                    value={typeof nodeParameter.value === 'string' ? nodeParameter.value : ''}
                     placeholder="Введите значение"
                     className="bg-depth-3 hover:bg-depth-4 border border-depth-4"
-                    onChange={handleStringChange}
+                    onChange={(newValue) => {
+                        if (newValue === null) return;
+                        updateNodeParameter(nodeId, nodeParameter.id, newValue);
+                    }}
                 />
-
-                {showDeleteButton && (
-                    <button
-                        onClick={() => unassignParameter(nodeParameter.id)}
-                        className="cursor-pointer text-gray hover:text-white min-w-4"
-                    >
-                        <X size={16} />
-                    </button>
-                )}
+                <button
+                    onClick={() => unassignParameter(nodeParameter.id)}
+                    className="cursor-pointer text-gray hover:text-white min-w-4"
+                >
+                    <X size={16} />
+                </button>
             </div>
         );
     }
 
-    if (isBoolean(nodeParameter)) {
-        const handleBooleanChange = (checked: boolean) => {
-            updateNodeParameter(nodeId, nodeParameter.id, checked);
-        };
-
+    if (nodeParameter.type === 'boolean') {
         return (
             <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
                 <div className="flex items-center justify-between w-full">
@@ -120,42 +105,26 @@ export const NodeParameters = memo(function NodeParameters({
                         <ParameterIcon size={16} />
                         <span className="truncate">{nodeParameter.name}</span>
                     </div>
-
                     <Checkbox
-                        checked={(nodeParameter.value as boolean) ?? false}
-                        className={`
-                            bg-depth-3 border border-depth-4
-                            ${nodeParameter.value === true ? 'hover:bg-bg-accent' : 'hover:bg-depth-4'}
-                        `}
-                        onChange={handleBooleanChange}
+                        checked={typeof nodeParameter.value === 'boolean' ? nodeParameter.value : false}
+                        className="bg-depth-3 border border-depth-4"
+                        onChange={(checked) => updateNodeParameter(nodeId, nodeParameter.id, checked)}
                     />
                 </div>
-
-                {showDeleteButton && (
-                    <button
-                        onClick={() => unassignParameter(nodeParameter.id)}
-                        className="cursor-pointer text-gray hover:text-white min-w-4"
-                    >
-                        <X size={16} />
-                    </button>
-                )}
+                <button
+                    onClick={() => unassignParameter(nodeParameter.id)}
+                    className="cursor-pointer text-gray hover:text-white min-w-4"
+                >
+                    <X size={16} />
+                </button>
             </div>
         );
     }
 
-    if (isEnum(nodeParameter)) {
-        const selectedValue = nodeParameter.value as string | null;
-
+    if (nodeParameter.type === 'enum') {
         const globalParameter = parameters.find((p) => p.id === nodeParameter.id);
-        const options = (globalParameter?.defaultValue as string[]) || [];
-
-        const getCurrentEnumValue = () => {
-            return selectedValue || options[0] || '';
-        };
-
-        const handleEnumChange = (selected: string) => {
-            updateNodeParameter(nodeId, nodeParameter.id, selected);
-        };
+        const options = Array.isArray(globalParameter?.defaultValue) ? globalParameter.defaultValue : [];
+        const selectedValue = typeof nodeParameter.value === 'string' ? nodeParameter.value : null;
 
         return (
             <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
@@ -163,87 +132,47 @@ export const NodeParameters = memo(function NodeParameters({
                     <ParameterIcon size={16} />
                     <p className="truncate">{nodeParameter.name}</p>
                 </div>
-
                 <div className="w-full">
-                    <DropdownAbsolute title={getCurrentEnumValue()} depth={3} align="right">
-                        {options.map((option) => (
+                    <DropdownAbsolute title={selectedValue || (options[0] as string) || ''} depth={3} align="right">
+                        {options.map((option: string) => (
                             <button
                                 key={option}
-                                onClick={() => handleEnumChange(option)}
+                                onClick={() => updateNodeParameter(nodeId, nodeParameter.id, option)}
                                 className={`
-                                w-full text-left px-3 py-1.5 rounded-md border cursor-pointer
-                                ${
-                                    option === selectedValue
-                                        ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
-                                        : 'bg-depth-4 hover:bg-depth-5 border-depth-5'
-                                }
-                            `}
+                                    w-full text-left px-3 py-1.5 rounded-md border cursor-pointer
+                                    ${
+                                        option === selectedValue
+                                            ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
+                                            : 'bg-depth-4 hover:bg-depth-5 border-depth-5'
+                                    }
+                                `}
                             >
                                 {option}
                             </button>
                         ))}
                     </DropdownAbsolute>
                 </div>
-
-                {showDeleteButton && (
-                    <button
-                        onClick={() => unassignParameter(nodeParameter.id)}
-                        className="cursor-pointer text-gray hover:text-white min-w-4"
-                    >
-                        <X size={16} />
-                    </button>
-                )}
+                <button
+                    onClick={() => unassignParameter(nodeParameter.id)}
+                    className="cursor-pointer text-gray hover:text-white min-w-4"
+                >
+                    <X size={16} />
+                </button>
             </div>
         );
     }
 
-    if (isStructure(nodeParameter)) {
-        const structureValue = nodeParameter.value as string[];
-
-        const currentNode = items.find((item) => item.kind === 'node' && item.id === nodeId) as Node | undefined;
-        if (!currentNode) return null;
-
-        const nodeParameters = currentNode.parameters || [];
-
-        const childParameters = structureValue
-            .map((id) => nodeParameters.find((nodeParameter) => nodeParameter.id === id))
-            .filter((nodeParameter): nodeParameter is NodeParameter => nodeParameter !== undefined);
-
-        return (
-            <div className="flex flex-col gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-2">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 truncate">
-                        <ParameterIcon size={16} className="text-icon-secondary shrink-0" />
-                        <p className="truncate">{nodeParameter.name}</p>
-                    </div>
-
-                    {showDeleteButton && (
-                        <button
-                            onClick={() => unassignParameter(nodeParameter.id)}
-                            className="cursor-pointer text-gray hover:text-white min-w-4"
-                        >
-                            <X size={16} />
-                        </button>
-                    )}
-                </div>
-
-                <div className="flex flex-col gap-1 border-depth-4 p-1 bg-depth-1 rounded-md border border-dashed">
-                    {childParameters.length === 0 ? (
-                        <p className="flex items-center justify-center p-2 text-gray">Нет вложенных параметров</p>
-                    ) : (
-                        childParameters.map((childParameter) => (
-                            <NodeParameters
-                                key={childParameter.id}
-                                nodeParameter={childParameter}
-                                nodeId={nodeId}
-                                isChild={true}
-                            />
-                        ))
-                    )}
-                </div>
+    return (
+        <div className="flex items-center gap-2 bg-depth-2 border border-depth-3 rounded-md px-3 py-1 opacity-50">
+            <div className="flex items-center gap-2 w-full truncate">
+                <span className="text-gray-500">Неизвестный тип: {String(nodeParameter.type)}</span>
             </div>
-        );
-    }
-
-    return null;
+            <button
+                onClick={() => unassignParameter(nodeParameter.id)}
+                className="cursor-pointer text-gray hover:text-white min-w-4"
+            >
+                <X size={16} />
+            </button>
+        </div>
+    );
 });
