@@ -1,5 +1,4 @@
 import { Parameter } from '@/_core/_/parameter';
-import { isString } from '@/_core/_/parameter.type-guards';
 
 interface useStringParameterProps {
     parameter: Parameter;
@@ -7,7 +6,7 @@ interface useStringParameterProps {
 }
 
 export const useStringParameter = ({ parameter, updateParameter }: useStringParameterProps) => {
-    if (!parameter || !isString(parameter)) {
+    if (!parameter || parameter.type !== 'string') {
         return { updateDefaultValue: () => {} };
     }
 

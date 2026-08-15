@@ -1,5 +1,4 @@
 import { Parameter } from '@/_core/_/parameter';
-import { isNumber } from '@/_core/_/parameter.type-guards';
 
 interface useNumberParameterProps {
     parameter: Parameter | undefined;
@@ -7,7 +6,7 @@ interface useNumberParameterProps {
 }
 
 export const useNumberParameter = ({ parameter, updateParameter }: useNumberParameterProps) => {
-    if (!parameter || !isNumber(parameter)) {
+    if (!parameter || parameter.type !== 'number') {
         return {
             updateDefaultValue: () => {},
         };

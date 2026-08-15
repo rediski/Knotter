@@ -2,8 +2,6 @@ import { useMemo, useState, useCallback, type MouseEvent } from 'react';
 
 import type { Parameter } from '@/_core/_/parameter';
 
-import { isStructure } from '@/_core/_/parameter.type-guards';
-
 import { useItemsStore } from '@/store/useItemsStore';
 import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 
@@ -18,19 +16,16 @@ const updateSiblingsOrder = (
 ) => {
     if (currentParameter.parentId) {
         const updatedParameters = parameters.map((parameter) => {
-            if (parameter.id === currentParameter.parentId && isStructure(parameter)) {
+            if (parameter.id === currentParameter.parentId) {
                 return { ...parameter, defaultValue: newSiblingsIds };
             }
-
             return parameter;
         });
-
         setParameters(updatedParameters);
         return;
     }
 
     const otherParameters = parameters.filter((parameter) => parameter.parentId !== null);
-
     const newRootParameters = newSiblingsIds
         .map((id) => parameters.find((parameter) => parameter.id === id))
         .filter((parameter): parameter is Parameter => parameter !== undefined);
@@ -46,8 +41,8 @@ const getIdsToDelete = (ids: Set<string>, parametersMap: Map<string, Parameter>)
         const currentId = stack.pop()!;
         const parameter = parametersMap.get(currentId);
 
-        if (parameter && isStructure(parameter)) {
-            for (const childId of parameter.defaultValue) {
+        if (parameter) {
+            for (const childId of parameter.defaultValue as string[]) {
                 if (!toDelete.has(childId)) {
                     toDelete.add(childId);
                     stack.push(childId);
@@ -111,13 +106,6 @@ export const useNodeContent = () => {
         const newParameters = parameters.filter((parameter) => !idsToDelete.has(parameter.id));
 
         const cleanedParameters = newParameters.map((parameter) => {
-            if (isStructure(parameter)) {
-                return {
-                    ...parameter,
-                    defaultValue: parameter.defaultValue.filter((id: string) => !idsToDelete.has(id)),
-                };
-            }
-
             return parameter;
         });
 
@@ -130,11 +118,9 @@ export const useNodeContent = () => {
             if (ctrlKey) {
                 const newSet = new Set(selectedParameters);
                 const wasDeleted = newSet.delete(id);
-
                 if (!wasDeleted) {
                     newSet.add(id);
                 }
-
                 setSelectedParameters(newSet);
                 return;
             }
@@ -142,11 +128,9 @@ export const useNodeContent = () => {
             if (shiftKey && selectedParameters.size > 0) {
                 const lastSelectedId = Array.from(selectedParameters)[selectedParameters.size - 1];
                 const rangeSet = getRangeSelection(filteredParameters, id, lastSelectedId);
-
                 if (rangeSet.size > 0) {
                     setSelectedParameters(rangeSet);
                 }
-
                 return;
             }
 
@@ -157,15 +141,11 @@ export const useNodeContent = () => {
 
     return {
         filteredParameters,
-        parameters,
         filterText,
         selectedParameters,
-
         setFilterText,
-
         selectParameters,
         deleteSelectedParameters,
-
         draggingId,
         dragOverId,
         listRef,

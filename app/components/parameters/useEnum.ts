@@ -1,11 +1,10 @@
 import { Parameter } from '@/_core/_/parameter';
 import { updateParameter } from '@/utils/parameters/updateParameter';
-import { isEnum } from '@/_core/_/parameter.type-guards';
 
 export const useEnum = ({ parameter }: { parameter: Parameter }) => {
     const addEnumOption = () => {
         if (!parameter) return;
-        if (!isEnum(parameter)) return;
+        if (parameter.type !== 'enum') return;
 
         const currentValue = parameter.defaultValue as string[];
         const ordinalNumber = currentValue.length + 1;
@@ -26,7 +25,7 @@ export const useEnum = ({ parameter }: { parameter: Parameter }) => {
 
     const removeEnumOption = (index: number) => {
         if (!parameter) return;
-        if (!isEnum(parameter)) return;
+        if (parameter.type !== 'enum') return;
 
         const currentValue = parameter.defaultValue as string[];
         const updatedOptions = currentValue.filter((_, i) => i !== index);
@@ -39,7 +38,7 @@ export const useEnum = ({ parameter }: { parameter: Parameter }) => {
 
     const updateEnumOption = (index: number, newValue: string) => {
         if (!parameter) return;
-        if (!isEnum(parameter)) return;
+        if (parameter.type !== 'enum') return;
 
         const currentValue = parameter.defaultValue as string[];
 
