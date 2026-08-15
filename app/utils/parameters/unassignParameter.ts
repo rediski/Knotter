@@ -1,4 +1,3 @@
-import { isStructure } from '@/_core/_/parameter.type-guards';
 import { useItemsStore } from '@/store/useItemsStore';
 import { getSelectedNode } from '@/utils/nodes/getSelectedNodes';
 
@@ -17,11 +16,6 @@ export const unassignParameter = (parameterId: string) => {
     const getIdsToRemove = (id: string): string[] => {
         const parameter = allParameters.find((p) => p.id === id);
         if (!parameter) return [id];
-
-        if (isStructure(parameter)) {
-            const childIds = parameter.defaultValue.flatMap((childId) => getIdsToRemove(childId));
-            return [id, ...childIds];
-        }
 
         return [id];
     };
