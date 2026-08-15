@@ -1,16 +1,18 @@
 import { useParams } from 'next/navigation';
 
-import { Input } from '@/components/UI/Input';
 import { EmptyState } from '@/components/UI/EmptyState';
-import { ParameterItem } from '@/components/parameters/ParameterItem';
-import { CreateParameterForm } from '@/components/parameters/CreateParameterForm';
 
+import { ParameterItem } from '@/components/parameters/ParameterItem';
 import { useNodeContent } from '@/components/parameters/useNodeContent';
+
+import { useItemsStore } from '@/store/useItemsStore';
 
 import { hasParameterInNode } from '@/utils/nodes/hasParameterInNode';
 import { addSelectedParametersToNode } from '@/utils/nodes/addSelectedParametersToNode';
+import { createParameter } from '@/utils/parameters/createParameter';
 
-import { Search, Plus, X } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
+import { generateUniqueName } from '@/utils/items/generateUniqueName';
 
 export const Paramters = () => {
     const params = useParams();
@@ -18,20 +20,19 @@ export const Paramters = () => {
 
     const {
         filteredParameters,
-        parameters,
         selectedParameters,
 
         selectParameters,
         deleteSelectedParameters,
 
-        draggingId,
-        insertPosition,
         listRef,
         handleDragStart,
         handleDragOver,
         handleDrop,
         handleDragEnd,
     } = useNodeContent();
+
+    const parameters = useItemsStore((state) => state.parameters);
 
     const selectedIds = Array.from(selectedParameters);
     const selectedParametersList = parameters.filter((parameter) => selectedParameters.has(parameter.id));
@@ -58,11 +59,22 @@ export const Paramters = () => {
         },
     ];
 
+    const baseName = 'Параметр';
+
+    const name = generateUniqueName(
+        baseName,
+        parameters.map((parameter) => parameter.name),
+    );
+
     return (
         <div className="flex flex-col gap-1 flex-1 overflow-y-auto max-h-[calc(100vh-8px-32px-4px)]">
-            <div className="flex flex-col gap-1 p-1 bg-depth-1 border border-depth-3 rounded-md">
-                <CreateParameterForm />
-            </div>
+            <button
+                onClick={() => createParameter(name)}
+                className="flex items-center justify-center gap-2 h-8 rounded-md cursor-pointer bg-depth-2 hover:bg-depth-3 active:bg-depth-4 text-foreground border border-depth-3 text-sm"
+            >
+                <Plus size={16} />
+                <span>Создать</span>
+            </button>
 
             <div className="flex flex-col flex-1 w-full overflow-y-auto bg-depth-1 border border-depth-3 rounded-md">
                 <div className="flex gap-1 sticky top-0 bg-depth-1 z-20 p-1 border-b border-depth-3">
@@ -90,16 +102,6 @@ export const Paramters = () => {
                 >
                     {filteredParameters.length > 0 ? (
                         <>
-                            {insertPosition !== null && draggingId && (
-                                <div
-                                    className="absolute left-1 right-1 h-0.5 bg-bg-accent rounded-full z-20 pointer-events-none"
-                                    style={{
-                                        top: `calc(${insertPosition} * (100% / ${filteredParameters.length}))`,
-                                        transition: 'top 0.05s ease-out',
-                                    }}
-                                />
-                            )}
-
                             {filteredParameters.map((parameter) => (
                                 <li
                                     key={parameter.id}
