@@ -1,16 +1,13 @@
-import { LucideIcon } from 'lucide-react';
-import { Hash, Type, FlagTriangleRight, List, Folder, Bug } from 'lucide-react';
+import type { ParameterType } from '@/_core/_/parameter';
+import { Sigma, Type, FlagTriangleRight, List, LucideIcon } from 'lucide-react';
 
 const iconMap: Record<string, LucideIcon> = {
-    number: Hash,
+    number: Sigma,
     string: Type,
     boolean: FlagTriangleRight,
     enum: List,
-    structure: Folder,
-
-    bug: Bug,
 };
 
-export function getParameterIcon(type: string): LucideIcon {
+export function getParameterIcon(type: ParameterType): LucideIcon {
     return iconMap[type] || iconMap.bug;
 }
