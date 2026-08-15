@@ -1,13 +1,9 @@
-import type { NodeParameterValue } from '@/_core/_/parameter';
 import type { Node } from '@/_core/_/canvas.types';
+import { ParameterValue } from '@/_core/_/parameter';
 
 import { useItemsStore } from '@/store/useItemsStore';
 
-export const updateNodeParameter = <T extends keyof NodeParameterValue>(
-    nodeId: string,
-    parameterId: string,
-    value: NodeParameterValue[T],
-) => {
+export const updateNodeParameter = (nodeId: string, parameterId: string, value: ParameterValue) => {
     const { currentSceneId, scenes } = useItemsStore.getState();
 
     if (!currentSceneId) return;
