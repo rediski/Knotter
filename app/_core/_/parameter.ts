@@ -1,35 +1,14 @@
-export type ParameterType = 'number' | 'string' | 'boolean' | 'enum' | 'structure';
+export type ParameterType = 'number' | 'string' | 'boolean' | 'enum';
 
-export type ParameterDefaultValue = {
-    number: number;
-    string: string;
-    boolean: boolean;
-    enum: string[];
-    structure: string[];
-};
+export type ParameterValue = string | number | boolean | string[] | null;
 
-export type NodeParameterValue = {
-    number: number;
-    string: string;
-    boolean: boolean;
-    enum: string | null;
-    structure: string[];
-};
-
-export type Parameter<T extends ParameterType = ParameterType> = {
+export type Parameter = {
     id: string;
     name: string;
-    type: T;
-    defaultValue: ParameterDefaultValue[T];
+    type: ParameterType | null;
+    value: ParameterValue;
+    defaultValue: ParameterValue;
     parentId: string | null;
-};
-
-export type NodeParameter<T extends ParameterType = ParameterType> = {
-    id: string;
-    name: string;
-    type: T;
-    parentId: string | null;
-    value: NodeParameterValue[T];
 };
 
 export const parameterTypes: { type: ParameterType; label: string }[] = [
@@ -37,5 +16,4 @@ export const parameterTypes: { type: ParameterType; label: string }[] = [
     { type: 'string', label: 'Текст' },
     { type: 'boolean', label: 'Флаг' },
     { type: 'enum', label: 'Список' },
-    { type: 'structure', label: 'Структура' },
 ];
