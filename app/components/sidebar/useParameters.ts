@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, type MouseEvent } from 'react';
+import { useMemo, useState, useCallback, type MouseEvent, useEffect } from 'react';
 
 import type { Parameter } from '@/_core/_/parameter';
 
@@ -54,7 +54,7 @@ const getIdsToDelete = (ids: Set<string>, parametersMap: Map<string, Parameter>)
     return toDelete;
 };
 
-export const useNodeContent = () => {
+export const useParameters = () => {
     const parameters = useItemsStore((state) => state.parameters);
     const setParameters = useItemsStore((state) => state.setParameters);
     const selectedParameters = useItemsStore((state) => state.selectedParameters);
@@ -86,32 +86,35 @@ export const useNodeContent = () => {
         [parameters, selectedParameters, setParameters],
     );
 
-    const { draggingId, dragOverId, listRef, handleDragStart, handleDragOver, handleDrop, handleDragEnd } =
-        useDragAndDrop<Parameter>({
-            filteredItems: filteredParameters,
-            items: parameters,
-            selectedIds: Array.from(selectedParameters),
-            onSelect: (ids) => setSelectedParameters(new Set(ids)),
-            onReorder: handleDragReorder,
-        });
+    const { listRef, handleDragStart, handleDragOver, handleDrop, handleDragEnd } = useDragAndDrop<Parameter>({
+        filteredItems: filteredParameters,
+        items: parameters,
+        selectedIds: Array.from(selectedParameters),
+        onSelect: (ids) => setSelectedParameters(new Set(ids)),
+        onReorder: handleDragReorder,
+        itemSelector: 'li',
+    });
 
-    const deleteSelectedParameters = (e: MouseEvent) => {
-        e.stopPropagation();
+    const deleteSelectedParameters = useCallback(
+        (e: MouseEvent) => {
+            e.stopPropagation();
 
-        if (selectedParameters.size === 0) return;
+            if (selectedParameters.size === 0) return;
 
-        const parametersMap = new Map(parameters.map((parameter) => [parameter.id, parameter]));
-        const idsToDelete = getIdsToDelete(selectedParameters, parametersMap);
+            const parametersMap = new Map(parameters.map((parameter) => [parameter.id, parameter]));
+            const idsToDelete = getIdsToDelete(selectedParameters, parametersMap);
 
-        const newParameters = parameters.filter((parameter) => !idsToDelete.has(parameter.id));
+            const newParameters = parameters.filter((parameter) => !idsToDelete.has(parameter.id));
 
-        const cleanedParameters = newParameters.map((parameter) => {
-            return parameter;
-        });
+            const cleanedParameters = newParameters.map((parameter) => {
+                return parameter;
+            });
 
-        setParameters(cleanedParameters);
-        setSelectedParameters(new Set());
-    };
+            setParameters(cleanedParameters);
+            setSelectedParameters(new Set());
+        },
+        [parameters, selectedParameters, setParameters, setSelectedParameters],
+    );
 
     const selectParameters = useCallback(
         (id: string, ctrlKey: boolean, shiftKey: boolean) => {
@@ -139,6 +142,19 @@ export const useNodeContent = () => {
         [selectedParameters, filteredParameters, setSelectedParameters],
     );
 
+    const deselect = useCallback(
+        (e: React.MouseEvent<HTMLUListElement>) => {
+            if (e.target === e.currentTarget) {
+                setSelectedParameters(new Set());
+            }
+        },
+        [setSelectedParameters],
+    );
+
+    const visibleSelectedCount = useMemo(() => {
+        return filteredParameters.filter((p) => selectedParameters.has(p.id)).length;
+    }, [filteredParameters, selectedParameters]);
+
     return {
         filteredParameters,
         filterText,
@@ -146,8 +162,8 @@ export const useNodeContent = () => {
         setFilterText,
         selectParameters,
         deleteSelectedParameters,
-        draggingId,
-        dragOverId,
+        deselect,
+        visibleSelectedCount,
         listRef,
         handleDragStart,
         handleDragOver,
