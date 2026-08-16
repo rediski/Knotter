@@ -54,15 +54,14 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
         [currentSceneId, scene],
     );
 
-    const { draggingId, dragOverId, listRef, handleDragStart, handleDragOver, handleDrop, handleDragEnd } =
-        useDragAndDrop<CanvasItem>({
-            filteredItems,
-            items,
-            selectedIds: selectedItemIds,
-            onSelect: setSelectedItemIds,
-            onReorder: handleReorder,
-            itemSelector: 'li',
-        });
+    const { listRef, handleDragStart, handleDragOver, handleDrop, handleDragEnd } = useDragAndDrop<CanvasItem>({
+        filteredItems,
+        items,
+        selectedIds: selectedItemIds,
+        onSelect: setSelectedItemIds,
+        onReorder: handleReorder,
+        itemSelector: 'li',
+    });
 
     useEffect(() => {
         setMounted(true);
