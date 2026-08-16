@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 
 import { NODE_SHAPES } from '@/_core/_/nodeShapeType';
 
-import { NodeParameters } from '@/components/parameters/NodeParameters';
+import { NodeParameters } from '@/_core/Node/NodeParameters';
 
 import { useItemsStore } from '@/store/useItemsStore';
 import { getNodes } from '@/utils/nodes/getNodes';
