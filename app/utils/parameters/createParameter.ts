@@ -8,6 +8,7 @@ export const createParameter = (name: string): Parameter => {
     const newParameter: Parameter = {
         id: uuid(),
         name,
+        description: '',
         type: null,
         value: null,
         defaultValue: null,
