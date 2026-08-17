@@ -14,8 +14,6 @@ interface UseDragAndDropProps<Item extends Identifiable> {
 }
 
 interface UseDragAndDropReturn {
-    draggingId: string | null;
-    dragOverId: string | null;
     listRef: RefObject<HTMLUListElement | null>;
     handleDragStart: (e: React.DragEvent, nodeId: string) => void;
     handleDragOver: (e: React.DragEvent) => void;
@@ -166,8 +164,6 @@ export function useDragAndDrop<Item extends Identifiable>({
     }, []);
 
     return {
-        draggingId,
-        dragOverId,
         listRef,
         handleDragStart,
         handleDragOver,
