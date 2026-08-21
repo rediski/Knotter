@@ -70,7 +70,7 @@ export default function NodePage() {
                     backgroundSize: '128px 128px',
                 }}
             >
-                <div className="relative pt-84 flex flex-col items-center gap-4 min-w-md w-full h-fit overflow-y-auto">
+                <div className="relative pt-84 flex flex-col items-center gap-4 min-w-md w-full">
                     <div className="ml-px flex items-center justify-center shrink-0">
                         {Icon && (
                             <Icon
@@ -84,37 +84,11 @@ export default function NodePage() {
 
                     <div className="flex-1 w-full max-w-md">
                         <div className="flex flex-col gap-1 text-sm w-full">
-                            {openedNode.parameters.length > 0 && (
-                                <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 w-full max-h-105 overflow-y-auto shadow">
-                                    {openedNode.parameters.map((nodeParameter) => (
-                                        <NodeParameters
-                                            key={nodeParameter.id}
-                                            nodeParameter={nodeParameter}
-                                            nodeId={openedNode.id}
-                                        />
-                                    ))}
-                                </div>
-                            )}
-
-                            {openedNode.parameters.length === 0 && (
-                                <div className="flex items-center justify-center bg-depth-1 border border-depth-3 rounded-md">
-                                    <div className="text-sm text-gray bg-depth-2 w-full p-4 m-1 rounded-md border border-depth-3 text-center">
-                                        Нет добавленных параметров
-                                    </div>
-                                </div>
-                            )}
+                            <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 w-full shadow-xs">
+                                <NodeParameters nodeParameters={openedNode.parameters} nodeId={openedNode.id} />
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <div className="absolute bottom-4 left-4 flex flex-col gap-1">
-                    <h2 className="wrap-break-word text-base w-fit h-fit bg-depth-2 border border-depth-3 rounded-md px-3 py-1">
-                        {openedNode.name || '...'}
-                    </h2>
-
-                    <p className="wrap-break-word text-gray text-base w-fit flex-1 max-w-lg min-w-xs h-fit max-h-54.5 bg-depth-2 border border-depth-3 rounded-md px-3 py-1 overflow-y-auto">
-                        {openedNode.description || '...'}
-                    </p>
                 </div>
             </div>
         </div>
