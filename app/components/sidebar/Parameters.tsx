@@ -9,11 +9,11 @@ import { useParameters } from '@/components/sidebar/useParameters';
 
 import { useItemsStore } from '@/store/useItemsStore';
 
+import { generateUniqueName } from '@/utils/items/generateUniqueName';
 import { hasParameterInNode } from '@/utils/nodes/hasParameterInNode';
 import { createParameter } from '@/utils/parameters/createParameter';
 
 import { Plus } from 'lucide-react';
-import { generateUniqueName } from '@/utils/items/generateUniqueName';
 
 export const Parameters = () => {
     const params = useParams();
