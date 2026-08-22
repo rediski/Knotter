@@ -6,7 +6,6 @@ import type { Scene } from '@/_core/_/canvas.types';
 
 import { Input } from '@/components/UI/Input';
 import { Textarea } from '@/components/UI/Textarea';
-import { ColorPicker } from '@/components/sidebar/ColorPicker';
 import { Dropdown } from '@/components/UI/Dropdown';
 
 import { useDropdownStore } from '@/store/useDropdownStore';
@@ -19,7 +18,7 @@ import { toggleMagnetMode } from '@/utils/canvas/toggleMagnetMode';
 import { toggleTooltipMode } from '@/utils/canvas/toggleTooltipMode';
 import { toggleInvertY } from '@/utils/canvas/toggleInvertY';
 
-import { LandPlot, Magnet, Grid2x2, Move3d, Eye, EyeOff, EyeClosed, MoveVertical, Settings2 } from 'lucide-react';
+import { LandPlot, Magnet, Grid2x2, Move3d, Eye, EyeOff, EyeClosed, MoveVertical } from 'lucide-react';
 
 const FIELD_TITLES = {
     NAME: 'Наименование',
