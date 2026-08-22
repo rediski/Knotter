@@ -42,14 +42,16 @@ export const Parameters = () => {
     );
 
     return (
-        <div className="flex flex-col gap-1 flex-1 overflow-y-auto max-h-[calc(100vh-8px-32px-4px)]">
-            <button
-                onClick={() => createParameter(name)}
-                className="flex items-center justify-center gap-2 m-1 mb-0 h-8 rounded-md cursor-pointer bg-depth-2 hover:bg-depth-3 active:bg-depth-4 text-foreground border border-depth-3 text-sm"
-            >
-                <Plus size={16} />
-                <span>Создать</span>
-            </button>
+        <div className="flex flex-col overflow-y-auto max-h-[calc(100vh-8px-32px-4px)] mt-1">
+            <div className="px-1">
+                <button
+                    onClick={() => createParameter(name)}
+                    className="flex items-center gap-2 w-full min-h-9 px-3 py-1 rounded-md cursor-pointer bg-depth-2 hover:bg-depth-3 active:bg-depth-4 text-foreground border border-depth-3 text-sm"
+                >
+                    <Plus size={16} />
+                    <span>Создать</span>
+                </button>
+            </div>
 
             <ul
                 className="flex flex-col gap-1 p-1 list-none relative"
@@ -73,8 +75,6 @@ export const Parameters = () => {
                                 parameter={parameter}
                                 selectedIds={selectedParameters}
                                 onSelect={selectParameters}
-                                hasParameterInNode={hasParameterInNode(parameter.id, nodeId)}
-                                currentNodeId={currentNodeId}
                                 handleDragStart={handleDragStart}
                             />
                         ))}
