@@ -9,7 +9,7 @@ export const getSelectedParametersIds = (): string[] => {
 export const getSelectedParameter = (): Parameter | null => {
     const { selectedParameters, parameters } = useItemsStore.getState();
 
-    if (selectedParameters.size === 0) {
+    if (selectedParameters.length === 0) {
         return null;
     }
 

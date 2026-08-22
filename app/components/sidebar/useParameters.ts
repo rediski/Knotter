@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, type MouseEvent, useEffect } from 'react';
+import { useMemo, useState, useCallback, type MouseEvent } from 'react';
 
 import type { Parameter } from '@/_core/_/parameter';
 
@@ -33,7 +33,7 @@ const updateSiblingsOrder = (
     setParameters([...newRootParameters, ...otherParameters]);
 };
 
-const getIdsToDelete = (ids: Set<string>, parametersMap: Map<string, Parameter>): Set<string> => {
+const getIdsToDelete = (ids: string[], parametersMap: Map<string, Parameter>): Set<string> => {
     const toDelete = new Set(ids);
     const stack = Array.from(ids);
 
@@ -54,11 +54,20 @@ const getIdsToDelete = (ids: Set<string>, parametersMap: Map<string, Parameter>)
     return toDelete;
 };
 
+const ensureArray = (value: any): string[] => {
+    if (Array.isArray(value)) return value;
+    if (value instanceof Set) return Array.from(value);
+    if (value === null || value === undefined) return [];
+    return [];
+};
+
 export const useParameters = () => {
     const parameters = useItemsStore((state) => state.parameters);
     const setParameters = useItemsStore((state) => state.setParameters);
-    const selectedParameters = useItemsStore((state) => state.selectedParameters);
+    const rawSelectedParameters = useItemsStore((state) => state.selectedParameters);
     const setSelectedParameters = useItemsStore((state) => state.setSelectedParameters);
+
+    const selectedParameters = useMemo(() => ensureArray(rawSelectedParameters), [rawSelectedParameters]);
 
     const [filterText, setFilterText] = useState('');
 
@@ -66,7 +75,7 @@ export const useParameters = () => {
 
     const handleDragReorder = useCallback(
         (newParameters: Parameter[]) => {
-            const firstSelectedId = Array.from(selectedParameters)[0];
+            const firstSelectedId = selectedParameters[0];
             if (!firstSelectedId) return;
 
             const firstParameter = parameters.find((p) => p.id === firstSelectedId);
@@ -89,8 +98,8 @@ export const useParameters = () => {
     const { listRef, handleDragStart, handleDragOver, handleDrop, handleDragEnd } = useDragAndDrop<Parameter>({
         filteredItems: filteredParameters,
         items: parameters,
-        selectedIds: Array.from(selectedParameters),
-        onSelect: (ids) => setSelectedParameters(new Set(ids)),
+        selectedIds: selectedParameters,
+        onSelect: (ids) => setSelectedParameters(ids),
         onReorder: handleDragReorder,
         itemSelector: 'li',
     });
@@ -99,7 +108,7 @@ export const useParameters = () => {
         (e: MouseEvent) => {
             e.stopPropagation();
 
-            if (selectedParameters.size === 0) return;
+            if (selectedParameters.length === 0) return;
 
             const parametersMap = new Map(parameters.map((parameter) => [parameter.id, parameter]));
             const idsToDelete = getIdsToDelete(selectedParameters, parametersMap);
@@ -111,7 +120,7 @@ export const useParameters = () => {
             });
 
             setParameters(cleanedParameters);
-            setSelectedParameters(new Set());
+            setSelectedParameters([]);
         },
         [parameters, selectedParameters, setParameters, setSelectedParameters],
     );
@@ -119,25 +128,30 @@ export const useParameters = () => {
     const selectParameters = useCallback(
         (id: string, ctrlKey: boolean, shiftKey: boolean) => {
             if (ctrlKey) {
-                const newSet = new Set(selectedParameters);
-                const wasDeleted = newSet.delete(id);
-                if (!wasDeleted) {
-                    newSet.add(id);
+                const newArray = [...selectedParameters];
+                const index = newArray.indexOf(id);
+
+                if (index >= 0) {
+                    newArray.splice(index, 1);
+                    setSelectedParameters(newArray);
+                    return;
                 }
-                setSelectedParameters(newSet);
+
+                newArray.push(id);
+                setSelectedParameters(newArray);
                 return;
             }
 
-            if (shiftKey && selectedParameters.size > 0) {
-                const lastSelectedId = Array.from(selectedParameters)[selectedParameters.size - 1];
+            if (shiftKey && selectedParameters.length > 0) {
+                const lastSelectedId = selectedParameters[selectedParameters.length - 1];
                 const rangeSet = getRangeSelection(filteredParameters, id, lastSelectedId);
                 if (rangeSet.size > 0) {
-                    setSelectedParameters(rangeSet);
+                    setSelectedParameters(Array.from(rangeSet));
                 }
                 return;
             }
 
-            setSelectedParameters(new Set([id]));
+            setSelectedParameters([id]);
         },
         [selectedParameters, filteredParameters, setSelectedParameters],
     );
@@ -145,14 +159,14 @@ export const useParameters = () => {
     const deselect = useCallback(
         (e: React.MouseEvent<HTMLUListElement>) => {
             if (e.target === e.currentTarget) {
-                setSelectedParameters(new Set());
+                setSelectedParameters([]);
             }
         },
         [setSelectedParameters],
     );
 
     const visibleSelectedCount = useMemo(() => {
-        return filteredParameters.filter((p) => selectedParameters.has(p.id)).length;
+        return filteredParameters.filter((p) => selectedParameters.includes(p.id)).length;
     }, [filteredParameters, selectedParameters]);
 
     return {

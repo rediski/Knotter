@@ -19,8 +19,8 @@ export interface ItemsState {
     parameters: Parameter[];
     setParameters: (parameters: Parameter[]) => void;
 
-    selectedParameters: Set<string>;
-    setSelectedParameters: (selectedParameters: Set<string>) => void;
+    selectedParameters: string[];
+    setSelectedParameters: (selectedParameters: string[]) => void;
 
     hoveredNodeId: string | null;
     setHoveredNodeId: (id: string | null) => void;
@@ -53,7 +53,7 @@ export const useItemsStore = create<ItemsState>()(
             parameters: [],
             setParameters: (parameters) => set({ parameters }),
 
-            selectedParameters: new Set<string>(),
+            selectedParameters: [],
             setSelectedParameters: (selectedParameters) => set({ selectedParameters }),
 
             hoveredNodeId: null,
@@ -76,6 +76,7 @@ export const useItemsStore = create<ItemsState>()(
                 currentSceneId: state.currentSceneId,
                 selectedItemIds: state.selectedItemIds,
                 parameters: state.parameters,
+                selectedParameters: state.selectedParameters,
             }),
         },
     ),

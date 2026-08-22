@@ -2,8 +2,8 @@ import type { Node } from '@/_core/_/canvas.types';
 
 import { useItemsStore } from '@/store/useItemsStore';
 
-export const addSelectedParametersToNode = (nodeId: string) => {
-    const { currentSceneId, scenes, parameters, selectedParameters, setSelectedParameters } = useItemsStore.getState();
+export const addSelectedParametersToNode = (nodeId: string, parameterIds: string[]) => {
+    const { currentSceneId, scenes, parameters } = useItemsStore.getState();
 
     if (!currentSceneId) return;
 
@@ -16,7 +16,7 @@ export const addSelectedParametersToNode = (nodeId: string) => {
     const existingIds = new Set(node.parameters?.map((p) => p.id) || []);
 
     const paramsToAdd = parameters.filter(
-        (p) => selectedParameters.has(p.id) && p.parentId === null && !existingIds.has(p.id),
+        (p) => parameterIds.includes(p.id) && p.parentId === null && !existingIds.has(p.id),
     );
 
     if (paramsToAdd.length === 0) return;
@@ -41,6 +41,4 @@ export const addSelectedParametersToNode = (nodeId: string) => {
             },
         },
     });
-
-    setSelectedParameters(new Set());
 };
