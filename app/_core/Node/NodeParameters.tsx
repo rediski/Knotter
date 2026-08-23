@@ -234,8 +234,8 @@ export const NodeParameters = memo(function NodeParameters({
     );
 
     return (
-        <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2 px-1 py-1 border-b border-depth-3 pb-2">
+        <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2 border-b border-depth-3 pb-1">
                 <div className="relative flex-1">
                     <button
                         onClick={() => {
@@ -244,7 +244,7 @@ export const NodeParameters = memo(function NodeParameters({
                                 setSelectedAddIds([]);
                             }
                         }}
-                        className="flex items-center gap-2 w-full px-3 py-1.5 text-sm bg-depth-2 hover:bg-depth-3 border border-depth-3 rounded-md transition-colors"
+                        className="flex items-center gap-2 w-full px-3 py-1.5 text-sm bg-depth-2 hover:bg-depth-3 border border-depth-3 rounded-md"
                     >
                         <Plus size={16} />
 
@@ -266,7 +266,7 @@ export const NodeParameters = memo(function NodeParameters({
                                         <button
                                             onClick={handleAddSelected}
                                             disabled={selectedAddIds.length === 0}
-                                            className={`w-full px-3 py-1.5 text-sm rounded-md transition-colors ${
+                                            className={`w-full px-3 py-1.5 text-sm rounded-md ${
                                                 selectedAddIds.length > 0
                                                     ? 'bg-bg-accent/10 text-text-accent hover:bg-bg-accent/15'
                                                     : 'bg-depth-3 text-foreground/30 cursor-not-allowed'

@@ -233,7 +233,7 @@ export const InspectorParameter = memo(function InspectorParameter({
                             <button
                                 onClick={() => changeParameterType(parameter.id, null)}
                                 className={`
-                                    w-full text-left px-3 py-2 text-sm rounded-md transition-colors
+                                    w-full text-left px-3 py-2 text-sm rounded-md
                                     ${
                                         !parameter.type
                                             ? 'bg-bg-accent/10 text-text-accent border border-bg-accent/10'
