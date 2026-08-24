@@ -1,19 +1,26 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-
-import { NODE_SHAPES } from '@/_core/_/nodeShapeType';
 
 import { NodeParameters } from '@/_core/Node/NodeParameters';
 
 import { useItemsStore } from '@/store/useItemsStore';
 import { getNodes } from '@/utils/nodes/getNodes';
+import { useCanvasRenderer } from '@/_core/Canvas/useCanvasRenderer';
+import { useCanvasInteraction } from '@/_core/Canvas/useCanvasInteraction';
+import { useCanvasHotkeys } from '@/_core/Canvas/useCanvasHotkeys';
+import { SelectionBox } from '@/components/canvas/CanvasSelectionBox';
+import { Coordinates } from '@/components/scene/Coordinates';
+import { Node } from '@/_core/Node';
 
 export default function NodePage() {
     const params = useParams();
     const nodeId = params.nodeId as string;
     const router = useRouter();
+
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     const { currentSceneId, scenes, currentNodeId, setCurrentNodeIds } = useItemsStore();
 
@@ -47,6 +54,10 @@ export default function NodePage() {
         return () => unsubscribe();
     }, [nodeId, router]);
 
+    useCanvasInteraction({ containerRef, canvasRef });
+    useCanvasHotkeys(canvasRef);
+    useCanvasRenderer(canvasRef);
+
     const scene = currentSceneId ? scenes[currentSceneId] : null;
     const items = scene?.items ?? [];
     const nodes = getNodes(items);
@@ -55,38 +66,29 @@ export default function NodePage() {
 
     if (!openedNode) return null;
 
-    const Icon = NODE_SHAPES[openedNode.shapeType]?.icon;
-    if (!Icon) return null;
-
     return (
         <div className="flex gap-1 w-full h-full">
             <div
-                className="bg-depth-1 min-w-3xl w-full rounded-lg border border-depth-3 overflow-hidden"
-                style={{
-                    backgroundImage: `
-                        linear-gradient(to right, var(--grid-color-1) 1px, transparent 1px),
-                        linear-gradient(to bottom, var(--grid-color-1) 1px, transparent 1px)
-                    `,
-                    backgroundSize: '128px 128px',
-                }}
+                ref={containerRef}
+                className="relative bg-depth-1 min-w-3xl w-full rounded-lg border border-depth-3 overflow-hidden"
             >
-                <div className="relative pt-84 flex flex-col items-center gap-4 min-w-md w-full">
-                    <div className="ml-px flex items-center justify-center shrink-0">
-                        {Icon && (
-                            <Icon
-                                size={96}
-                                className="fill-depth-1"
-                                strokeWidth={openedNode.shapeType === 'point' ? 2.5 : 1.5}
-                                style={{ color: openedNode.color ?? 'var(--color-foreground)' }}
-                            />
-                        )}
-                    </div>
+                <Coordinates canvasRef={canvasRef} />
 
-                    <div className="flex-1 w-full max-w-md">
-                        <div className="flex flex-col gap-1 text-sm w-full">
-                            <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 w-full shadow-xs">
-                                <NodeParameters nodeParameters={openedNode.parameters} nodeId={openedNode.id} />
-                            </div>
+                <canvas
+                    ref={canvasRef}
+                    className="absolute top-0 left-0 w-full h-full bg-depth-1 rounded-md border border-depth-3"
+                />
+
+                <SelectionBox containerRef={containerRef} />
+
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <Node containerRef={containerRef} isNodePage={true} nodeId={nodeId} />
+                </div>
+
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full max-w-md pointer-events-auto">
+                    <div className="flex flex-col gap-1 text-sm w-full">
+                        <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 w-full shadow-xs">
+                            <NodeParameters nodeParameters={openedNode.parameters} nodeId={openedNode.id} />
                         </div>
                     </div>
                 </div>

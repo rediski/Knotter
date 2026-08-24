@@ -7,7 +7,7 @@ import { NODE_SIZE } from '@/_core/_/canvas.constants';
 
 import { useItemsStore } from '@/store/useItemsStore';
 
-export function NodeRenderer({ node }: { node: Node }) {
+export function NodeRenderer({ node, isNodePage }: { node: Node; isNodePage: boolean }) {
     const { currentSceneId, scenes, selectedItemIds, hoveredNodeId, tempEdge } = useItemsStore();
 
     const isSelected = selectedItemIds.includes(node.id);
@@ -51,7 +51,8 @@ export function NodeRenderer({ node }: { node: Node }) {
 
             <Icon
                 className={`
-                    w-max fill-depth-1 hover:cursor-move active:cursor-grabbing
+                    w-max fill-depth-1 active:cursor-grabbing
+                    ${isNodePage ? 'hover:cursor-pointer' : ' hover:cursor-move'}
                     ${isPoint ? 'stroke-[2px]' : 'stroke-[1.5px]'}
                 `}
                 style={{ color: node.color ?? 'var(--foreground)' }}

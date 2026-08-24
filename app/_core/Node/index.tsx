@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, type RefObject } from 'react';
+import { useRef, useEffect, useState, type RefObject } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { NODE_SIZE } from '@/_core/_/canvas.constants';
@@ -17,7 +17,15 @@ import { getNodes } from '@/utils/nodes/getNodes';
 import { getScreenCoords } from '@/utils/canvas/getScreenCoords';
 import { openNodeTab } from '@/utils/nodes/openNodeTab';
 
-export const Node = ({ containerRef }: { containerRef: RefObject<HTMLDivElement | null> }) => {
+export const Node = ({
+    containerRef,
+    isNodePage = false,
+    nodeId: forcedNodeId = null,
+}: {
+    containerRef: RefObject<HTMLDivElement | null>;
+    isNodePage?: boolean;
+    nodeId?: string | null;
+}) => {
     const router = useRouter();
     const nodeRef = useRef<HTMLDivElement>(null);
 
@@ -36,6 +44,19 @@ export const Node = ({ containerRef }: { containerRef: RefObject<HTMLDivElement 
     const scene = currentSceneId ? scenes[currentSceneId] : null;
     const items = scene?.items ?? [];
     const nodes = getNodes(items);
+
+    const displayedNodes = isNodePage && forcedNodeId ? nodes.filter((node) => node.id === forcedNodeId) : nodes;
+
+    const [mountedNodes, setMountedNodes] = useState<Set<string>>(new Set());
+
+    useEffect(() => {
+        const nodeIds = displayedNodes.map((node) => node.id);
+        setMountedNodes(new Set(nodeIds));
+
+        return () => {
+            setMountedNodes(new Set());
+        };
+    }, [displayedNodes.map((node) => node.id).join(',')]);
 
     const handleNodeClick = (nodeId: string) => {
         if (clickTimeoutRef.current) {
@@ -61,10 +82,12 @@ export const Node = ({ containerRef }: { containerRef: RefObject<HTMLDivElement 
 
     return (
         <div ref={nodeRef} className="absolute inset-0 select-none">
-            <EdgeRenderer containerRef={containerRef} />
+            {!isNodePage && <EdgeRenderer containerRef={containerRef} />}
 
-            {nodes.map((node) => {
-                const { x: screenX, y: screenY } = getScreenCoords(node.position.x, node.position.y, containerRef);
+            {displayedNodes.map((node) => {
+                const position = isNodePage ? { x: 0, y: 0 } : node.position;
+
+                const { x: screenX, y: screenY } = getScreenCoords(position.x, position.y, containerRef);
 
                 return (
                     <div
@@ -79,38 +102,39 @@ export const Node = ({ containerRef }: { containerRef: RefObject<HTMLDivElement 
                         }}
                         onClick={() => handleNodeClick(node.id)}
                     >
-                        <NodeRenderer node={node} />
+                        <NodeRenderer node={node} isNodePage={isNodePage} />
                     </div>
                 );
             })}
 
-            {nodes.map((node) => {
-                const isHovered = hoveredNodeId === node.id;
-                const isSelected = selectedItemIds.includes(node.id);
+            {!isNodePage &&
+                nodes.map((node) => {
+                    const isHovered = hoveredNodeId === node.id;
+                    const isSelected = selectedItemIds.includes(node.id);
 
-                const shouldShowTooltip = Boolean(
-                    node.name && (tooltipMode === 'always' || (tooltipMode === 'hover' && isHovered)),
-                );
+                    const shouldShowTooltip = Boolean(
+                        node.name && (tooltipMode === 'always' || (tooltipMode === 'hover' && isHovered)),
+                    );
 
-                if (!shouldShowTooltip) return null;
+                    if (!shouldShowTooltip) return null;
 
-                const { x: screenX, y: screenY } = getScreenCoords(node.position.x, node.position.y, containerRef);
+                    const { x: screenX, y: screenY } = getScreenCoords(node.position.x, node.position.y, containerRef);
 
-                const tooltipSpacing = 12;
+                    const tooltipSpacing = 12;
 
-                const tooltipYOffset = (NODE_SIZE / 2) * zoomLevel + tooltipSpacing * zoomLevel;
-                const tooltipY = screenY - tooltipYOffset;
+                    const tooltipYOffset = (NODE_SIZE / 2) * zoomLevel + tooltipSpacing * zoomLevel;
+                    const tooltipY = screenY - tooltipYOffset;
 
-                return (
-                    <NodeTooltip
-                        key={node.id}
-                        node={node}
-                        position={{ x: screenX, y: tooltipY }}
-                        zoomLevel={zoomLevel}
-                        isSelected={isSelected}
-                    />
-                );
-            })}
+                    return (
+                        <NodeTooltip
+                            key={node.id}
+                            node={node}
+                            position={{ x: screenX, y: tooltipY }}
+                            zoomLevel={zoomLevel}
+                            isSelected={isSelected}
+                        />
+                    );
+                })}
         </div>
     );
 };
