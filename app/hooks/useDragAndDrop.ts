@@ -10,12 +10,13 @@ interface UseDragAndDropProps<Item extends Identifiable> {
     selectedIds: string[];
     onSelect: (ids: string[]) => void;
     onReorder: (newItems: Item[]) => void;
+    onDragStart?: (e: React.DragEvent, ids: string[]) => void;
     itemSelector?: string;
 }
 
 interface UseDragAndDropReturn {
     listRef: RefObject<HTMLUListElement | null>;
-    handleDragStart: (e: React.DragEvent, nodeId: string) => void;
+    handleDragStart: (e: React.DragEvent, id: string) => void;
     handleDragOver: (e: React.DragEvent) => void;
     handleDrop: (e: React.DragEvent) => void;
     handleDragEnd: () => void;
@@ -26,34 +27,32 @@ export function useDragAndDrop<Item extends Identifiable>({
     selectedIds,
     onSelect,
     onReorder,
+    onDragStart,
     itemSelector = 'li',
 }: UseDragAndDropProps<Item>): UseDragAndDropReturn {
     const [draggingId, setDraggingId] = useState<string | null>(null);
-    const [dragOverId, setDragOverId] = useState<string | null>(null);
     const listRef = useRef<HTMLUListElement | null>(null);
 
     const handleDragStart = useCallback(
-        (e: React.DragEvent, nodeId: string): void => {
+        (e: React.DragEvent, id: string): void => {
             e.stopPropagation();
 
-            if (!selectedIds.includes(nodeId)) {
-                onSelect([nodeId]);
+            if (!selectedIds.includes(id)) {
+                onSelect([id]);
             }
 
-            setDraggingId(nodeId);
+            setDraggingId(id);
 
-            const idsToMove = selectedIds.includes(nodeId) ? selectedIds : [nodeId];
+            const idsToMove = selectedIds.includes(id) ? selectedIds : [id];
 
             e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData(
-                'text/plain',
-                JSON.stringify({
-                    primaryId: nodeId,
-                    selectedIds: idsToMove,
-                }),
-            );
+            e.dataTransfer.setData('text/plain', JSON.stringify(idsToMove));
+
+            if (onDragStart) {
+                onDragStart(e, idsToMove);
+            }
         },
-        [selectedIds, onSelect],
+        [selectedIds, onSelect, onDragStart],
     );
 
     const handleDragOver = useCallback(
@@ -62,26 +61,22 @@ export function useDragAndDrop<Item extends Identifiable>({
             e.preventDefault();
 
             if (!draggingId || !listRef.current) {
-                setDragOverId(null);
                 return;
             }
 
             const target = (e.target as HTMLElement).closest(itemSelector);
 
             if (!target) {
-                setDragOverId(null);
                 return;
             }
 
             const targetId = target.getAttribute('data-id');
 
             if (!targetId || targetId === draggingId) {
-                setDragOverId(null);
                 return;
             }
 
             if (selectedIds.includes(targetId)) {
-                setDragOverId(null);
                 return;
             }
 
@@ -89,7 +84,6 @@ export function useDragAndDrop<Item extends Identifiable>({
             const draggedIndex = items.findIndex((item) => item.id === draggingId);
 
             if (targetIndex === -1 || draggedIndex === -1) {
-                setDragOverId(null);
                 return;
             }
 
@@ -141,11 +135,7 @@ export function useDragAndDrop<Item extends Identifiable>({
 
             if (JSON.stringify(currentOrder) !== JSON.stringify(newOrder)) {
                 onReorder(newItems);
-                setDragOverId(targetId);
-                return;
             }
-
-            setDragOverId(null);
         },
         [draggingId, items, selectedIds, onReorder, itemSelector],
     );
@@ -155,12 +145,10 @@ export function useDragAndDrop<Item extends Identifiable>({
         e.preventDefault();
 
         setDraggingId(null);
-        setDragOverId(null);
     }, []);
 
     const handleDragEnd = useCallback((): void => {
         setDraggingId(null);
-        setDragOverId(null);
     }, []);
 
     return {
