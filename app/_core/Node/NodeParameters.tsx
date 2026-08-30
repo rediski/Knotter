@@ -106,7 +106,7 @@ export const NodeParameters = memo(function NodeParameters({
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
-                        unassignParameter(parameter.id);
+                        unassignParameter(parameter.id, nodeId);
                     }}
                     className="cursor-pointer text-gray hover:text-foreground min-w-4"
                 >

@@ -1,26 +1,21 @@
 import { useItemsStore } from '@/store/useItemsStore';
-import { getSelectedNode } from '@/utils/nodes/getSelectedNodes';
 
-export const unassignParameter = (parameterId: string) => {
-    const itemsState = useItemsStore.getState();
-    const { currentSceneId, scenes } = itemsState;
+export const unassignParameter = (parameterId: string, nodeId: string) => {
+    const state = useItemsStore.getState();
+    const { currentSceneId, scenes } = state;
 
     if (!currentSceneId) return;
 
     const scene = scenes[currentSceneId];
     if (!scene) return;
 
-    const node = getSelectedNode();
-    if (!node) return;
-
     const updatedItems = scene.items.map((item) => {
-        if (item.kind === 'node' && item.id === node.id) {
+        if (item.kind === 'node' && item.id === nodeId) {
             return {
                 ...item,
                 parameters: item.parameters.filter((parameter) => parameter.id !== parameterId),
             };
         }
-
         return item;
     });
 
