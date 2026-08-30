@@ -13,7 +13,6 @@ import { useItemsStore } from '@/store/useItemsStore';
 import { getParameterIcon } from '@/utils/parameters/getParameterIcon';
 import { updateNodeParameter } from '@/utils/parameters/updateNodeParameter';
 import { unassignParameter } from '@/utils/parameters/unassignParameter';
-import { addSelectedParametersToNode } from '@/utils/nodes/addSelectedParametersToNode';
 
 import { X } from 'lucide-react';
 
@@ -25,8 +24,6 @@ export const NodeParameters = memo(function NodeParameters({
     nodeId: string;
 }) {
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
-    const [isAddDropdownOpen, setIsAddDropdownOpen] = useState(false);
-    const [selectedAddIds, setSelectedAddIds] = useState<string[]>([]);
 
     const { parameters } = useItemsStore();
 
@@ -34,33 +31,6 @@ export const NodeParameters = memo(function NodeParameters({
         () => nodeParameters.filter((p) => p?.type !== null && p?.type !== undefined),
         [nodeParameters],
     );
-
-    const existingParameterIds = useMemo(() => new Set(validNodeParameters.map((p) => p.id)), [validNodeParameters]);
-
-    const availableParameters = useMemo(
-        () => parameters.filter((p) => !existingParameterIds.has(p.id) && p.type !== null && p.type !== undefined),
-        [parameters, existingParameterIds],
-    );
-
-    const handleAddSelected = useCallback(() => {
-        if (selectedAddIds.length === 0) return;
-
-        addSelectedParametersToNode(nodeId, selectedAddIds);
-        setSelectedAddIds([]);
-        setIsAddDropdownOpen(false);
-    }, [nodeId, selectedAddIds]);
-
-    const handleToggleAddSelection = useCallback((id: string) => {
-        setSelectedAddIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
-    }, []);
-
-    if (!Array.isArray(nodeParameters)) {
-        return (
-            <div className="text-gray bg-depth-2 w-full p-4 rounded-md border border-depth-3 text-center">
-                Нет добавленных параметров
-            </div>
-        );
-    }
 
     const handleSelect = useCallback(
         (id: string, ctrlKey: boolean, shiftKey: boolean) => {
@@ -115,9 +85,9 @@ export const NodeParameters = memo(function NodeParameters({
             );
 
             const baseClassName = `
-                flex items-center gap-2 bg-depth-2 border rounded-md px-3 py-1
-                ${isSelected ? 'border-bg-accent/30 bg-bg-accent/5' : 'border-depth-3'}
-                cursor-pointer hover:border-bg-accent/20
+                flex items-center gap-2 border rounded-md px-3 py-1 bg-depth-2 
+                ${isSelected ? 'border-depth-7' : 'border-depth-3 hover:border-depth-5'}
+                cursor-pointer 
             `;
 
             if (parameter.type === 'number') {
@@ -213,7 +183,7 @@ export const NodeParameters = memo(function NodeParameters({
                                             w-full text-left px-3 py-1.5 rounded-md border cursor-pointer
                                             ${
                                                 option === selectedValue
-                                                    ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
+                                                    ? 'bg-bg-accent border-border-accent text-text-accent'
                                                     : 'bg-depth-4 hover:bg-depth-5 border-depth-5'
                                             }
                                         `}
@@ -236,53 +206,9 @@ export const NodeParameters = memo(function NodeParameters({
 
     return (
         <div className="flex flex-col gap-1">
-            {isAddDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-full max-h-72 overflow-y-auto bg-depth-2 border border-depth-3 rounded-md shadow-lg z-10 py-1">
-                    {availableParameters.length === 0 ? (
-                        <div className="px-3 py-2 text-sm text-foreground/50">Нет доступных параметров</div>
-                    ) : (
-                        <>
-                            <div className="border-t border-depth-3 mt-1 pt-1 px-2">
-                                <button
-                                    onClick={handleAddSelected}
-                                    disabled={selectedAddIds.length === 0}
-                                    className={`w-full px-3 py-1.5 text-sm rounded-md ${
-                                        selectedAddIds.length > 0
-                                            ? 'bg-bg-accent/10 text-text-accent hover:bg-bg-accent/15'
-                                            : 'bg-depth-3 text-foreground/30 cursor-not-allowed'
-                                    }`}
-                                >
-                                    Добавить выбранные ({selectedAddIds.length})
-                                </button>
-                            </div>
-
-                            {availableParameters.map((param) => {
-                                const Icon = getParameterIcon(param.type);
-                                const isChecked = selectedAddIds.includes(param.id);
-
-                                return (
-                                    <div
-                                        key={param.id}
-                                        onClick={() => handleToggleAddSelection(param.id)}
-                                        className={`flex items-center gap-2 px-3 py-1.5 hover:bg-depth-3 cursor-pointer ${
-                                            isChecked ? 'bg-bg-accent/5' : ''
-                                        }`}
-                                    >
-                                        <Checkbox checked={isChecked} onChange={() => {}} className="pointer-events-none" />
-
-                                        <Icon size={14} className="min-w-4" />
-                                        <span className="text-sm truncate flex-1">{param.name}</span>
-                                    </div>
-                                );
-                            })}
-                        </>
-                    )}
-                </div>
-            )}
-
             {validNodeParameters.length === 0 ? (
-                <div className="text-gray bg-depth-2 w-full p-4 rounded-md border border-depth-3 text-center">
-                    Нет добавленных параметров
+                <div className="text-gray bg-depth-2 w-full px-3 py-1 rounded-md border border-dashed text-sm border-depth-3 text-center">
+                    Перетащите параметры из списка
                 </div>
             ) : (
                 <div className="flex flex-col gap-1">{validNodeParameters.map(renderParameter)}</div>
