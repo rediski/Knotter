@@ -5,14 +5,18 @@ import { useParams, useRouter } from 'next/navigation';
 
 import { NodeParameters } from '@/_core/Node/NodeParameters';
 
-import { useItemsStore } from '@/store/useItemsStore';
-import { getNodes } from '@/utils/nodes/getNodes';
-import { useCanvasRenderer } from '@/_core/Canvas/useCanvasRenderer';
-import { useCanvasInteraction } from '@/_core/Canvas/useCanvasInteraction';
-import { useCanvasHotkeys } from '@/_core/Canvas/useCanvasHotkeys';
 import { SelectionBox } from '@/components/canvas/CanvasSelectionBox';
 import { Coordinates } from '@/components/scene/Coordinates';
 import { Node } from '@/_core/Node';
+
+import { useItemsStore } from '@/store/useItemsStore';
+
+import { useCanvasRenderer } from '@/_core/Canvas/useCanvasRenderer';
+import { useCanvasInteraction } from '@/_core/Canvas/useCanvasInteraction';
+import { useCanvasHotkeys } from '@/_core/Canvas/useCanvasHotkeys';
+
+import { getNodes } from '@/utils/nodes/getNodes';
+import { addSelectedParametersToNode } from '@/utils/nodes/addSelectedParametersToNode';
 
 export default function NodePage() {
     const params = useParams();
@@ -66,11 +70,33 @@ export default function NodePage() {
 
     if (!openedNode) return null;
 
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+
+        try {
+            const data = e.dataTransfer.getData('text/plain');
+            const parameterIds = JSON.parse(data);
+
+            if (Array.isArray(parameterIds) && parameterIds.length > 0) {
+                addSelectedParametersToNode(nodeId, parameterIds);
+            }
+        } catch (error) {
+            console.error('Failed to parse drag data:', error);
+        }
+    };
+
     return (
         <div className="flex gap-1 w-full h-full">
             <div
                 ref={containerRef}
                 className="relative bg-depth-1 min-w-3xl w-full rounded-lg border border-depth-3 overflow-hidden"
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
             >
                 <Coordinates canvasRef={canvasRef} />
 
