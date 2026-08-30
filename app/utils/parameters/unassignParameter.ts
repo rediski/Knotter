@@ -2,42 +2,36 @@ import { useItemsStore } from '@/store/useItemsStore';
 import { getSelectedNode } from '@/utils/nodes/getSelectedNodes';
 
 export const unassignParameter = (parameterId: string) => {
-    const { currentSceneId, scenes, parameters: allParameters } = useItemsStore.getState();
+    const itemsState = useItemsStore.getState();
+    const { currentSceneId, scenes } = itemsState;
 
     if (!currentSceneId) return;
 
     const scene = scenes[currentSceneId];
-    const items = scene?.items ?? [];
+    if (!scene) return;
 
     const node = getSelectedNode();
-
     if (!node) return;
 
-    const getIdsToRemove = (id: string): string[] => {
-        const parameter = allParameters.find((p) => p.id === id);
-        if (!parameter) return [id];
-
-        return [id];
-    };
-
-    const idsToRemove = getIdsToRemove(parameterId);
-
-    const updatedItems = items.map((item) => {
+    const updatedItems = scene.items.map((item) => {
         if (item.kind === 'node' && item.id === node.id) {
             return {
                 ...item,
-                parameters: item.parameters.filter((parameter) => !idsToRemove.includes(parameter.id)),
+                parameters: item.parameters.filter((parameter) => parameter.id !== parameterId),
             };
         }
+
         return item;
     });
 
-    if (scene) {
-        const updatedScene = {
-            ...scene,
-            items: updatedItems,
-            updatedAt: new Date(),
-        };
-        useItemsStore.setState({ scenes: { ...scenes, [currentSceneId]: updatedScene } });
-    }
+    useItemsStore.setState({
+        scenes: {
+            ...scenes,
+            [currentSceneId]: {
+                ...scene,
+                items: updatedItems,
+                updatedAt: new Date(),
+            },
+        },
+    });
 };
