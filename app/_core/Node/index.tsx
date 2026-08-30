@@ -10,6 +10,7 @@ import { useCanvasStore } from '@/store/useCanvasStore';
 import { EdgeRenderer } from '@/_core/Edge/EdgeRenderer';
 import { NodeRenderer } from '@/_core/Node/NodeRenderer';
 import { NodeTooltip } from '@/_core/Node/NodeTooltip';
+import { NodeParameters } from '@/_core/Node/NodeParameters';
 
 import { useItemsStore } from '@/store/useItemsStore';
 
@@ -95,6 +96,35 @@ export const Node = ({
                     </div>
                 );
             })}
+
+            {isNodePage &&
+                forcedNodeId &&
+                (() => {
+                    const openedNode = nodes.find((item) => item.id === forcedNodeId && item.kind === 'node');
+                    if (!openedNode) return null;
+
+                    const { x: centerX, y: centerY } = getScreenCoords(0, 0, containerRef);
+
+                    const parametersSpacing = 20;
+                    const nodeHalfSize = (NODE_SIZE / 2) * zoomLevel;
+                    const parametersY = centerY + nodeHalfSize + parametersSpacing;
+
+                    return (
+                        <div
+                            key={`parameters-${openedNode.id}`}
+                            className="absolute pointer-events-auto"
+                            style={{
+                                left: `${centerX}px`,
+                                top: `${parametersY}px`,
+                                transform: `translateX(-50%) scale(${zoomLevel})`,
+                                transformOrigin: 'top center',
+                                zIndex: 10,
+                            }}
+                        >
+                            <NodeParameters nodeParameters={openedNode.parameters} nodeId={openedNode.id} />
+                        </div>
+                    );
+                })()}
 
             {!isNodePage &&
                 nodes.map((node) => {

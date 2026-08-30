@@ -3,8 +3,6 @@
 import { useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
-import { NodeParameters } from '@/_core/Node/NodeParameters';
-
 import { SelectionBox } from '@/components/canvas/CanvasSelectionBox';
 import { Coordinates } from '@/components/scene/Coordinates';
 import { Node } from '@/_core/Node';
@@ -109,14 +107,6 @@ export default function NodePage() {
 
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <Node containerRef={containerRef} isNodePage={true} nodeId={nodeId} />
-                </div>
-
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full max-w-md pointer-events-auto">
-                    <div className="flex flex-col gap-1 text-sm w-full">
-                        <div className="flex flex-col gap-1 bg-depth-1 border border-depth-3 rounded-md p-1 w-full shadow-xs">
-                            <NodeParameters nodeParameters={openedNode.parameters} nodeId={openedNode.id} />
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
