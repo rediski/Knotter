@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState, type RefObject } from 'react';
+import { useRef, useEffect, type RefObject } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { NODE_SIZE } from '@/_core/_/canvas.constants';
@@ -46,17 +46,6 @@ export const Node = ({
     const nodes = getNodes(items);
 
     const displayedNodes = isNodePage && forcedNodeId ? nodes.filter((node) => node.id === forcedNodeId) : nodes;
-
-    const [mountedNodes, setMountedNodes] = useState<Set<string>>(new Set());
-
-    useEffect(() => {
-        const nodeIds = displayedNodes.map((node) => node.id);
-        setMountedNodes(new Set(nodeIds));
-
-        return () => {
-            setMountedNodes(new Set());
-        };
-    }, [displayedNodes.map((node) => node.id).join(',')]);
 
     const handleNodeClick = (nodeId: string) => {
         if (clickTimeoutRef.current) {
