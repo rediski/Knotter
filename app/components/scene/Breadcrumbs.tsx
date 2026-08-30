@@ -33,14 +33,14 @@ export function Breadcrumbs() {
                 href={`/${scene.id}/`}
                 className={`
                     flex items-center gap-1 px-3 py-1.25 w-48 rounded-md border cursor-pointer text-sm
-                    ${currentSceneId === scene.id && currentNodeId === null ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-2 hover:bg-depth-3 border-depth-3'}
+                    ${currentSceneId === scene.id && currentNodeId === null ? 'bg-bg-accent border-border-accent text-text-accent' : 'bg-depth-2 hover:bg-depth-3 border-depth-3'}
                 `}
             >
                 <LandPlot size={16} />
 
                 <hr
                     className={`h-5 mx-1 border-l
-                    ${currentSceneId === scene.id ? 'border-bg-accent/10' : 'border-depth-3'}`}
+                    ${currentSceneId === scene.id ? 'border-border-accent' : 'border-depth-3'}`}
                 />
 
                 {scene.name}
@@ -54,12 +54,12 @@ export function Breadcrumbs() {
                         href={`/${scene.id}/${currentNodeId}`}
                         className={`
                             flex items-center gap-1 px-3 py-1.25 w-48 rounded-md border cursor-pointer text-sm
-                            bg-bg-accent/10 border-bg-accent/10 text-text-accent
+                            bg-bg-accent border-border-accent text-text-accent
                         `}
                     >
                         <PackageOpen size={16} />
 
-                        <hr className="h-5 mx-1 border-l border-bg-accent/10" />
+                        <hr className="h-5 mx-1 border-l border-border-accent" />
 
                         {nodeName}
                     </Link>

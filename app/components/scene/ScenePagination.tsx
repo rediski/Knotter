@@ -33,7 +33,7 @@ export const ScenePagination = ({ totalItems, visibleRange, onScrollToScene }: S
                         title={`Перейти к сценам ${groupStart + 1}-${groupEnd}`}
                     >
                         <div
-                            className="absolute top-0 h-full bg-text-accent transition-all duration-150"
+                            className="absolute top-0 h-full bg-accent transition-all duration-150"
                             style={{
                                 left: `${leftOffset}%`,
                                 width: `${fillWidth}%`,
@@ -62,7 +62,7 @@ export const ScenePagination = ({ totalItems, visibleRange, onScrollToScene }: S
                             <div
                                 key={`dot-${itemIndex}`}
                                 className={`w-2 h-2 rounded-full
-                                    ${isItemVisible ? 'bg-text-accent' : 'bg-depth-4'}
+                                    ${isItemVisible ? 'bg-accent' : 'bg-depth-4'}
                                 `}
                             />
                         );

@@ -137,7 +137,7 @@ export const History = () => {
                                     group px-3 py-2 border rounded-md cursor-pointer
                                     ${
                                         isCurrent
-                                            ? 'bg-bg-accent/10 text-text-accent border-bg-accent/10'
+                                            ? 'bg-bg-accent text-text-accent border-border-accent'
                                             : 'bg-depth-2 border-depth-4 hover:bg-depth-3'
                                     }
                                     ${isInFuture ? 'opacity-50' : ''}
@@ -151,7 +151,7 @@ export const History = () => {
 
                                         <div
                                             className={`border-l h-5 
-                                                ${isCurrent ? 'border-bg-accent/10' : 'border-depth-4'}
+                                                ${isCurrent ? 'border-border-accent' : 'border-depth-4'}
                                             `}
                                         />
 

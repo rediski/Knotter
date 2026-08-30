@@ -34,7 +34,7 @@ export function SelectionBox({ containerRef }: SelectionBoxProps) {
 
     return (
         <div
-            className="absolute pointer-events-none border-2 border-bg-accent bg-bg-accent/30"
+            className="absolute pointer-events-none border-2 border-accent bg-accent/30"
             style={{ left, top, width, height }}
         />
     );

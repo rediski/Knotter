@@ -231,7 +231,7 @@ export function SceneList() {
                                     group cursor-pointer select-none
                                     ${
                                         isActive
-                                            ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent'
+                                            ? 'bg-bg-accent border-border-accent text-text-accent'
                                             : 'bg-depth-2 border-depth-3 hover:bg-depth-3'
                                     }
                                 `}
@@ -242,7 +242,7 @@ export function SceneList() {
                                 <hr
                                     className={`
                                         h-5 mx-1 border-l
-                                        ${currentSceneId === sceneId ? 'border-bg-accent/10' : 'border-depth-5'}
+                                        ${currentSceneId === sceneId ? 'border-border-accent' : 'border-depth-5'}
                                     `}
                                 />
 
@@ -261,7 +261,7 @@ export function SceneList() {
                                             opacity-0 group-hover:opacity-100 rounded p-0.5 border cursor-pointer shrink-0
                                             ${
                                                 currentSceneId === sceneId
-                                                    ? 'bg-bg-accent/10 hover:bg-bg-accent/15 border-bg-accent/10'
+                                                    ? 'bg-bg-accent border-border-accent'
                                                     : 'bg-depth-4 hover:bg-depth-5 border-depth-5'
                                             }
                                         `}

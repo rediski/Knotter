@@ -59,7 +59,7 @@ export const Parameters = () => {
                 {filteredParameters.length > 0 ? (
                     <>
                         {visibleSelectedCount > 1 && (
-                            <div className="text-xs text-text-accent px-3 py-1 bg-bg-accent/5 rounded-md truncate">
+                            <div className="text-xs text-text-accent px-3 py-1 bg-bg-accent rounded-md truncate">
                                 Выбранных параметров: {visibleSelectedCount}
                             </div>
                         )}

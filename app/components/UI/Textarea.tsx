@@ -30,7 +30,7 @@ export const Textarea = memo(function Textarea({ value, onChange, className = ''
                 value={value}
                 onChange={handleChange}
                 className={`
-                    flex items-center w-full bg-depth-2 focus:outline-none focus:ring-2 focus:ring-bg-accent/70 text-foreground placeholder-gray px-3 py-2 text-sm rounded-md  resize-none field-sizing-content min-h-[3lh] max-h-[12lh] 
+                    flex items-center w-full bg-depth-2 focus:outline-none focus:ring-2 focus:ring-bg-accent text-foreground placeholder-gray px-3 py-2 text-sm rounded-md  resize-none field-sizing-content min-h-[3lh] max-h-[12lh] 
                     ${className}
                 `}
                 {...props}

@@ -168,7 +168,7 @@ export const InspectorScene = memo(function InspectorScene({
                     {controls.map(({ active, onClick, Icon, label, key }) => (
                         <label
                             key={key}
-                            className={`flex items-center gap-2 cursor-pointer border rounded-md h-9 px-3 ${active ? 'bg-bg-accent/10 border-bg-accent/10 text-text-accent' : 'bg-depth-3 border-depth-4'}`}
+                            className={`flex items-center gap-2 cursor-pointer border rounded-md h-9 px-3 ${active ? 'bg-bg-accent border-border-accent text-text-accent' : 'bg-depth-3 border-depth-4'}`}
                         >
                             <button
                                 onClick={(e) => {
@@ -179,7 +179,7 @@ export const InspectorScene = memo(function InspectorScene({
                                 <Icon size={16} />
                             </button>
 
-                            <hr className={`h-6 border-l ${active ? 'border-bg-accent/10' : 'border-depth-5'}`} />
+                            <hr className={`h-6 border-l ${active ? 'border-border-accent' : 'border-depth-5'}`} />
 
                             <span className="text-sm select-none truncate">{label}</span>
                         </label>

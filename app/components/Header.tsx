@@ -44,7 +44,7 @@ export default function Header() {
 
                     <button
                         onClick={openWorkspace}
-                        className="flex items-center w-fit text-sm px-3 h-8 bg-bg-accent/10 hover:bg-bg-accent/15 border border-bg-accent/15 hover:border-bg-accent/20 transition-colors text-text-accent rounded-lg select-none cursor-pointer"
+                        className="flex items-center w-fit text-sm px-3 h-8 bg-bg-accent border border-border-accent transition-colors text-text-accent rounded-lg select-none cursor-pointer"
                     >
                         Open Workspace
                     </button>

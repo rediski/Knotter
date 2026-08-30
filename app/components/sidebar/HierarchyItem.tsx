@@ -85,8 +85,8 @@ export const HierarchyItem = memo(function HierarchyItem({
                 <div
                     className={`
                     w-full px-3 h-9 rounded-md outline-none tabular-nums flex items-center text-nowrap
-                    ${isSelected ? 'bg-bg-accent/10 border border-bg-accent/10' : 'bg-depth-2 hover:bg-depth-3 border border-depth-3'}
-                    ${isPartOfSelectionGroup && 'border-bg-accent/20'}
+                    ${isSelected ? 'bg-bg-accent border border-border-accent' : 'bg-depth-2 hover:bg-depth-3 border border-depth-3'}
+                    ${isPartOfSelectionGroup && 'border-border-accent'}
                     relative z-10
                 `}
                 >
@@ -111,7 +111,7 @@ export const HierarchyItem = memo(function HierarchyItem({
                             />
                         )}
 
-                        <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/10' : 'border-depth-4'}`} />
+                        <div className={`border-l h-5 ${isSelected ? 'border-border-accent' : 'border-depth-4'}`} />
 
                         <span className={`text-sm truncate ${isSelected ? 'text-text-accent' : 'text-foreground'}`}>
                             {filteredItem.name}

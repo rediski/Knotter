@@ -31,7 +31,7 @@ export function NodeRenderer({ node, isNodePage }: { node: Node; isNodePage: boo
     const borderClass = (() => {
         if (hasDuplicatePosition) return 'border-red';
         if (isHoveredWithTempEdge) return 'border-green';
-        return 'border-bg-accent';
+        return 'border-accent';
     })();
 
     return (

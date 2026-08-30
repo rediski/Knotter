@@ -214,7 +214,7 @@ export const Input = memo(function Input({
                 onKeyDown={handleKeyDown}
                 inputMode={isNumberType ? 'decimal' : 'text'}
                 className={`
-                    w-full text-foreground placeholder-gray px-3 py-1 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-bg-accent/70 h-8
+                    w-full text-foreground placeholder-gray px-3 py-1 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-bg-accent h-8
                     ${hasIcon && 'pr-8'}
                     ${className}
                 `}

@@ -78,12 +78,12 @@ export const InspectorNode = memo(function InspectorNode({
                                 onClick={() => setSelectedItemIds([edge.id])}
                                 className={`
                                 flex items-center gap-2 text-sm px-3 py-2 rounded-md cursor-pointer group
-                                ${isSelected ? 'bg-bg-accent/10 border border-bg-accent/10 text-text-accent' : 'bg-depth-3 hover:bg-depth-4 border border-depth-4 text-contrast'}
+                                ${isSelected ? 'bg-bg-accent border border-border-accent text-text-accent' : 'bg-depth-3 hover:bg-depth-4 border border-depth-4 text-contrast'}
                             `}
                             >
                                 <LineSquiggle size={16} />
 
-                                <div className={`border-l h-5 ${isSelected ? 'border-bg-accent/20' : 'border-depth-5'}`} />
+                                <div className={`border-l h-5 ${isSelected ? 'border-border-accent' : 'border-depth-5'}`} />
 
                                 <div className="flex items-center gap-1.5 flex-1">
                                     <span>{edge.name}</span>
@@ -92,7 +92,7 @@ export const InspectorNode = memo(function InspectorNode({
                                 <button
                                     className={`
                                     opacity-0 group-hover:opacity-100 rounded p-0.5 transition-opacity cursor-pointer
-                                    ${isSelected ? 'hover:bg-bg-accent/10' : 'hover:bg-depth-5'}
+                                    ${isSelected ? 'hover:bg-bg-accent' : 'hover:bg-depth-5'}
                                 `}
                                     onClick={(e) => {
                                         e.stopPropagation();

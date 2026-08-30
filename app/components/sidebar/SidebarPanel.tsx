@@ -114,7 +114,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                                 flex items-center gap-2 px-3 h-8 text-left text-sm rounded-md cursor-pointer w-full 
                                 ${
                                     option.label === currentPanelTitle
-                                        ? 'bg-bg-accent/15 text-text-accent'
+                                        ? 'bg-bg-accent text-text-accent'
                                         : 'bg-depth-3 hover:bg-depth-4'
                                 }
                             `}

@@ -217,7 +217,7 @@ export const InspectorParameter = memo(function InspectorParameter({
                                             w-full text-left px-3 py-2 text-sm rounded-md cursor-pointer
                                             ${
                                                 parameter.type === typeOption.type
-                                                    ? 'bg-bg-accent/10 text-text-accent border border-bg-accent/10'
+                                                    ? 'bg-bg-accent text-text-accent border border-border-accent'
                                                     : 'hover:bg-depth-4 text-contrast'
                                             }
                                         `}
@@ -236,7 +236,7 @@ export const InspectorParameter = memo(function InspectorParameter({
                                     w-full text-left px-3 py-2 text-sm rounded-md
                                     ${
                                         !parameter.type
-                                            ? 'bg-bg-accent/10 text-text-accent border border-bg-accent/10'
+                                            ? 'bg-bg-accent text-text-accent border border-border-accent'
                                             : 'hover:bg-depth-4 text-contrast'
                                     }
                                 `}

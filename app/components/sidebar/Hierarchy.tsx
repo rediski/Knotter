@@ -158,7 +158,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                                     w-full pr-3 pl-2 h-9 rounded-md outline-none tabular-nums flex items-center
                                     ${
                                         selectedItemIds.includes(currentSceneId)
-                                            ? 'bg-bg-accent/10 border border-bg-accent/10'
+                                            ? 'bg-bg-accent border border-border-accent'
                                             : 'bg-depth-2 hover:bg-depth-3 border border-depth-3'
                                     }
                                 `}
@@ -166,19 +166,19 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                         <div className="flex items-center gap-2 flex-1">
                             <button
                                 onClick={() => setIsExpanded((prev) => !prev)}
-                                className={`flex items-center justify-center p-0.5 rounded cursor-pointer ${isSceneSelected ? 'text-text-accent hover:bg-bg-accent/10' : 'hover:bg-depth-3'}`}
+                                className={`flex items-center justify-center p-0.5 rounded cursor-pointer ${isSceneSelected ? 'text-text-accent hover:bg-bg-accent' : 'hover:bg-depth-3'}`}
                             >
                                 {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                             </button>
 
-                            <div className={`border-l h-5 ${isSceneSelected ? 'border-bg-accent/10' : 'border-depth-4'}`} />
+                            <div className={`border-l h-5 ${isSceneSelected ? 'border-border-accent' : 'border-depth-4'}`} />
 
                             <LandPlot
                                 size={16}
                                 className={`min-w-4 ${isSceneSelected ? 'text-text-accent' : 'text-foreground'}`}
                             />
 
-                            <div className={`border-l h-5 ${isSceneSelected ? 'border-bg-accent/10' : 'border-depth-4'}`} />
+                            <div className={`border-l h-5 ${isSceneSelected ? 'border-border-accent' : 'border-depth-4'}`} />
 
                             <span className={`text-sm truncate ${isSceneSelected ? 'text-text-accent' : 'text-foreground'}`}>
                                 {scene.name}
@@ -198,7 +198,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                         {filteredItems.length > 0 ? (
                             <div className="flex flex-col gap-1 relative">
                                 {visibleSelectedCount > 1 && (
-                                    <div className="text-xs text-text-accent px-3 py-1 bg-bg-accent/5 rounded-md truncate">
+                                    <div className="text-xs text-text-accent px-3 py-1 bg-bg-accent rounded-md truncate">
                                         Выбранных элементов: {visibleSelectedCount}
                                     </div>
                                 )}

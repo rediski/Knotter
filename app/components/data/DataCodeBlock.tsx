@@ -28,7 +28,7 @@ const ActionButton = ({ onClick, icon: Icon, label = '', isSuccess = false, isAc
         className={`
             flex items-center w-8 h-8 p-2 rounded-md cursor-pointer border
             ${isSuccess ? 'text-green' : 'text-contrast'}
-            ${isActive ? 'bg-bg-accent border-bg-accent text-white' : 'bg-depth-3 hover:bg-depth-4/80 active:bg-depth-5 border-depth-4'}
+            ${isActive ? 'bg-bg-accent border-border-accent text-white' : 'bg-depth-3 hover:bg-depth-4/80 active:bg-depth-5 border-depth-4'}
         `}
     >
         <Icon size={16} /> {label}
@@ -39,7 +39,7 @@ export function DataCodeBlock<T = AnyObject>({
     data,
     maxHeight,
     title = 'Все сцены',
-    fileName = 'data'
+    fileName = 'data',
 }: DataCodeBlockProps<T>) {
     if (!data) return <span className="text-json-null">Нет данных</span>;
 
@@ -83,16 +83,9 @@ export function DataCodeBlock<T = AnyObject>({
                     <span>{title}</span>
 
                     <div className="flex gap-1">
-                        <ActionButton
-                            onClick={handleCopy}
-                            icon={isCopied ? Check : Copy}
-                            isSuccess={isCopied}
-                        />
+                        <ActionButton onClick={handleCopy} icon={isCopied ? Check : Copy} isSuccess={isCopied} />
 
-                        <ActionButton
-                            onClick={handleSave}
-                            icon={ArrowDownToLine}
-                        />
+                        <ActionButton onClick={handleSave} icon={ArrowDownToLine} />
                     </div>
                 </div>
 
