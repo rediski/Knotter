@@ -51,8 +51,8 @@ export function NodeRenderer({ node, isNodePage }: { node: Node; isNodePage: boo
 
             <Icon
                 className={`
-                    w-max fill-depth-1 active:cursor-grabbing
-                    ${isNodePage ? 'hover:cursor-pointer' : ' hover:cursor-move'}
+                    w-max fill-depth-1
+                    ${isNodePage ? 'hover:cursor-pointer' : 'hover:cursor-move active:cursor-grabbing'}
                     ${isPoint ? 'stroke-[2px]' : 'stroke-[1.5px]'}
                 `}
                 style={{ color: node.color ?? 'var(--foreground)' }}
