@@ -105,7 +105,7 @@ export const Node = ({
 
                     const { x: centerX, y: centerY } = getScreenCoords(0, 0, containerRef);
 
-                    const parametersSpacing = 20;
+                    const parametersSpacing = 40;
                     const nodeHalfSize = (NODE_SIZE / 2) * zoomLevel;
                     const parametersY = centerY + nodeHalfSize + parametersSpacing;
 
@@ -116,7 +116,7 @@ export const Node = ({
                             style={{
                                 left: `${centerX}px`,
                                 top: `${parametersY}px`,
-                                transform: `translateX(-50%) scale(${zoomLevel})`,
+                                transform: `translateX(-50%) scale(${zoomLevel * 0.5})`,
                                 transformOrigin: 'top center',
                                 zIndex: 10,
                             }}
