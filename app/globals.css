@@ -12,7 +12,10 @@
     --depth-6: rgb(198, 198, 200);
     --depth-7: rgb(192, 192, 194);
 
-    --background-accent: rgb(32, 112, 235);
+    --accent: rgb(32, 112, 235);
+
+    --background-accent: #1b2332;
+    --border-accent: #1e2a44;
     --text-accent: rgb(68, 148, 235);
 
     --grid-color-1: rgba(0, 0, 0, 0.05);
@@ -79,8 +82,11 @@
     --color-depth-6: var(--depth-6);
     --color-depth-7: var(--depth-7);
 
+    --color-accent: var(--accent);
     --color-bg-accent: var(--background-accent);
+    --color-border-accent: var(--border-accent);
     --color-text-accent: var(--text-accent);
+
     --color-grid-1: var(--grid-color-1);
     --color-grid-2: var(--grid-color-2);
     --color-grid-3: var(--grid-color-3);
