@@ -40,11 +40,11 @@ export const ParameterItem = memo(function ParameterItem({
         >
             <div
                 className={`
-                        w-full px-3 h-9 rounded-md outline-none tabular-nums flex items-center text-nowrap
-                        ${isSelected ? 'bg-bg-accent/10 border border-bg-accent/10' : 'bg-depth-2 hover:bg-depth-3 border border-depth-3'}
-                        ${isPartOfSelectionGroup && 'border-bg-accent/20'}
-                        ${isSelected ? 'text-text-accent' : 'text-foreground'}
-                    `}
+                    w-full px-3 h-9 rounded-md outline-none tabular-nums flex items-center text-nowrap
+                    ${isSelected ? 'bg-bg-accent/10 border border-bg-accent/10' : 'bg-depth-2 hover:bg-depth-3 border border-depth-3'}
+                    ${isPartOfSelectionGroup && 'border-bg-accent/20'}
+                    ${isSelected ? 'text-text-accent' : 'text-foreground'}
+                `}
             >
                 <div className="flex items-center gap-2 flex-1 min-w-0">
                     <Icon size={16} className="min-w-4" />
