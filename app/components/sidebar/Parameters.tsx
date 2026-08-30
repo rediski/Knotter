@@ -1,7 +1,5 @@
 'use client';
 
-import { useParams } from 'next/navigation';
-
 import { EmptyState } from '@/components/UI/EmptyState';
 
 import { ParameterItem } from '@/components/sidebar/ParameterItem';
@@ -10,15 +8,12 @@ import { useParameters } from '@/components/sidebar/useParameters';
 import { useItemsStore } from '@/store/useItemsStore';
 
 import { generateUniqueName } from '@/utils/items/generateUniqueName';
-import { hasParameterInNode } from '@/utils/nodes/hasParameterInNode';
+
 import { createParameter } from '@/utils/parameters/createParameter';
 
 import { Plus } from 'lucide-react';
 
 export const Parameters = () => {
-    const params = useParams();
-    const nodeId = params.nodeId as string;
-
     const {
         filteredParameters,
         selectedParameters,
@@ -33,9 +28,9 @@ export const Parameters = () => {
     } = useParameters();
 
     const parameters = useItemsStore((state) => state.parameters);
-    const currentNodeId = useItemsStore((state) => state.currentNodeId);
 
     const baseName = 'Параметр';
+
     const name = generateUniqueName(
         baseName,
         parameters.map((parameter) => parameter.name),
@@ -69,7 +64,7 @@ export const Parameters = () => {
                             </div>
                         )}
 
-                        {filteredParameters.map((parameter, index) => (
+                        {filteredParameters.map((parameter) => (
                             <ParameterItem
                                 key={parameter.id}
                                 parameter={parameter}
