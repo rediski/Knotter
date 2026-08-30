@@ -15,7 +15,7 @@ import { updateNodeParameter } from '@/utils/parameters/updateNodeParameter';
 import { unassignParameter } from '@/utils/parameters/unassignParameter';
 import { addSelectedParametersToNode } from '@/utils/nodes/addSelectedParametersToNode';
 
-import { X, ChevronDown, Plus } from 'lucide-react';
+import { X } from 'lucide-react';
 
 export const NodeParameters = memo(function NodeParameters({
     nodeParameters = [],
@@ -108,7 +108,7 @@ export const NodeParameters = memo(function NodeParameters({
                         e.stopPropagation();
                         unassignParameter(parameter.id);
                     }}
-                    className="cursor-pointer text-gray hover:text-white min-w-4"
+                    className="cursor-pointer text-gray hover:text-foreground min-w-4"
                 >
                     <X size={16} />
                 </button>
@@ -223,6 +223,7 @@ export const NodeParameters = memo(function NodeParameters({
                                 ))}
                             </DropdownAbsolute>
                         </div>
+
                         {renderRemoveButton()}
                     </div>
                 );
@@ -235,76 +236,49 @@ export const NodeParameters = memo(function NodeParameters({
 
     return (
         <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2 border-b border-depth-3 pb-1">
-                <div className="relative flex-1">
-                    <button
-                        onClick={() => {
-                            setIsAddDropdownOpen(!isAddDropdownOpen);
-                            if (!isAddDropdownOpen) {
-                                setSelectedAddIds([]);
-                            }
-                        }}
-                        className="flex items-center gap-2 w-full px-3 py-1.5 text-sm bg-depth-2 hover:bg-depth-3 border border-depth-3 rounded-md"
-                    >
-                        <Plus size={16} />
+            {isAddDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 w-full max-h-72 overflow-y-auto bg-depth-2 border border-depth-3 rounded-md shadow-lg z-10 py-1">
+                    {availableParameters.length === 0 ? (
+                        <div className="px-3 py-2 text-sm text-foreground/50">Нет доступных параметров</div>
+                    ) : (
+                        <>
+                            <div className="border-t border-depth-3 mt-1 pt-1 px-2">
+                                <button
+                                    onClick={handleAddSelected}
+                                    disabled={selectedAddIds.length === 0}
+                                    className={`w-full px-3 py-1.5 text-sm rounded-md ${
+                                        selectedAddIds.length > 0
+                                            ? 'bg-bg-accent/10 text-text-accent hover:bg-bg-accent/15'
+                                            : 'bg-depth-3 text-foreground/30 cursor-not-allowed'
+                                    }`}
+                                >
+                                    Добавить выбранные ({selectedAddIds.length})
+                                </button>
+                            </div>
 
-                        <span>Добавить параметр</span>
+                            {availableParameters.map((param) => {
+                                const Icon = getParameterIcon(param.type);
+                                const isChecked = selectedAddIds.includes(param.id);
 
-                        <ChevronDown
-                            size={14}
-                            className={`ml-auto transition-transform ${isAddDropdownOpen ? 'rotate-180' : ''}`}
-                        />
-                    </button>
+                                return (
+                                    <div
+                                        key={param.id}
+                                        onClick={() => handleToggleAddSelection(param.id)}
+                                        className={`flex items-center gap-2 px-3 py-1.5 hover:bg-depth-3 cursor-pointer ${
+                                            isChecked ? 'bg-bg-accent/5' : ''
+                                        }`}
+                                    >
+                                        <Checkbox checked={isChecked} onChange={() => {}} className="pointer-events-none" />
 
-                    {isAddDropdownOpen && (
-                        <div className="absolute top-full left-0 mt-1 w-full max-h-72 overflow-y-auto bg-depth-2 border border-depth-3 rounded-md shadow-lg z-10 py-1">
-                            {availableParameters.length === 0 ? (
-                                <div className="px-3 py-2 text-sm text-foreground/50">Нет доступных параметров</div>
-                            ) : (
-                                <>
-                                    <div className="border-t border-depth-3 mt-1 pt-1 px-2">
-                                        <button
-                                            onClick={handleAddSelected}
-                                            disabled={selectedAddIds.length === 0}
-                                            className={`w-full px-3 py-1.5 text-sm rounded-md ${
-                                                selectedAddIds.length > 0
-                                                    ? 'bg-bg-accent/10 text-text-accent hover:bg-bg-accent/15'
-                                                    : 'bg-depth-3 text-foreground/30 cursor-not-allowed'
-                                            }`}
-                                        >
-                                            Добавить выбранные ({selectedAddIds.length})
-                                        </button>
+                                        <Icon size={14} className="min-w-4" />
+                                        <span className="text-sm truncate flex-1">{param.name}</span>
                                     </div>
-
-                                    {availableParameters.map((param) => {
-                                        const Icon = getParameterIcon(param.type);
-                                        const isChecked = selectedAddIds.includes(param.id);
-
-                                        return (
-                                            <div
-                                                key={param.id}
-                                                onClick={() => handleToggleAddSelection(param.id)}
-                                                className={`flex items-center gap-2 px-3 py-1.5 hover:bg-depth-3 cursor-pointer ${
-                                                    isChecked ? 'bg-bg-accent/5' : ''
-                                                }`}
-                                            >
-                                                <Checkbox
-                                                    checked={isChecked}
-                                                    onChange={() => {}}
-                                                    className="pointer-events-none"
-                                                />
-
-                                                <Icon size={14} className="min-w-4" />
-                                                <span className="text-sm truncate flex-1">{param.name}</span>
-                                            </div>
-                                        );
-                                    })}
-                                </>
-                            )}
-                        </div>
+                                );
+                            })}
+                        </>
                     )}
                 </div>
-            </div>
+            )}
 
             {validNodeParameters.length === 0 ? (
                 <div className="text-gray bg-depth-2 w-full p-4 rounded-md border border-depth-3 text-center">
