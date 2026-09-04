@@ -14,8 +14,8 @@
 
     --accent: rgb(32, 112, 235);
 
-    --background-accent: #1b2332;
-    --border-accent: #1e2a44;
+    --background-accent: #d0d8e7;
+    --border-accent: #becde7;
     --text-accent: rgb(68, 148, 235);
 
     --grid-color-1: rgba(0, 0, 0, 0.05);
@@ -43,6 +43,10 @@
 [data-theme='dark'] {
     --background: #151517;
     --foreground: #ededed;
+
+    --background-accent: #1b2332;
+    --border-accent: #1e2a44;
+    --text-accent: rgb(68, 148, 235);
 
     --depth-1: rgb(27, 27, 29);
     --depth-2: rgb(33, 33, 35);
