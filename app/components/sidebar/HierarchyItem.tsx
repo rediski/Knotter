@@ -208,14 +208,16 @@ export const HierarchyItem = memo(function HierarchyItem({
                 }}
             />
 
-            <div
-                className="absolute border-t border-depth-4"
-                style={{
-                    left: `${LINE_LEFT}px`,
-                    top: '50%',
-                    width: `${LINE_WIDTH}px`,
-                }}
-            />
+            {!(isNode && hasParameters && isExpanded) && (
+                <div
+                    className="absolute border-t border-depth-4"
+                    style={{
+                        left: `${LINE_LEFT}px`,
+                        top: '50%',
+                        width: `${LINE_WIDTH}px`,
+                    }}
+                />
+            )}
 
             <div
                 className="flex items-center gap-1 relative"
