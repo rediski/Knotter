@@ -29,7 +29,9 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
     const filterText = useSidebarStore((state) => (panelId ? state.filterText[panelId] : ''));
 
     const filteredItems = useMemo(() => {
-        if (!currentSceneId) return [];
+        if (!currentSceneId) {
+            return [];
+        }
 
         const scene = scenes[currentSceneId];
         const items = scene?.items ?? [];
@@ -41,15 +43,24 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
 
     const handleReorder = useCallback(
         (newItems: CanvasItem[]) => {
-            if (currentSceneId && scene) {
-                const { scenes } = useItemsStore.getState();
-                const updatedScene = {
-                    ...scene,
-                    items: newItems,
-                    updatedAt: new Date(),
-                };
-                useItemsStore.setState({ scenes: { ...scenes, [currentSceneId]: updatedScene } });
+            if (!currentSceneId || !scene) {
+                return;
             }
+
+            const { scenes } = useItemsStore.getState();
+
+            const updatedScene = {
+                ...scene,
+                items: newItems,
+                updatedAt: new Date(),
+            };
+
+            useItemsStore.setState({
+                scenes: {
+                    ...scenes,
+                    [currentSceneId]: updatedScene,
+                },
+            });
         },
         [currentSceneId, scene],
     );
@@ -60,7 +71,8 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
         selectedIds: selectedItemIds,
         onSelect: setSelectedItemIds,
         onReorder: handleReorder,
-        itemSelector: 'li',
+        itemSelector: 'li[data-id]',
+        multiSelect: true,
     });
 
     useEffect(() => {
@@ -70,6 +82,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             const target = e.target as HTMLElement;
+
             if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
                 return;
             }
@@ -102,9 +115,12 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                 const newSet = new Set(selectedItemIds);
                 const wasDeleted = newSet.delete(nodeId);
 
-                if (!wasDeleted) newSet.add(nodeId);
+                if (!wasDeleted) {
+                    newSet.add(nodeId);
+                }
 
                 setSelectedItemIds(Array.from(newSet));
+
                 return;
             }
 
@@ -155,37 +171,63 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                 <li className="relative select-none cursor-pointer" onClick={selectScene}>
                     <div
                         className={`
-                                    w-full pr-3 pl-2 h-9 rounded-md outline-none tabular-nums flex items-center
-                                    ${
-                                        selectedItemIds.includes(currentSceneId)
-                                            ? 'bg-bg-accent border border-border-accent'
-                                            : 'bg-depth-2 hover:bg-depth-3 border border-depth-3'
-                                    }
-                                `}
+                            w-full pr-3 pl-2 h-9 rounded-md outline-none tabular-nums flex items-center
+                            ${
+                                selectedItemIds.includes(currentSceneId)
+                                    ? 'bg-bg-accent border border-border-accent'
+                                    : 'bg-depth-2 hover:bg-depth-3 border border-depth-3'
+                            }
+                        `}
                     >
                         <div className="flex items-center gap-2 flex-1">
                             <button
+                                type="button"
                                 onClick={() => setIsExpanded((prev) => !prev)}
-                                className={`flex items-center justify-center p-0.5 rounded cursor-pointer ${isSceneSelected ? 'text-text-accent hover:bg-bg-accent' : 'hover:bg-depth-3'}`}
+                                className={`
+                                    flex items-center justify-center
+                                    p-0.5 rounded cursor-pointer
+                                    ${isSceneSelected ? 'text-text-accent hover:bg-bg-accent' : 'hover:bg-depth-3'}
+                                `}
                             >
                                 {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                             </button>
 
-                            <div className={`border-l h-5 ${isSceneSelected ? 'border-border-accent' : 'border-depth-4'}`} />
+                            <div
+                                className={`
+                                    border-l h-5
+                                    ${isSceneSelected ? 'border-border-accent' : 'border-depth-4'}
+                                `}
+                            />
 
                             <LandPlot
                                 size={16}
-                                className={`min-w-4 ${isSceneSelected ? 'text-text-accent' : 'text-foreground'}`}
+                                className={`
+                                    min-w-4
+                                    ${isSceneSelected ? 'text-text-accent' : 'text-foreground'}
+                                `}
                             />
 
-                            <div className={`border-l h-5 ${isSceneSelected ? 'border-border-accent' : 'border-depth-4'}`} />
+                            <div
+                                className={`
+                                    border-l h-5
+                                    ${isSceneSelected ? 'border-border-accent' : 'border-depth-4'}
+                                `}
+                            />
 
-                            <span className={`text-sm truncate ${isSceneSelected ? 'text-text-accent' : 'text-foreground'}`}>
+                            <span
+                                className={`
+                                    text-sm truncate
+                                    ${isSceneSelected ? 'text-text-accent' : 'text-foreground'}
+                                `}
+                            >
                                 {scene.name}
                             </span>
 
                             <span
-                                className={`ml-auto text-xs tabular-nums text-nowrap ${isSceneSelected ? 'text-text-accent' : 'text-foreground'}`}
+                                className={`
+                                    ml-auto text-xs tabular-nums text-nowrap
+                                    ${isSceneSelected ? 'text-text-accent' : 'text-foreground'}
+                                `}
                             >
                                 {items.length} / {MAX_SCENE_ITEMS}
                             </span>

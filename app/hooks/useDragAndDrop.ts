@@ -12,6 +12,7 @@ interface UseDragAndDropProps<Item extends Identifiable> {
     onReorder: (newItems: Item[]) => void;
     onDragStart?: (e: React.DragEvent, ids: string[]) => void;
     itemSelector?: string;
+    multiSelect?: boolean;
 }
 
 interface UseDragAndDropReturn {
@@ -29,6 +30,7 @@ export function useDragAndDrop<Item extends Identifiable>({
     onReorder,
     onDragStart,
     itemSelector = 'li',
+    multiSelect = true,
 }: UseDragAndDropProps<Item>): UseDragAndDropReturn {
     const [draggingId, setDraggingId] = useState<string | null>(null);
     const listRef = useRef<HTMLUListElement | null>(null);
@@ -37,22 +39,27 @@ export function useDragAndDrop<Item extends Identifiable>({
         (e: React.DragEvent, id: string): void => {
             e.stopPropagation();
 
-            if (!selectedIds.includes(id)) {
-                onSelect([id]);
+            let idsToMove: string[];
+
+            if (multiSelect) {
+                if (!selectedIds.includes(id)) {
+                    onSelect([id]);
+                    idsToMove = [id];
+                } else {
+                    idsToMove = selectedIds;
+                }
+            } else {
+                idsToMove = [id];
             }
 
             setDraggingId(id);
 
-            const idsToMove = selectedIds.includes(id) ? selectedIds : [id];
-
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text/plain', JSON.stringify(idsToMove));
 
-            if (onDragStart) {
-                onDragStart(e, idsToMove);
-            }
+            onDragStart?.(e, idsToMove);
         },
-        [selectedIds, onSelect, onDragStart],
+        [multiSelect, selectedIds, onSelect, onDragStart],
     );
 
     const handleDragOver = useCallback(
@@ -70,13 +77,9 @@ export function useDragAndDrop<Item extends Identifiable>({
                 return;
             }
 
-            const targetId = target.getAttribute('data-id');
+            const targetId = target.getAttribute(multiSelect ? 'data-id' : 'data-parameter-id');
 
             if (!targetId || targetId === draggingId) {
-                return;
-            }
-
-            if (selectedIds.includes(targetId)) {
                 return;
             }
 
@@ -87,24 +90,60 @@ export function useDragAndDrop<Item extends Identifiable>({
                 return;
             }
 
+            if (!multiSelect) {
+                const rect = target.getBoundingClientRect();
+                const relativeY = (e.clientY - rect.top) / rect.height;
+                const isBefore = relativeY < 0.5;
+                const newItems = [...items];
+                const [draggedItem] = newItems.splice(draggedIndex, 1);
+
+                let newIndex = targetIndex;
+
+                if (draggedIndex < targetIndex) {
+                    newIndex = isBefore ? targetIndex - 1 : targetIndex;
+                } else {
+                    newIndex = isBefore ? targetIndex : targetIndex + 1;
+                }
+
+                newIndex = Math.max(0, Math.min(newIndex, newItems.length));
+                newItems.splice(newIndex, 0, draggedItem);
+
+                const currentOrder = items.map((item) => item.id);
+                const newOrder = newItems.map((item) => item.id);
+
+                if (JSON.stringify(currentOrder) !== JSON.stringify(newOrder)) {
+                    onReorder(newItems);
+                }
+
+                return;
+            }
+
+            if (selectedIds.includes(targetId)) {
+                return;
+            }
+
             const selectedItems = items.filter((item) => selectedIds.includes(item.id));
+
             const selectedIndices = selectedItems
                 .map((item) => items.findIndex((i) => i.id === item.id))
                 .sort((a, b) => a - b);
+
+            if (selectedIndices.length === 0) {
+                return;
+            }
 
             const minSelectedIndex = Math.min(...selectedIndices);
             const maxSelectedIndex = Math.max(...selectedIndices);
             const selectedCount = selectedItems.length;
 
             const rect = target.getBoundingClientRect();
-            const mouseY = e.clientY;
-            const relativeY = (mouseY - rect.top) / rect.height;
+            const relativeY = (e.clientY - rect.top) / rect.height;
 
             const isBefore = relativeY < 0.5;
 
             const newItems = [...items];
 
-            const itemsToMove = selectedIndices
+            const itemsToMove = [...selectedIndices]
                 .sort((a, b) => b - a)
                 .map((index) => {
                     const [item] = newItems.splice(index, 1);
@@ -137,7 +176,7 @@ export function useDragAndDrop<Item extends Identifiable>({
                 onReorder(newItems);
             }
         },
-        [draggingId, items, selectedIds, onReorder, itemSelector],
+        [draggingId, items, selectedIds, onReorder, itemSelector, multiSelect],
     );
 
     const handleDrop = useCallback((e: React.DragEvent): void => {
