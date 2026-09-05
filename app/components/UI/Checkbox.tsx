@@ -28,7 +28,7 @@ export const Checkbox = memo(function Checkbox({
 
             <div
                 className={`
-                    w-5 h-5 rounded-sm peer-focus:ring-2 peer-focus:ring-bg-accent peer-checked:bg-bg-accent peer-checked:border-border-accent flex items-center justify-center
+                    w-5 h-5 rounded-sm peer-focus:ring-2 peer-focus:ring-accent peer-checked:bg-accent peer-checked:border-border-accent flex items-center justify-center
                     ${className}
                 `}
             >
