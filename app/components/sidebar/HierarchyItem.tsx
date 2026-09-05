@@ -1,51 +1,119 @@
 'use client';
 
-import { memo, type MouseEvent } from 'react';
+import { memo, type MouseEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import type { CanvasItem } from '@/_core/_/canvas.types';
+import type { CanvasItem, Node } from '@/_core/_/canvas.types';
+import type { Parameter } from '@/_core/_/parameter';
 
 import { useItemsStore } from '@/store/useItemsStore';
 
 import { openNodeTab } from '@/utils/nodes/openNodeTab';
 
-import { LineSquiggle, Package, PackageOpen } from 'lucide-react';
+import { ChevronDown, ChevronRight, LineSquiggle, Package, PackageOpen, ScanBox } from 'lucide-react';
 
 interface HierarchyItemProps {
-    filteredItem: CanvasItem;
+    item: CanvasItem | Parameter;
     index: number;
     totalItems: number;
-    selectItem: (id: string, ctrlKey: boolean, shiftKey: boolean) => void;
-    isSelected: boolean;
-    handleDragStart: (e: React.DragEvent, nodeId: string) => void;
-    selectedItemIds: string[];
+    selectItem?: (id: string, ctrlKey: boolean, shiftKey: boolean) => void;
+    isSelected?: boolean;
+    handleDragStart?: (e: React.DragEvent, nodeId: string) => void;
+    selectedItemIds?: string[];
+    isParameter?: boolean;
 }
 
 export const HierarchyItem = memo(function HierarchyItem({
-    filteredItem,
+    item,
     index,
     totalItems,
     selectItem,
-    isSelected,
+    isSelected = false,
     handleDragStart,
-    selectedItemIds,
+    selectedItemIds = [],
+    isParameter = false,
 }: HierarchyItemProps) {
     const router = useRouter();
 
+    const [isExpanded, setIsExpanded] = useState(true);
+
     const currentNodeId = useItemsStore((state) => state.currentNodeId);
-    const isNodeTabOpen = currentNodeId === filteredItem.id;
+
+    if (isParameter) {
+        const parameter = item as Parameter;
+
+        const isLast = index === totalItems - 1;
+
+        const LINE_LEFT = 38.8;
+        const LINE_WIDTH = 16;
+
+        return (
+            <div className="relative select-none">
+                <div
+                    className="absolute border-l border-depth-4"
+                    style={{
+                        left: `${LINE_LEFT}px`,
+                        top: 0,
+                        height: isLast ? '50%' : '100%',
+                    }}
+                />
+
+                <div
+                    className="absolute border-t border-depth-4"
+                    style={{
+                        left: `${LINE_LEFT}px`,
+                        top: '50%',
+                        width: `${LINE_WIDTH}px`,
+                    }}
+                />
+
+                <div
+                    className="flex items-center gap-1 relative"
+                    style={{
+                        paddingLeft: LINE_LEFT + LINE_WIDTH,
+                    }}
+                >
+                    <div className="w-full px-3 h-9 rounded-md outline-none tabular-nums flex items-center text-nowrap relative z-10 border bg-depth-2 hover:bg-depth-3 border-depth-3">
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                            <ScanBox size={16} className="shrink-0 text-foreground" />
+
+                            <div className="border-l h-5 border-depth-4" />
+
+                            <span className="text-sm truncate text-foreground">{parameter.name}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    const canvasItem = item as CanvasItem;
+
+    const isNode = canvasItem.kind === 'node';
+    const isEdge = canvasItem.kind === 'edge';
+
+    const node = isNode ? (canvasItem as Node) : null;
+
+    const parameters = node?.parameters ?? [];
+
+    const isNodeTabOpen = currentNodeId === canvasItem.id;
+
+    const hasParameters = parameters.length > 0;
 
     const isPartOfSelectionGroup = isSelected && selectedItemIds.length > 1;
-
-    const isNode = filteredItem.kind === 'node';
-    const isEdge = filteredItem.kind === 'edge';
 
     const handleDoubleClick = (e: MouseEvent) => {
         e.stopPropagation();
 
         if (isNode) {
-            openNodeTab(filteredItem.id, router);
+            openNodeTab(canvasItem.id, router);
         }
+    };
+
+    const toggleExpanded = (e: MouseEvent) => {
+        e.stopPropagation();
+
+        setIsExpanded((prev) => !prev);
     };
 
     const isLast = index === totalItems - 1;
@@ -55,20 +123,19 @@ export const HierarchyItem = memo(function HierarchyItem({
 
     return (
         <li
-            data-id={filteredItem.id}
+            data-id={canvasItem.id}
             className="relative select-none cursor-grab"
-            onClick={(e: MouseEvent) => selectItem(filteredItem.id, e.ctrlKey, e.shiftKey)}
+            onClick={(e) => selectItem?.(canvasItem.id, e.ctrlKey, e.shiftKey)}
             onDoubleClick={handleDoubleClick}
-            onDragStart={(e) => handleDragStart(e, filteredItem.id)}
-            draggable={true}
+            onDragStart={(e) => handleDragStart?.(e, canvasItem.id)}
+            draggable
         >
             <div
                 className="absolute border-l border-depth-4"
                 style={{
                     left: `${LINE_LEFT}px`,
-                    top: '0',
-                    bottom: isLast ? '50%' : '0',
-                    height: isLast ? '50%' : '100%',
+                    top: 0,
+                    bottom: isLast && !isExpanded ? '50%' : 0,
                 }}
             />
 
@@ -81,44 +148,74 @@ export const HierarchyItem = memo(function HierarchyItem({
                 }}
             />
 
-            <div className="flex items-center gap-1 relative" style={{ paddingLeft: LINE_LEFT + LINE_WIDTH }}>
+            <div
+                className="flex items-center gap-1 relative"
+                style={{
+                    paddingLeft: LINE_LEFT + LINE_WIDTH,
+                }}
+            >
                 <div
-                    className={`
-                    w-full px-3 h-9 rounded-md outline-none tabular-nums flex items-center text-nowrap
-                    ${isSelected ? 'bg-bg-accent border border-border-accent' : 'bg-depth-2 hover:bg-depth-3 border border-depth-3'}
-                    ${isPartOfSelectionGroup && 'border-border-accent'}
-                    relative z-10
-                `}
+                    className={`w-full px-3 h-9 rounded-md outline-none tabular-nums flex items-center text-nowrap relative z-10 border
+                        ${isSelected ? 'bg-bg-accent border-border-accent' : 'bg-depth-2 hover:bg-depth-3 border-depth-3'}
+                        ${isPartOfSelectionGroup ? 'border-border-accent' : ''}
+                    `}
                 >
-                    <div className="flex items-center gap-2 flex-1">
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                        {isNode && hasParameters && (
+                            <button
+                                type="button"
+                                onClick={toggleExpanded}
+                                className={`flex items-center justify-center p-0.5 rounded shrink-0 cursor-pointer
+                                    ${isSelected ? 'text-text-accent hover:bg-bg-accent' : 'hover:bg-depth-3'}
+                                `}
+                            >
+                                {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                            </button>
+                        )}
+
                         {isNode &&
                             (isNodeTabOpen ? (
-                                <PackageOpen
-                                    size={16}
-                                    className={`min-w-4 ${isSelected ? 'text-text-accent' : 'text-foreground'}`}
-                                />
+                                <PackageOpen size={16} className={isSelected ? 'text-text-accent' : 'text-foreground'} />
                             ) : (
-                                <Package
-                                    size={16}
-                                    className={`min-w-4 ${isSelected ? 'text-text-accent' : 'text-foreground'}`}
-                                />
+                                <Package size={16} className={isSelected ? 'text-text-accent' : 'text-foreground'} />
                             ))}
 
                         {isEdge && (
-                            <LineSquiggle
-                                size={16}
-                                className={`min-w-4 ${isSelected ? 'text-text-accent' : 'text-foreground'}`}
-                            />
+                            <LineSquiggle size={16} className={isSelected ? 'text-text-accent' : 'text-foreground'} />
                         )}
 
-                        <div className={`border-l h-5 ${isSelected ? 'border-border-accent' : 'border-depth-4'}`} />
+                        <div
+                            className={`
+                                border-l h-5
+                                ${isSelected ? 'border-border-accent' : 'border-depth-4'}
+                            `}
+                        />
 
-                        <span className={`text-sm truncate ${isSelected ? 'text-text-accent' : 'text-foreground'}`}>
-                            {filteredItem.name}
+                        <span
+                            className={`
+                                text-sm truncate
+                                ${isSelected ? 'text-text-accent' : 'text-foreground'}
+                            `}
+                        >
+                            {canvasItem.name}
                         </span>
                     </div>
                 </div>
             </div>
+
+            {isNode && isExpanded && parameters.length > 0 && (
+                <div className="flex flex-col gap-1 mt-1">
+                    {parameters.map((parameter, parameterIndex) => (
+                        <HierarchyItem
+                            key={parameter.id ?? parameterIndex}
+                            item={parameter}
+                            index={parameterIndex}
+                            totalItems={parameters.length}
+                            isParameter
+                        />
+                    ))}
+                </div>
+            )}
         </li>
     );
 });

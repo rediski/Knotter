@@ -206,7 +206,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                                 {filteredItems.map((filteredItem, index) => (
                                     <HierarchyItem
                                         key={filteredItem.id}
-                                        filteredItem={filteredItem}
+                                        item={filteredItem}
                                         index={index}
                                         totalItems={filteredItems.length}
                                         selectItem={selectItem}
