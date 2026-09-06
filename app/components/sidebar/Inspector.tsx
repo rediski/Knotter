@@ -12,7 +12,7 @@ import { useItemsStore } from '@/store/useItemsStore';
 import { useSidebarStore } from '@/store/useSidebarStore';
 
 import { getSelectedItem } from '@/utils/items/getSelectedItems';
-import { getSelectedParameter } from '@/utils/parameters/getSelectedParameter';
+import { getSelectedParameter } from '@/utils/parameters/getSelectedParameters';
 
 const FIELD_TITLES = {
     NAME: 'Наименование',
@@ -31,43 +31,44 @@ const FIELD_TITLES = {
 export const Inspector = memo(function Inspector({ panelId }: { panelId?: string }) {
     const [mounted, setMounted] = useState(false);
     const prevSelectedItemIds = useRef<string[]>([]);
-    const prevSelectedParameters = useRef<string[]>([]);
+    const prevSelectedParameterIds = useRef<string[]>([]);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    const { currentSceneId, scenes, selectedItemIds, selectedParameters, setSelectedParameters, setSelectedItemIds } =
+    const { currentSceneId, scenes, selectedItemIds, setSelectedItemIds, selectedParameterIds, setSelectedParameterIds } =
         useItemsStore();
+
     const filterText = useSidebarStore((state) => (panelId ? state.filterText[panelId] : ''));
 
     useEffect(() => {
         const prevItems = prevSelectedItemIds.current;
-        const prevParams = prevSelectedParameters.current;
+        const prevParams = prevSelectedParameterIds.current;
 
         const itemsChanged =
             selectedItemIds.length !== prevItems.length || selectedItemIds.some((id, i) => id !== prevItems[i]);
         const paramsChanged =
-            selectedParameters.length !== prevParams.length || selectedParameters.some((id, i) => id !== prevParams[i]);
+            selectedParameterIds.length !== prevParams.length || selectedParameterIds.some((id, i) => id !== prevParams[i]);
 
-        if (itemsChanged && selectedItemIds.length > 0 && selectedParameters.length > 0) {
-            setSelectedParameters([]);
+        if (itemsChanged && selectedItemIds.length > 0 && selectedParameterIds.length > 0) {
+            setSelectedParameterIds([]);
         }
 
-        if (paramsChanged && selectedParameters.length > 0 && selectedItemIds.length > 0) {
+        if (paramsChanged && selectedParameterIds.length > 0 && selectedItemIds.length > 0) {
             setSelectedItemIds([]);
         }
 
         prevSelectedItemIds.current = selectedItemIds;
-        prevSelectedParameters.current = selectedParameters;
-    }, [selectedItemIds, selectedParameters, setSelectedParameters, setSelectedItemIds]);
+        prevSelectedParameterIds.current = selectedParameterIds;
+    }, [selectedItemIds, selectedParameterIds, setSelectedParameterIds, setSelectedItemIds]);
 
     const isSceneSelected =
         mounted && selectedItemIds.length === 1 && currentSceneId && selectedItemIds[0] === currentSceneId;
     const selectedScene = isSceneSelected && currentSceneId ? scenes[currentSceneId] : null;
 
     const selectedItem = mounted && !isSceneSelected && selectedItemIds.length === 1 ? getSelectedItem() : null;
-    const selectedParameter = mounted && !selectedItem && selectedParameters.length === 1 ? getSelectedParameter() : null;
+    const selectedParameter = mounted && !selectedItem && selectedParameterIds.length === 1 ? getSelectedParameter() : null;
 
     const scene = currentSceneId ? scenes[currentSceneId] : null;
     const items = scene?.items ?? [];
