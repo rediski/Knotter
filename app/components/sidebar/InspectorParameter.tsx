@@ -29,19 +29,9 @@ const FIELD_TITLES = {
 
 interface InspectorParameterProps {
     parameter: Parameter;
-    showName: boolean;
-    showDescription: boolean;
-    showType: boolean;
-    showDefaultValue: boolean;
 }
 
-export const InspectorParameter = memo(function InspectorParameter({
-    parameter,
-    showName,
-    showDescription,
-    showType,
-    showDefaultValue,
-}: InspectorParameterProps) {
+export const InspectorParameter = memo(function InspectorParameter({ parameter }: InspectorParameterProps) {
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
 
     const handleNameChange = (value: string) => {
@@ -172,48 +162,43 @@ export const InspectorParameter = memo(function InspectorParameter({
 
     return (
         <div className="flex flex-col px-1 gap-1">
-            {showName && (
-                <div className="flex flex-col gap-1 pt-1">
-                    <Input
-                        value={parameter.name}
-                        onChange={handleNameChange}
-                        placeholder={FIELD_TITLES.NAME}
-                        icon={ScanBox}
-                        className="bg-depth-2 border border-depth-3"
-                    />
-                </div>
-            )}
+            <div className="flex flex-col gap-1 pt-1">
+                <Input
+                    value={parameter.name}
+                    onChange={handleNameChange}
+                    placeholder={FIELD_TITLES.NAME}
+                    icon={ScanBox}
+                    className="bg-depth-2 border border-depth-3"
+                />
+            </div>
 
-            {showDescription && (
-                <div className="flex flex-col gap-1">
-                    <Textarea
-                        value={parameter.description}
-                        onChange={handleDescriptionChange}
-                        placeholder={FIELD_TITLES.DESCRIPTION}
-                        className="border border-depth-3"
-                    />
-                </div>
-            )}
+            <div className="flex flex-col gap-1">
+                <Textarea
+                    value={parameter.description}
+                    onChange={handleDescriptionChange}
+                    placeholder={FIELD_TITLES.DESCRIPTION}
+                    className="border border-depth-3"
+                />
+            </div>
 
-            {showType && (
-                <Dropdown title={FIELD_TITLES.TYPE} isOpen={isDropdownOpen(100)} onToggle={() => toggleDropdown(100)}>
-                    <DropdownAbsolute
-                        title={
-                            parameter.type
-                                ? parameterTypes.find((t) => t.type === parameter.type)?.label || 'Не выбран'
-                                : 'Не выбран'
-                        }
-                        depth={3}
-                        icon={getParameterIcon(parameter.type)}
-                    >
-                        <div className="flex flex-col gap-1">
-                            {parameterTypes.map((typeOption) => {
-                                const IconComponent = getParameterIcon(typeOption.type);
-                                return (
-                                    <button
-                                        key={typeOption.type}
-                                        onClick={() => changeParameterType(parameter.id, typeOption.type)}
-                                        className={`
+            <Dropdown title={FIELD_TITLES.TYPE} isOpen={isDropdownOpen(100)} onToggle={() => toggleDropdown(100)}>
+                <DropdownAbsolute
+                    title={
+                        parameter.type
+                            ? parameterTypes.find((t) => t.type === parameter.type)?.label || 'Не выбран'
+                            : 'Не выбран'
+                    }
+                    depth={3}
+                    icon={getParameterIcon(parameter.type)}
+                >
+                    <div className="flex flex-col gap-1">
+                        {parameterTypes.map((typeOption) => {
+                            const IconComponent = getParameterIcon(typeOption.type);
+                            return (
+                                <button
+                                    key={typeOption.type}
+                                    onClick={() => changeParameterType(parameter.id, typeOption.type)}
+                                    className={`
                                             w-full text-left px-3 py-2 text-sm rounded-md cursor-pointer
                                             ${
                                                 parameter.type === typeOption.type
@@ -221,18 +206,18 @@ export const InspectorParameter = memo(function InspectorParameter({
                                                     : 'hover:bg-depth-4 text-contrast'
                                             }
                                         `}
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <IconComponent size={16} />
-                                            <span>{typeOption.label}</span>
-                                        </div>
-                                    </button>
-                                );
-                            })}
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <IconComponent size={16} />
+                                        <span>{typeOption.label}</span>
+                                    </div>
+                                </button>
+                            );
+                        })}
 
-                            <button
-                                onClick={() => changeParameterType(parameter.id, null)}
-                                className={`
+                        <button
+                            onClick={() => changeParameterType(parameter.id, null)}
+                            className={`
                                     w-full text-left px-3 py-2 text-sm rounded-md
                                     ${
                                         !parameter.type
@@ -240,18 +225,17 @@ export const InspectorParameter = memo(function InspectorParameter({
                                             : 'hover:bg-depth-4 text-contrast'
                                     }
                                 `}
-                            >
-                                <div className="flex items-center gap-2">
-                                    <ScanBox size={16} />
-                                    <span>Не выбран</span>
-                                </div>
-                            </button>
-                        </div>
-                    </DropdownAbsolute>
-                </Dropdown>
-            )}
+                        >
+                            <div className="flex items-center gap-2">
+                                <ScanBox size={16} />
+                                <span>Не выбран</span>
+                            </div>
+                        </button>
+                    </div>
+                </DropdownAbsolute>
+            </Dropdown>
 
-            {showDefaultValue && parameter.type && (
+            {parameter.type && (
                 <Dropdown
                     title={FIELD_TITLES.DEFAULT_VALUE}
                     isOpen={isDropdownOpen(101)}

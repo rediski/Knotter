@@ -9,26 +9,11 @@ import { InspectorEdge } from '@/components/sidebar/InspectorEdge';
 import { InspectorParameter } from '@/components/sidebar/InspectorParameter';
 
 import { useItemsStore } from '@/store/useItemsStore';
-import { useSidebarStore } from '@/store/useSidebarStore';
 
 import { getSelectedItem } from '@/utils/items/getSelectedItems';
 import { getSelectedParameter } from '@/utils/parameters/getSelectedParameters';
 
-const FIELD_TITLES = {
-    NAME: 'Наименование',
-    DESCRIPTION: 'Описание',
-    POSITION: 'Позиция',
-    SHAPE: 'Форма',
-    COLOR: 'Цвет',
-    EDGE_FROM: 'Входящие связи',
-    EDGE_TO: 'Исходящие связи',
-    EDGE_FROM_NODE: 'Начальный узел',
-    EDGE_TO_NODE: 'Конечный узел',
-    TYPE: 'Тип',
-    DEFAULT_VALUE: 'Значение по умолчанию',
-} as const;
-
-export const Inspector = memo(function Inspector({ panelId }: { panelId?: string }) {
+export const Inspector = memo(function Inspector() {
     const [mounted, setMounted] = useState(false);
     const prevSelectedItemIds = useRef<string[]>([]);
     const prevSelectedParameterIds = useRef<string[]>([]);
@@ -39,8 +24,6 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
 
     const { currentSceneId, scenes, selectedItemIds, setSelectedItemIds, selectedParameterIds, setSelectedParameterIds } =
         useItemsStore();
-
-    const filterText = useSidebarStore((state) => (panelId ? state.filterText[panelId] : ''));
 
     useEffect(() => {
         const prevItems = prevSelectedItemIds.current;
@@ -73,53 +56,14 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     const scene = currentSceneId ? scenes[currentSceneId] : null;
     const items = scene?.items ?? [];
 
-    const shouldShowField = (fieldTitle: string) => {
-        if (!filterText) return true;
-        return fieldTitle.toLowerCase().includes(filterText.toLowerCase());
-    };
-
-    const showName = shouldShowField(FIELD_TITLES.NAME);
-    const showDescription = shouldShowField(FIELD_TITLES.DESCRIPTION);
-    const showPosition = shouldShowField(FIELD_TITLES.POSITION);
-    const showShape = shouldShowField(FIELD_TITLES.SHAPE);
-    const showColor = shouldShowField(FIELD_TITLES.COLOR);
-    const showEdgeFrom = shouldShowField(FIELD_TITLES.EDGE_FROM);
-    const showEdgeTo = shouldShowField(FIELD_TITLES.EDGE_TO);
-    const showEdgeFromNode = shouldShowField(FIELD_TITLES.EDGE_FROM_NODE);
-    const showEdgeToNode = shouldShowField(FIELD_TITLES.EDGE_TO_NODE);
-    const showType = shouldShowField(FIELD_TITLES.TYPE);
-    const showDefaultValue = shouldShowField(FIELD_TITLES.DEFAULT_VALUE);
-
-    const hasVisibleFields =
-        showName ||
-        showDescription ||
-        showPosition ||
-        showShape ||
-        showColor ||
-        showEdgeFrom ||
-        showEdgeTo ||
-        showEdgeFromNode ||
-        showEdgeToNode ||
-        showType ||
-        showDefaultValue;
-
     if (!mounted) {
         return <EmptyState message="Загрузка..." />;
-    }
-
-    if (filterText && !hasVisibleFields) {
-        return <EmptyState message={`Не найдено полей по запросу "${filterText}"`} />;
     }
 
     if (isSceneSelected && selectedScene) {
         return (
             <div className="overflow-y-auto mt-1 border-t border-depth-3 w-full h-full">
-                <InspectorScene
-                    scene={selectedScene}
-                    showName={showName}
-                    showDescription={showDescription}
-                    showColor={showColor}
-                />
+                <InspectorScene scene={selectedScene} />
             </div>
         );
     }
@@ -128,17 +72,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
         if (selectedItem.kind === 'node') {
             return (
                 <div className="overflow-y-auto mt-1 border-t border-depth-3 w-full h-full">
-                    <InspectorNode
-                        node={selectedItem}
-                        items={items}
-                        showName={showName}
-                        showDescription={showDescription}
-                        showPosition={showPosition}
-                        showShape={showShape}
-                        showColor={showColor}
-                        showEdgeFrom={showEdgeFrom}
-                        showEdgeTo={showEdgeTo}
-                    />
+                    <InspectorNode node={selectedItem} items={items} />
                 </div>
             );
         }
@@ -146,14 +80,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
         if (selectedItem.kind === 'edge') {
             return (
                 <div className="overflow-y-auto mt-1 border-t border-depth-3 w-full h-full">
-                    <InspectorEdge
-                        edge={selectedItem}
-                        items={items}
-                        showName={showName}
-                        showColor={showColor}
-                        showEdgeFromNode={showEdgeFromNode}
-                        showEdgeToNode={showEdgeToNode}
-                    />
+                    <InspectorEdge edge={selectedItem} items={items} />
                 </div>
             );
         }
@@ -162,13 +89,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     if (selectedParameter) {
         return (
             <div className="overflow-y-auto mt-1 border-t border-depth-3 w-full h-full">
-                <InspectorParameter
-                    parameter={selectedParameter}
-                    showName={showName}
-                    showDescription={showDescription}
-                    showType={showType}
-                    showDefaultValue={showDefaultValue}
-                />
+                <InspectorParameter parameter={selectedParameter} />
             </div>
         );
     }

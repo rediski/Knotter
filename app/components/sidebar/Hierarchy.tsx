@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo, useCallback, useMemo, useState, useEffect } from 'react';
+import React, { memo, useCallback, useState, useEffect } from 'react';
 
 import type { CanvasItem } from '@/_core/_/canvas.types';
 import { MAX_SCENE_ITEMS } from '@/_core/_/canvas.constants';
@@ -9,7 +9,6 @@ import { EmptyState } from '@/components/UI/EmptyState';
 import { HierarchyItem } from '@/components/sidebar/HierarchyItem';
 
 import { useItemsStore } from '@/store/useItemsStore';
-import { useSidebarStore } from '@/store/useSidebarStore';
 
 import { getRangeSelection } from '@/utils/canvas/getRangeSelection';
 import { deleteSelectedItems } from '@/utils/items/deleteSelectedItems';
@@ -17,7 +16,7 @@ import { useDragAndDrop } from '@/hooks/useDragAndDrop';
 
 import { LandPlot, ChevronDown, ChevronRight } from 'lucide-react';
 
-export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string }) {
+export const Hierarchy = memo(function Hierarchy() {
     const [mounted, setMounted] = useState(false);
     const [isExpanded, setIsExpanded] = useState(true);
 
@@ -25,21 +24,6 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
 
     const scene = currentSceneId ? scenes[currentSceneId] : null;
     const items: CanvasItem[] = scene?.items ?? [];
-
-    const filterText = useSidebarStore((state) => (panelId ? state.filterText[panelId] : ''));
-
-    const filteredItems = useMemo(() => {
-        if (!currentSceneId) {
-            return [];
-        }
-
-        const scene = scenes[currentSceneId];
-        const items = scene?.items ?? [];
-
-        const lowerText = filterText?.toLowerCase() || '';
-
-        return items.filter((item) => item.name.toLowerCase().includes(lowerText));
-    }, [currentSceneId, scenes, filterText]);
 
     const handleReorder = useCallback(
         (newItems: CanvasItem[]) => {
@@ -125,7 +109,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
 
             if (shiftKey && selectedItemIds.length > 0) {
                 const lastSelectedId = selectedItemIds[selectedItemIds.length - 1];
-                const rangeSet = getRangeSelection(filteredItems, nodeId, lastSelectedId);
+                const rangeSet = getRangeSelection(items, nodeId, lastSelectedId);
 
                 if (rangeSet.size > 0) {
                     setSelectedItemIds(Array.from(rangeSet));
@@ -136,7 +120,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
 
             setSelectedItemIds([nodeId]);
         },
-        [selectedItemIds, setSelectedItemIds, filteredItems],
+        [selectedItemIds, setSelectedItemIds, items],
     );
 
     const selectScene = useCallback(() => {
@@ -155,7 +139,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
 
     const isSceneSelected = selectedItemIds.includes(currentSceneId);
 
-    const visibleSelectedCount = filteredItems.filter((item) => selectedItemIds.includes(item.id)).length;
+    const visibleSelectedCount = items.filter((item) => selectedItemIds.includes(item.id)).length;
 
     return (
         <div className="flex flex-col h-full overflow-y-auto">
@@ -236,7 +220,7 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
 
                 {isExpanded && (
                     <>
-                        {filteredItems.length > 0 ? (
+                        {items.length > 0 ? (
                             <div className="flex flex-col gap-1 relative">
                                 {visibleSelectedCount > 1 && (
                                     <div className="text-xs text-text-accent px-3 py-1 bg-bg-accent rounded-md truncate">
@@ -244,27 +228,21 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
                                     </div>
                                 )}
 
-                                {filteredItems.map((filteredItem, index) => (
+                                {items.map((item, index) => (
                                     <HierarchyItem
-                                        key={filteredItem.id}
-                                        item={filteredItem}
+                                        key={item.id}
+                                        item={item}
                                         index={index}
-                                        totalItems={filteredItems.length}
+                                        totalItems={items.length}
                                         selectItem={selectItem}
-                                        isSelected={selectedItemIds.includes(filteredItem.id)}
+                                        isSelected={selectedItemIds.includes(item.id)}
                                         handleDragStart={handleDragStart}
                                         selectedItemIds={selectedItemIds}
                                     />
                                 ))}
                             </div>
                         ) : (
-                            <EmptyState
-                                message={
-                                    items.length === 0
-                                        ? 'Создайте элемент, нажав ПКМ по холсту.'
-                                        : `Не найдено элементов по запросу "${filterText}"`
-                                }
-                            />
+                            <EmptyState message={'Создайте элемент, нажав ПКМ по холсту.'} />
                         )}
                     </>
                 )}

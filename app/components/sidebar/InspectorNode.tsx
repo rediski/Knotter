@@ -37,26 +37,9 @@ const FIELD_TITLES = {
 interface InspectorNodeProps {
     node: Node;
     items: CanvasItem[];
-    showName: boolean;
-    showDescription: boolean;
-    showPosition: boolean;
-    showShape: boolean;
-    showColor: boolean;
-    showEdgeFrom: boolean;
-    showEdgeTo: boolean;
 }
 
-export const InspectorNode = memo(function InspectorNode({
-    node,
-    items,
-    showName,
-    showDescription,
-    showPosition,
-    showShape,
-    showColor,
-    showEdgeFrom,
-    showEdgeTo,
-}: InspectorNodeProps) {
+export const InspectorNode = memo(function InspectorNode({ node, items }: InspectorNodeProps) {
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
     const { selectedItemIds, setSelectedItemIds } = useItemsStore();
 
@@ -111,84 +94,74 @@ export const InspectorNode = memo(function InspectorNode({
 
     return (
         <div className="flex flex-col px-1 gap-1">
-            {showName && (
-                <div className="flex flex-col gap-1 pt-1">
-                    <Input
-                        value={node.name}
-                        onChange={changeName}
-                        placeholder={FIELD_TITLES.NAME}
-                        icon={Package}
-                        className="bg-depth-2 border border-depth-3"
-                    />
-                </div>
-            )}
+            <div className="flex flex-col gap-1 pt-1">
+                <Input
+                    value={node.name}
+                    onChange={changeName}
+                    placeholder={FIELD_TITLES.NAME}
+                    icon={Package}
+                    className="bg-depth-2 border border-depth-3"
+                />
+            </div>
 
-            {showDescription && (
+            <div className="flex flex-col gap-1">
+                <Textarea
+                    value={node.description}
+                    onChange={changeNodeDescription}
+                    placeholder={FIELD_TITLES.DESCRIPTION}
+                    className="border border-depth-3"
+                />
+            </div>
+
+            <Dropdown title={FIELD_TITLES.POSITION} isOpen={isDropdownOpen(2)} onToggle={() => toggleDropdown(2)}>
                 <div className="flex flex-col gap-1">
-                    <Textarea
-                        value={node.description}
-                        onChange={changeNodeDescription}
-                        placeholder={FIELD_TITLES.DESCRIPTION}
-                        className="border border-depth-3"
-                    />
-                </div>
-            )}
+                    <div className="flex items-center bg-depth-3 border border-depth-4 rounded-md">
+                        <span className="text-sm text-center min-w-8 border-r border-depth-5">X</span>
 
-            {showPosition && (
-                <Dropdown title={FIELD_TITLES.POSITION} isOpen={isDropdownOpen(2)} onToggle={() => toggleDropdown(2)}>
-                    <div className="flex flex-col gap-1">
-                        <div className="flex items-center bg-depth-3 border border-depth-4 rounded-md">
-                            <span className="text-sm text-center min-w-8 border-r border-depth-5">X</span>
-
-                            <Input
-                                type="number"
-                                value={node.position.x.toString()}
-                                onChange={(value) => {
-                                    const newX = value === '' ? 0 : Number(value);
-                                    changeNodePosition(node.id, { ...node.position, x: newX });
-                                }}
-                                className="bg-depth-3 border-depth-4"
-                                allowNegative={true}
-                                allowDecimal={true}
-                            />
-                        </div>
-
-                        <div className="flex items-center bg-depth-3 border border-depth-4 rounded-md">
-                            <span className="text-sm text-center min-w-8 border-r border-depth-5">Y</span>
-
-                            <Input
-                                type="number"
-                                value={node.position.y.toString()}
-                                onChange={(value) => {
-                                    const newY = value === '' ? 0 : Number(value);
-                                    changeNodePosition(node.id, { ...node.position, y: newY });
-                                }}
-                                className="bg-depth-3 border-depth-4"
-                                allowNegative={true}
-                                allowDecimal={true}
-                            />
-                        </div>
+                        <Input
+                            type="number"
+                            value={node.position.x.toString()}
+                            onChange={(value) => {
+                                const newX = value === '' ? 0 : Number(value);
+                                changeNodePosition(node.id, { ...node.position, x: newX });
+                            }}
+                            className="bg-depth-3 border-depth-4"
+                            allowNegative={true}
+                            allowDecimal={true}
+                        />
                     </div>
-                </Dropdown>
-            )}
 
-            {showShape && (
-                <Dropdown title={FIELD_TITLES.SHAPE} isOpen={isDropdownOpen(1)} onToggle={() => toggleDropdown(1)}>
-                    <ShapeButtons
-                        shapeType={node.shapeType ?? null}
-                        onTypeChange={(newShapeType) => changeShapeType(newShapeType)}
-                    />
-                </Dropdown>
-            )}
+                    <div className="flex items-center bg-depth-3 border border-depth-4 rounded-md">
+                        <span className="text-sm text-center min-w-8 border-r border-depth-5">Y</span>
 
-            {showColor && (
-                <Dropdown title={FIELD_TITLES.COLOR} isOpen={isDropdownOpen(1.5)} onToggle={() => toggleDropdown(1.5)}>
-                    <ColorPicker color={node.color} onColorChange={(newColor) => changeColor(newColor)} />
-                </Dropdown>
-            )}
+                        <Input
+                            type="number"
+                            value={node.position.y.toString()}
+                            onChange={(value) => {
+                                const newY = value === '' ? 0 : Number(value);
+                                changeNodePosition(node.id, { ...node.position, y: newY });
+                            }}
+                            className="bg-depth-3 border-depth-4"
+                            allowNegative={true}
+                            allowDecimal={true}
+                        />
+                    </div>
+                </div>
+            </Dropdown>
 
-            {showEdgeFrom && renderEdgeList(incomingEdges, FIELD_TITLES.EDGE_FROM, 3)}
-            {showEdgeTo && renderEdgeList(outgoingEdges, FIELD_TITLES.EDGE_TO, 4)}
+            <Dropdown title={FIELD_TITLES.SHAPE} isOpen={isDropdownOpen(1)} onToggle={() => toggleDropdown(1)}>
+                <ShapeButtons
+                    shapeType={node.shapeType ?? null}
+                    onTypeChange={(newShapeType) => changeShapeType(newShapeType)}
+                />
+            </Dropdown>
+
+            <Dropdown title={FIELD_TITLES.COLOR} isOpen={isDropdownOpen(1.5)} onToggle={() => toggleDropdown(1.5)}>
+                <ColorPicker color={node.color} onColorChange={(newColor) => changeColor(newColor)} />
+            </Dropdown>
+
+            {renderEdgeList(incomingEdges, FIELD_TITLES.EDGE_FROM, 3)}
+            {renderEdgeList(outgoingEdges, FIELD_TITLES.EDGE_TO, 4)}
 
             <span className="text-xs text-gray text-right p-1 select-text">{node.id}</span>
         </div>

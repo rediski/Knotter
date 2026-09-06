@@ -8,17 +8,17 @@ export interface SelectParametersEvent {
     shiftKey: boolean;
 }
 
-export const selectParameters = (id: string, event: SelectParametersEvent, filteredParameters: Parameter[]) => {
+export const selectParameters = (id: string, event: SelectParametersEvent, parameters: Parameter[]) => {
     const { ctrlKey, metaKey, shiftKey } = event;
 
     const selectedParameterIds = useItemsStore.getState().selectedParameterIds;
     const setSelectedParameterIds = useItemsStore.getState().setSelectedParameterIds;
 
     const newSelection = updateSelection({
-        items: filteredParameters,
+        items: parameters,
         selectedIds: selectedParameterIds,
         targetId: id,
-        getItemId: (p) => p.id,
+        getItemId: (parameter) => parameter.id,
         shiftKey,
         ctrlKey,
         metaKey,

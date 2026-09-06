@@ -35,17 +35,9 @@ const FIELD_TITLES = {
 
 interface InspectorSceneProps {
     scene: Scene;
-    showName: boolean;
-    showDescription: boolean;
-    showColor: boolean;
 }
 
-export const InspectorScene = memo(function InspectorScene({
-    scene,
-    showName,
-    showDescription,
-    showColor,
-}: InspectorSceneProps) {
+export const InspectorScene = memo(function InspectorScene({ scene }: InspectorSceneProps) {
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
 
     const isMagnet = useCanvasStore((state) => state.isMagnet);
@@ -139,19 +131,17 @@ export const InspectorScene = memo(function InspectorScene({
 
     return (
         <div className="flex flex-col px-1 gap-1">
-            {showName && (
-                <div className="flex flex-col gap-1 pt-1">
-                    <Input
-                        value={scene.name}
-                        onChange={handleNameChange}
-                        placeholder={FIELD_TITLES.NAME}
-                        icon={LandPlot}
-                        className="bg-depth-2 border border-depth-3"
-                    />
-                </div>
-            )}
+            <div className="flex flex-col gap-1 pt-1">
+                <Input
+                    value={scene.name}
+                    onChange={handleNameChange}
+                    placeholder={FIELD_TITLES.NAME}
+                    icon={LandPlot}
+                    className="bg-depth-2 border border-depth-3"
+                />
+            </div>
 
-            {showDescription && scene.description !== undefined && (
+            {scene.description !== undefined && (
                 <div className="flex flex-col gap-1">
                     <Textarea
                         value={scene.description || ''}

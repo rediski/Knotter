@@ -14,10 +14,6 @@ export interface SidebarState {
     sidebarWidth: number;
     setSidebarWidth: (width: number) => void;
 
-    filterText: Record<string, string>;
-    setFilterText: (panelId: string, text: string) => void;
-    clearFilterText: (panelId: string) => void;
-
     showFilters: boolean;
     setShowFilters: (show: boolean) => void;
     toggleShowFilters: () => void;
@@ -47,21 +43,6 @@ export const useSidebarStore = create<SidebarState>()(
             sidebarWidth: 380,
             setSidebarWidth: (sidebarWidth) => set({ sidebarWidth }),
 
-            filterText: {},
-            setFilterText: (panelId, text) =>
-                set((state) => ({
-                    filterText: {
-                        ...state.filterText,
-                        [panelId]: text,
-                    },
-                })),
-            clearFilterText: (panelId) =>
-                set((state) => {
-                    const newFilterText = { ...state.filterText };
-                    delete newFilterText[panelId];
-                    return { filterText: newFilterText };
-                }),
-
             showFilters: true,
             setShowFilters: (showFilters) => set({ showFilters }),
             toggleShowFilters: () => set((state) => ({ showFilters: !state.showFilters })),
@@ -78,7 +59,6 @@ export const useSidebarStore = create<SidebarState>()(
             partialize: (state) => ({
                 sidebarWidth: state.sidebarWidth,
                 sidebarPanels: state.sidebarPanels,
-                filterText: state.filterText,
                 showFilters: state.showFilters,
                 dataViewMode: state.dataViewMode,
             }),

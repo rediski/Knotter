@@ -1,7 +1,7 @@
 import { Parameter } from '@/_core/_/parameter';
 import { useItemsStore } from '@/store/useItemsStore';
 
-export const getVisibleSelectedParametersCount = (filteredParameters: Parameter[]): number => {
+export const getVisibleSelectedParametersCount = (parameters: Parameter[]): number => {
     const selectedParameterIds = useItemsStore.getState().selectedParameterIds;
-    return filteredParameters.filter((p) => selectedParameterIds.includes(p.id)).length;
+    return parameters.filter((parameter) => selectedParameterIds.includes(parameter.id)).length;
 };

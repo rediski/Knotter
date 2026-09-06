@@ -113,11 +113,11 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                     case 'clipboard':
                         return <Clipboard />;
                     case 'hierarchy':
-                        return <Hierarchy panelId={panel.id} />;
+                        return <Hierarchy />;
                     case 'history':
                         return <History />;
                     case 'inspector':
-                        return <Inspector panelId={panel.id} />;
+                        return <Inspector />;
                     case 'parameters':
                         return <Parameters />;
                     default:

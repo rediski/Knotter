@@ -27,20 +27,9 @@ const FIELD_TITLES = {
 interface InspectorEdgeProps {
     edge: Edge;
     items: CanvasItem[];
-    showName: boolean;
-    showColor: boolean;
-    showEdgeFromNode: boolean;
-    showEdgeToNode: boolean;
 }
 
-export const InspectorEdge = memo(function InspectorEdge({
-    edge,
-    items,
-    showName,
-    showColor,
-    showEdgeFromNode,
-    showEdgeToNode,
-}: InspectorEdgeProps) {
+export const InspectorEdge = memo(function InspectorEdge({ edge, items }: InspectorEdgeProps) {
     const { toggleDropdown, isDropdownOpen } = useDropdownStore();
     const { setSelectedItemIds } = useItemsStore();
 
@@ -66,26 +55,22 @@ export const InspectorEdge = memo(function InspectorEdge({
 
     return (
         <div className="flex flex-col m-1 gap-1">
-            {showName && (
-                <div className="flex flex-col gap-1 pt-1">
-                    <Input
-                        value={edge.name}
-                        onChange={changeName}
-                        placeholder={FIELD_TITLES.NAME}
-                        icon={LineSquiggle}
-                        className="bg-depth-2 border border-depth-3"
-                    />
-                </div>
-            )}
+            <div className="flex flex-col gap-1 pt-1">
+                <Input
+                    value={edge.name}
+                    onChange={changeName}
+                    placeholder={FIELD_TITLES.NAME}
+                    icon={LineSquiggle}
+                    className="bg-depth-2 border border-depth-3"
+                />
+            </div>
 
-            {showEdgeFromNode && renderNodeLink(edge.from, FIELD_TITLES.EDGE_FROM_NODE, 5)}
-            {showEdgeToNode && renderNodeLink(edge.to, FIELD_TITLES.EDGE_TO_NODE, 6)}
+            {renderNodeLink(edge.from, FIELD_TITLES.EDGE_FROM_NODE, 5)}
+            {renderNodeLink(edge.to, FIELD_TITLES.EDGE_TO_NODE, 6)}
 
-            {showColor && (
-                <Dropdown title={FIELD_TITLES.COLOR} isOpen={isDropdownOpen(1.5)} onToggle={() => toggleDropdown(1.5)}>
-                    <ColorPicker color={edge.color} onColorChange={(newColor) => changeColor(newColor)} />
-                </Dropdown>
-            )}
+            <Dropdown title={FIELD_TITLES.COLOR} isOpen={isDropdownOpen(1.5)} onToggle={() => toggleDropdown(1.5)}>
+                <ColorPicker color={edge.color} onColorChange={(newColor) => changeColor(newColor)} />
+            </Dropdown>
 
             <span className="text-xs text-gray text-right p-1 select-text">{edge.id}</span>
         </div>
