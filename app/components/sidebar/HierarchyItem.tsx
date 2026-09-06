@@ -11,6 +11,7 @@ import { useItemsStore } from '@/store/useItemsStore';
 import { openNodeTab } from '@/utils/nodes/openNodeTab';
 
 import { useDragAndDrop } from '@/hooks/useDragAndDrop';
+import { reorderParameters } from '@/utils/parameters/reorderParameters';
 
 import { ChevronDown, ChevronRight, LineSquiggle, Package, PackageOpen, ScanBox } from 'lucide-react';
 
@@ -46,7 +47,7 @@ export const HierarchyItem = memo(function HierarchyItem({
 
         const isLast = index === totalItems - 1;
 
-        const LINE_LEFT = 38.8;
+        const LINE_LEFT = 58;
         const LINE_WIDTH = 16;
 
         return (
@@ -116,49 +117,15 @@ export const HierarchyItem = memo(function HierarchyItem({
         handleDrop: handleParameterDrop,
         handleDragEnd: handleParameterDragEnd,
     } = useDragAndDrop<Parameter>({
-        filteredItems: parameters,
         items: parameters,
         selectedIds: [],
         onSelect: () => {},
         multiSelect: false,
         itemSelector: 'li[data-parameter-id]',
-        onReorder: (newParameters) => {
-            const { currentSceneId, scenes } = useItemsStore.getState();
-
-            if (!currentSceneId) {
-                return;
-            }
-
-            const scene = scenes[currentSceneId];
-
-            if (!scene) {
-                return;
-            }
-
-            const newItems = scene.items.map((sceneItem) => {
-                if (sceneItem.id !== canvasItem.id) {
-                    return sceneItem;
-                }
-
-                if (sceneItem.kind !== 'node') {
-                    return sceneItem;
-                }
-
-                return {
-                    ...sceneItem,
-                    parameters: newParameters,
-                };
-            });
-
-            useItemsStore.setState({
-                scenes: {
-                    ...scenes,
-                    [currentSceneId]: {
-                        ...scene,
-                        items: newItems,
-                        updatedAt: new Date(),
-                    },
-                },
+        onReorder: (newParameters: Parameter[]) => {
+            reorderParameters({
+                canvasItemId: canvasItem.id,
+                newParameters,
             });
         },
     });
@@ -178,6 +145,8 @@ export const HierarchyItem = memo(function HierarchyItem({
     };
 
     const isLast = index === totalItems - 1;
+    const hasNestedContent = isNode && hasParameters;
+    const shouldShortenLine = isLast && (!hasNestedContent || !isExpanded);
 
     const LINE_LEFT = 18.8;
     const LINE_WIDTH = 16;
@@ -204,7 +173,7 @@ export const HierarchyItem = memo(function HierarchyItem({
                 style={{
                     left: `${LINE_LEFT}px`,
                     top: 0,
-                    bottom: isLast && !isExpanded ? '50%' : 0,
+                    bottom: shouldShortenLine ? '50%' : 0,
                 }}
             />
 
