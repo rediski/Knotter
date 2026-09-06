@@ -1,4 +1,5 @@
 import { useItemsStore } from '@/store/useItemsStore';
+import { updateSelection } from '@/utils/items/updateSelection';
 
 export interface SelectCanvasItemEvent {
     ctrlKey: boolean;
@@ -21,43 +22,17 @@ export function selectItems(params: SelectCanvasItemParams): string[] {
     const scene = scenes[currentSceneId];
     const items = scene?.items ?? [];
 
-    const item = items.find((i) => i.id === itemId);
+    const item = items.find((item) => item.id === itemId);
 
     if (!item) return [...selectedItemIds];
 
-    const idToIndex = new Map(items.map((i, index) => [i.id, index]));
-
-    if (e.shiftKey && selectedItemIds.length > 0) {
-        const lastSelectedId = selectedItemIds[selectedItemIds.length - 1];
-        const start = idToIndex.get(lastSelectedId);
-        const end = idToIndex.get(itemId);
-
-        if (start !== undefined && end !== undefined) {
-            const [from, to] = start < end ? [start, end] : [end, start];
-
-            const newSelection = new Set(selectedItemIds);
-
-            items.slice(from, to + 1).forEach((i) => newSelection.add(i.id));
-
-            return Array.from(newSelection);
-        }
-
-        return [...selectedItemIds];
-    }
-
-    if (e.ctrlKey || e.metaKey) {
-        const newSelection = new Set(selectedItemIds);
-
-        if (newSelection.has(itemId)) {
-            newSelection.delete(itemId);
-        }
-
-        if (!newSelection.has(itemId)) {
-            newSelection.add(itemId);
-        }
-
-        return Array.from(newSelection);
-    }
-
-    return [itemId];
+    return updateSelection({
+        items,
+        selectedIds: selectedItemIds,
+        targetId: itemId,
+        getItemId: (item) => item.id,
+        shiftKey: e.shiftKey,
+        ctrlKey: e.ctrlKey,
+        metaKey: e.metaKey,
+    });
 }
