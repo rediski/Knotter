@@ -66,7 +66,6 @@ export const Hierarchy = memo(function Hierarchy({ panelId }: { panelId?: string
     );
 
     const { listRef, handleDragStart, handleDragOver, handleDrop, handleDragEnd } = useDragAndDrop<CanvasItem>({
-        filteredItems,
         items,
         selectedIds: selectedItemIds,
         onSelect: setSelectedItemIds,
