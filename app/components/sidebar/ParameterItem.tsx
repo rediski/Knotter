@@ -1,40 +1,29 @@
 'use client';
 
-import { memo, useCallback, type MouseEvent } from 'react';
+import { memo } from 'react';
 
 import type { Parameter } from '@/_core/_/parameter';
 import { getParameterIcon } from '@/utils/parameters/getParameterIcon';
+import { useItemsStore } from '@/store/useItemsStore';
+import { selectParameters } from '@/utils/parameters/selectParameters';
 
 interface ParameterItemProps {
     parameter: Parameter;
-    selectedIds: string[];
-    onSelect: (id: string, ctrlKey: boolean, shiftKey: boolean) => void;
     handleDragStart: (e: React.DragEvent, id: string) => void;
 }
 
-export const ParameterItem = memo(function ParameterItem({
-    parameter,
-    selectedIds,
-    onSelect,
-    handleDragStart,
-}: ParameterItemProps) {
-    const isSelected = selectedIds.includes(parameter.id);
-    const isPartOfSelectionGroup = isSelected && selectedIds.length > 1;
+export const ParameterItem = memo(function ParameterItem({ parameter, handleDragStart }: ParameterItemProps) {
+    const selectedParameterIds = useItemsStore((state) => state.selectedParameterIds);
+    const parameters = useItemsStore((state) => state.parameters);
+    const isSelected = selectedParameterIds.includes(parameter.id);
+    const isPartOfSelectionGroup = isSelected && selectedParameterIds.length > 1;
     const Icon = getParameterIcon(parameter.type);
-
-    const handleClick = useCallback(
-        (e: MouseEvent) => {
-            e.stopPropagation();
-            onSelect(parameter.id, e.ctrlKey || e.metaKey, e.shiftKey);
-        },
-        [parameter.id, onSelect],
-    );
 
     return (
         <li
             data-id={parameter.id}
             className="relative select-none cursor-grab"
-            onClick={handleClick}
+            onClick={(e) => selectParameters(parameter.id, e, parameters)}
             onDragStart={(e) => handleDragStart(e, parameter.id)}
             draggable={true}
         >
