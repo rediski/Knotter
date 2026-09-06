@@ -4,14 +4,14 @@ import type { Scene, Position } from '@/_core/_/canvas.types';
 import type { Parameter } from '@/_core/_/parameter';
 
 export interface ItemsState {
-    selectedItemIds: string[];
-    setSelectedItemIds: (ids: string[]) => void;
-
     scenes: Record<string, Scene>;
     setScenes: (scenes: Record<string, Scene>) => void;
 
     currentSceneId: string | null;
     setCurrentSceneId: (id: string | null) => void;
+
+    selectedItemIds: string[];
+    setSelectedItemIds: (ids: string[]) => void;
 
     currentNodeId: string | null;
     setCurrentNodeIds: (id: string | null) => void;
@@ -19,8 +19,8 @@ export interface ItemsState {
     parameters: Parameter[];
     setParameters: (parameters: Parameter[]) => void;
 
-    selectedParameters: string[];
-    setSelectedParameters: (selectedParameters: string[]) => void;
+    selectedParameterIds: string[];
+    setSelectedParameterIds: (selectedParameterIds: string[]) => void;
 
     hoveredNodeId: string | null;
     setHoveredNodeId: (id: string | null) => void;
@@ -53,8 +53,8 @@ export const useItemsStore = create<ItemsState>()(
             parameters: [],
             setParameters: (parameters) => set({ parameters }),
 
-            selectedParameters: [],
-            setSelectedParameters: (selectedParameters) => set({ selectedParameters }),
+            selectedParameterIds: [],
+            setSelectedParameterIds: (selectedParameterIds) => set({ selectedParameterIds }),
 
             hoveredNodeId: null,
             setHoveredNodeId: (id) => set({ hoveredNodeId: id }),
@@ -76,7 +76,7 @@ export const useItemsStore = create<ItemsState>()(
                 currentSceneId: state.currentSceneId,
                 selectedItemIds: state.selectedItemIds,
                 parameters: state.parameters,
-                selectedParameters: state.selectedParameters,
+                selectedParameterIds: state.selectedParameterIds,
             }),
         },
     ),
