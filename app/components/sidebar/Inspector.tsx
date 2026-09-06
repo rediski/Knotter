@@ -113,7 +113,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
 
     if (isSceneSelected && selectedScene) {
         return (
-            <div className="overflow-y-auto mt-1 border-t border-depth-3 h-full">
+            <div className="overflow-y-auto mt-1 border-t border-depth-3 w-full h-full">
                 <InspectorScene
                     scene={selectedScene}
                     showName={showName}
@@ -127,7 +127,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
     if (selectedItem) {
         if (selectedItem.kind === 'node') {
             return (
-                <div className="overflow-y-auto mt-1 border-t border-depth-3 h-full">
+                <div className="overflow-y-auto mt-1 border-t border-depth-3 w-full h-full">
                     <InspectorNode
                         node={selectedItem}
                         items={items}
@@ -145,7 +145,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
 
         if (selectedItem.kind === 'edge') {
             return (
-                <div className="overflow-y-auto mt-1 border-t border-depth-3 h-full">
+                <div className="overflow-y-auto mt-1 border-t border-depth-3 w-full h-full">
                     <InspectorEdge
                         edge={selectedItem}
                         items={items}
@@ -161,7 +161,7 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
 
     if (selectedParameter) {
         return (
-            <div className="overflow-y-auto mt-1 border-t border-depth-3 h-full">
+            <div className="overflow-y-auto mt-1 border-t border-depth-3 w-full h-full">
                 <InspectorParameter
                     parameter={selectedParameter}
                     showName={showName}
@@ -173,5 +173,5 @@ export const Inspector = memo(function Inspector({ panelId }: { panelId?: string
         );
     }
 
-    return <EmptyState message="Необходимо выбрать один элемент или параметр" />;
+    return <EmptyState message="Необходимо выбрать один элемент или параметр" className="w-full" />;
 });
