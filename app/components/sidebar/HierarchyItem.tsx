@@ -206,15 +206,24 @@ export const HierarchyItem = memo(function HierarchyItem({
                 >
                     <div className="flex items-center gap-2 flex-1 min-w-0">
                         {isNode && hasParameters && (
-                            <button
-                                type="button"
-                                onClick={toggleExpanded}
-                                className={`flex items-center justify-center p-0.5 rounded shrink-0 cursor-pointer
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={toggleExpanded}
+                                    className={`flex items-center justify-center p-0.5 rounded shrink-0 cursor-pointer
                                     ${isSelected ? 'text-text-accent hover:bg-bg-accent' : 'hover:bg-depth-3'}
                                 `}
-                            >
-                                {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-                            </button>
+                                >
+                                    {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                                </button>
+
+                                <div
+                                    className={`
+                                        border-l h-5
+                                        ${isSelected ? 'border-border-accent' : 'border-depth-4'}
+                                     `}
+                                />
+                            </>
                         )}
 
                         {isNode &&
