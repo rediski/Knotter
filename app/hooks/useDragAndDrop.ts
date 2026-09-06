@@ -5,7 +5,6 @@ interface Identifiable {
 }
 
 interface UseDragAndDropProps<Item extends Identifiable> {
-    filteredItems: Item[];
     items: Item[];
     selectedIds: string[];
     onSelect: (ids: string[]) => void;
@@ -39,19 +38,34 @@ export function useDragAndDrop<Item extends Identifiable>({
         (e: React.DragEvent, id: string): void => {
             e.stopPropagation();
 
-            let idsToMove: string[];
+            if (!multiSelect) {
+                const idsToMove = [id];
 
-            if (multiSelect) {
-                if (!selectedIds.includes(id)) {
-                    onSelect([id]);
-                    idsToMove = [id];
-                } else {
-                    idsToMove = selectedIds;
-                }
-            } else {
-                idsToMove = [id];
+                setDraggingId(id);
+
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', JSON.stringify(idsToMove));
+
+                onDragStart?.(e, idsToMove);
+
+                return;
             }
 
+            if (!selectedIds.includes(id)) {
+                onSelect([id]);
+                const idsToMove = [id];
+
+                setDraggingId(id);
+
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', JSON.stringify(idsToMove));
+
+                onDragStart?.(e, idsToMove);
+
+                return;
+            }
+
+            const idsToMove = selectedIds;
             setDraggingId(id);
 
             e.dataTransfer.effectAllowed = 'move';
@@ -97,21 +111,13 @@ export function useDragAndDrop<Item extends Identifiable>({
                 const newItems = [...items];
                 const [draggedItem] = newItems.splice(draggedIndex, 1);
 
-                let newIndex = targetIndex;
+                const offset = draggedIndex < targetIndex ? -1 : 0;
+                const baseIndex = isBefore ? targetIndex : targetIndex + 1;
+                const newIndex = Math.max(0, Math.min(baseIndex + offset, newItems.length));
 
-                if (draggedIndex < targetIndex) {
-                    newIndex = isBefore ? targetIndex - 1 : targetIndex;
-                } else {
-                    newIndex = isBefore ? targetIndex : targetIndex + 1;
-                }
-
-                newIndex = Math.max(0, Math.min(newIndex, newItems.length));
                 newItems.splice(newIndex, 0, draggedItem);
 
-                const currentOrder = items.map((item) => item.id);
-                const newOrder = newItems.map((item) => item.id);
-
-                if (JSON.stringify(currentOrder) !== JSON.stringify(newOrder)) {
+                if (JSON.stringify(items) !== JSON.stringify(newItems)) {
                     onReorder(newItems);
                 }
 
@@ -169,10 +175,7 @@ export function useDragAndDrop<Item extends Identifiable>({
 
             newItems.splice(newIndex, 0, ...itemsToMove);
 
-            const currentOrder = items.map((item) => item.id);
-            const newOrder = newItems.map((item) => item.id);
-
-            if (JSON.stringify(currentOrder) !== JSON.stringify(newOrder)) {
+            if (JSON.stringify(items) !== JSON.stringify(newItems)) {
                 onReorder(newItems);
             }
         },
