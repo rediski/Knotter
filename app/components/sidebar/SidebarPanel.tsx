@@ -25,8 +25,6 @@ import { removePanel } from '@/utils/sidebar/removePanel';
 import { movePanelDown, movePanelUp } from '@/utils/sidebar/movePanel';
 import { setPanelType } from '@/utils/sidebar/setPanelType';
 
-import { Search } from 'lucide-react';
-
 export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
     const sidebarPanels = useSidebarStore((state) => state.sidebarPanels);
     const setSidebarPanels = useSidebarStore((state) => state.setSidebarPanels);
@@ -37,9 +35,6 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
         label: panelTitles[key],
         icon: panelIcons[key],
     }));
-
-    const filterText = useSidebarStore((state) => state.filterText[panel.id] || '');
-    const setFilterText = useSidebarStore((state) => state.setFilterText);
 
     const panelRef = useRef<HTMLDivElement>(null);
 
@@ -85,23 +80,10 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
 
             <div
                 className={`
-                    flex justify-between items-center gap-1 p-1 pb-0
+                    flex justify-end items-center gap-1 p-1 pb-0
                     ${panelIndex > 0 && 'border-t border-depth-3'}
                 `}
             >
-                <div className="flex-1">
-                    {panel.type && (
-                        <Input
-                            value={filterText}
-                            onChange={() => setFilterText(panel.id, filterText)}
-                            placeholder="Поиск..."
-                            icon={Search}
-                            iconSize={14}
-                            className="bg-depth-2 border border-depth-3"
-                        />
-                    )}
-                </div>
-
                 <DropdownAbsolute title={currentPanelTitle} icon={currentPanelIcon}>
                     {panelOptions.map((option) => (
                         <button
