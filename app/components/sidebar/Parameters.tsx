@@ -20,9 +20,8 @@ import { handleDragReorderParameters } from '@/utils/parameters/handleDragReorde
 
 export const Parameters = () => {
     const parameters = useItemsStore((state) => state.parameters);
-    const setSelectedParameterIds = useItemsStore((state) => state.setSelectedParameterIds);
-
     const selectedParameterIds = useItemsStore((state) => state.selectedParameterIds);
+    const setSelectedParameterIds = useItemsStore((state) => state.setSelectedParameterIds);
 
     const { listRef, handleDragStart, handleDragOver, handleDrop, handleDragEnd } = useDragAndDrop<Parameter>({
         items: parameters,
@@ -42,7 +41,7 @@ export const Parameters = () => {
     const visibleSelectedParametersCount = getVisibleSelectedParametersCount(parameters);
 
     return (
-        <div className="flex flex-col overflow-y-auto max-h-[calc(100vh-8px-32px-4px)] mt-1">
+        <div className="flex flex-col overflow-y-auto max-h-[calc(100vh-8px-32px-4px)] h-full mt-1">
             <div className="px-1">
                 <button
                     onClick={() => createParameter(name)}
@@ -54,12 +53,16 @@ export const Parameters = () => {
             </div>
 
             <ul
-                className="flex flex-col gap-1 p-1 list-none relative"
+                className="flex flex-col gap-1 p-1 list-none relative h-full"
                 ref={listRef}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
                 onDragEnd={handleDragEnd}
-                onClick={() => setSelectedParameterIds([])}
+                onClick={(e) => {
+                    if (e.target === e.currentTarget) {
+                        setSelectedParameterIds([]);
+                    }
+                }}
             >
                 {parameters.length > 0 ? (
                     <>
