@@ -68,10 +68,6 @@ export const InspectorEdge = memo(function InspectorEdge({ edge, items }: Inspec
             {renderNodeLink(edge.from, FIELD_TITLES.EDGE_FROM_NODE, 5)}
             {renderNodeLink(edge.to, FIELD_TITLES.EDGE_TO_NODE, 6)}
 
-            <Dropdown title={FIELD_TITLES.COLOR} isOpen={isDropdownOpen(1.5)} onToggle={() => toggleDropdown(1.5)}>
-                <ColorPicker color={edge.color} onColorChange={(newColor) => changeColor(newColor)} />
-            </Dropdown>
-
             <span className="text-xs text-gray text-right p-1 select-text">{edge.id}</span>
         </div>
     );

@@ -86,8 +86,7 @@ const NODE_FIELDS: (keyof Node)[] = [
     'parameters',
 ];
 
-const EDGE_FIELDS: (keyof Edge)[] = ['kind', 'id', 'name', 'from', 'to', 'color'];
-
+const EDGE_FIELDS: (keyof Edge)[] = ['kind', 'id', 'name', 'from', 'to'];
 const PARAMETER_FIELDS: (keyof Parameter)[] = ['id', 'name', 'type', 'defaultValue', 'parentId'];
 
 const getFieldLabel = (mode: DataViewMode, field: string): string => {

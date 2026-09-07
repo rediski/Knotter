@@ -36,5 +36,4 @@ export interface Edge {
     name: string;
     from: string;
     to: string;
-    color: string | null;
 }

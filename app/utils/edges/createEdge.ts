@@ -39,7 +39,6 @@ export function createEdge(clickedNodeId: string) {
         name,
         from: tempEdge,
         to: clickedNodeId,
-        color: null,
     };
 
     const newItems = [...items, newEdge];
