@@ -14,7 +14,9 @@ export const Edge = ({ edge, containerRef }: { edge: EdgeType; containerRef: Ref
 
     const scene = currentSceneId ? scenes[currentSceneId] : null;
     const items = scene?.items ?? [];
+
     const nodes = getNodes(items);
+
     const fromNode = nodes.find((node) => node.id === edge.from);
     const toNode = nodes.find((node) => node.id === edge.to);
 
@@ -25,6 +27,7 @@ export const Edge = ({ edge, containerRef }: { edge: EdgeType; containerRef: Ref
 
     const minX = Math.min(fromCoords.x, toCoords.x);
     const minY = Math.min(fromCoords.y, toCoords.y);
+
     const width = Math.abs(toCoords.x - fromCoords.x);
     const height = Math.abs(toCoords.y - fromCoords.y);
 
@@ -41,8 +44,27 @@ export const Edge = ({ edge, containerRef }: { edge: EdgeType; containerRef: Ref
     const offsetX = width < selectionRectSize ? (selectionRectSize - width) / 2 : 0;
     const offsetY = height < selectionRectSize ? (selectionRectSize - height) / 2 : 0;
 
+    const gradientId = `edge-gradient-${edge.id}`;
+
+    const fromColor = fromNode.color ?? 'var(--foreground)';
+    const toColor = toNode.color ?? 'var(--foreground)';
+
     return (
         <g>
+            <defs>
+                <linearGradient
+                    id={gradientId}
+                    gradientUnits="userSpaceOnUse"
+                    x1={fromCoords.x}
+                    y1={fromCoords.y}
+                    x2={toCoords.x}
+                    y2={toCoords.y}
+                >
+                    <stop offset="0%" stopColor={fromColor} />
+                    <stop offset="100%" stopColor={toColor} />
+                </linearGradient>
+            </defs>
+
             <rect
                 x={minX + 1.5 - offsetX}
                 y={minY - offsetY}
@@ -55,12 +77,13 @@ export const Edge = ({ edge, containerRef }: { edge: EdgeType; containerRef: Ref
                 rx={4}
                 pointerEvents="none"
             />
+
             <line
                 x1={fromCoords.x}
                 y1={fromCoords.y}
                 x2={toCoords.x}
                 y2={toCoords.y}
-                stroke={edge.color ?? 'var(--foreground)'}
+                stroke={`url(#${gradientId})`}
                 strokeWidth={2 * zoomLevel}
                 data-edge-id={edge.id}
                 className="cursor-pointer pointer-events-auto"
