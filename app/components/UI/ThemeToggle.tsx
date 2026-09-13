@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 
-export function ThemeToggle() {
+export function ThemeToggle({ className = 'h-9 w-9' }: { className?: string }) {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 
@@ -30,7 +30,7 @@ export function ThemeToggle() {
     return (
         <button
             onClick={() => setTheme(nextTheme())}
-            className="p-2 rounded-md bg-depth-2 hover:bg-depth-3 border border-depth-3 h-8 w-8 cursor-pointer flex items-center justify-center"
+            className={`flex items-center justify-center rounded-md bg-depth-1 hover:bg-depth-2 cursor-pointer ${className}`}
         >
             {isSystem ? <Monitor size={16} /> : isDark ? <Sun size={16} /> : <Moon size={16} />}
         </button>
