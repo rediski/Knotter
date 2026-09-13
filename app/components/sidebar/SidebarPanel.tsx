@@ -2,6 +2,8 @@
 
 import { useRef } from 'react';
 
+import Link from 'next/link';
+
 import type { PanelType, SidebarPanel as SidebarPanelType } from '@/_core/_/sidebarPanel';
 
 import { panelTitles, panelIcons } from '@/_core/_/sidebarPanel';
@@ -12,7 +14,7 @@ import { History } from '@/components/sidebar/History';
 import { Inspector } from '@/components/sidebar/Inspector';
 import { Parameters } from '@/components/sidebar/Parameters';
 
-import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
+import { ThemeToggle } from '@/components/UI/ThemeToggle';
 import { EmptyState } from '@/components/UI/EmptyState';
 import { PanelContextMenu } from '@/components/sidebar/PanelContextMenu';
 
@@ -23,6 +25,8 @@ import { addPanel } from '@/utils/sidebar/addPanel';
 import { removePanel } from '@/utils/sidebar/removePanel';
 import { movePanelDown, movePanelUp } from '@/utils/sidebar/movePanel';
 import { setPanelType } from '@/utils/sidebar/setPanelType';
+
+import { Home } from 'lucide-react';
 
 export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
     const sidebarPanels = useSidebarStore((state) => state.sidebarPanels);
@@ -71,15 +75,16 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                 }}
             />
 
-            <div className="flex flex-col items-center gap-1 p-1 pb-0 border-r border-depth-3">
-                {panelOptions.map((option) => (
-                    <button
-                        key={option.value}
-                        onClick={() => {
-                            setPanelType(sidebarPanels, setSidebarPanels, panel.id, option.value);
-                            closeMenu();
-                        }}
-                        className={`
+            <div className="flex flex-col items-center gap-1 p-1 border-r border-depth-3">
+                <div className="flex-1">
+                    {panelOptions.map((option) => (
+                        <button
+                            key={option.value}
+                            onClick={() => {
+                                setPanelType(sidebarPanels, setSidebarPanels, panel.id, option.value);
+                                closeMenu();
+                            }}
+                            className={`
                                 flex items-center justify-center gap-2 w-9 h-9 text-left text-sm rounded-md cursor-pointer
                                 ${
                                     option.label === currentPanelTitle
@@ -87,11 +92,23 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                                         : 'bg-depth-1 hover:bg-depth-2'
                                 }
                             `}
-                        title={option.label}
+                            title={option.label}
+                        >
+                            {option.icon && <option.icon size={18} />}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="flex flex-col justify-end flex-1">
+                    <ThemeToggle />
+
+                    <Link
+                        href="/"
+                        className="flex items-center w-9 h-9 p-2 bg-depth-1 hover:bg-depth-2 rounded-md cursor-pointer"
                     >
-                        {option.icon && <option.icon size={18} />}
-                    </button>
-                ))}
+                        <Home size={18} />
+                    </Link>
+                </div>
             </div>
 
             {(() => {
