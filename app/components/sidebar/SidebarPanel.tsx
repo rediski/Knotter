@@ -71,12 +71,7 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
                 }}
             />
 
-            <div
-                className={`
-                    flex flex-col items-center gap-1 p-1 pb-0 border-r border-depth-3
-                   
-                `}
-            >
+            <div className="flex flex-col items-center gap-1 p-1 pb-0 border-r border-depth-3">
                 {panelOptions.map((option) => (
                     <button
                         key={option.value}
@@ -101,16 +96,16 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
 
             {(() => {
                 switch (panel.type) {
-                    case 'clipboard':
-                        return <Clipboard />;
                     case 'hierarchy':
                         return <Hierarchy />;
-                    case 'history':
-                        return <History />;
                     case 'inspector':
                         return <Inspector />;
                     case 'parameters':
                         return <Parameters />;
+                    case 'history':
+                        return <History />;
+                    case 'clipboard':
+                        return <Clipboard />;
                     default:
                         return <EmptyState message="Выберите тип панели" />;
                 }
