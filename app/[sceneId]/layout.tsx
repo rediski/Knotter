@@ -14,6 +14,8 @@ export default function CanvasLayout({ children }: { children: ReactNode }) {
         <div className="flex w-full h-screen bg-background p-1 overflow-x-hidden" translate="no">
             <TitleUpdater />
 
+            <Sidebar />
+
             <div className="flex flex-col flex-1 gap-1">
                 <div className="fixed flex items-center gap-1 z-20 bg-depth-1 p-1 m-1 rounded-md border border-depth-3 shadow-xs">
                     <Link
@@ -40,8 +42,6 @@ export default function CanvasLayout({ children }: { children: ReactNode }) {
 
                 {children}
             </div>
-
-            <Sidebar />
         </div>
     );
 }
