@@ -24,29 +24,29 @@ const PRESET_COLORS = [
 
 export const ColorPicker = memo(function ColorPicker({ color, onColorChange }: ColorPickerProps) {
     const safeColor = color ?? 'var(--foreground)';
-    const hasColor = color !== null;
 
     return (
         <div className="flex gap-2 items-center flex-wrap">
             <button
+                className={`flex items-center justify-center border-depth-3 w-8 h-8 rounded-full cursor-pointer border`}
+                style={{ backgroundColor: safeColor }}
+                title="Текущий цвет"
+            />
+
+            <div className="bg-depth-4 h-6 w-px" />
+
+            <button
                 onClick={() => onColorChange(null)}
-                className={`
-                    flex items-center justify-center bg-transparent border-depth-3 w-8 h-8 rounded-md cursor-pointer border transition-all duration-100 
-                    ${!hasColor ? 'scale-110 border-2 border-foreground' : 'hover:scale-110'}
-                `}
+                className="flex items-center justify-center bg-foreground border-depth-3 w-8 h-8 rounded-full cursor-pointer border active:scale-110"
                 title="По умолчанию"
-            >
-                <X size={16} className="text-foreground" />
-            </button>
+            />
 
             {PRESET_COLORS.map((presetColor) => (
                 <button
                     key={presetColor}
                     onClick={() => onColorChange(presetColor)}
-                    className={`
-                        w-8 h-8 rounded-md cursor-pointer border transition-all duration-100
-                        ${safeColor === presetColor ? 'scale-110' : 'hover:scale-110'}
-                    `}
+                    className="w-8 h-8 rounded-full cursor-pointer active:scale-110"
+
                     style={{
                         backgroundColor: presetColor,
                         borderColor: safeColor === presetColor ? 'var(--foreground)' : presetColor,
