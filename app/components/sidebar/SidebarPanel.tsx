@@ -13,7 +13,6 @@ import { Inspector } from '@/components/sidebar/Inspector';
 import { Parameters } from '@/components/sidebar/Parameters';
 
 import { DropdownAbsolute } from '@/components/UI/DropdownAbsolute';
-import { Input } from '@/components/UI/Input';
 import { EmptyState } from '@/components/UI/EmptyState';
 import { PanelContextMenu } from '@/components/sidebar/PanelContextMenu';
 
@@ -44,15 +43,9 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
     const canMoveDown = panelIndex < sidebarPanels.length - 1;
 
     const currentPanelTitle = panel.type ? panelTitles[panel.type] : 'Пустая панель';
-    const currentPanelIcon = panel.type ? panelIcons[panel.type] : undefined;
 
     return (
-        <div
-            ref={panelRef}
-            className="flex flex-col w-full h-full overflow-y-auto relative"
-            onContextMenu={handleContextMenu}
-            onClick={closeMenu}
-        >
+        <div ref={panelRef} className="flex w-full h-full relative" onContextMenu={handleContextMenu} onClick={closeMenu}>
             <PanelContextMenu
                 menuRef={menuRef}
                 isOpen={isOpen}
@@ -80,32 +73,30 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
 
             <div
                 className={`
-                    flex justify-end items-center gap-1 p-1 pb-0
-                    ${panelIndex > 0 && 'border-t border-depth-3'}
+                    flex flex-col items-center gap-1 p-1 pb-0 border-r border-depth-3
+                   
                 `}
             >
-                <DropdownAbsolute title={currentPanelTitle} icon={currentPanelIcon}>
-                    {panelOptions.map((option) => (
-                        <button
-                            key={option.value}
-                            onClick={() => {
-                                setPanelType(sidebarPanels, setSidebarPanels, panel.id, option.value);
-                                closeMenu();
-                            }}
-                            className={`
-                                flex items-center gap-2 px-3 h-8 text-left text-sm rounded-md cursor-pointer w-full 
+                {panelOptions.map((option) => (
+                    <button
+                        key={option.value}
+                        onClick={() => {
+                            setPanelType(sidebarPanels, setSidebarPanels, panel.id, option.value);
+                            closeMenu();
+                        }}
+                        className={`
+                                flex items-center justify-center gap-2 w-9 h-9 text-left text-sm rounded-md cursor-pointer
                                 ${
                                     option.label === currentPanelTitle
                                         ? 'bg-bg-accent text-text-accent'
-                                        : 'bg-depth-3 hover:bg-depth-4'
+                                        : 'bg-depth-1 hover:bg-depth-2'
                                 }
                             `}
-                        >
-                            {option.icon && <option.icon size={16} />}
-                            {option.label}
-                        </button>
-                    ))}
-                </DropdownAbsolute>
+                        title={option.label}
+                    >
+                        {option.icon && <option.icon size={18} />}
+                    </button>
+                ))}
             </div>
 
             {(() => {

@@ -54,8 +54,8 @@ export const InspectorEdge = memo(function InspectorEdge({ edge, items }: Inspec
     };
 
     return (
-        <div className="flex flex-col m-1 gap-1">
-            <div className="flex flex-col gap-1 pt-1">
+        <div className="flex flex-col w-full p-1 gap-1">
+            <div className="flex flex-col gap-1">
                 <Input
                     value={edge.name}
                     onChange={changeName}

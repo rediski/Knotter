@@ -93,8 +93,8 @@ export const InspectorNode = memo(function InspectorNode({ node, items }: Inspec
     };
 
     return (
-        <div className="flex flex-col px-1 gap-1">
-            <div className="flex flex-col gap-1 pt-1">
+        <div className="flex flex-col w-full p-1 gap-1">
+            <div className="flex flex-col gap-1">
                 <Input
                     value={node.name}
                     onChange={changeName}

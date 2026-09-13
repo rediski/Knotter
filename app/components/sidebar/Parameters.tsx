@@ -41,19 +41,17 @@ export const Parameters = () => {
     const visibleSelectedParametersCount = getVisibleSelectedParametersCount(parameters);
 
     return (
-        <div className="flex flex-col overflow-y-auto max-h-[calc(100vh-8px-32px-4px)] h-full mt-1">
-            <div className="px-1">
-                <button
-                    onClick={() => createParameter(name)}
-                    className="flex items-center gap-2 w-full min-h-9 px-3 py-1 rounded-md cursor-pointer bg-depth-2 hover:bg-depth-3 active:bg-depth-4 text-foreground border border-depth-3 text-sm"
-                >
-                    <Plus size={16} />
-                    <span>Создать</span>
-                </button>
-            </div>
+        <div className="flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-8px)] h-screen p-1 w-full">
+            <button
+                onClick={() => createParameter(name)}
+                className="flex items-center gap-2 w-full min-h-9 px-3 py-1 rounded-md cursor-pointer bg-depth-2 hover:bg-depth-3 active:bg-depth-4 text-foreground border border-depth-3 text-sm"
+            >
+                <Plus size={16} />
+                <span>Создать</span>
+            </button>
 
             <ul
-                className="flex flex-col gap-1 p-1 list-none relative h-full"
+                className="flex flex-col gap-1 list-none relative h-full"
                 ref={listRef}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}

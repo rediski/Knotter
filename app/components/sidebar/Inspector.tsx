@@ -61,37 +61,21 @@ export const Inspector = memo(function Inspector() {
     }
 
     if (isSceneSelected && selectedScene) {
-        return (
-            <div className="overflow-y-auto mt-1 border-t border-depth-3 w-full h-full">
-                <InspectorScene scene={selectedScene} />
-            </div>
-        );
+        return <InspectorScene scene={selectedScene} />;
     }
 
     if (selectedItem) {
         if (selectedItem.kind === 'node') {
-            return (
-                <div className="overflow-y-auto mt-1 border-t border-depth-3 w-full h-full">
-                    <InspectorNode node={selectedItem} items={items} />
-                </div>
-            );
+            return <InspectorNode node={selectedItem} items={items} />;
         }
 
         if (selectedItem.kind === 'edge') {
-            return (
-                <div className="overflow-y-auto mt-1 border-t border-depth-3 w-full h-full">
-                    <InspectorEdge edge={selectedItem} items={items} />
-                </div>
-            );
+            return <InspectorEdge edge={selectedItem} items={items} />;
         }
     }
 
     if (selectedParameter) {
-        return (
-            <div className="overflow-y-auto mt-1 border-t border-depth-3 w-full h-full">
-                <InspectorParameter parameter={selectedParameter} />
-            </div>
-        );
+        return <InspectorParameter parameter={selectedParameter} />;
     }
 
     return <EmptyState message="Необходимо выбрать один элемент или параметр" className="w-full" />;

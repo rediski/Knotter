@@ -130,8 +130,8 @@ export const InspectorScene = memo(function InspectorScene({ scene }: InspectorS
     ];
 
     return (
-        <div className="flex flex-col px-1 gap-1">
-            <div className="flex flex-col gap-1 pt-1">
+        <div className="flex flex-col w-full p-1 gap-1">
+            <div className="flex flex-col gap-1">
                 <Input
                     value={scene.name}
                     onChange={handleNameChange}

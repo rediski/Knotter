@@ -23,6 +23,20 @@ export const Sidebar = memo(function Sidebar() {
     return (
         <div className="flex h-full items-stretch z-50 bg-background select-none">
             <div
+                ref={sidebarRef}
+                className="flex flex-col shrink-0 overflow-hidden bg-depth-1 border border-depth-3 rounded-md"
+                style={{ width: `${width}px` }}
+                onContextMenu={menu.handleContextMenu}
+                onClick={menu.closeMenu}
+            >
+                <div className="flex flex-col h-full">
+                    {panels.map((panel) => (
+                        <SidebarPanel key={panel.id} panel={panel} />
+                    ))}
+                </div>
+            </div>
+
+            <div
                 onMouseDown={startSidebarResize}
                 className={`
                     w-2 cursor-ew-resize flex items-center justify-center gap-px shrink-0 hover:bg-bg-accent active:bg-bg-accent group
@@ -35,20 +49,6 @@ export const Sidebar = memo(function Sidebar() {
                         ${isResizingSidebar ? 'bg-accent' : 'bg-depth-7'}
                     `}
                 />
-            </div>
-
-            <div
-                ref={sidebarRef}
-                className="flex flex-col shrink-0 overflow-hidden bg-depth-1 border border-depth-3 rounded-md"
-                style={{ width: `${width}px` }}
-                onContextMenu={menu.handleContextMenu}
-                onClick={menu.closeMenu}
-            >
-                <div className="flex flex-col h-full">
-                    {panels.map((panel) => (
-                        <SidebarPanel key={panel.id} panel={panel} />
-                    ))}
-                </div>
             </div>
         </div>
     );

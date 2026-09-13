@@ -20,7 +20,7 @@ export const History = () => {
 
     if (!currentScene) {
         return (
-            <div className="flex flex-col gap-1 p-1 h-full pt-0 mt-1 text-sm overflow-auto">
+            <div className="flex flex-col gap-1 p-1 w-full h-full text-sm overflow-auto">
                 <EmptyState message="Нет активной сцены" />
             </div>
         );
@@ -110,7 +110,7 @@ export const History = () => {
     });
 
     return (
-        <div className="flex flex-col gap-1 p-1 h-full pt-0 mt-1 text-sm overflow-auto">
+        <div className="flex flex-col gap-1 p-1 w-full h-full text-sm overflow-auto">
             {groupedHistory.length === 0 && <EmptyState message="История пуста" />}
 
             {groupedHistory.map((group, groupIndex) => (

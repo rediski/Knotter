@@ -142,7 +142,7 @@ export const Hierarchy = memo(function Hierarchy() {
     const visibleSelectedCount = items.filter((item) => selectedItemIds.includes(item.id)).length;
 
     return (
-        <div className="flex flex-col h-full overflow-y-auto">
+        <div className="flex flex-col h-full w-full overflow-y-auto">
             <ul
                 ref={listRef}
                 className="flex flex-col gap-1 m-1 mr-0 pr-1 overflow-y-auto h-full relative"

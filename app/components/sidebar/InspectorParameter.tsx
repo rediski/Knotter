@@ -161,7 +161,7 @@ export const InspectorParameter = memo(function InspectorParameter({ parameter }
     };
 
     return (
-        <div className="flex flex-col px-1 gap-1">
+        <div className="flex flex-col w-full px-1 gap-1">
             <div className="flex flex-col gap-1 pt-1">
                 <Input
                     value={parameter.name}

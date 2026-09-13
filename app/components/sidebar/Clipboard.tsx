@@ -6,7 +6,7 @@ export const Clipboard = () => {
     const clipboard = useClipboardStore((state) => state.clipboard);
 
     return (
-        <div className="flex flex-col gap-1 m-1 pr-1 text-sm h-full overflow-auto">
+        <div className="flex flex-col gap-1 m-1 text-sm w-full h-full overflow-auto">
             {clipboard.length !== 0 ? (
                 clipboard.map((item) => {
                     const isNode = item.kind === 'node';
