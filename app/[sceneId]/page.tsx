@@ -67,7 +67,7 @@ export default function Canvas() {
 
             <canvas
                 ref={canvasRef}
-                className="absolute top-0 left-0 w-full h-full bg-depth-1 rounded-md border border-depth-3"
+                className="absolute top-0 left-0 w-full h-full bg-depth-1 rounded-lg border border-depth-3"
             />
 
             <SelectionBox containerRef={containerRef} />

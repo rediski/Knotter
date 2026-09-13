@@ -24,7 +24,7 @@ export const Sidebar = memo(function Sidebar() {
         <div className="flex h-full items-stretch z-50 bg-background select-none">
             <div
                 ref={sidebarRef}
-                className="flex flex-col shrink-0 overflow-hidden bg-depth-1 border border-depth-3 rounded-md"
+                className="flex flex-col shrink-0 overflow-hidden bg-depth-1 border border-depth-3 rounded-lg"
                 style={{ width: `${width}px` }}
                 onContextMenu={menu.handleContextMenu}
                 onClick={menu.closeMenu}
