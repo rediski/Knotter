@@ -15,10 +15,10 @@ export function useSidebarResize() {
         if (!isResizingSidebar) return;
 
         const onMouseMove = (e: MouseEvent) => {
-            const rightEdge = window.innerWidth;
-            const MAX_WIDTH = rightEdge - 64;
+            const leftEdge = 0;
+            const MAX_WIDTH = window.innerWidth - 64;
 
-            const newWidth = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, rightEdge - e.clientX));
+            const newWidth = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, e.clientX - leftEdge));
             setSidebarWidth(newWidth);
         };
 
