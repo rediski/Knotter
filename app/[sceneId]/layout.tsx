@@ -1,13 +1,12 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 
-import { ThemeToggle } from '@/components/UI/ThemeToggle';
 import { TitleUpdater } from '@/components/scene/TitleUpdater';
 import { Breadcrumbs } from '@/components/scene/Breadcrumbs';
 import { SceneList } from '@/components/scene/SceneList';
 import { Sidebar } from '@/components/sidebar/Sidebar';
 
-import { Database, Home } from 'lucide-react';
+import { Database } from 'lucide-react';
 
 export default function CanvasLayout({ children }: { children: ReactNode }) {
     return (
