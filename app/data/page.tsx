@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import type { Scene, Node, Edge, CanvasItem } from '@/_core/_/canvas.types';
@@ -12,11 +11,12 @@ import { useItemsStore } from '@/store/useItemsStore';
 import { DataViewMode, useSidebarStore } from '@/store/useSidebarStore';
 
 import { DataCodeBlock } from '@/components/data/DataCodeBlock';
-import { ThemeToggle } from '@/components/UI/ThemeToggle';
+import { Sidebar } from '@/components/sidebar/Sidebar';
+
 import { Checkbox } from '@/components/UI/Checkbox';
 import { Input } from '@/components/UI/Input';
 
-import { Home, LandPlot, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 type FilterableData = Parameter | Scene | Node | Edge | (Record<string, unknown> & { kind?: string });
 type FilteredItem = Record<string, unknown>;
@@ -324,29 +324,19 @@ export default function DataPage() {
     const isItemsSelected = selectedFields.has('items');
 
     return (
-        <div className="flex flex-col gap-1 p-1 h-full">
-            <div className="flex gap-1 h-10.5 m-1">
-                <div className="flex items-center gap-1 bg-depth-1 p-1 rounded-md border border-depth-3">
-                    <Link
-                        href="/"
-                        className="flex items-center w-8 h-8 p-2 rounded-md bg-depth-2 hover:bg-depth-3 border border-depth-3 cursor-pointer"
-                    >
-                        <Home size={16} />
-                    </Link>
-
-                    <ThemeToggle />
-
-                    <button
-                        onClick={handleGoBack}
-                        className="flex items-center w-8 h-8 p-2 rounded-md bg-depth-2 hover:bg-depth-3 border border-depth-3 cursor-pointer"
-                        aria-label="Назад"
-                    >
-                        <LandPlot size={16} />
-                    </button>
-                </div>
-            </div>
+        <div className="flex gap-1 p-1 h-full">
+            <Sidebar />
 
             <div className="flex gap-1 container m-auto">
+                <div className="relative max-h-[calc(100vh-4px-4px-42px-4px-4px-4px)] bg-depth-1 border border-depth-3 rounded-md w-full">
+                    <DataCodeBlock
+                        data={filteredData}
+                        maxHeight="calc(100vh - 108px)"
+                        title={searchQuery ? `Результаты поиска: "${searchQuery}"` : 'Все сцены'}
+                        fileName="selected-item"
+                    />
+                </div>
+
                 {availableFields.length > 0 && (
                     <div className="w-xs h-fit bg-depth-1 border border-depth-3 rounded-md select-none">
                         <div className="relative flex items-center gap-1 p-1 bg-background border-b border-depth-3 h-10.5">
@@ -494,15 +484,6 @@ export default function DataPage() {
                         </div>
                     </div>
                 )}
-
-                <div className="relative max-h-[calc(100vh-4px-4px-42px-4px-4px-4px)] bg-depth-1 border border-depth-3 rounded-md w-full">
-                    <DataCodeBlock
-                        data={filteredData}
-                        maxHeight="calc(100vh - 108px)"
-                        title={searchQuery ? `Результаты поиска: "${searchQuery}"` : 'Все сцены'}
-                        fileName="selected-item"
-                    />
-                </div>
             </div>
         </div>
     );
