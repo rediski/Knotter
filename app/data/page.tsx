@@ -324,146 +324,74 @@ export default function DataPage() {
     const isItemsSelected = selectedFields.has('items');
 
     return (
-        <div className="flex gap-1 p-1 h-full">
+        <div className="flex p-1 h-full">
             <Sidebar />
 
-            <div className="flex gap-1 container m-auto">
-                <div className="relative max-h-[calc(100vh-4px-4px-42px-4px-4px-4px)] bg-depth-1 border border-depth-3 rounded-md w-full">
-                    <DataCodeBlock
-                        data={filteredData}
-                        maxHeight="calc(100vh - 108px)"
-                        title={searchQuery ? `Результаты поиска: "${searchQuery}"` : 'Все сцены'}
-                        fileName="selected-item"
-                    />
-                </div>
+            <div className="relative max-h-[calc(100vh-4px-4px-42px-4px-4px-4px)] bg-depth-1 border border-depth-3 rounded-md w-full">
+                <DataCodeBlock
+                    data={filteredData}
+                    maxHeight="calc(100vh - 108px)"
+                    title={searchQuery ? `Результаты поиска: "${searchQuery}"` : 'Все сцены'}
+                    fileName="selected-item"
+                />
+            </div>
 
-                {availableFields.length > 0 && (
-                    <div className="w-xs h-fit bg-depth-1 border border-depth-3 rounded-md select-none">
-                        <div className="relative flex items-center gap-1 p-1 bg-background border-b border-depth-3 h-10.5">
-                            <div
-                                className="absolute h-[calc(100%-8px)] top-1 rounded-md bg-depth-2 transition-[left,width] duration-300 ease-in-out"
-                                style={{
-                                    left: activeIndex === 0 ? '4px' : `calc(50% + 2px)`,
-                                    width: `calc(50% - 6px)`,
-                                }}
-                            />
+            {availableFields.length > 0 && (
+                <div className="w-xs h-fit bg-depth-1 border border-depth-3 rounded-md select-none">
+                    <div className="relative flex items-center gap-1 p-1 bg-background border-b border-depth-3 h-10.5">
+                        <div
+                            className="absolute h-[calc(100%-8px)] top-1 rounded-md bg-depth-2 transition-[left,width] duration-300 ease-in-out"
+                            style={{
+                                left: activeIndex === 0 ? '4px' : `calc(50% + 2px)`,
+                                width: `calc(50% - 6px)`,
+                            }}
+                        />
 
-                            {Object.entries(VIEW_LABELS).map(([mode, label]) => (
-                                <button
-                                    key={mode}
-                                    onClick={() => setDataViewMode(mode as DataViewMode)}
-                                    className={`
+                        {Object.entries(VIEW_LABELS).map(([mode, label]) => (
+                            <button
+                                key={mode}
+                                onClick={() => setDataViewMode(mode as DataViewMode)}
+                                className={`
                                         relative z-10 flex-1 px-4 h-8 rounded-md text-sm text-foreground cursor-pointer
                                         ${dataViewMode === mode ? '' : 'hover:bg-depth-1'}
                                     `}
-                                >
-                                    {label}
-                                </button>
-                            ))}
-                        </div>
+                            >
+                                {label}
+                            </button>
+                        ))}
+                    </div>
 
-                        <div className="relative p-1 border-b border-depth-3">
-                            <Input
-                                value={searchQuery}
-                                onChange={setSearchQuery}
-                                placeholder="Поиск..."
-                                className="bg-depth-2 border border-depth-3"
-                            />
+                    <div className="relative p-1 border-b border-depth-3">
+                        <Input
+                            value={searchQuery}
+                            onChange={setSearchQuery}
+                            placeholder="Поиск..."
+                            className="bg-depth-2 border border-depth-3"
+                        />
 
-                            {searchQuery && (
-                                <button
-                                    onClick={() => setSearchQuery('')}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray hover:text-foreground cursor-pointer z-10"
-                                >
-                                    <X size={16} />
-                                </button>
-                            )}
-                        </div>
+                        {searchQuery && (
+                            <button
+                                onClick={() => setSearchQuery('')}
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray hover:text-foreground cursor-pointer z-10"
+                            >
+                                <X size={16} />
+                            </button>
+                        )}
+                    </div>
 
-                        <div className="overflow-y-auto max-h-[calc(100vh-4px-4px-42px-42px-42px-4px-4px-4px-4px)]">
-                            {dataViewMode === 'scenes' && (
-                                <>
-                                    <div className="flex flex-col gap-1 p-1">
-                                        <div className="flex items-center gap-3 px-3 py-1">
-                                            <label className="flex items-center gap-3 cursor-pointer">
-                                                <Checkbox checked={isAllSelected} onChange={toggleAllFields} />
-                                                <span className="text-sm font-bold">Поля сцен</span>
-                                            </label>
-                                        </div>
-
-                                        <div className="flex flex-col gap-1">
-                                            {sceneFields.map((field) => (
-                                                <label
-                                                    key={field}
-                                                    className="flex items-center gap-3 px-3 py-1 rounded-md bg-depth-2 border border-depth-3 hover:bg-depth-2 cursor-pointer"
-                                                >
-                                                    <Checkbox
-                                                        checked={selectedFields.has(field)}
-                                                        onChange={() => toggleField(field)}
-                                                    />
-                                                    <span className="text-sm truncate">
-                                                        {getFieldLabel(dataViewMode, field)}
-                                                    </span>
-                                                </label>
-                                            ))}
-
-                                            {hasItemsField && (
-                                                <label className="flex items-center gap-3 px-3 py-1 rounded-md bg-depth-2 border border-depth-3 hover:bg-depth-2 cursor-pointer">
-                                                    <Checkbox
-                                                        checked={selectedFields.has('items')}
-                                                        onChange={() => toggleField('items')}
-                                                    />
-
-                                                    <span className="text-sm truncate">
-                                                        {getFieldLabel(dataViewMode, 'items')}
-                                                    </span>
-                                                </label>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    {isItemsSelected && hasItemsField && availableItemFields.length > 0 && (
-                                        <div className="flex flex-col gap-1 p-1 border-t border-depth-3">
-                                            <div className="flex items-center gap-3 px-3 py-1">
-                                                <label className="flex items-center gap-3 cursor-pointer">
-                                                    <Checkbox checked={isAllItemSelected} onChange={toggleAllItemFields} />
-                                                    <span className="text-sm font-bold">Поля элементов</span>
-                                                </label>
-                                            </div>
-
-                                            <div className="flex flex-col gap-1">
-                                                {availableItemFields.map((itemField) => (
-                                                    <label
-                                                        key={itemField}
-                                                        className="flex items-center gap-3 px-3 py-1 rounded-md bg-depth-2 border border-depth-3 hover:bg-depth-2 cursor-pointer"
-                                                    >
-                                                        <Checkbox
-                                                            checked={selectedItemFields.has(itemField)}
-                                                            onChange={() => toggleItemField(itemField)}
-                                                        />
-
-                                                        <span className="text-sm truncate">
-                                                            {getItemFieldLabel(itemField)}
-                                                        </span>
-                                                    </label>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                </>
-                            )}
-
-                            {dataViewMode === 'parameters' && (
+                    <div className="overflow-y-auto max-h-[calc(100vh-4px-4px-42px-42px-42px-4px-4px-4px-4px)]">
+                        {dataViewMode === 'scenes' && (
+                            <>
                                 <div className="flex flex-col gap-1 p-1">
                                     <div className="flex items-center gap-3 px-3 py-1">
                                         <label className="flex items-center gap-3 cursor-pointer">
                                             <Checkbox checked={isAllSelected} onChange={toggleAllFields} />
-                                            <span className="text-sm font-bold">Поля параметров</span>
+                                            <span className="text-sm font-bold">Поля сцен</span>
                                         </label>
                                     </div>
 
                                     <div className="flex flex-col gap-1">
-                                        {availableFields.map((field) => (
+                                        {sceneFields.map((field) => (
                                             <label
                                                 key={field}
                                                 className="flex items-center gap-3 px-3 py-1 rounded-md bg-depth-2 border border-depth-3 hover:bg-depth-2 cursor-pointer"
@@ -472,19 +400,85 @@ export default function DataPage() {
                                                     checked={selectedFields.has(field)}
                                                     onChange={() => toggleField(field)}
                                                 />
-
                                                 <span className="text-sm truncate">
                                                     {getFieldLabel(dataViewMode, field)}
                                                 </span>
                                             </label>
                                         ))}
+
+                                        {hasItemsField && (
+                                            <label className="flex items-center gap-3 px-3 py-1 rounded-md bg-depth-2 border border-depth-3 hover:bg-depth-2 cursor-pointer">
+                                                <Checkbox
+                                                    checked={selectedFields.has('items')}
+                                                    onChange={() => toggleField('items')}
+                                                />
+
+                                                <span className="text-sm truncate">
+                                                    {getFieldLabel(dataViewMode, 'items')}
+                                                </span>
+                                            </label>
+                                        )}
                                     </div>
                                 </div>
-                            )}
-                        </div>
+
+                                {isItemsSelected && hasItemsField && availableItemFields.length > 0 && (
+                                    <div className="flex flex-col gap-1 p-1 border-t border-depth-3">
+                                        <div className="flex items-center gap-3 px-3 py-1">
+                                            <label className="flex items-center gap-3 cursor-pointer">
+                                                <Checkbox checked={isAllItemSelected} onChange={toggleAllItemFields} />
+                                                <span className="text-sm font-bold">Поля элементов</span>
+                                            </label>
+                                        </div>
+
+                                        <div className="flex flex-col gap-1">
+                                            {availableItemFields.map((itemField) => (
+                                                <label
+                                                    key={itemField}
+                                                    className="flex items-center gap-3 px-3 py-1 rounded-md bg-depth-2 border border-depth-3 hover:bg-depth-2 cursor-pointer"
+                                                >
+                                                    <Checkbox
+                                                        checked={selectedItemFields.has(itemField)}
+                                                        onChange={() => toggleItemField(itemField)}
+                                                    />
+
+                                                    <span className="text-sm truncate">{getItemFieldLabel(itemField)}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                        {dataViewMode === 'parameters' && (
+                            <div className="flex flex-col gap-1 p-1">
+                                <div className="flex items-center gap-3 px-3 py-1">
+                                    <label className="flex items-center gap-3 cursor-pointer">
+                                        <Checkbox checked={isAllSelected} onChange={toggleAllFields} />
+                                        <span className="text-sm font-bold">Поля параметров</span>
+                                    </label>
+                                </div>
+
+                                <div className="flex flex-col gap-1">
+                                    {availableFields.map((field) => (
+                                        <label
+                                            key={field}
+                                            className="flex items-center gap-3 px-3 py-1 rounded-md bg-depth-2 border border-depth-3 hover:bg-depth-2 cursor-pointer"
+                                        >
+                                            <Checkbox
+                                                checked={selectedFields.has(field)}
+                                                onChange={() => toggleField(field)}
+                                            />
+
+                                            <span className="text-sm truncate">{getFieldLabel(dataViewMode, field)}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </div>
     );
 }

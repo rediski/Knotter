@@ -49,7 +49,12 @@ export function SidebarPanel({ panel }: { panel: SidebarPanelType }) {
     const currentPanelTitle = panel.type ? panelTitles[panel.type] : 'Пустая панель';
 
     return (
-        <div ref={panelRef} className="flex w-full h-full relative" onContextMenu={handleContextMenu} onClick={closeMenu}>
+        <div
+            ref={panelRef}
+            className="flex w-full h-[calc(100vh-8px-2px)] relative"
+            onContextMenu={handleContextMenu}
+            onClick={closeMenu}
+        >
             <PanelContextMenu
                 menuRef={menuRef}
                 isOpen={isOpen}
